@@ -9,24 +9,19 @@ import { chainIdToName } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { borderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { useNetwork } from 'wagmi';
 import { NetworkWarning } from '../common/network-warning';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
 import { ADropdown } from './astra-dropdown';
 
 export const ANavbar = () => {
-  const { selectedChain, setSelectedChain } = useAppContext();
-  const { chain } = useNetwork();
-  const chainId = String(chain?.id);
+  const { selectedChain, setSelectedChain, isWalletNetworkSupported } = useAppContext();
   const [labelVal, setLabelVal] = useState(chainIdToName(selectedChain));
   const { theme } = useTheme();
   const [logo, setLogo] = useState<ReactNode>(<EZImage src={flowLogoDark.src} className="w-28 h-9" />);
 
-  const [networkWarning, setNetworkWarning] = useState(false);
-
   useEffect(() => {
-    setNetworkWarning(!!chain?.id && chainId !== selectedChain);
-  }, [networkWarning, chain, selectedChain, chainId]);
+    setLabelVal(chainIdToName(selectedChain));
+  }, [selectedChain]);
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -38,7 +33,7 @@ export const ANavbar = () => {
 
   return (
     <div>
-      <div className={networkWarning ? 'block' : 'hidden'}>
+      <div className={isWalletNetworkSupported ? 'hidden' : 'block'}>
         <NetworkWarning />
       </div>
       <div className={twMerge('flex px-6 py-2 space-x-4 items-center border-b-[1px]', borderColor)}>
@@ -66,16 +61,13 @@ export const ANavbar = () => {
             {
               label: 'Goerli',
               onClick: () => {
-                setLabelVal(chainIdToName(ChainId.Goerli));
                 setSelectedChain(ChainId.Goerli);
               }
             },
             {
-              label: 'Ethereum (soon)',
+              label: 'Ethereum (beta)',
               onClick: () => {
-                // adi-todo uncomment
-                // setLabelVal(chainIdToName(ChainId.Mainnet));
-                // setSelectedChain(ChainId.Mainnet);
+                setSelectedChain(ChainId.Mainnet);
               }
             }
           ]}

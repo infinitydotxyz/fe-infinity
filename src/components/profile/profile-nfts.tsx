@@ -18,7 +18,9 @@ export const ProfileNFTs = ({ userAddress }: Props) => {
   const [selectedCollection, setSelectedCollection] = useState<CollectionSearchDto>();
   const [filter, setFilter] = useState<TokensFilter>({});
   const { isNFTSelected, isNFTSelectable, listMode, toggleNFTSelection, toggleMultipleNFTSelection } = useAppContext();
-  const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(userAddress, filter);
+  const { selectedChain } = useAppContext();
+
+  const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(userAddress, selectedChain, filter);
   const [numSweep, setNumSweep] = useState('');
   const [customSweep, setCustomSweep] = useState('');
 

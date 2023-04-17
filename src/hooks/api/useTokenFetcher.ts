@@ -1,41 +1,42 @@
-import { BaseToken, Erc721Token, OrdersSnippet } from '@infinityxyz/lib-frontend/types/core';
-import { useState } from 'react';
+import { BaseToken, ChainId, Erc721Token, OrdersSnippet } from '@infinityxyz/lib-frontend/types/core';
+import { useEffect, useState } from 'react';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { ApiResponse, nFormatter } from 'src/utils';
 import { fetchCollectionTokens, fetchProfileTokens } from 'src/utils/astra-utils';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType } from 'src/utils/context/CartContext';
 import { ERC721TokenCartItem, TokensFilter } from 'src/utils/types';
-import { useNetwork } from 'wagmi';
 
 type ApiNftData = Erc721Token & {
   orderSnippet?: OrdersSnippet;
 };
 
-export function useCollectionTokenFetcher(collectionAddress: string | undefined, filter: TokensFilter) {
-  const { chain } = useNetwork();
-  const { selectedChain } = useAppContext();
-  const chainId = String(chain?.id ?? selectedChain);
-
+export function useCollectionTokenFetcher(
+  collectionAddress: string | undefined,
+  collectionChainId: ChainId,
+  filter: TokensFilter
+) {
   return useTokenFetcher<ApiNftData, ERC721TokenCartItem>({
-    fetcher: (cursor, filters) => fetchCollectionTokens(collectionAddress || '', chainId, { cursor, ...filters }),
+    fetcher: (cursor, filters) =>
+      fetchCollectionTokens(collectionAddress || '', collectionChainId, { cursor, ...filters }),
     mapper: (data) => nftsToCardDataWithOrderFields(data),
     execute: collectionAddress !== '',
     filter
   });
 }
 
-export function useProfileTokenFetcher(userAddress: string | undefined, filter: TokensFilter) {
-  const { chain } = useNetwork();
-  const { selectedChain } = useAppContext();
-  const chainId = String(chain?.id ?? selectedChain);
-
-  return useTokenFetcher<ApiNftData, ERC721TokenCartItem>({
+export function useProfileTokenFetcher(userAddress: string | undefined, chainId: ChainId, filter: TokensFilter) {
+  const fetcher = useTokenFetcher<ApiNftData, ERC721TokenCartItem>({
     fetcher: (cursor, filters) => fetchProfileTokens(userAddress || '', chainId, { cursor, ...filters }),
     mapper: (data) => nftsToCardDataWithOrderFields(data),
     execute: userAddress !== '',
     filter
   });
+
+  useEffect(() => {
+    fetcher.fetch(false);
+  }, [userAddress, chainId, filter]);
+
+  return fetcher;
 }
 
 function useTokenFetcher<From, To>({

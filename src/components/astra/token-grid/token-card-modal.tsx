@@ -343,7 +343,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
             className="h-80 w-80 rounded-lg"
           />
           <ATraitList
-            traits={(token as Erc721Token).metadata.attributes ?? []}
+            traits={(token as Erc721Token).metadata?.attributes ?? []}
             collectionTraits={collectionAttributes ?? {}}
           />
         </div>
