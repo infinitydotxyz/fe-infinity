@@ -1,4 +1,4 @@
-import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { HiOutlineExternalLink } from 'react-icons/hi';
@@ -6,7 +6,6 @@ import { BlueCheck, ClipboardButton, EthSymbol, EZImage, ReadMoreText, Spacer } 
 import { useMatchingEngineCollection } from 'src/hooks/api/useMatchingEngineCollection';
 import etherscanLogo from 'src/images/etherscan-logo.png';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
 import {
   borderColor,
   brandBorderColor,
@@ -17,7 +16,6 @@ import {
   smallIconButtonStyle
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { useNetwork } from 'wagmi';
 import { AOutlineButton } from '../astra/astra-button';
 import { MatchingEngineStatusIcon, StatusIcon } from '../common/status-icon';
 
@@ -56,13 +54,13 @@ export const CollectionPageHeader = ({
   tabs,
   onTabChange
 }: CollectionPageHeaderProps) => {
-  const { chain } = useNetwork();
-  const { selectedChain } = useAppContext();
-  const chainId = String(chain?.id ?? selectedChain);
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
+  const chainId = (collection?.chainId ?? '1') as ChainId;
+
   const { result: matchingEngineStatus, isInitialLoadComplete } = useMatchingEngineCollection(
-    collection?.address ?? ''
+    collection?.address ?? '',
+    chainId
   );
 
   return (

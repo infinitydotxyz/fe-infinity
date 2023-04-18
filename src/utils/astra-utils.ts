@@ -3,12 +3,13 @@ import { trimText } from 'src/components/common';
 import { SORT_FILTERS, TokensFilter } from 'src/utils/types';
 import { ApiResponse } from './api-utils';
 import { API_BASE, LARGE_LIMIT } from './constants';
+import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 
 export type TokenFetcherOptions = { cursor?: string } & TokensFilter;
 
 export const fetchCollectionTokens = async (
   collectionAddress: string,
-  chainId: string,
+  collectionChainId: ChainId,
   { cursor, sort = SORT_FILTERS.lowestPrice, ...options }: TokenFetcherOptions = {}
 ): Promise<ApiResponse> => {
   const filters = {
@@ -31,12 +32,12 @@ export const fetchCollectionTokens = async (
   const query = {
     limit: LARGE_LIMIT,
     cursor,
-    chainId,
+    chainId: collectionChainId,
     ...options,
     ...filters
   };
 
-  const response = await httpGet(`/collections/${chainId}:${collectionAddress}/nfts`, query);
+  const response = await httpGet(`/collections/${collectionChainId}:${collectionAddress}/nfts`, query);
   return response;
 };
 

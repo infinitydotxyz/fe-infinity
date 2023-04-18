@@ -49,10 +49,12 @@ import {
 import { DEFAULT_MAX_GAS_PRICE_WEI, ZERO_ADDRESS } from '../constants';
 import { fetchOrderNonce, postOrdersV2 } from '../orderbook-utils';
 import { CartType, useCartContext } from './CartContext';
+import { useChain } from 'src/hooks/useChain';
 
 type AppContextType = {
   selectedChain: ChainId;
-  setSelectedChain: (value: ChainId) => void;
+  setSelectedChain: (chain: ChainId) => void;
+  isWalletNetworkSupported: boolean;
 
   showCart: boolean;
   setShowCart: (value: boolean) => void;
@@ -108,7 +110,7 @@ interface Props {
 }
 
 export const AppContextProvider = ({ children }: Props) => {
-  const [selectedChain, setSelectedChain] = useState<ChainId>(ChainId.Goerli); // adi-todo: change to mainnet
+  const { selectedChain, setSelectedChain, isWalletNetworkSupported } = useChain();
   const [showCart, setShowCart] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [selectedProfileTab, setSelectedProfileTab] = useState(ProfileTabs.Items.toString());
@@ -123,6 +125,19 @@ export const AppContextProvider = ({ children }: Props) => {
   const chainId = String(chain?.id);
   const { address: user } = useAccount();
   const { cartType } = useCartContext();
+
+  useEffect(() => {
+    switch (chain?.id) {
+      case 1:
+        setSelectedChain(ChainId.Mainnet);
+        break;
+      case 5:
+        setSelectedChain(ChainId.Goerli);
+        break;
+      default:
+        setSelectedChain(ChainId.Goerli);
+    }
+  }, [chain]);
 
   const {
     isNFTSelected,
@@ -630,6 +645,7 @@ export const AppContextProvider = ({ children }: Props) => {
   const value: AppContextType = {
     selectedChain,
     setSelectedChain,
+    isWalletNetworkSupported,
 
     showCart,
     setShowCart,
