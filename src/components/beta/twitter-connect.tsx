@@ -9,6 +9,7 @@ interface Props {
 
 export const TwitterConnect = (props: Props) => {
   const twitterLogo = FaTwitter({ color: '#007aff' });
+  const twitterLogoHref = 'https://twitter.com/flowdotso';
 
   switch (props.state.step) {
     case Twitter.Connect: {
@@ -19,27 +20,33 @@ export const TwitterConnect = (props: Props) => {
         isComplete: false
       };
 
-      return <ThirdPartyConnection connectionName="Twitter" logo={twitterLogo} step={step} />;
+      return (
+        <ThirdPartyConnection connectionName="Twitter" logoHref={twitterLogoHref} logo={twitterLogo} step={step} />
+      );
     }
     case Twitter.Follow: {
       const step = {
-        title: 'Follow Flow on Twitter',
+        title: 'Follow us on Twitter',
         message: 'Follow',
         href: props.state.data.url,
         isComplete: false
       };
 
-      return <ThirdPartyConnection connectionName="Twitter" logo={twitterLogo} step={step} />;
+      return (
+        <ThirdPartyConnection connectionName="Twitter" logoHref={twitterLogoHref} logo={twitterLogo} step={step} />
+      );
     }
     case Twitter.Complete: {
       const step = {
-        title: 'Follow Flow on Twitter',
+        title: 'Follow us on Twitter',
         message: 'Follow',
         href: '',
         isComplete: true
       };
 
-      return <ThirdPartyConnection connectionName="Twitter" logo={twitterLogo} step={step} />;
+      return (
+        <ThirdPartyConnection connectionName="Twitter" logoHref={twitterLogoHref} logo={twitterLogo} step={step} />
+      );
     }
   }
 };

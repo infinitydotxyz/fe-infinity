@@ -12,9 +12,10 @@ interface Props {
   expanded?: boolean;
   slug: string;
   collectionFloorPrice?: string | number | null | undefined;
+  chainId: ChainId;
 }
 
-export const CollectionNftSearchInput = ({ expanded, slug, collectionFloorPrice }: Props) => {
+export const CollectionNftSearchInput = ({ expanded, slug, collectionFloorPrice, chainId }: Props) => {
   const { search, setSubTypeQuery, setQuery } = useSearchState<SearchType.Collection, 'slug', 'nft'>({
     type: SearchType.Collection,
     query: slug,
@@ -23,7 +24,7 @@ export const CollectionNftSearchInput = ({ expanded, slug, collectionFloorPrice 
     subType: 'nft',
     subTypeQuery: '',
     cursor: '',
-    chainId: ChainId.Mainnet,
+    chainId,
     subTypeSearchBy: 'tokenId'
   });
   const { result } = useSearch(search);

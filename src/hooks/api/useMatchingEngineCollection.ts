@@ -1,7 +1,6 @@
+import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
-import { useNetwork } from 'wagmi';
 
 export interface MatchingEngineStatus {
   isSynced: boolean;
@@ -35,10 +34,7 @@ export interface MatchingEngineStatus {
   };
 }
 
-export const useMatchingEngineCollection = (address: string, refreshInterval = 30_000) => {
-  const { chain } = useNetwork();
-  const { selectedChain } = useAppContext();
-  const chainId = String(chain?.id ?? selectedChain);
+export const useMatchingEngineCollection = (address: string, collectionChainId: ChainId, refreshInterval = 30_000) => {
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<MatchingEngineStatus | null>(null);
   const [isInitialLoadComplete, setIsInitialLoadComplete] = useState(false);
@@ -49,7 +45,7 @@ export const useMatchingEngineCollection = (address: string, refreshInterval = 3
         return;
       }
       setIsLoading(true);
-      const response = await apiGet(`/v2/collections/${chainId}:${address}/matching-engine`);
+      const response = await apiGet(`/v2/collections/${collectionChainId}:${address}/matching-engine`);
       const res = response.result as MatchingEngineStatus;
       if (signal.abort) {
         return;
