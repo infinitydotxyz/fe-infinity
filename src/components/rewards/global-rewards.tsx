@@ -1,15 +1,16 @@
 import React from 'react';
 import { TokenomicsConfigDto, TokenomicsPhaseDto } from '@infinityxyz/lib-frontend/types/dto';
 import { TradingFeeDestination } from '@infinityxyz/lib-frontend/types/dto/rewards/tokenomics-phase.dto';
-import { CenteredContent, BouncingLogo, TooltipWrapper } from 'src/components/common';
+import { CenteredContent, BouncingLogo, TooltipWrapper, ExternalLink } from 'src/components/common';
 import { DistributionBar } from 'src/components/common/distribution-bar';
 import { InfoBox } from 'src/components/rewards/info-box';
 import { RewardPhase } from 'src/components/rewards/reward-phase';
 import useScreenSize from 'src/hooks/useScreenSize';
-import { nFormatter, useFetch } from 'src/utils';
+import { FLOW_TOKEN, nFormatter, useFetch } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { State } from 'src/utils/state';
 import { ProgressBar } from 'src/components/common/progress-bar';
+import { bgColor, bidDataPointColor, saleDataPointColor, secondaryBgColor } from 'src/utils/ui-constants';
 
 type GRAND_RAFFLE_TYPE = `${TradingFeeDestination.Raffle}-grand`;
 type PHASE_RAFFLE_TYPE = `${TradingFeeDestination.Raffle}-phase`;
@@ -100,7 +101,6 @@ interface Props {
 
 const GlobalRewards = ({ showCount }: Props) => {
   const { result, isLoading, isError } = useFetch<TokenomicsConfigDto>('/rewards');
-  const { isMobile } = useScreenSize();
 
   if (isLoading) {
     return (
@@ -111,89 +111,141 @@ const GlobalRewards = ({ showCount }: Props) => {
   }
 
   if (isError) {
-    return <div className="flex flex-col mt-10">An error occurred loading rewards.</div>;
+    return <div className="flex flex-col mt-10">An error occurred while loading rewards</div>;
   }
 
-  const renderTooltip = (props: {
-    isHovered: boolean;
-    children?: React.ReactNode;
-    title?: string;
-    message?: string;
-  }) => {
-    return (
-      <TooltipWrapper
-        className="w-fit min-w-[200px]"
-        show={props.isHovered}
-        tooltip={{
-          title: props.title ?? '',
-          content: props.message ?? ''
-        }}
-      >
-        {props.children}
-      </TooltipWrapper>
-    );
-  };
+  return (
+    <div className={twMerge('space-y-4 mt-6 pb-6 mb-16')}>
+      <div className="flex space-x-4 justify-between">
+        <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
+          <div className="text-2xl font-medium underline">Buy Rewards</div>
+          <div>10M ${FLOW_TOKEN.symbol} per day</div>
+          <div>
+            All purchases earn rewards. The more you buy, the more you earn. Rewards are distributed proportionally to
+            all buyers each day.
+          </div>
+          <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName={`bg-[#FA8147]`} />
+        </div>
 
-  if (result?.phases && result?.phases.length > 0) {
-    return (
-      <div className="space-y-4">
-        {result.phases.map((phase: TokenomicsPhaseDto, index) => {
-          if (showCount && index >= showCount) {
-            return;
-          }
+        <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
+          <div className="text-2xl font-medium underline">Bid Rewards</div>
+          <div>5M ${FLOW_TOKEN.symbol} per day</div>
+          <div>
+            Collections bids close to a collection's floor and token bids close to the NFT's last sale price earn more
+            tokens.
+          </div>
+          <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName="bg-[#7d81f6]" />
+        </div>
 
-          const phaseTotalFeesUSD =
-            ((phase.tradingFeeRefund?.rewardSupply ?? 0) * (phase.tradingFeeRefund?.rewardRateDenominator ?? 0)) /
-            (phase.tradingFeeRefund?.rewardRateNumerator ?? 1);
+        <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
+          <div className="text-2xl font-medium underline">Referral Rewards</div>
+          <div>200M ${FLOW_TOKEN.symbol} until supply runs out</div>
+          <div>
+            There's a fixed suppky of referral rewards. So the earliest referrers get the highest rewards. See{' '}
+            <ExternalLink href="https://docs.flow.so/referrals" className="underline">
+              docs
+            </ExternalLink>{' '}
+            for details.
+          </div>
+          <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName="bg-[#4899f1]" />
+        </div>
 
-          const state = phase.isActive ? State.Active : phase.progress === 100 ? State.Complete : State.Inactive;
-          let message = '';
-          switch (state) {
-            case State.Active:
-              message = `${phase.name} is currently active.`;
-              break;
-            case State.Inactive:
-              message = `${phase.name} will become active once the previous phase has completed.`;
-              break;
-            case State.Complete:
-              message = `${phase.name} has been completed.`;
-              break;
-          }
-          return (
-            <InfoBox
-              key={phase.id}
-              title={phase.name}
-              state={state}
-              renderTooltip={renderTooltip}
-              tooltipMessage={message}
-              tooltipTitle={state}
-            >
-              <div className={twMerge('flex align-center justify-center', isMobile ? 'flex-col' : '')}>
-                <InfoBox.SideInfo>
-                  <InfoBox.Stats title="Trading Fee Distribution" description={`Trading Fee: 2.5%`}>
-                    <>
-                      <DistributionBar distribution={getPhaseSplitDistributions(phase, phaseTotalFeesUSD)} />
-                      <div className="w-full py-2">
-                        <div className="text-sm mt-1 mb-2">Progress</div>
-                        <div className="text-2xl font-heading font-bold">
-                          <ProgressBar percentage={phase.progress} total={`${nFormatter(phaseTotalFeesUSD)} USD`} />
-                        </div>
-                      </div>
-                    </>
-                  </InfoBox.Stats>
-                </InfoBox.SideInfo>
-                <InfoBox.SideInfo>
-                  <div className={isMobile ? '' : 'ml-6'}>
-                    <RewardPhase key={phase.id} phase={phase} />
-                  </div>
-                </InfoBox.SideInfo>
-              </div>
-            </InfoBox>
-          );
-        })}
+        <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
+          <div className="text-2xl font-medium underline">Creator Rewards</div>
+          <div>100k ${FLOW_TOKEN.symbol} per day</div>
+          <div>
+            Whitelisted collections (currently less than 5) earn rewards for their creators. Ping us on{' '}
+            <ExternalLink href="https://discord.gg/flowdotso" className="underline">
+              discord
+            </ExternalLink>{' '}
+            to get whitelisted.
+          </div>
+          <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName="bg-[#66d981]" />
+        </div>
       </div>
-    );
-  }
+    </div>
+  );
+
+  // const renderTooltip = (props: {
+  //   isHovered: boolean;
+  //   children?: React.ReactNode;
+  //   title?: string;
+  //   message?: string;
+  // }) => {
+  //   return (
+  //     <TooltipWrapper
+  //       className="w-fit min-w-[200px]"
+  //       show={props.isHovered}
+  //       tooltip={{
+  //         title: props.title ?? '',
+  //         content: props.message ?? ''
+  //       }}
+  //     >
+  //       {props.children}
+  //     </TooltipWrapper>
+  //   );
+  // };
+
+  // if (result?.phases && result?.phases.length > 0) {
+  //   return (
+  //     <div className="space-y-4">
+  //       {result.phases.map((phase: TokenomicsPhaseDto, index) => {
+  //         if (showCount && index >= showCount) {
+  //           return;
+  //         }
+
+  //         const phaseTotalFeesUSD =
+  //           ((phase.tradingFeeRefund?.rewardSupply ?? 0) * (phase.tradingFeeRefund?.rewardRateDenominator ?? 0)) /
+  //           (phase.tradingFeeRefund?.rewardRateNumerator ?? 1);
+
+  //         const state = phase.isActive ? State.Active : phase.progress === 100 ? State.Complete : State.Inactive;
+  //         let message = '';
+  //         switch (state) {
+  //           case State.Active:
+  //             message = `${phase.name} is currently active.`;
+  //             break;
+  //           case State.Inactive:
+  //             message = `${phase.name} will become active once the previous phase has completed.`;
+  //             break;
+  //           case State.Complete:
+  //             message = `${phase.name} has been completed.`;
+  //             break;
+  //         }
+  //         return (
+  //           <InfoBox
+  //             key={phase.id}
+  //             title={phase.name}
+  //             state={state}
+  //             renderTooltip={renderTooltip}
+  //             tooltipMessage={message}
+  //             tooltipTitle={state}
+  //           >
+  //             <div className={twMerge('flex align-center justify-center', isMobile ? 'flex-col' : '')}>
+  //               <InfoBox.SideInfo>
+  //                 <InfoBox.Stats title="Trading Fee Distribution" description={`Trading Fee: 2.5%`}>
+  //                   <>
+  //                     <DistributionBar distribution={getPhaseSplitDistributions(phase, phaseTotalFeesUSD)} />
+  //                     <div className="w-full py-2">
+  //                       <div className="text-sm mt-1 mb-2">Progress</div>
+  //                       <div className="text-2xl font-heading font-bold">
+  //                         <ProgressBar percentage={phase.progress} total={`${nFormatter(phaseTotalFeesUSD)} USD`} />
+  //                       </div>
+  //                     </div>
+  //                   </>
+  //                 </InfoBox.Stats>
+  //               </InfoBox.SideInfo>
+  //               <InfoBox.SideInfo>
+  //                 <div className={isMobile ? '' : 'ml-6'}>
+  //                   <RewardPhase key={phase.id} phase={phase} />
+  //                 </div>
+  //               </InfoBox.SideInfo>
+  //             </div>
+  //           </InfoBox>
+  //         );
+  //       })}
+  //     </div>
+  //   );
+  // }
 
   return <div className="flex flex-col mt-10 text-sm">Unable to load rewards</div>;
 };
