@@ -500,7 +500,7 @@ export const erc721OrderCartItemToCollectionCartItem = (order: ERC721OrderCartIt
 
 export const chainIdToName = (chainId: ChainId) => {
   return chainId === ChainId.Mainnet
-    ? 'Ethereum'
+    ? 'Ethereum (beta)'
     : chainId === ChainId.Goerli
     ? 'Goerli'
     : chainId === ChainId.Polygon
