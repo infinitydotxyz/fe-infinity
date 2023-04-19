@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
 import { switchNetwork } from '@wagmi/core';
 
-const DEFAULT_CHAIN = ChainId.Goerli;
+const DEFAULT_CHAIN = ChainId.Mainnet;
 
 export const useChain = () => {
   const [selectedChain, setSelectedChain] = useState<ChainId>(DEFAULT_CHAIN);
