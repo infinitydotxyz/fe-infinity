@@ -59,15 +59,15 @@ export const ANavbar = () => {
           // }))}
           items={[
             {
-              label: 'Goerli',
-              onClick: () => {
-                setSelectedChain(ChainId.Goerli);
-              }
-            },
-            {
               label: 'Ethereum (beta)',
               onClick: () => {
                 setSelectedChain(ChainId.Mainnet);
+              }
+            },
+            {
+              label: 'Goerli',
+              onClick: () => {
+                setSelectedChain(ChainId.Goerli);
               }
             }
           ]}

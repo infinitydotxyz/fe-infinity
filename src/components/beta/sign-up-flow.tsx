@@ -1,5 +1,5 @@
 import { BetaAuthorizationComplete, BetaAuthorizationStatus, ReferralStep } from 'src/hooks/useSignUpState';
-import { BouncingLogo, ClipboardButton, ConnectButton, TextInputBox } from '../common';
+import { BouncingLogo, ClipboardButton, ConnectButton, ExternalLink, TextInputBox } from '../common';
 import { AButton } from '../astra/astra-button';
 import { TwitterConnect } from './twitter-connect';
 import { DiscordConnect } from './discord-connect';
@@ -7,6 +7,9 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import * as BetaContext from 'src/utils/context/BetaContext';
 import { SITE_HOST } from 'src/utils';
+import { twMerge } from 'tailwind-merge';
+import { iconButtonStyle, secondaryBgColor } from 'src/utils/ui-constants';
+import { FaDiscord } from 'react-icons/fa';
 
 export const SignUpFlow = () => {
   const router = useRouter();
@@ -83,8 +86,8 @@ export const SignUpFlow = () => {
     case 'not-signed-in': {
       return (
         <div className="mt-4">
-          <AButton onClick={triggerSignature} primary>
-            Sign In
+          <AButton onClick={triggerSignature} primary className={isLoading ? 'hidden' : 'relative py-3 px-6 text-sm'}>
+            Sign up
           </AButton>
 
           <div className={isLoading ? 'relative' : 'hidden'}>
@@ -100,9 +103,15 @@ export const SignUpFlow = () => {
             return (
               <div className="mt-4 flex flex-col justify-center items-center">
                 <div className={isLoading ? 'hidden' : 'flex flex-col items-start'}>
-                  <p className="mb-2">Enter your referral code</p>
+                  <div className="mb-4 flex">
+                    Enter your referral code. Join our{' '}
+                    <ExternalLink href="https://discord.gg/flowdotso">
+                      <FaDiscord className={twMerge('text-brand-discord cursor-pointer mx-2', iconButtonStyle)} />
+                    </ExternalLink>{' '}
+                    to get one.
+                  </div>
 
-                  <div className="flex flex-row">
+                  <div className="flex flex-row text-sm">
                     <TextInputBox
                       value={referralCode}
                       onChange={(value) => {
@@ -111,7 +120,7 @@ export const SignUpFlow = () => {
                       type={'text'}
                       placeholder={'Referral code'}
                     />
-                    <AButton primary className="ml-2" onClick={submitReferralCode}>
+                    <AButton primary className="ml-2 px-6 text-sm" onClick={submitReferralCode}>
                       Submit
                     </AButton>
                   </div>
@@ -127,7 +136,7 @@ export const SignUpFlow = () => {
           }
           return (
             <div className="mt-4 flex flex-col justify-start items-center">
-              <div className="flex flex-row">
+              <div className={isLoading ? 'hidden' : twMerge(secondaryBgColor, 'flex flex-row rounded-lg py-4')}>
                 <div className="flex">
                   <TwitterConnect state={result.auth.twitter} />
                 </div>
@@ -135,6 +144,7 @@ export const SignUpFlow = () => {
                   <DiscordConnect state={result.auth.discord} />
                 </div>
               </div>
+
               <div className={isLoading ? 'relative' : 'hidden'}>
                 <BouncingLogo />
               </div>
@@ -145,12 +155,17 @@ export const SignUpFlow = () => {
           const referralCode = (result.auth as BetaAuthorizationComplete).referralCode;
           return (
             <div className="flex flex-col items-start">
-              <div className="flex flex-row justify-center items-center">
-                <div className="mb-2">Your referral code: {`${SITE_HOST}?ref=${referralCode}`}</div>
-                <ClipboardButton textToCopy={`${SITE_HOST}?ref=${referralCode}`} className={'h-4 w-4 ml-2.5 mb-1.5'} />
+              <div className="flex flex-row justify-center items-center mb-4">
+                <div className="flex space-x-3">
+                  <div className="mt-2">Your referral link:</div>
+                  <div className={twMerge(secondaryBgColor, 'flex rounded-lg p-2 space-x-2')}>
+                    <div>{`${SITE_HOST}?ref=${referralCode}`} </div>
+                    <ClipboardButton textToCopy={`${SITE_HOST}?ref=${referralCode}`} className={'h-5 w-5'} />
+                  </div>
+                </div>
               </div>
               <div className="flex w-full justify-center">
-                <AButton onClick={redirectToTrending} primary>
+                <AButton onClick={redirectToTrending} primary className="px-4 py-3 text-sm">
                   Get started
                 </AButton>
               </div>

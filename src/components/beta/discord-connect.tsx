@@ -8,7 +8,7 @@ interface Props {
 }
 
 const discordLogoHref = 'https://discord.gg/flowdotso';
-const discordLogo = FaDiscord({});
+const discordLogo = FaDiscord({ className: 'text-brand-discord' });
 
 const getStep = (state: Props['state']): { step: LinkStep | ButtonStep; disabled: boolean } => {
   switch (state.step) {
