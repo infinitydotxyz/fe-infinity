@@ -15,7 +15,7 @@ import { ReactNode } from 'react';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
 import { CartType } from './context/CartContext';
 import { BigNumber } from '@ethersproject/bignumber/lib/bignumber';
-import { formatUnits } from 'ethers/lib/utils.js';
+import { formatUnits, parseUnits } from 'ethers/lib/utils.js';
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
 
@@ -384,7 +384,7 @@ export const getEstimatedGasPrice = async (provider: Provider | undefined): Prom
   }
   const price = await provider.getGasPrice();
   const result = getFeesAtTarget(price, 4);
-  const priorityFee = formatUnits(3, 'gwei');
+  const priorityFee = parseUnits('3', 'gwei');
   const priceEstimate = BigNumber.from(result.maxBaseFeeWei).add(priorityFee);
   return priceEstimate.toString();
 };
