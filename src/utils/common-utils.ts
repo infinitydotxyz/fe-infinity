@@ -14,6 +14,8 @@ import { normalize } from 'path';
 import { ReactNode } from 'react';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
 import { CartType } from './context/CartContext';
+import { BigNumber } from '@ethersproject/bignumber/lib/bignumber';
+import { formatUnits } from 'ethers/lib/utils.js';
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
 
@@ -359,12 +361,31 @@ export const infinityExchangeCustomError = (err: string) => {
   }
 };
 
+export function getFeesAtTarget(currentBaseFee: BigNumber, blocksInFuture: number) {
+  const MAX_SINGLE_BLOCK_INCREASE = 1.125;
+  const MAX_SINGLE_BLOCK_DECREASE = 0.875;
+  const maxIncreaseAtTarget = Math.ceil(MAX_SINGLE_BLOCK_INCREASE ** blocksInFuture * 1000);
+  const maxDecreaseAtTarget = Math.floor(MAX_SINGLE_BLOCK_DECREASE ** blocksInFuture * 1000);
+
+  const maxBaseFee = currentBaseFee.mul(maxIncreaseAtTarget).div(1000);
+  const minBaseFee = currentBaseFee.mul(maxDecreaseAtTarget).div(1000);
+
+  return {
+    maxBaseFeeWei: maxBaseFee.toString(),
+    minBaseFeeWei: minBaseFee.toString(),
+    maxBaseFeeGwei: formatUnits(maxBaseFee, 'gwei'),
+    minBaseFeeGwei: formatUnits(minBaseFee, 'gwei')
+  };
+}
+
 export const getEstimatedGasPrice = async (provider: Provider | undefined): Promise<string | undefined> => {
   if (!provider) {
     return undefined;
   }
   const price = await provider.getGasPrice();
-  const priceEstimate = price.mul(3).add(3 * 10 ** 9);
+  const result = getFeesAtTarget(price, 4);
+  const priorityFee = formatUnits(3, 'gwei');
+  const priceEstimate = BigNumber.from(result.maxBaseFeeWei).add(priorityFee);
   return priceEstimate.toString();
 };
 
