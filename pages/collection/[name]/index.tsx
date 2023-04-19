@@ -394,6 +394,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 {!showCart && (
                   <div className="flex w-1/3">
                     <CollectionItemsPageSidebar
+                      collectionChainId={collection.chainId as ChainId}
                       collectionAddress={collection.address}
                       collectionImage={collection.metadata.profileImage}
                     />
