@@ -135,7 +135,7 @@ export const AppContextProvider = ({ children }: Props) => {
         setSelectedChain(ChainId.Goerli);
         break;
       default:
-        setSelectedChain(ChainId.Goerli);
+        setSelectedChain(ChainId.Mainnet);
     }
   }, [chain]);
 
