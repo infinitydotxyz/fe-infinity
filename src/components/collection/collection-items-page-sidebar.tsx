@@ -1,21 +1,22 @@
-import { CollectionSaleAndOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, CollectionSaleAndOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { twMerge } from 'tailwind-merge';
-import { useNetwork } from 'wagmi';
 import { CollectionRecentSalesOrders } from './collection-recent-sales-orders';
 
 export type Props = {
   className?: string;
+  collectionChainId: ChainId;
   collectionAddress: string;
   collectionImage: string;
 };
 
-export const CollectionItemsPageSidebar = ({ className = '', collectionAddress, collectionImage }: Props) => {
-  const { chain } = useNetwork();
-  const { selectedChain } = useAppContext();
-  const chainId = String(chain?.id ?? selectedChain);
+export const CollectionItemsPageSidebar = ({
+  className = '',
+  collectionChainId,
+  collectionAddress,
+  collectionImage
+}: Props) => {
   // const [salesChartData, setSalesChartData] = useState<SalesChartData[]>([]);
   const [recentSalesOrdersData, setRecentSalesOrdersData] = useState<CollectionSaleAndOrder[]>([]);
   // const [isSalesChartLoading, setIsSalesChartLoading] = useState(true);
@@ -45,7 +46,7 @@ export const CollectionItemsPageSidebar = ({ className = '', collectionAddress, 
   // };
 
   const fetchRecentSalesAndOrders = async () => {
-    const { result, error } = await apiGet(`/collections/${chainId}:${collectionAddress}/salesorders`);
+    const { result, error } = await apiGet(`/collections/${collectionChainId}:${collectionAddress}/salesorders`);
 
     if (error) {
       console.error(error);
@@ -83,7 +84,7 @@ export const CollectionItemsPageSidebar = ({ className = '', collectionAddress, 
     }, 30 * 1000);
 
     return () => clearInterval(interval);
-  }, [collectionAddress, chainId]);
+  }, [collectionAddress, collectionChainId]);
 
   return (
     <div className={twMerge('flex flex-col py-4 w-full pr-4', className)}>
