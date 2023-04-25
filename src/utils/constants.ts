@@ -50,7 +50,16 @@ export const INFT_TOKEN = getToken(ChainId.Mainnet) ?? {
   chainId: ChainId.Mainnet
 };
 
-export const FLOW_TOKEN = getToken(ChainId.Mainnet) ?? {
+// adi-todo: uncomment this
+// export const FLOW_TOKEN = getToken(ChainId.Mainnet) ?? {
+//   address: '',
+//   name: 'Flow',
+//   symbol: 'XFL',
+//   decimals: 18,
+//   chainId: ChainId.Mainnet
+// };
+
+export const FLOW_TOKEN = {
   address: '',
   name: 'Flow',
   symbol: 'XFL',

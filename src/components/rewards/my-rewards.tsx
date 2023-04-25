@@ -1,13 +1,13 @@
-import { round } from '@infinityxyz/lib-frontend/utils';
 import React, { useState } from 'react';
-import { Button, Spacer } from 'src/components/common';
+import { CenterFixed, CenteredContent, ClipboardButton, ConnectButton, Spacer } from 'src/components/common';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens-modal';
-import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
+import { useUserRewards } from 'src/hooks/api/useUserRewards';
 import { nFormatter } from 'src/utils';
 import { FLOW_TOKEN } from 'src/utils/constants';
-import { bgColor, secondaryBgColor, secondaryTextColor } from 'src/utils/ui-constants';
+import { bgColor, secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { useAccount } from 'wagmi';
 
 interface RewardsSectionProps {
   title: string;
@@ -34,9 +34,12 @@ const RewardsSection = (props: RewardsSectionProps) => {
 const MyRewards = () => {
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
-  const { result: quota, mutate: mutateQuota } = useUserCurationQuota();
-  // const { result: userRewards } = useUserRewards();
-  const [referralLink] = useState('');
+  const { address } = useAccount();
+  const { result: userRewards } = useUserRewards();
+  const numReferrals = userRewards?.totals.referrals.numReferrals ?? 0;
+  const referralReward = userRewards?.totals.referrals.referralRewardTokens ?? 0;
+  const referralRewardBoost = (userRewards?.totals.referrals.referralRewardBoost ?? 0) + 1 + 'x';
+  const referralLink = userRewards?.totals.referrals.referralLink ?? '';
   // const { claim } = useClaim();
   // const { setTxnHash } = useAppContext();
 
@@ -56,6 +59,14 @@ const MyRewards = () => {
   //   toastSuccess('Sent txn to chain for execution');
   //   setTxnHash(hash);
   // };
+
+  if (!address) {
+    return (
+      <CenteredContent>
+        <ConnectButton />
+      </CenteredContent>
+    );
+  }
 
   return (
     <div className="space-y-10 mt-6 pb-6 mb-16">
@@ -152,7 +163,7 @@ const MyRewards = () => {
         </div>
       </RewardsSection> */}
 
-      <RewardsSection
+      {/* <RewardsSection
         title="Token Balance"
         subTitle={`Stake ${FLOW_TOKEN.symbol} tokens to boost rewards. The more tokens you stake, higher the reward boost.`}
         sideInfo={
@@ -197,30 +208,34 @@ const MyRewards = () => {
             </div>
           </div>
         }
-      ></RewardsSection>
+      ></RewardsSection> */}
 
       <RewardsSection
         title="Referral Rewards"
         subTitle={`Refer users to Flow, and earn $${FLOW_TOKEN.symbol} when users join. The more users you refer, the more you earn. 
-          Referrals will also increase your reward boost. \n
-          Your referral link: ${referralLink}`}
+          Referrals will also increase your reward boost.`}
         sideInfo={
           <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
             <div>Earned</div>
+            <div className="mt-2 flex items-center space-x-2">
+              <div>Referral link: </div>
+              <div className={twMerge(secondaryBgColor, 'p-2 rounded-lg')}>{referralLink}</div>
+              <ClipboardButton textToCopy={referralLink} className={'h-5 w-5'} />
+            </div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{nFormatter(quota?.stake?.stakePower || 0)}</div>
+                <div className="text-2xl font-heading font-bold">{nFormatter(referralReward)}</div>
                 <div className="text-sm mt-1">${FLOW_TOKEN.symbol}</div>
               </div>
               <Spacer />
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{nFormatter(quota?.availableVotes ?? 0)}</div>
+                <div className="text-2xl font-heading font-bold">{nFormatter(numReferrals)}</div>
                 <div className="text-sm mt-1"># Referrals</div>
               </div>
               <Spacer />
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{nFormatter(quota?.availableVotes ?? 0)}</div>
-                <div className="text-sm mt-1">Referral boost</div>
+                <div className="text-2xl font-heading font-bold">{referralRewardBoost}</div>
+                <div className="text-sm mt-1">Reward boost</div>
               </div>
               <Spacer />
               <div className="lg:w-1/4 sm:w-full"></div>
@@ -230,7 +245,11 @@ const MyRewards = () => {
         }
       ></RewardsSection>
 
-      <RewardsSection
+      <CenterFixed>
+        <div className={twMerge(secondaryBgColor, 'mt-10 p-6 rounded-lg')}>More rewards coming soon</div>
+      </CenterFixed>
+
+      {/* <RewardsSection
         title="Bid Rewards"
         subTitle="Earn bid rewards for placing collection and per NFT bids. Only bids closer to floor and the last sale price of the NFT are rewarded."
         sideInfo={
@@ -321,13 +340,12 @@ const MyRewards = () => {
             </div>
           </div>
         }
-      ></RewardsSection>
+      ></RewardsSection> */}
 
       {showStakeTokensModal && (
         <StakeTokensModal
           onClose={() => {
             setShowStakeTokensModal(false);
-            mutateQuota();
           }}
         />
       )}
