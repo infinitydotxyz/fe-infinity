@@ -18,6 +18,7 @@ import { borderColor, hoverColorBrandText, secondaryBgColor } from '../ui-consta
 import { useAppContext } from './AppContext';
 import DockItem from './DockItem';
 import { DockContextType } from './types';
+import { GiJeweledChalice } from 'react-icons/gi';
 
 /**
  * <DockContext> provider.
@@ -161,6 +162,19 @@ const Dock = () => {
                       onClick={() => {
                         setSelectedProfileTab(ProfileTabs.Send);
                         router.push(`/profile/${user}`);
+                      }}
+                    />
+                  </div>
+                </HelpToolTip>
+              </DockItem>
+
+              <DockItem highlighted={router.asPath.startsWith(`/rewards`)} className={dockItemClassname}>
+                <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Rewards</div>}>
+                  <div className={itemClassname}>
+                    <GiJeweledChalice
+                      className={twMerge(iconClassname, hoverColorBrandText)}
+                      onClick={() => {
+                        router.push(`/rewards`);
                       }}
                     />
                   </div>

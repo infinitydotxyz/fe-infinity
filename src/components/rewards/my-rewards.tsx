@@ -1,18 +1,13 @@
-import { DistributionType } from '@infinityxyz/lib-frontend/types/core';
-import { UserCumulativeRewardsDto } from '@infinityxyz/lib-frontend/types/dto';
-import { round } from '@infinityxyz/lib-frontend/utils';
 import React, { useState } from 'react';
-import { Button, Spacer, toastSuccess } from 'src/components/common';
+import { CenterFixed, CenteredContent, ClipboardButton, ConnectButton, Spacer } from 'src/components/common';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens-modal';
-import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useUserRewards } from 'src/hooks/api/useUserRewards';
-import { useClaim } from 'src/hooks/contract/cm-distributor/claim';
 import { nFormatter } from 'src/utils';
-import { INFT_TOKEN } from 'src/utils/constants';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { FLOW_TOKEN } from 'src/utils/constants';
 import { bgColor, secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { useAccount } from 'wagmi';
 
 interface RewardsSectionProps {
   title: string;
@@ -23,10 +18,10 @@ interface RewardsSectionProps {
 
 const RewardsSection = (props: RewardsSectionProps) => {
   return (
-    <div className={twMerge(secondaryBgColor, 'flex-col px-10 rounded-lg w-full')}>
+    <div className={twMerge(secondaryBgColor, 'flex-col px-10 py-4 rounded-lg w-full')}>
       <div className="flex w-full">
         <div className="w-1/2">
-          <div className="text-4xl font-body font-medium">{props.title}</div>
+          <div className="text-2xl font-medium underline">{props.title}</div>
           {props.subTitle && <div className="w-1/2 mt-5">{props.subTitle}</div>}
         </div>
         {props?.sideInfo && <div className="w-1/2">{props.sideInfo}</div>}
@@ -39,31 +34,43 @@ const RewardsSection = (props: RewardsSectionProps) => {
 const MyRewards = () => {
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
-  const { result: quota, mutate: mutateQuota } = useUserCurationQuota();
+  const { address } = useAccount();
   const { result: userRewards } = useUserRewards();
-  const { claim } = useClaim();
-  const { setTxnHash } = useAppContext();
+  const numReferrals = userRewards?.totals.referrals.numReferrals ?? 0;
+  const referralReward = userRewards?.totals.referrals.referralRewardTokens ?? 0;
+  const referralRewardBoost = (userRewards?.totals.referrals.referralRewardBoost ?? 0) + 1 + 'x';
+  const referralLink = userRewards?.totals.referrals.referralLink ?? '';
+  // const { claim } = useClaim();
+  // const { setTxnHash } = useAppContext();
 
-  const onClaim = async (type: DistributionType, props?: UserCumulativeRewardsDto) => {
-    if (!props || !props.claimableWei || props.claimableWei === '0') {
-      throw new Error('Nothing to claim');
-    }
+  // const onClaim = async (type: DistributionType, props?: UserCumulativeRewardsDto) => {
+  //   if (!props || !props.claimableWei || props.claimableWei === '0') {
+  //     throw new Error('Nothing to claim');
+  //   }
 
-    const { hash } = await claim({
-      type,
-      account: props.account,
-      cumulativeAmount: props.cumulativeAmount,
-      merkleRoot: props.merkleRoot,
-      merkleProof: props.merkleProof,
-      contractAddress: props.contractAddress
-    });
-    toastSuccess('Sent txn to chain for execution');
-    setTxnHash(hash);
-  };
+  //   const { hash } = await claim({
+  //     type,
+  //     account: props.account,
+  //     cumulativeAmount: props.cumulativeAmount,
+  //     merkleRoot: props.merkleRoot,
+  //     merkleProof: props.merkleProof,
+  //     contractAddress: props.contractAddress
+  //   });
+  //   toastSuccess('Sent txn to chain for execution');
+  //   setTxnHash(hash);
+  // };
+
+  if (!address) {
+    return (
+      <CenteredContent>
+        <ConnectButton />
+      </CenteredContent>
+    );
+  }
 
   return (
-    <div className="space-y-10 mt-4">
-      <RewardsSection title="Claim">
+    <div className="space-y-10 mt-6 pb-6 mb-16">
+      {/* <RewardsSection title="Claim">
         <div className="flex flex-col md:!flex-row mt-4 w-full">
           <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg grow')}>
             <div>ETH Earned</div>
@@ -154,15 +161,14 @@ const MyRewards = () => {
             </div>
           </div>
         </div>
-      </RewardsSection>
+      </RewardsSection> */}
 
-      {/* Token Balance */}
-      <RewardsSection
+      {/* <RewardsSection
         title="Token Balance"
-        subTitle={`Stake ${INFT_TOKEN.symbol} tokens to gain curation power. The longer you lock, the more curation power you'll earn.`}
+        subTitle={`Stake ${FLOW_TOKEN.symbol} tokens to boost rewards. The more tokens you stake, higher the reward boost.`}
         sideInfo={
           <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
-            <div>${INFT_TOKEN.symbol} tokens</div>
+            <div>${FLOW_TOKEN.symbol}</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">{nFormatter(round(quota?.tokenBalance || 0, 2))}</div>
@@ -174,6 +180,11 @@ const MyRewards = () => {
                 <div className="text-sm mt-1">Staked</div>
               </div>
               <Spacer />
+              <div className="lg:w-1/4 sm:w-full">
+                <div className="text-2xl font-heading font-bold">{nFormatter(round(quota?.totalStaked || 0, 0))}</div>
+                <div className="text-sm mt-1">Stake boost</div>
+              </div>
+              <Spacer />
               <div className="lg:w-1/4 sm:w-full"></div>
               <Spacer />
             </div>
@@ -182,67 +193,119 @@ const MyRewards = () => {
                 Stake
               </Button>
 
-              <Button size="large" variant="outline" className="ml-3" onClick={() => setShowUnstakeTokensModal(true)}>
+              <Button
+                disabled
+                size="large"
+                variant="outline"
+                className="ml-3"
+                onClick={() => setShowUnstakeTokensModal(true)}
+              >
                 Unstake
               </Button>
+              <div className={twMerge(secondaryTextColor, 'ml-2 text-xs')}>
+                Unstake available at block 17778462 (roughly Aug 1 2023)
+              </div>
+            </div>
+          </div>
+        }
+      ></RewardsSection> */}
+
+      <RewardsSection
+        title="Referral Rewards"
+        subTitle={`Refer users to Flow, and earn $${FLOW_TOKEN.symbol} when users join. The more users you refer, the more you earn. 
+          Referrals will also increase your reward boost.`}
+        sideInfo={
+          <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
+            <div>Earned</div>
+            <div className="mt-2 flex items-center space-x-2">
+              <div>Referral link: </div>
+              <div className={twMerge(secondaryBgColor, 'p-2 rounded-lg')}>{referralLink}</div>
+              <ClipboardButton textToCopy={referralLink} className={'h-5 w-5'} />
+            </div>
+            <div className="flex flex-wrap mt-4">
+              <div className="lg:w-1/4 sm:w-full">
+                <div className="text-2xl font-heading font-bold">{nFormatter(referralReward)}</div>
+                <div className="text-sm mt-1">${FLOW_TOKEN.symbol}</div>
+              </div>
+              <Spacer />
+              <div className="lg:w-1/4 sm:w-full">
+                <div className="text-2xl font-heading font-bold">{nFormatter(numReferrals)}</div>
+                <div className="text-sm mt-1"># Referrals</div>
+              </div>
+              <Spacer />
+              <div className="lg:w-1/4 sm:w-full">
+                <div className="text-2xl font-heading font-bold">{referralRewardBoost}</div>
+                <div className="text-sm mt-1">Reward boost</div>
+              </div>
+              <Spacer />
+              <div className="lg:w-1/4 sm:w-full"></div>
+              <Spacer />
             </div>
           </div>
         }
       ></RewardsSection>
 
-      <RewardsSection
-        title="Curation Rewards"
-        subTitle="Earn curation rewards for voting on collections with your votes. You'll gain a portion of the transaction fees for each collection you curate."
+      <CenterFixed>
+        <div className={twMerge(secondaryBgColor, 'mt-10 p-6 rounded-lg')}>More rewards coming soon</div>
+      </CenterFixed>
+
+      {/* <RewardsSection
+        title="Bid Rewards"
+        subTitle="Earn bid rewards for placing collection and per NFT bids. Only bids closer to floor and the last sale price of the NFT are rewarded."
         sideInfo={
           <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
-            <div>Voting power</div>
+            <div>Earned</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">{nFormatter(quota?.stake?.stakePower || 0)}</div>
-                <div className="text-sm mt-1">Total</div>
+                <div className="text-sm mt-1">${FLOW_TOKEN.symbol}</div>
               </div>
               <Spacer />
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">{nFormatter(quota?.stake.totalCuratedVotes || 0)}</div>
-                <div className="text-sm mt-1">Used</div>
+                <div className="text-sm mt-1">WETH bid vol</div>
               </div>
               <Spacer />
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">{nFormatter(quota?.availableVotes ?? 0)}</div>
-                <div className="text-sm mt-1">Remaining</div>
+                <div className="text-sm mt-1"># Bids</div>
+              </div>
+              <Spacer />
+              <div className="lg:w-1/4 sm:w-full">
+                <div className="text-2xl font-heading font-bold">{nFormatter(quota?.availableVotes ?? 0)}</div>
+                <div className="text-sm mt-1">Effective boost</div>
               </div>
               <Spacer />
             </div>
           </div>
         }
       ></RewardsSection>
-
-      {/* --- Trading Rewards --- */}
 
       <RewardsSection
-        title="Trading Rewards"
-        subTitle="Earn trading rewards for buying and selling NFTs on Flow. Rewards are distributed once per week."
+        title="Buy Rewards"
+        subTitle="Earn buy rewards for every purchase you make on the platform. "
         sideInfo={
           <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
-            <div className="flex flex-wrap">
-              <div className="lg:w-1/3 sm:w-full">
-                <div className="mb-4">Volume traded</div>
-                <div className="text-2xl font-heading font-bold">
-                  {nFormatter(round(userRewards?.totals.tradingRefund.volume ?? 0, 4))}
-                </div>
-                <div className="text-sm mt-1">ETH</div>
+            <div>Earned</div>
+            <div className="flex flex-wrap mt-4">
+              <div className="lg:w-1/4 sm:w-full">
+                <div className="text-2xl font-heading font-bold">{nFormatter(quota?.stake?.stakePower || 0)}</div>
+                <div className="text-sm mt-1">${FLOW_TOKEN.symbol}</div>
               </div>
               <Spacer />
-              <div className="lg:w-1/3 sm:w-full">
-                <div className="mb-4">Buys</div>
-                <div className="text-2xl font-heading font-bold">{userRewards?.totals.tradingRefund.buys ?? 0}</div>
-                <div className="text-sm mt-1">NFTs</div>
+              <div className="lg:w-1/4 sm:w-full">
+                <div className="text-2xl font-heading font-bold">{nFormatter(quota?.stake.totalCuratedVotes || 0)}</div>
+                <div className="text-sm mt-1">WETH buy vol</div>
               </div>
               <Spacer />
-              <div className="lg:w-1/3 sm:w-full">
-                <div className="mb-4">Sells</div>
-                <div className="text-2xl font-heading font-bold">{userRewards?.totals.tradingRefund.sells ?? 0}</div>
-                <div className="text-sm mt-1">NFTs</div>
+              <div className="lg:w-1/4 sm:w-full">
+                <div className="text-2xl font-heading font-bold">{nFormatter(quota?.availableVotes ?? 0)}</div>
+                <div className="text-sm mt-1"># Buys</div>
+              </div>
+              <Spacer />
+              <div className="lg:w-1/4 sm:w-full">
+                <div className="text-2xl font-heading font-bold">{nFormatter(quota?.availableVotes ?? 0)}</div>
+                <div className="text-sm mt-1">Effective boost</div>
               </div>
               <Spacer />
             </div>
@@ -250,26 +313,30 @@ const MyRewards = () => {
         }
       ></RewardsSection>
 
-      {/* <RewardsSection
-        title="Referral Rewards"
-        subTitle="Refer users to collections or assets, and receive a portion of the sales fees if the referral results in a purchase."
+      <RewardsSection
+        title="Creator Rewards"
+        subTitle="Creators of whitelisted collections earn rewards on every purchase of the collection's NFTs on Flow."
         sideInfo={
-          <div className="py-4 px-6 rounded-lg">
-            <div className="flex flex-wrap">
-              <div className="lg:w-1/3 sm:w-full">
-                <div className="mb-4">Referrals</div>
-                <div className="text-2xl font-heading font-bold">
-                  {nFormatter(round(userRewards?.totals?.referrals?.numReferrals ?? 0, 4))}
-                </div>
-                <div className="text-sm mt-1">Total</div>
+          <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
+            <div>Earned</div>
+            <div className="flex flex-wrap mt-4">
+              <div className="lg:w-1/4 sm:w-full">
+                <div className="text-2xl font-heading font-bold">{nFormatter(quota?.stake?.stakePower || 0)}</div>
+                <div className="text-sm mt-1">${FLOW_TOKEN.symbol}</div>
               </div>
-              <div className="lg:w-1/3 sm:w-full">
-                <div className="mb-4">Referral rewards</div>
-                <div className="text-2xl font-heading font-bold">
-                  {nFormatter(round(userRewards?.totals?.referrals?.totalRewardsEth ?? 0, 4))}
-                </div>
-                <div className="text-sm mt-1">ETH</div>
+              <Spacer />
+              <div className="lg:w-1/4 sm:w-full">
+                <div className="text-2xl font-heading font-bold">{nFormatter(quota?.stake.totalCuratedVotes || 0)}</div>
+                <div className="text-sm mt-1">WETH buy vol</div>
               </div>
+              <Spacer />
+              <div className="lg:w-1/4 sm:w-full">
+                <div className="text-2xl font-heading font-bold">{nFormatter(quota?.availableVotes ?? 0)}</div>
+                <div className="text-sm mt-1"># Buys</div>
+              </div>
+              <Spacer />
+              <div className="lg:w-1/4 sm:w-full"></div>
+              <Spacer />
             </div>
           </div>
         }
@@ -279,7 +346,6 @@ const MyRewards = () => {
         <StakeTokensModal
           onClose={() => {
             setShowStakeTokensModal(false);
-            mutateQuota();
           }}
         />
       )}
