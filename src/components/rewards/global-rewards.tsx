@@ -1,8 +1,7 @@
 import { TokenomicsConfigDto } from '@infinityxyz/lib-frontend/types/dto';
-import { BouncingLogo, CenterFixed, CenteredContent, ExternalLink } from 'src/components/common';
-import { ProgressBar } from 'src/components/common/progress-bar';
+import { BouncingLogo, CenteredContent, ExternalLink } from 'src/components/common';
 import { FLOW_TOKEN, useFetch } from 'src/utils';
-import { bgColor, secondaryBgColor } from 'src/utils/ui-constants';
+import { secondaryBgColor, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 // type GRAND_RAFFLE_TYPE = `${TradingFeeDestination.Raffle}-grand`;
@@ -109,10 +108,14 @@ const GlobalRewards = ({ showCount }: Props) => {
     return <div className="flex flex-col mt-10">An error occurred while loading rewards</div>;
   }
 
-  return <CenterFixed>Soon</CenterFixed>;
+  // return <CenterFixed>Soon</CenterFixed>;
 
   return (
     <div className={twMerge('space-y-4 mt-6 pb-6 mb-16')}>
+      <div>
+        <div className="text-2xl font-medium">Season 1</div>
+        <div className={twMerge(secondaryTextColor, 'font-medium text-sm')}>Ends on Jul 31 2023</div>
+      </div>
       <div className="flex space-x-4 justify-between">
         <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
           <div className="text-2xl font-medium underline">Buy Rewards</div>
@@ -121,10 +124,10 @@ const GlobalRewards = ({ showCount }: Props) => {
             All purchases earn rewards. The more you buy, the more you earn. Rewards are distributed proportionally to
             all buyers each day.
           </div>
-          <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName={`bg-[#FA8147]`} />
+          {/* <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName={`bg-[#FA8147]`} /> */}
         </div>
 
-        <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
+        {/* <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
           <div className="text-2xl font-medium underline">Listing Rewards</div>
           <div>1M ${FLOW_TOKEN.symbol} per day.</div>
           <div>
@@ -132,7 +135,7 @@ const GlobalRewards = ({ showCount }: Props) => {
             distributed each day.
           </div>
           <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName="bg-[#7d81f6]" />
-        </div>
+        </div> */}
 
         <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
           <div className="text-2xl font-medium underline">Referral Rewards</div>
@@ -144,17 +147,17 @@ const GlobalRewards = ({ showCount }: Props) => {
             </ExternalLink>{' '}
             for details.
           </div>
-          <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName="bg-[#4899f1]" />
+          {/* <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName="bg-[#4899f1]" /> */}
         </div>
 
         <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
           <div className="text-2xl font-medium underline">Airdrop</div>
-          <div>500M ${FLOW_TOKEN.symbol} total.</div>
+          <div>800M ${FLOW_TOKEN.symbol} total.</div>
           <div>
             Airdrop is based on past trading activity. Earn it by referring 2 people to Flow or by listing 2 supported
             NFTs at or below their market price.
           </div>
-          <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName="bg-[#66d981]" />
+          {/* <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName="bg-[#66d981]" /> */}
         </div>
 
         {/* <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
