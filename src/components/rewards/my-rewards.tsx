@@ -62,7 +62,7 @@ const MyRewards = () => {
   const getStakeInfo = async () => {
     const stakeLevel = await getUserStakeLevel();
     const boost =
-      stakeLevel === 0 ? '1x' : stakeLevel === 1 ? '1.5x' : stakeLevel === 2 ? '2x' : stakeLevel === 3 ? '2.5x' : '3x';
+      stakeLevel === 0 ? '0x' : stakeLevel === 1 ? '0.5x' : stakeLevel === 2 ? '1x' : stakeLevel === 3 ? '1.5x' : '2x';
     setXflStakeBoost(boost);
 
     const xflStaked = parseFloat((await stakeBalance()) ?? '0');
