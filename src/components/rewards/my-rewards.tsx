@@ -39,7 +39,7 @@ const MyRewards = () => {
   const { result: userRewards } = useUserRewards();
   const numReferrals = userRewards?.totals.referrals.numReferrals ?? 0;
   const referralReward = userRewards?.totals.referrals.numTokens ?? 0;
-  const referralRewardBoost = (userRewards?.totals.referrals.referralRewardBoost ?? 0) + 1 + 'x';
+  const referralRewardBoost = (userRewards?.totals.referrals.referralRewardBoost ?? 0) + 'x';
   const referralLink = userRewards?.totals.referrals.referralLink ?? '';
   const airdropReward = userRewards?.totals.airdrop.cumulative ?? 0;
   const airdropClaimStatus = userRewards?.totals.airdrop.isINFT || numReferrals > 2 ? 'Earned' : 'Not earned';
