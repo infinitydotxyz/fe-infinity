@@ -69,7 +69,8 @@ const GlobalRewards = ({ showCount }: Props) => {
           <div className="text-2xl font-medium underline">Airdrop</div>
           <div>800M ${FLOW_TOKEN.symbol} total.</div>
           <div>
-            Airdrop is based on past trading activity. Earn it by referring 2 friends to Flow via your referral link.
+            Airdrop is based on past trading activity. Cumulative buy volumes more than 9000 USDC in the last 6 months
+            on OS and Blur are eligible. Earn it by referring 2 friends to Flow via your referral link.
           </div>
           {/* <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName="bg-[#66d981]" /> */}
         </div>

@@ -230,7 +230,7 @@ const MyRewards = () => {
 
       <RewardsSection
         title="Airdrop"
-        subTitle={`Airdrop is calculated based on $INFT holdings, staked $INFT, $FLUR holdings and the past 6 month buy volume on Blur and OpenSea. Earn it
+        subTitle={`Airdrop is calculated based on $INFT holdings, staked $INFT, $FLUR holdings and the past 6 month buy volume (> 9000 USDC total) on Blur and OpenSea. Earn it
         by referring 2 friends to Flow using your referral link.`}
         sideInfo={
           <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
