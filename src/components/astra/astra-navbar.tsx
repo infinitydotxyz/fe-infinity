@@ -2,7 +2,7 @@ import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { useTheme } from 'next-themes';
 import { ReactNode, useEffect, useState } from 'react';
 import { AstraCartButton } from 'src/components/astra/astra-cart-button';
-import { ConnectButton, EZImage, NextLink, Spacer } from 'src/components/common';
+import { ConnectButton, EZImage, ExternalLink, NextLink, Spacer } from 'src/components/common';
 import flowLogoDark from 'src/images/flow-logo-dark.svg';
 import flowLogoLight from 'src/images/flow-logo-light.svg';
 import { chainIdToName } from 'src/utils';
@@ -44,6 +44,10 @@ export const ANavbar = () => {
         </div>
 
         <Spacer />
+
+        <ExternalLink href="https://docs.flow.so" className="text-sm underline">
+          Docs
+        </ExternalLink>
 
         <ADropdown
           hasBorder={true}

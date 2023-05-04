@@ -1,41 +1,34 @@
 import { MaxUint256 } from '@ethersproject/constants';
-import { RadioGroup } from '@headlessui/react';
-import { StakeDuration } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
-import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
-import { useStake } from 'src/hooks/contract/staker/useStake';
+import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
 import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
-import { nFormatter } from 'src/utils';
+import { FLOW_TOKEN, nFormatter } from 'src/utils';
+import { useAccount, useBalance } from 'wagmi';
 import { BouncingLogo, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
-import { RadioButtonCard } from '../common/radio-button-card';
 
 interface Props {
   onClose: () => void;
 }
 
-const multipliers = {
-  [StakeDuration.None]: 1,
-  [StakeDuration.ThreeMonths]: 2,
-  [StakeDuration.SixMonths]: 3,
-  [StakeDuration.TwelveMonths]: 4
-};
-
-const getMultiplier = (duration: StakeDuration) => `Multiplier: ${multipliers[duration]}x`;
-
 export const StakeTokensModal = ({ onClose }: Props) => {
-  const [stakeDuration, setStakeDuration] = useState<StakeDuration>(StakeDuration.None);
   const [value, setValue] = useState('');
   const [isStaking, setIsStaking] = useState(false);
-  const { result: quota } = useUserCurationQuota();
-  const { stake } = useStake();
+  const { stake } = useStakerContract();
   const { approve } = useTokenApprove();
   const { allowance } = useTokenAllowance();
+  const { address } = useAccount();
 
-  const tokenBalance = quota?.tokenBalance || 0;
+  const xflBalanceObj = useBalance({
+    address,
+    token: FLOW_TOKEN.address as `0x${string}`,
+    watch: false,
+    cacheTime: 5_000
+  });
+  const tokenBalance = parseFloat(xflBalanceObj?.data?.formatted ?? '0');
 
   const valueAsNumber = () => {
     return parseFloat(value);
@@ -54,10 +47,10 @@ export const StakeTokensModal = ({ onClose }: Props) => {
         await approve(MaxUint256);
       }
 
-      await stake(valueAsNumber(), stakeDuration);
+      await stake(valueAsNumber());
 
       onClose();
-      toastSuccess('Stake successful, change in tokens will reflect shortly.');
+      toastSuccess('Stake successful.');
     } catch (err) {
       console.error(err);
     } finally {
@@ -76,32 +69,25 @@ export const StakeTokensModal = ({ onClose }: Props) => {
     >
       <div>
         <div className="mt-2">
-          <div>
-            <RadioGroup value={stakeDuration} onChange={setStakeDuration} className="space-y-2">
-              <RadioGroup.Label>Lock for:</RadioGroup.Label>
-              <RadioButtonCard
-                value={StakeDuration.None}
-                label="No commitment"
-                description={getMultiplier(StakeDuration.None)}
-              />
-              <RadioButtonCard
-                value={StakeDuration.ThreeMonths}
-                label="3 months"
-                description={getMultiplier(StakeDuration.ThreeMonths)}
-              />
-              <RadioButtonCard
-                value={StakeDuration.SixMonths}
-                label="6 months"
-                description={getMultiplier(StakeDuration.SixMonths)}
-              />
-              <RadioButtonCard
-                value={StakeDuration.TwelveMonths}
-                label="12 months"
-                description={getMultiplier(StakeDuration.TwelveMonths)}
-              />
-            </RadioGroup>
+          <div className="text-sm text-gray-400">Reward boost levels</div>
+          <div className="mt-4 flex flex-row gap-4">
+            <div className="flex flex-col items-center">
+              <div className="text-2xl font-bold">1.5x</div>
+              <div className="text-xs text-gray-400">10k ${FLOW_TOKEN.symbol}</div>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="text-2xl font-bold">2x</div>
+              <div className="text-xs text-gray-400">50k ${FLOW_TOKEN.symbol}</div>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="text-2xl font-bold">2.5x</div>
+              <div className="text-xs text-gray-400">100k ${FLOW_TOKEN.symbol}</div>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="text-2xl font-bold">3x</div>
+              <div className="text-xs text-gray-400">200k ${FLOW_TOKEN.symbol}</div>
+            </div>
           </div>
-
           <div className="mt-8">
             <TextInputBox
               label=""
@@ -121,28 +107,13 @@ export const StakeTokensModal = ({ onClose }: Props) => {
               placeholder="Enter amount to stake"
               isFullWidth
               renderRightIcon={() => (
-                <Button
-                  variant="gray"
-                  size="small"
-                  className="rounded-lg py-2 px-3"
-                  onClick={() => setValue(tokenBalance.toString())}
-                >
+                <Button size="small" className="rounded-lg py-2 px-3" onClick={() => setValue(tokenBalance.toString())}>
                   Max
                 </Button>
               )}
             />
           </div>
           <div className="text-right mr-2 mt-1">Balance: {nFormatter(tokenBalance)}</div>
-
-          <div className="text-lg mt-8 flex justify-between">
-            <span>Voting power</span>
-            <span>{valueAsNumber() * multipliers[stakeDuration]}</span>
-          </div>
-          {/* <hr className="my-3" />
-          <div className="text-lg font-medium flex justify-between">
-            <span>Estimated APR</span>
-            <span>20%</span>
-          </div> */}
         </div>
 
         <Button size="large" className="w-full py-3 mt-8" onClick={onStake} disabled={isStaking}>
@@ -150,9 +121,8 @@ export const StakeTokensModal = ({ onClose }: Props) => {
         </Button>
 
         {isStaking && (
-          <div className="mt-2 flex flex-row gap-2 items-center">
+          <div className="mt-2 flex items-center">
             <BouncingLogo />
-            <span>Waiting for transaction to complete...</span>
           </div>
         )}
       </div>
