@@ -1,4 +1,3 @@
-import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { useTheme } from 'next-themes';
 import { ReactNode, useEffect, useState } from 'react';
 import { AstraCartButton } from 'src/components/astra/astra-cart-button';
@@ -11,11 +10,10 @@ import { borderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { NetworkWarning } from '../common/network-warning';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
-import { ADropdown } from './astra-dropdown';
 
 export const ANavbar = () => {
-  const { selectedChain, setSelectedChain, isWalletNetworkSupported } = useAppContext();
-  const [labelVal, setLabelVal] = useState(chainIdToName(selectedChain));
+  const { selectedChain, isWalletNetworkSupported } = useAppContext();
+  const [, setLabelVal] = useState(chainIdToName(selectedChain));
   const { theme } = useTheme();
   const [logo, setLogo] = useState<ReactNode>(<EZImage src={flowLogoDark.src} className="w-28 h-9" />);
 
@@ -49,7 +47,7 @@ export const ANavbar = () => {
           Docs
         </ExternalLink>
 
-        <ADropdown
+        {/* <ADropdown
           hasBorder={true}
           alignMenuRight={true}
           label={labelVal}
@@ -75,7 +73,7 @@ export const ANavbar = () => {
               }
             }
           ]}
-        />
+        /> */}
 
         <ConnectButton />
 
