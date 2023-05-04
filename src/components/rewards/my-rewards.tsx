@@ -42,7 +42,7 @@ const MyRewards = () => {
   const referralRewardBoost = (userRewards?.totals.referrals.referralRewardBoost ?? 0) + 1 + 'x';
   const referralLink = userRewards?.totals.referrals.referralLink ?? '';
   const airdropReward = userRewards?.totals.airdrop.cumulative ?? 0;
-  const airdropClaimStatus = userRewards?.totals.airdrop.isINFT || numReferrals > 2 ? 'Earned' : 'Not earned';
+  const airdropClaimStatus = userRewards?.totals.airdrop.isINFT || numReferrals >= 2 ? 'Earned' : 'Not earned';
   const { getUserStakeLevel, stakeBalance } = useStakerContract();
   const [xflStaked, setXflStaked] = useState(0);
   const [xflStakeBoost, setXflStakeBoost] = useState('1x');
@@ -186,7 +186,7 @@ const MyRewards = () => {
                 Unstake
               </Button>
               <div className={twMerge(secondaryTextColor, 'ml-2 text-xs')}>
-                Unstake available at block 17778462 (roughly Aug 3rd 2023)
+                Unstake available on Aug 3rd 2023 00:00 UTC)
               </div>
             </div>
           </div>
@@ -241,7 +241,7 @@ const MyRewards = () => {
               </div>
               <div className="items-center flex">
                 Last date to earn:{' '}
-                <div className={twMerge(secondaryBgColor, 'ml-2 p-2 rounded-md text-sm')}>May 31 2023</div>
+                <div className={twMerge(secondaryBgColor, 'ml-2 p-2 rounded-md text-sm')}>Aug 3 2023</div>
               </div>
             </div>
             <div className="flex flex-wrap mt-4">
