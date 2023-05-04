@@ -7,7 +7,7 @@ import { useTokenContract } from './useTokenContract';
  */
 export function useTokenApprove() {
   const { contract } = useTokenContract();
-  const { address: stakerAddress } = useStakerContract();
+  const { stakerAddress } = useStakerContract();
 
   const approve = async (amount: BigNumber, spenderAddress?: string) => {
     const tx = await contract.approve(spenderAddress || stakerAddress, amount.toString());

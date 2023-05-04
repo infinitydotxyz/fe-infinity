@@ -14,7 +14,7 @@ import { useTokenContract } from './useTokenContract';
 export function useTokenAllowance(owner?: string, spender?: string) {
   const { address: user } = useAccount();
   const { contract } = useTokenContract();
-  const { address: stakerAddress } = useStakerContract();
+  const { stakerAddress } = useStakerContract();
   const [allowance, setAllowance] = useState(0);
 
   useEffect(() => {
