@@ -240,7 +240,7 @@ const MyRewards = () => {
                 <div className={twMerge(secondaryBgColor, 'ml-2 p-2 rounded-md text-sm')}>{airdropClaimStatus}</div>
               </div>
               <div className="items-center flex">
-                Last date to claim:{' '}
+                Last date to earn:{' '}
                 <div className={twMerge(secondaryBgColor, 'ml-2 p-2 rounded-md text-sm')}>May 31 2023</div>
               </div>
             </div>
