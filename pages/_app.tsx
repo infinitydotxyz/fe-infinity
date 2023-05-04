@@ -31,7 +31,7 @@ if (!isLocalhost()) {
 
 const alchemyApiKeyMainnet = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_MAINNET ?? '';
 const alchemyApiKeyGoerli = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_GOERLI ?? '';
-const supportedChains = [mainnet, goerli];
+const supportedChains = [mainnet];
 const { chains, provider } = configureChains(supportedChains, [
   jsonRpcProvider({
     rpc: (chain) => {

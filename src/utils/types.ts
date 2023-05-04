@@ -73,6 +73,13 @@ export type TokensFilter = {
   cursor?: string;
 };
 
+export interface GlobalRewards {
+  totalVolumeETH: number;
+  totalNumBuys: number;
+  last24HrsVolumeETH: number;
+  last24HrsNumBuys: number;
+}
+
 export const getSortLabel = (key?: string, defaultLabel?: string): string => {
   let result = '';
 
