@@ -9,7 +9,8 @@ import { FLOW_TOKEN } from 'src/utils/constants';
 import { GlobalRewards } from 'src/utils/types';
 import { bgColor, secondaryBgColor, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { useAccount, useBalance } from 'wagmi';
+import { useAccount, useBalance, useNetwork } from 'wagmi';
+import { UniswapModal } from '../common/uniswap-model';
 
 interface RewardsSectionProps {
   title: string;
@@ -36,6 +37,10 @@ const RewardsSection = (props: RewardsSectionProps) => {
 const MyRewards = () => {
   const NUM_DAILY_BUY_REWARDS = 9_000_000;
 
+  const { chain } = useNetwork();
+  const chainId = String(chain?.id);
+
+  const [showBuyTokensModal, setShowBuyTokensModal] = useState(false);
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
   const { address } = useAccount();
@@ -192,18 +197,16 @@ const MyRewards = () => {
               <div className="lg:w-1/4 sm:w-full"></div>
               <Spacer />
             </div>
-            <div className="w-full flex mt-4 items-center flex-wrap">
+            <div className="w-full flex mt-4 items-center flex-wrap space-x-3">
+              <Button size="large" onClick={() => setShowBuyTokensModal(true)}>
+                Buy ${FLOW_TOKEN.symbol}
+              </Button>
+
               <Button size="large" onClick={() => setShowStakeTokensModal(true)}>
                 Stake
               </Button>
 
-              <Button
-                disabled
-                size="large"
-                variant="outline"
-                className="ml-3"
-                onClick={() => setShowUnstakeTokensModal(true)}
-              >
+              <Button disabled size="large" variant="outline" onClick={() => setShowUnstakeTokensModal(true)}>
                 Unstake
               </Button>
               <div className={twMerge(secondaryTextColor, 'ml-2 text-xs')}>
@@ -296,16 +299,16 @@ const MyRewards = () => {
               <Spacer />
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">
-                  {nFormatter(buyerTotalVol || 0)} {EthSymbol}
+                  {nFormatter(platformLast24HrVol ?? 0)} {EthSymbol}
                 </div>
-                <div className="text-sm mt-1">Your total vol</div>
+                <div className="text-sm mt-1">Total vol last 24 hrs</div>
               </div>
               <Spacer />
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">
-                  {nFormatter(platformLast24HrVol ?? 0)} {EthSymbol}
+                  {nFormatter(buyerTotalVol || 0)} {EthSymbol}
                 </div>
-                <div className="text-sm mt-1">Total vol last 24 hrs</div>
+                <div className="text-sm mt-1">Your total vol</div>
               </div>
               <Spacer />
               <div className="lg:w-1/4 sm:w-full">
@@ -393,7 +396,18 @@ const MyRewards = () => {
           </div>
         }
       ></RewardsSection> */}
-
+      {showBuyTokensModal && (
+        <UniswapModal
+          onClose={() => setShowBuyTokensModal(false)}
+          title={'Buy XFL'}
+          chainId={Number(chainId)}
+          tokenAddress={FLOW_TOKEN.address}
+          tokenName={FLOW_TOKEN.name}
+          tokenDecimals={FLOW_TOKEN.decimals}
+          tokenSymbol={FLOW_TOKEN.symbol}
+          tokenLogoURI="https://pbs.twimg.com/profile_images/1640378608492371969/Vkm_Wevj_400x400.jpg"
+        />
+      )}
       {showStakeTokensModal && (
         <StakeTokensModal
           onClose={() => {
