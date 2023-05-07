@@ -296,16 +296,16 @@ const MyRewards = () => {
               <Spacer />
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">
-                  {nFormatter(buyerTotalVol || 0)} {EthSymbol}
+                  {nFormatter(platformLast24HrVol ?? 0)} {EthSymbol}
                 </div>
-                <div className="text-sm mt-1">Your total vol</div>
+                <div className="text-sm mt-1">Total vol last 24 hrs</div>
               </div>
               <Spacer />
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">
-                  {nFormatter(platformLast24HrVol ?? 0)} {EthSymbol}
+                  {nFormatter(buyerTotalVol || 0)} {EthSymbol}
                 </div>
-                <div className="text-sm mt-1">Total vol last 24 hrs</div>
+                <div className="text-sm mt-1">Your total vol</div>
               </div>
               <Spacer />
               <div className="lg:w-1/4 sm:w-full">
