@@ -318,7 +318,7 @@ const MyRewards = () => {
               <Spacer />
             </div>
 
-            <div className={twMerge('mt-5 items-center')}>
+            <div className={twMerge('mt-5 items-center space-y-2')}>
               <div className="flex items-center space-x-2">
                 <div className="text-sm">Earned rewards (last 24hrs): </div>
                 <div className={twMerge(secondaryBgColor, 'ml-2 p-2 rounded-md')}>
