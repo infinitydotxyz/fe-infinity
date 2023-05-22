@@ -14,7 +14,6 @@ import { CartContextProvider } from 'src/utils/context/CartContext';
 import { jsonRpcProvider } from '@wagmi/core/providers/jsonRpc';
 import NProgress from 'nprogress'; //nprogress module
 import '../styles/nprogress.css'; //styles of nprogress
-import { BetaProvider } from 'src/utils/context/BetaContext';
 import { WagmiConfig, configureChains, createClient, goerli, mainnet } from 'wagmi';
 NProgress.configure({ showSpinner: false });
 
@@ -76,9 +75,7 @@ const App = (props: AppProps) => {
         >
           <CartContextProvider>
             <AppContextProvider>
-              <BetaProvider>
-                <AppBody {...props} />
-              </BetaProvider>
+              <AppBody {...props} />
             </AppContextProvider>
           </CartContextProvider>
         </ConnectKitProvider>
