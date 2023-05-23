@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, CenteredContent, ClipboardButton, ConnectButton, EthSymbol, Spacer } from 'src/components/common';
+import { Button, CenteredContent, ConnectButton, EthSymbol, Spacer } from 'src/components/common';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens-modal';
 import { useUserRewards } from 'src/hooks/api/useUserRewards';
@@ -51,7 +51,7 @@ const MyRewards = () => {
   const referralReward = userRewards?.totals.referrals.numTokens ?? 0;
   const referralRewardBoostNum = userRewards?.totals.referrals.referralRewardBoost ?? 0;
   const referralRewardBoost = referralRewardBoostNum + 'x';
-  const referralLink = userRewards?.totals.referrals.referralLink ?? '';
+  // const referralLink = userRewards?.totals.referrals.referralLink ?? '';
 
   const airdropReward = userRewards?.totals.airdrop.cumulative ?? 0;
   const airdropClaimStatus = userRewards?.totals.airdrop.isINFT || numReferrals >= 2 ? 'Earned' : 'Not earned';
@@ -217,44 +217,48 @@ const MyRewards = () => {
         }
       ></RewardsSection>
 
-      <RewardsSection
-        title="Referral Rewards"
-        subTitle={`Refer users to Flow, and earn $${FLOW_TOKEN.symbol} when users join. The more users you refer, the more you earn. 
+      {referralReward > 0 && (
+        <RewardsSection
+          title="Referral Rewards"
+          subTitle={`Refer users to Flow, and earn $${FLOW_TOKEN.symbol} when users join. The more users you refer, the more you earn. 
           Referrals will also increase your reward boost.`}
-        sideInfo={
-          <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
-            <div className="mt-2 flex items-center space-x-2">
+          sideInfo={
+            <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
+              {/* <div className="mt-2 flex items-center space-x-2">
               <div>Referral link: </div>
               <div className={twMerge(secondaryBgColor, 'p-2 rounded-lg')}>{referralLink}</div>
               <ClipboardButton textToCopy={referralLink} className={'h-5 w-5'} />
+            </div> */}
+              <div className="mt-2 flex items-center space-x-2">
+                <div>Earned</div>
+              </div>
+              <div className="flex flex-wrap mt-4">
+                <div className="lg:w-1/4 sm:w-full">
+                  <div className="text-2xl font-heading font-bold">{nFormatter(referralReward)}</div>
+                  <div className="text-sm mt-1">${FLOW_TOKEN.symbol}</div>
+                </div>
+                <Spacer />
+                <div className="lg:w-1/4 sm:w-full">
+                  <div className="text-2xl font-heading font-bold">{nFormatter(numReferrals)}</div>
+                  <div className="text-sm mt-1"># Referrals</div>
+                </div>
+                <Spacer />
+                <div className="lg:w-1/4 sm:w-full">
+                  <div className="text-2xl font-heading font-bold">{referralRewardBoost}</div>
+                  <div className="text-sm mt-1">Reward boost</div>
+                </div>
+                <Spacer />
+                <div className="lg:w-1/4 sm:w-full"></div>
+                <Spacer />
+              </div>
             </div>
-            <div className="flex flex-wrap mt-4">
-              <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{nFormatter(referralReward)}</div>
-                <div className="text-sm mt-1">${FLOW_TOKEN.symbol}</div>
-              </div>
-              <Spacer />
-              <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{nFormatter(numReferrals)}</div>
-                <div className="text-sm mt-1"># Referrals</div>
-              </div>
-              <Spacer />
-              <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{referralRewardBoost}</div>
-                <div className="text-sm mt-1">Reward boost</div>
-              </div>
-              <Spacer />
-              <div className="lg:w-1/4 sm:w-full"></div>
-              <Spacer />
-            </div>
-          </div>
-        }
-      ></RewardsSection>
+          }
+        ></RewardsSection>
+      )}
 
       <RewardsSection
         title="Airdrop"
-        subTitle={`Airdrop is calculated based on $INFT holdings, staked $INFT, $FLUR holdings and the past 6 month buy volume (> 9000 USDC total) on Blur and OpenSea. Earn it
-        by referring 2 friends to Flow using your referral link.`}
+        subTitle={`Airdrop is calculated based on $INFT holdings, staked $INFT, $FLUR holdings and the past 6 month buy volume (> 9000 USDC total) on Blur and OpenSea.`}
         sideInfo={
           <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
             <div className="items-center flex mt-2 text-sm">

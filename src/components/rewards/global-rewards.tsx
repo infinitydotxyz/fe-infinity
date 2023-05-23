@@ -52,7 +52,7 @@ const GlobalRewards = ({ showCount }: Props) => {
           <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName="bg-[#7d81f6]" />
         </div> */}
 
-        <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
+        {/* <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
           <div className="text-2xl font-medium underline">Referral Rewards</div>
           <div>200M ${FLOW_TOKEN.symbol} until supply runs out.</div>
           <div>
@@ -62,7 +62,7 @@ const GlobalRewards = ({ showCount }: Props) => {
             </ExternalLink>{' '}
             for details.
           </div>
-          {/* <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName="bg-[#4899f1]" /> */}
+          <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName="bg-[#4899f1]" /> 
         </div>
 
         <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
@@ -72,8 +72,8 @@ const GlobalRewards = ({ showCount }: Props) => {
             Airdrop is based on past trading activity. Cumulative buy volumes more than 9000 USDC in the last 6 months
             on OS and Blur are eligible. Earn it by referring 2 friends to Flow via your referral link.
           </div>
-          {/* <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName="bg-[#66d981]" /> */}
-        </div>
+          <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName="bg-[#66d981]" />
+        </div> */}
 
         <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
           <div className="text-2xl font-medium underline">Creator Rewards</div>
