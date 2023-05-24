@@ -287,7 +287,7 @@ const MyRewards = () => {
 
       <RewardsSection
         title="Buy Rewards"
-        subTitle={`Earn buy rewards for every purchase you make on the platform. 
+        subTitle={`Earn buy rewards for every NFT purchase you make on the platform. 
           Every day 9M $${FLOW_TOKEN.symbol} is distributed to buyers proportional to their buy volume. Claimable on Aug 3 2023.`}
         sideInfo={
           <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
