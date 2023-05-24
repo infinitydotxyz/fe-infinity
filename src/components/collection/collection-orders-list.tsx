@@ -1,14 +1,13 @@
+import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { useCollectionOrderFetcher } from 'src/hooks/api/useOrderFetcher';
 import { CartType } from 'src/utils/context/CartContext';
 import { ERC721OrderCartItem, SORT_FILTERS, TokensFilter } from 'src/utils/types';
-import { borderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { APriceFilter } from '../astra/astra-price-filter';
 import { BouncingLogo, CenteredContent, ScrollLoader, Spacer } from '../common';
 import { StatusIcon } from '../common/status-icon';
 import { CollectionOrderListItem } from './collection-order-list-item';
-import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 
 interface Props {
   collectionAddress: string;
@@ -43,7 +42,7 @@ export const CollectionOrderList = ({ collectionAddress, collectionChainId, clas
 
   return (
     <div className={twMerge('min-h-[50vh] pb-20', className)}>
-      <div className={twMerge(borderColor, 'w-full flex py-2 px-4 border-t-[1px] space-x-2')}>
+      <div className={twMerge('w-full flex py-2 px-4 space-x-2')}>
         <Spacer />
         <div className="flex text-sm items-cente px-4">
           <StatusIcon status="pending-indefinite" label="Live" />

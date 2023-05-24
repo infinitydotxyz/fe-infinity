@@ -200,7 +200,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
         <CollectionPageHeader {...headerProps} />
 
         <div ref={setRef} className="overflow-y-auto scrollbar-hide">
-          <div>
+          {selectedTab === 'Items' && (
             <div className="flex mt-2 px-4">
               <div
                 className={twMerge(
@@ -340,67 +340,67 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 </div>
               </div>
             </div>
-            {selectedTraits.length > 0 && (
-              <div className="flex px-4 mt-2 space-x-2">
-                {selectedTraits.map((trait) => {
-                  return (
-                    <div
-                      key={trait}
-                      className={twMerge('flex items-center rounded-lg border p-2 text-sm font-medium', borderColor)}
-                    >
-                      {trait}
-                    </div>
-                  );
-                })}
+          )}
+          {selectedTraits.length > 0 && (
+            <div className="flex px-4 mt-2 space-x-2">
+              {selectedTraits.map((trait) => {
+                return (
+                  <div
+                    key={trait}
+                    className={twMerge('flex items-center rounded-lg border p-2 text-sm font-medium', borderColor)}
+                  >
+                    {trait}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          {selectedTab === 'Items' && (
+            <div className="flex flex-row">
+              <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
+                <TokenGrid
+                  collectionCreator={collectionCreator}
+                  collectionFloorPrice={floorPrice}
+                  listMode={listMode}
+                  className={twMerge(
+                    'px-4 py-4 min-h-[600px]',
+                    cartType === CartType.CollectionOffer
+                      ? 'opacity-30 duration-300 pointer-events-none'
+                      : 'duration-300'
+                  )} // this min-height is to prevent the grid from collapsing when there are no items so filter menus can still render
+                  onClick={onClickNFT}
+                  isSelectable={isNFTSelectable}
+                  isSelected={isNFTSelected}
+                  data={data}
+                  hasNextPage={hasNextPage}
+                  onFetchMore={() => fetch(true)}
+                  isError={!!error}
+                  isLoading={!!isLoading}
+                />
               </div>
-            )}
-            {selectedTab === 'Bids' && (
-              <CollectionOrderList
-                collectionAddress={collection.address}
-                collectionChainId={collection.chainId as ChainId}
-              />
-            )}
-            {selectedTab === 'Analytics' && (
-              <CollectionCharts
-                collectionAddress={collection.address}
-                collectionChainId={chainId}
-                collectionImage={collection.metadata.profileImage}
-              />
-            )}
-            {selectedTab === 'Items' && (
-              <div className="flex flex-row">
-                <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
-                  <TokenGrid
-                    collectionCreator={collectionCreator}
-                    collectionFloorPrice={floorPrice}
-                    listMode={listMode}
-                    className={twMerge(
-                      'px-4 py-4 min-h-[600px]',
-                      cartType === CartType.CollectionOffer
-                        ? 'opacity-30 duration-300 pointer-events-none'
-                        : 'duration-300'
-                    )} // this min-height is to prevent the grid from collapsing when there are no items so filter menus can still render
-                    onClick={onClickNFT}
-                    isSelectable={isNFTSelectable}
-                    isSelected={isNFTSelected}
-                    data={data}
-                    hasNextPage={hasNextPage}
-                    onFetchMore={() => fetch(true)}
-                    isError={!!error}
-                    isLoading={!!isLoading}
-                  />
-                </div>
 
-                <div className={`${showCart ? 'w-0' : 'flex w-1/3'} transition-width duration-100`}>
-                  <CollectionItemsPageSidebar
-                    collectionChainId={collection.chainId as ChainId}
-                    collectionAddress={collection.address}
-                    collectionImage={collection.metadata.profileImage}
-                  />
-                </div>
+              <div className={`${showCart ? 'w-0' : 'flex w-1/3'} transition-width duration-100`}>
+                <CollectionItemsPageSidebar
+                  collectionChainId={collection.chainId as ChainId}
+                  collectionAddress={collection.address}
+                  collectionImage={collection.metadata.profileImage}
+                />
               </div>
-            )}
-          </div>
+            </div>
+          )}
+          {selectedTab === 'Bids' && (
+            <CollectionOrderList
+              collectionAddress={collection.address}
+              collectionChainId={collection.chainId as ChainId}
+            />
+          )}
+          {selectedTab === 'Analytics' && (
+            <CollectionCharts
+              collectionAddress={collection.address}
+              collectionChainId={chainId}
+              collectionImage={collection.metadata.profileImage}
+            />
+          )}
         </div>
       </div>
     </div>
