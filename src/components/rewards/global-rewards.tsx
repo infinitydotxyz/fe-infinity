@@ -36,8 +36,8 @@ const GlobalRewards = ({ showCount }: Props) => {
           <div className="text-2xl font-medium underline">Buy Rewards</div>
           <div>9M ${FLOW_TOKEN.symbol} per day.</div>
           <div>
-            All purchases earn rewards. The more you buy, the more you earn. Rewards are distributed proportionally to
-            all buyers each day.
+            All NFT purchases earn rewards. The more you buy, the more you earn. Rewards are distributed proportionally
+            to all buyers each day.
           </div>
           {/* <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName={`bg-[#FA8147]`} /> */}
         </div>
