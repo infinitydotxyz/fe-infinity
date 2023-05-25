@@ -761,6 +761,18 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
                 }
               },
               {
+                label: ORDER_EXPIRY_TIME.SIX_MONTHS,
+                onClick: () => {
+                  onEditComplete?.(price);
+                  setExpiry(ORDER_EXPIRY_TIME.SIX_MONTHS);
+                  if (token) {
+                    token.orderExpiry = ORDER_EXPIRY_TIME.SIX_MONTHS;
+                  } else if (collection) {
+                    collection.offerExpiry = ORDER_EXPIRY_TIME.SIX_MONTHS;
+                  }
+                }
+              },
+              {
                 label: ORDER_EXPIRY_TIME.YEAR,
                 onClick: () => {
                   onEditComplete?.(price);

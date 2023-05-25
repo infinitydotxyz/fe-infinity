@@ -28,6 +28,7 @@ export enum ORDER_EXPIRY_TIME {
   DAY = '1d',
   WEEK = '7d',
   MONTH = '30d',
+  SIX_MONTHS = '6mo',
   YEAR = '1y'
 }
 
