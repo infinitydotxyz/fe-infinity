@@ -1,18 +1,21 @@
 import { getAddress } from '@ethersproject/address';
-import { BaseToken, OrdersSnippet, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
-import { BaseCollection } from '@infinityxyz/lib-frontend/types/core/Collection';
+import { Provider } from '@ethersproject/providers';
+import { BaseToken, ChainId, OrdersSnippet, OwnerInfo, TokenStandard } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, CreationFlow } from '@infinityxyz/lib-frontend/types/core/Collection';
 import {
   Env,
   ETHEREUM_CHAIN_SCANNER_BASE,
+  GOERLI_CHAIN_SCANNER_BASE,
   POLYGON_CHAIN_SCANNER_BASE,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
 import { ProfileTabs } from 'pages/profile/[address]';
 import { normalize } from 'path';
 import { ReactNode } from 'react';
-import { ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
+import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
 import { CartType } from './context/CartContext';
-import { Provider } from '@ethersproject/providers';
+import { BigNumber } from '@ethersproject/bignumber/lib/bignumber';
+import { formatUnits, parseUnits } from 'ethers/lib/utils.js';
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
 
@@ -105,7 +108,7 @@ export const getTokenCartItemKey = (data: ERC721TokenCartItem) => {
 
 // use ellipsisString for non-address numbers, this gets the checksum address
 export const ellipsisAddress = (address?: string, left = 6, right = 4) => {
-  return ellipsisString(toChecksumAddress(address), left, right);
+  return ellipsisString(address, left, right);
 };
 
 export const addressesEqual = (left?: string, right?: string): boolean => {
@@ -208,6 +211,9 @@ export const getCustomExceptionMsg = (msg: ReactNode) => {
   if (typeof msg === 'string' && msg.indexOf('rejected transaction') > 0) {
     customMsg = ''; // this is a common error message when user rejects a transaction
   }
+  if (typeof msg === 'string' && msg.indexOf('rejected signing') > 0) {
+    customMsg = ''; // this is a common error message when user rejects a transaction
+  }
   return customMsg;
 };
 
@@ -257,6 +263,8 @@ export const getChainScannerBase = (chainId: string): string | null => {
     return ETHEREUM_CHAIN_SCANNER_BASE;
   } else if (chainId === '137') {
     return POLYGON_CHAIN_SCANNER_BASE;
+  } else if (chainId === '5') {
+    return GOERLI_CHAIN_SCANNER_BASE;
   }
   return null;
 };
@@ -353,33 +361,52 @@ export const infinityExchangeCustomError = (err: string) => {
   }
 };
 
+export function getFeesAtTarget(currentBaseFee: BigNumber, blocksInFuture: number) {
+  const MAX_SINGLE_BLOCK_INCREASE = 1.125;
+  const MAX_SINGLE_BLOCK_DECREASE = 0.875;
+  const maxIncreaseAtTarget = Math.ceil(MAX_SINGLE_BLOCK_INCREASE ** blocksInFuture * 1000);
+  const maxDecreaseAtTarget = Math.floor(MAX_SINGLE_BLOCK_DECREASE ** blocksInFuture * 1000);
+
+  const maxBaseFee = currentBaseFee.mul(maxIncreaseAtTarget).div(1000);
+  const minBaseFee = currentBaseFee.mul(maxDecreaseAtTarget).div(1000);
+
+  return {
+    maxBaseFeeWei: maxBaseFee.toString(),
+    minBaseFeeWei: minBaseFee.toString(),
+    maxBaseFeeGwei: formatUnits(maxBaseFee, 'gwei'),
+    minBaseFeeGwei: formatUnits(minBaseFee, 'gwei')
+  };
+}
+
 export const getEstimatedGasPrice = async (provider: Provider | undefined): Promise<string | undefined> => {
   if (!provider) {
     return undefined;
   }
   const price = await provider.getGasPrice();
-  const priceEstimate = price.mul(3);
+  const result = getFeesAtTarget(price, 4);
+  const priorityFee = parseUnits('3', 'gwei');
+  const priceEstimate = BigNumber.from(result.maxBaseFeeWei).add(priorityFee);
   return priceEstimate.toString();
 };
 
 export const getDefaultOrderExpiryTime = (): ORDER_EXPIRY_TIME => {
-  return ORDER_EXPIRY_TIME.WEEK;
+  return ORDER_EXPIRY_TIME.MONTH;
 };
 
-export const getOrderExpiryTimeInMsFromEnum = (expiry: ORDER_EXPIRY_TIME): number => {
+export const getOrderExpiryTimeInMsFromEnum = (startTimeMs: number, expiry: ORDER_EXPIRY_TIME): number => {
   switch (expiry) {
     case ORDER_EXPIRY_TIME.HOUR:
-      return Date.now() + 60 * 60 * 1000;
+      return startTimeMs + 60 * 60 * 1000;
     case ORDER_EXPIRY_TIME.DAY:
-      return Date.now() + 24 * 60 * 60 * 1000;
+      return startTimeMs + 24 * 60 * 60 * 1000;
     case ORDER_EXPIRY_TIME.WEEK:
-      return Date.now() + 7 * 24 * 60 * 60 * 1000;
+      return startTimeMs + 7 * 24 * 60 * 60 * 1000;
     case ORDER_EXPIRY_TIME.MONTH:
-      return Date.now() + 30 * 24 * 60 * 60 * 1000;
+      return startTimeMs + 30 * 24 * 60 * 60 * 1000;
     case ORDER_EXPIRY_TIME.YEAR:
-      return Date.now() + 365 * 24 * 60 * 60 * 1000;
+      return startTimeMs + 365 * 24 * 60 * 60 * 1000;
     default:
-      return Date.now() + 7 * 24 * 60 * 60 * 1000;
+      return startTimeMs + 7 * 24 * 60 * 60 * 1000;
   }
 };
 
@@ -419,8 +446,8 @@ export const erc721OrderCartItemToTokenCartItem = (order: ERC721OrderCartItem): 
   }
 
   const result: ERC721TokenCartItem = {
-    id: collInfo.chainId + ':' + collInfo.collectionAddress + '_' + item.tokenId,
-    name: item.tokenName ?? '',
+    id: collInfo.chainId + ':' + collInfo.collectionAddress + ':' + item?.tokenId ?? '',
+    name: item?.tokenName ?? '',
     title: collInfo.collectionName ?? '',
     collectionName: collInfo.collectionName ?? '',
     collectionSlug: collInfo.collectionSlug ?? '',
@@ -432,7 +459,7 @@ export const erc721OrderCartItemToTokenCartItem = (order: ERC721OrderCartItem): 
     chainId: collInfo.chainId,
     tokenAddress: collInfo.collectionAddress ?? '',
     address: collInfo.collectionAddress ?? '',
-    tokenId: item.tokenId,
+    tokenId: item?.tokenId ?? '',
     rarityRank: 0,
     orderSnippet,
     hasBlueCheck: collInfo.hasBlueCheck ?? false,
@@ -441,6 +468,65 @@ export const erc721OrderCartItemToTokenCartItem = (order: ERC721OrderCartItem): 
   };
 
   return result;
+};
+
+export const erc721OrderCartItemToCollectionCartItem = (order: ERC721OrderCartItem): ERC721CollectionCartItem => {
+  // this function assumes single item orders only not m of n types
+  const collInfo = order.nfts[0];
+
+  const result: ERC721CollectionCartItem = {
+    chainId: collInfo.chainId,
+    address: collInfo.collectionAddress ?? '',
+    hasBlueCheck: collInfo.hasBlueCheck ?? false,
+    cartType: CartType.CollectionOffer,
+    tokenStandard: TokenStandard.ERC721,
+    offerPriceEth: order.startPriceEth,
+    deployer: '',
+    deployedAt: 0,
+    deployedAtBlock: 0,
+    owner: '',
+    numOwnersUpdatedAt: 0,
+    metadata: {
+      name: collInfo.collectionName ?? '',
+      description: '',
+      profileImage: collInfo.collectionImage ?? '',
+      bannerImage: '',
+      symbol: '',
+      links: {
+        timestamp: 0
+      }
+    },
+    slug: collInfo.collectionSlug ?? '',
+    numNfts: 0,
+    numTraitTypes: 0,
+    indexInitiator: '',
+    state: {
+      version: 0,
+      create: {
+        step: CreationFlow.Complete,
+        updatedAt: 0,
+        error: undefined,
+        progress: 0,
+        zoraCursor: undefined,
+        reservoirCursor: undefined
+      },
+      export: {
+        done: false
+      }
+    }
+  };
+
+  return result;
+};
+
+export const chainIdToName = (chainId: ChainId) => {
+  return chainId === ChainId.Mainnet
+    ? 'Ethereum (beta)'
+    : chainId === ChainId.Goerli
+    ? 'Goerli'
+    : chainId === ChainId.Polygon
+    ? 'Polygon'
+    : 'Unknown';
 };
 
 export const ENV: Env = (process.env.NEXT_PUBLIC_ENV as Env | undefined | '') || Env.Prod;

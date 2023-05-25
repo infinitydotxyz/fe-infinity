@@ -21,7 +21,7 @@ export * from 'src/components/common/toggle-tab';
 export * from 'src/components/common/svg';
 export * from 'src/components/common/toaster';
 export * from 'src/components/common/heading';
-export * from 'src/components/common/spinner';
+export * from 'src/components/common/loaders';
 export * from 'src/components/common/modal';
 export * from 'src/components/common/simple-table';
 export * from 'src/components/common/header';

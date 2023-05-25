@@ -1,3 +1,4 @@
+import { Switch } from '@headlessui/react';
 import React, { ReactNode } from 'react';
 import { BsGrid, BsList } from 'react-icons/bs';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -6,7 +7,8 @@ import {
   hoverColor,
   borderColor,
   primaryBtnWithBgColorTextTransition,
-  textColor
+  textColor,
+  brandBorderColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
@@ -223,6 +225,35 @@ export const AToggleButton = ({ children, onClick }: Props4) => {
     >
       {children}
     </AButton>
+  );
+};
+
+interface Props5 {
+  checked: boolean;
+  onChange: () => void;
+}
+
+export const ASwitchButton = ({ checked, onChange }: Props5) => {
+  return (
+    <Switch
+      checked={checked}
+      onChange={onChange}
+      className={twMerge(
+        'border-[1px] relative inline-flex h-[24px] w-[50px] shrink-0 cursor-pointer rounded-full \
+             transition-colors duration-100 ease-in-out',
+        brandBorderColor,
+        checked ? 'bg-brand-primary' : ''
+      )}
+    >
+      <span className="sr-only">Use setting</span>
+      <span
+        className={twMerge(
+          'dark:bg-gray-200 bg-gray-300',
+          checked ? 'translate-x-[25px] bg-white' : 'translate-x-1',
+          'mt-[1px] h-[20px] w-[20px] rounded-full'
+        )}
+      />
+    </Switch>
   );
 };
 

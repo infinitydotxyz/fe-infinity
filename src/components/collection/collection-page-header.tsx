@@ -1,8 +1,9 @@
 import { BaseCollection, ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
-import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
+import { FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { BlueCheck, ClipboardButton, EthSymbol, EZImage, ReadMoreText, Spacer } from 'src/components/common';
+import { useMatchingEngineCollection } from 'src/hooks/api/useMatchingEngineCollection';
 import etherscanLogo from 'src/images/etherscan-logo.png';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
 import {
@@ -15,8 +16,8 @@ import {
   smallIconButtonStyle
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { useNetwork } from 'wagmi';
 import { AOutlineButton } from '../astra/astra-button';
+import { MatchingEngineStatusIcon, StatusIcon } from '../common/status-icon';
 
 export interface CollectionPageHeaderProps {
   expanded: boolean;
@@ -31,9 +32,7 @@ export interface CollectionPageHeaderProps {
   floorPrice: string | number | null | undefined;
   numOwners: string | number | null | undefined;
   numNfts: string | number | null | undefined;
-  twitterFollowersPercentChange: string | number | null | undefined;
   twitterFollowers: string | number | null | undefined;
-  discordFollowersPercentChange: string | number | null | undefined;
   discordFollowers: string | number | null | undefined;
   tabs: string[];
   onTabChange: (tab: string) => void;
@@ -50,23 +49,22 @@ export const CollectionPageHeader = ({
   floorPrice,
   numOwners,
   numNfts,
-  twitterFollowersPercentChange,
   twitterFollowers,
-  discordFollowersPercentChange,
   discordFollowers,
   tabs,
   onTabChange
 }: CollectionPageHeaderProps) => {
-  const { chain } = useNetwork();
-  const chainId = String(chain?.id ?? 1) as ChainId;
-
-  const twitterChangePct = `${Math.abs(Number(twitterFollowersPercentChange ?? 0))}`.slice(0, 5);
-  const discordChangePct = `${Math.abs(Number(discordFollowersPercentChange ?? 0))}`.slice(0, 5);
-
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
+  const chainId = (collection?.chainId ?? '1') as ChainId;
+
+  const { result: matchingEngineStatus, isInitialLoadComplete } = useMatchingEngineCollection(
+    collection?.address ?? '',
+    chainId
+  );
+
   return (
-    <div className={twMerge(borderColor, secondaryBgColor, 'border-b px-8')}>
+    <div className={twMerge(borderColor, secondaryBgColor, 'border-b px-6')}>
       {expanded && (
         <div className="flex flex-col space-y-3">
           <div className="flex w-full items-center mt-2">
@@ -88,7 +86,7 @@ export const CollectionPageHeader = ({
 
               <Spacer />
 
-              {collection?.metadata?.links?.external && (
+              {collection?.metadata?.links?.external ? (
                 <>
                   <AOutlineButton
                     className={hoverColor}
@@ -100,7 +98,7 @@ export const CollectionPageHeader = ({
                     </span>
                   </AOutlineButton>
                 </>
-              )}
+              ) : null}
 
               <AOutlineButton
                 className={hoverColor}
@@ -112,7 +110,7 @@ export const CollectionPageHeader = ({
                 </span>
               </AOutlineButton>
 
-              {collection?.metadata?.links?.twitter && (
+              {collection?.metadata?.links?.twitter ? (
                 <AOutlineButton
                   className={hoverColor}
                   onClick={() => window.open(collection?.metadata?.links?.twitter)}
@@ -122,26 +120,11 @@ export const CollectionPageHeader = ({
                       <FaTwitter className="text-brand-twitter" />
                     </div>
                     {twitterFollowers ?? ''}
-                    {twitterFollowersPercentChange && parseFloat(twitterChangePct) ? (
-                      <>
-                        {(twitterFollowersPercentChange ?? 0) < 0 ? (
-                          <span className="ml-2 py-1 px-2 rounded-lg bg-red-500 text-dark-body dark:bg-red-500 dark:text-dark-body text-xs flex items-center">
-                            <FaCaretDown className="mr-1" /> {twitterChangePct}%
-                          </span>
-                        ) : (
-                          <span className="ml-2 py-1 px-2 rounded-lg bg-green-500 text-dark-body dark:bg-green-500 dark:text-dark-body text-xs flex items-center">
-                            <FaCaretUp className="mr-1" /> {twitterChangePct}%
-                          </span>
-                        )}
-                      </>
-                    ) : (
-                      ''
-                    )}
                   </span>
                 </AOutlineButton>
-              )}
+              ) : null}
 
-              {collection?.metadata?.links?.discord && (
+              {collection?.metadata?.links?.discord ? (
                 <AOutlineButton
                   className={hoverColor}
                   onClick={() => window.open(collection?.metadata?.links?.discord)}
@@ -151,43 +134,63 @@ export const CollectionPageHeader = ({
                       <FaDiscord className="text-brand-discord" />
                     </div>
                     {discordFollowers ?? ''}
-                    {discordFollowersPercentChange && parseFloat(discordChangePct) ? (
-                      <>
-                        {(discordFollowersPercentChange ?? 0) < 0 ? (
-                          <span className="ml-2 py-1 px-2 rounded-lg bg-red-500 text-dark-body dark:bg-red-500 dark:text-dark-body text-xs flex items-center">
-                            <FaCaretDown className="mr-1" /> {discordChangePct}%
-                          </span>
-                        ) : (
-                          <span className="ml-2 py-1 px-2 rounded-lg bg-green-500 text-dark-body dark:bg-green-500 dark:text-dark-body text-xs flex items-center">
-                            <FaCaretUp className="mr-1" /> {discordChangePct}%
-                          </span>
-                        )}
-                      </>
-                    ) : (
-                      ''
-                    )}
                   </span>
                 </AOutlineButton>
-              )}
+              ) : null}
 
-              {collection?.metadata?.links?.instagram && (
+              {collection?.metadata?.links?.instagram ? (
                 <AOutlineButton
                   className={hoverColor}
                   onClick={() => window.open(collection?.metadata?.links?.instagram)}
                 >
                   <FaInstagram className="text-xl" />
                 </AOutlineButton>
-              )}
+              ) : null}
             </div>
           </div>
 
-          {description && (
+          {description ? (
             <div className="max-w-5xl text-sm">
               <ReadMoreText text={description} min={30} ideal={60} max={100} />
             </div>
-          )}
+          ) : null}
         </div>
       )}
+
+      <div className="flex mt-4">
+        <div className="flex text-sm items-center">
+          <div className="flex pr-4 gap-2 whitespace-nowrap font-medium">
+            <span className={secondaryTextColor}>Matching Engine </span>
+            <span className="">
+              {!isInitialLoadComplete ? (
+                <StatusIcon status="pending-indefinite" label="Loading..." />
+              ) : (
+                <MatchingEngineStatusIcon matchingEngineStatus={matchingEngineStatus} component="matchingEngine" />
+              )}
+            </span>
+          </div>
+          <div className="flex pr-4 gap-2 whitespace-nowrap font-medium">
+            <span className={secondaryTextColor}>Order Relay </span>
+            <span className="">
+              {!isInitialLoadComplete ? (
+                <StatusIcon status="pending-indefinite" label="Loading..." />
+              ) : (
+                <MatchingEngineStatusIcon matchingEngineStatus={matchingEngineStatus} component="orderRelay" />
+              )}
+            </span>
+          </div>
+          <div className="flex pr-4 gap-2 whitespace-nowrap font-medium">
+            <span className={secondaryTextColor}>Execution Engine </span>
+            <span className="">
+              {!isInitialLoadComplete ? (
+                <StatusIcon status="pending-indefinite" label="Loading..." />
+              ) : (
+                <MatchingEngineStatusIcon matchingEngineStatus={matchingEngineStatus} component="executionEngine" />
+              )}
+            </span>
+          </div>
+        </div>
+      </div>
 
       <div className="flex mt-4 text-sm">
         <div className="flex space-x-5">

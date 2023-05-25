@@ -31,7 +31,6 @@ interface ATraitProps {
 }
 
 export const ATrait: FC<ATraitProps> = ({ trait, description }) => {
-  // TODO: improve style to look more like gem's?
   return (
     <div className={twMerge(borderColor, 'border rounded-lg flex flex-col py-1')}>
       <div className="text-center text-xs break-words">{trait.trait_type}</div>
@@ -48,7 +47,7 @@ export const ATraitList: FC<ATraitListProps> = ({ traits, className = 'mt-6', co
   return (
     <div className={className}>
       <p className="text-lg font-bold font-heading mb-1">Traits</p>
-      <div className="space-y-2 max-h-80 overflow-auto pr-1.5">
+      <div className="space-y-2 max-h-[365px] overflow-auto scrollbar-hide">
         {traits?.map((trait: Erc721Attribute, idx) => (
           <ATrait
             key={idx + '_' + trait.trait_type}

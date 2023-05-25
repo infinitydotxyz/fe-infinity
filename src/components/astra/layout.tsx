@@ -5,7 +5,8 @@ import { Grid } from 'src/components/astra/grid';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { toastError } from '../common';
 import { ANavbar } from './astra-navbar';
-import { SidebarNav } from './sidebar-nav';
+import NonSsrWrapper from './non-ssr-wrapper';
+import Dock from 'src/utils/context/Dock';
 
 interface Props {
   children: ReactNode;
@@ -25,7 +26,8 @@ export const Layout = ({ children }: Props) => {
     removeCollFromSelection,
     orderSelection,
     clearOrderSelection,
-    removeOrderFromSelection
+    removeOrderFromSelection,
+    setIsCheckingOut
   } = useAppContext();
 
   const gridRef = useRef<HTMLDivElement>(null);
@@ -33,50 +35,61 @@ export const Layout = ({ children }: Props) => {
   const { ref: containerRef } = useResizeDetector();
 
   const cart = (
-    <AstraCart
-      onCheckout={async () => {
-        try {
-          if (nftSelection.length > 0) {
-            const result = await handleTokenCheckout(nftSelection);
-            result && clearNFTSelection();
-          } else if (collSelection.length > 0) {
-            const result = await handleCollCheckout(collSelection);
-            result && clearCollSelection();
-          } else if (orderSelection.length > 0) {
-            const result = await handleOrdersCancel(orderSelection);
-            result && clearOrderSelection();
+    <NonSsrWrapper>
+      <AstraCart
+        onCheckout={async () => {
+          try {
+            if (nftSelection.length > 0) {
+              const result = await handleTokenCheckout(nftSelection);
+              result && clearNFTSelection();
+            } else if (collSelection.length > 0) {
+              const result = await handleCollCheckout(collSelection);
+              result && clearCollSelection();
+            } else if (orderSelection.length > 0) {
+              const result = await handleOrdersCancel(orderSelection);
+              result && clearOrderSelection();
+            }
+
+            setIsCheckingOut(false);
+          } catch (e) {
+            console.error(e);
+            toastError(String(e));
           }
-        } catch (e) {
-          console.error(e);
-          toastError(String(e));
-        }
-      }}
-      onTokenSend={async (value) => {
-        const result = await handleTokenSend(nftSelection, value);
-        result && clearNFTSelection();
-      }}
-      onTokenRemove={(value) => {
-        removeNFTFromSelection(value);
-      }}
-      onCollRemove={(value) => {
-        removeCollFromSelection(value);
-      }}
-      onOrderRemove={(value) => {
-        removeOrderFromSelection(value);
-      }}
-      onTokensClear={() => {
-        clearNFTSelection();
-      }}
-      onCollsClear={() => {
-        clearCollSelection();
-      }}
-      onOrdersClear={() => {
-        clearOrderSelection();
-      }}
-    />
+        }}
+        onTokenSend={async (value) => {
+          const result = await handleTokenSend(nftSelection, value);
+          result && clearNFTSelection();
+          setIsCheckingOut(false);
+        }}
+        onTokenRemove={(value) => {
+          removeNFTFromSelection(value);
+        }}
+        onCollRemove={(value) => {
+          removeCollFromSelection(value);
+        }}
+        onOrderRemove={(value) => {
+          removeOrderFromSelection(value);
+        }}
+        onTokensClear={() => {
+          clearNFTSelection();
+        }}
+        onCollsClear={() => {
+          clearCollSelection();
+        }}
+        onOrdersClear={() => {
+          clearOrderSelection();
+        }}
+      />
+    </NonSsrWrapper>
+  );
+
+  const dock = (
+    <NonSsrWrapper>
+      <Dock />
+    </NonSsrWrapper>
   );
 
   const footer = <></>;
 
-  return Grid(<ANavbar />, <SidebarNav />, <>{children}</>, cart, footer, gridRef, containerRef);
+  return Grid(<ANavbar />, <>{children}</>, cart, footer, dock, gridRef, containerRef);
 };

@@ -1,4 +1,4 @@
-import { ERC721CardData, Erc721Collection, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ERC721CardData, Erc721Collection, ExecutionStatus, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { CartType } from './context/CartContext';
 
 export enum OrderBy {
@@ -41,10 +41,14 @@ export interface ERC721TokenCartItem extends ERC721CardData {
   orderPriceEth?: number;
   orderExpiry?: ORDER_EXPIRY_TIME;
   cartType: CartType;
+  lastSalePriceEth?: string | number | null | undefined;
+  lastSaleTimestamp?: number;
+  mintPriceEth?: string | number | null | undefined;
 }
 
 export interface ERC721OrderCartItem extends SignedOBOrder {
-  cartType: CartType.Cancel;
+  cartType: CartType.Cancel | CartType.CollectionOffer | CartType.TokenOffer;
+  executionStatus: ExecutionStatus | null;
 }
 
 export interface BasicTokenInfo {
@@ -52,6 +56,9 @@ export interface BasicTokenInfo {
   collectionAddress: string;
   tokenId: string;
   collectionFloorPrice?: string | number | null | undefined;
+  collectionCreator?: string;
+  lastSalePriceEth?: string | number | null | undefined;
+  mintPriceEth?: string | number | null | undefined;
 }
 
 export type TokensFilter = {
@@ -65,6 +72,13 @@ export type TokensFilter = {
   orderBy?: string;
   cursor?: string;
 };
+
+export interface GlobalRewards {
+  totalVolumeETH: number;
+  totalNumBuys: number;
+  last24HrsVolumeETH: number;
+  last24HrsNumBuys: number;
+}
 
 export const getSortLabel = (key?: string, defaultLabel?: string): string => {
   let result = '';

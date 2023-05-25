@@ -1,4 +1,4 @@
-import { CenterFixed, Spinner } from 'src/components/common';
+import { CenterFixed, BouncingLogo } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 
 interface Props2 {
@@ -16,7 +16,7 @@ export const ErrorOrLoading = ({ error, noData, message = 'No Data' }: Props2) =
     if (noData) {
       contents = <div className="text-sm">{message}</div>;
     } else {
-      contents = <Spinner />;
+      contents = <BouncingLogo />;
     }
   }
 

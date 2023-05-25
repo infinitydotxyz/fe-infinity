@@ -1,9 +1,17 @@
-import { Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
+import { Collection, CollectionPeriodStatsContent, StatsPeriod } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { AButton } from 'src/components/astra/astra-button';
 import { APageBox } from 'src/components/astra/astra-page-box';
-import { BlueCheckInline, CenterFixed, EthPrice, EZImage, NextLink, Spinner, ToggleTab } from 'src/components/common';
+import {
+  BlueCheckInline,
+  BouncingLogo,
+  CenterFixed,
+  EthPrice,
+  EZImage,
+  NextLink,
+  ToggleTab
+} from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { apiGet, formatNumber, getCollectionKeyId, nFormatter } from 'src/utils';
@@ -15,20 +23,23 @@ import { twMerge } from 'tailwind-merge';
 const TrendingPage = () => {
   const queryBy = 'by_sales_volume';
   const [data, setData] = useState<Collection[]>([]);
-  const [period, setPeriod] = useState('daily');
+  const [period, setPeriod] = useState(StatsPeriod.Daily);
   const [isLoading, setIsLoading] = useState(false);
   const isMounted = useIsMounted();
   const { isCollSelected, isCollSelectable, toggleCollSelection } = useAppContext();
-  const options = ['1 day', '7 days', '30 days'];
+  const options = ['1 day', '7 days', '30 days', 'All Time'];
   const DEFAULT_TAB = '1 day';
+  const { selectedChain } = useAppContext();
 
   const fetchData = async (refresh = false) => {
+    const chainId = selectedChain;
     setIsLoading(true);
     if (refresh) {
       setData([]);
     }
     const { result } = await apiGet('/collections/stats', {
       query: {
+        chainId,
         period,
         queryBy: queryBy
       }
@@ -50,18 +61,21 @@ const TrendingPage = () => {
 
   useEffect(() => {
     fetchData(true);
-  }, [period]);
+  }, [period, selectedChain]);
 
   const onChangeToggleTab = (value: string) => {
     switch (value) {
       case '1 day':
-        setPeriod('daily');
+        setPeriod(StatsPeriod.Daily);
         break;
       case '7 days':
-        setPeriod('weekly');
+        setPeriod(StatsPeriod.Weekly);
         break;
       case '30 days':
-        setPeriod('monthly');
+        setPeriod(StatsPeriod.Monthly);
+        break;
+      case 'All Time':
+        setPeriod(StatsPeriod.All);
         break;
     }
   };
@@ -76,7 +90,7 @@ const TrendingPage = () => {
           onChange={onChangeToggleTab}
         />
 
-        <div className="space-y-3 mt-8">
+        <div className="space-y-3 mt-8 pb-20">
           {data.map((coll, index) => {
             return (
               <TrendingPageCard
@@ -98,7 +112,7 @@ const TrendingPage = () => {
 
         {isLoading && (
           <CenterFixed>
-            <Spinner />
+            <BouncingLogo />
           </CenterFixed>
         )}
       </div>
@@ -112,7 +126,7 @@ export default TrendingPage;
 
 interface Props {
   collection: Collection;
-  period: string;
+  period: StatsPeriod;
   index: number;
   onClickBuy: (data: ERC721CollectionCartItem) => void;
   isCollSelected: (data: ERC721CollectionCartItem) => boolean;
@@ -123,20 +137,24 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
   const { isDesktop } = useScreenSize();
 
   let periodStat: CollectionPeriodStatsContent | undefined = undefined;
-  if (period === 'daily') {
+  if (period === StatsPeriod.Daily) {
     periodStat = collection?.stats?.daily;
-  } else if (period === 'weekly') {
+  } else if (period === StatsPeriod.Weekly) {
     periodStat = collection?.stats?.weekly;
-  } else if (period === 'monthly') {
+  } else if (period === StatsPeriod.Monthly) {
     periodStat = collection?.stats?.monthly;
+  } else if (period === StatsPeriod.All) {
+    periodStat = collection?.stats?.all;
   }
   const floorPrice = periodStat?.floorPrice ?? 0;
+  const floorPriceChange = Number(nFormatter(periodStat?.floorPriceChange));
+  const salesVolumeChange = Number(nFormatter(periodStat?.salesVolumeChange));
 
   return (
     <div className={twMerge(borderColor, 'border-b py-4 flex items-center')}>
       <div
         className="grid gap-2 justify-between items-center w-full"
-        style={{ gridTemplateColumns: 'minmax(0, 4fr) repeat(auto-fit, minmax(0, 1fr))' }}
+        style={{ gridTemplateColumns: 'minmax(0, 3fr) repeat(auto-fit, minmax(0, 1fr))' }}
       >
         <div className="flex items-center font-bold font-heading">
           <div className="text-lg mr-8 text-right">{index + 1}</div>
@@ -151,49 +169,33 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
           </NextLink>
         </div>
 
-        {isDesktop ? (
-          <>
-            <div className="">
-              <div className="text-sm font-bold flex items-center">Sales</div>
-              <div>{formatNumber(periodStat?.numSales)}</div>
-            </div>
-          </>
-        ) : null}
+        <div className="space-y-1">
+          <div className="text-sm font-bold flex items-center">Vol</div>
+          <EthPrice label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`} />
+        </div>
 
-        <div className="">
-          <div className="text-sm font-bold flex items-center">Volume</div>
-          <div>
-            <EthPrice label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`} />
+        <div className="space-y-1">
+          <div className="text-sm font-bold flex items-center">Vol Change</div>
+          <div className={twMerge('ml-2 text-xs', salesVolumeChange >= 0 ? 'text-green-600' : 'text-red-600')}>
+            {salesVolumeChange} %
           </div>
         </div>
 
-        <div className="">
-          <div className="text-sm font-bold flex items-center">Floor Price</div>
-          <div>
-            <EthPrice
-              label={
-                floorPrice > 0
-                  ? formatNumber(floorPrice, 2)
-                  : periodStat?.minPrice
-                  ? formatNumber(periodStat?.minPrice, 2)
-                  : '-'
-              }
-            />
-          </div>
+        <div className="space-y-1">
+          <div className="text-sm font-bold flex items-center">Floor</div>
+          <EthPrice label={floorPrice > 0 ? formatNumber(floorPrice, 2) : '-'} />
+        </div>
+
+        <div className="space-y-1 text-sm">
+          <div className="font-bold flex items-center">Floor Change</div>
+          <div className={twMerge(floorPriceChange >= 0 ? 'text-green-600' : 'text-red-600')}>{floorPriceChange} %</div>
         </div>
 
         {isDesktop ? (
-          <>
-            <div className="">
-              <div className="text-sm font-bold ">Owners</div>
-              <div>{nFormatter(periodStat?.ownerCount ?? 0)}</div>
-            </div>
-
-            <div className="">
-              <div className=" text-sm font-bold ">Tokens</div>
-              <div>{nFormatter(periodStat?.tokenCount ?? 0)}</div>
-            </div>
-          </>
+          <div className="space-y-1">
+            <div className=" text-sm font-bold ">Tokens</div>
+            <div>{nFormatter(periodStat?.tokenCount ?? 0)}</div>
+          </div>
         ) : null}
 
         <div className="flex gap-2">

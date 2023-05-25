@@ -19,37 +19,32 @@ interface Props {
   filter: TokensFilter;
   setFilter: (filter: TokensFilter) => void;
   typeValueMap: TypeValueMap;
-  setTypeValueMap: (typeValueMap: TypeValueMap) => void;
   selectedTraitType: string;
 }
 
-export function CollectionTraitsDisclosure({
-  traits,
-  filter,
-  setFilter,
-  typeValueMap,
-  setTypeValueMap,
-  selectedTraitType
-}: Props) {
+export function CollectionTraitsDisclosure({ traits, filter, setFilter, typeValueMap, selectedTraitType }: Props) {
   const [disclosureData, setDisclosureData] = useState<DisclosureData[]>([]);
 
   const getDisclosureContent = (traitType: string) => {
     return (
       <div className="flex flex-col">
-        {Object.entries(traits[traitType].values)?.map((val) => {
+        {Object.entries(traits?.[traitType]?.values)?.map((val) => {
           const traitValue = val[0];
           const traitValueData = val[1];
+          const isChecked = typeValueMap[traitType]?.[traitValue];
           return (
-            <div className={twMerge('flex border-b-[1px] py-2', borderColor)} key={`${traitType}.${traitValue}`}>
+            <div
+              className={twMerge('flex border-b-[1px] py-2', borderColor)}
+              key={`${traitType}.${traitValue}.${isChecked}`}
+            >
               <Checkbox
-                checked={typeValueMap[traitType]?.[traitValue]}
+                checked={isChecked}
                 onChange={(checked) => {
                   const map = { ...typeValueMap };
                   if (!map[traitType]) {
                     map[traitType] = {};
                   }
                   map[traitType][traitValue] = checked;
-                  setTypeValueMap(map);
 
                   const traitTypes = [];
                   const traitValues = [];
@@ -106,7 +101,7 @@ export function CollectionTraitsDisclosure({
 
   useEffect(() => {
     setDisclosureData(Array.from(getDisclosureData().values()));
-  }, [selectedTraitType]);
+  }, [selectedTraitType, typeValueMap]);
 
   return <ADisclosure data={disclosureData} />;
 }

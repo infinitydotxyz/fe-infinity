@@ -25,12 +25,19 @@ export const secondsPerDay = 86400;
 export const weekSeconds = secondsPerDay * 7;
 export const thirtyDaySeconds = secondsPerDay * 30;
 
+export const saleDataPointColor = '#FA8147';
+export const hoveredDataPointColor = '#66d981';
+export const listingDataPointColor = '#4899f1';
+export const bidDataPointColor = '#7d81f6';
+
 // these include both dark and light
 export const bgColor = 'dark:bg-dark-bg bg-light-bg';
 export const inverseBgColor = 'dark:bg-light-bg bg-dark-bg';
 export const secondaryBgColor = 'dark:bg-dark-card bg-light-card';
+export const secondaryBgColorDarker = 'dark:bg-dark-card bg-gray-200 bg-opacity-60';
 export const brandBorderColor = 'border-brand-primary';
 export const borderColor = 'dark:border-dark-border border-light-border';
+export const divideColor = 'dark:divide-dark-border divide-light-border';
 export const standardCard = `rounded-lg border p-5 my-3 ${borderColor} ${secondaryBgColor}`;
 export const standardBorderCard = `rounded-lg border p-2 my-3 ${borderColor}`;
 export const textColor = 'dark:text-dark-body text-light-body';

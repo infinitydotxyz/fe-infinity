@@ -1,17 +1,17 @@
 import {
   ChainId,
   ChainOBOrder,
+  ExecutionStatus,
   GetOrderItemsQuery,
   Order,
   OrderItemToken,
   SignedOBOrder
 } from '@infinityxyz/lib-frontend/types/core';
 import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { apiGet, DEFAULT_LIMIT } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { TokensFilter, SORT_FILTERS } from 'src/utils/types';
-import { useNetwork } from 'wagmi';
-import { OrderCache } from '../../components/orderbook/order-cache';
 
 interface BaseProps {
   kind?: 'collection' | 'token' | 'profile';
@@ -45,7 +45,7 @@ type FetcherProps = CollectionProps | TokenProps | ProfileProps;
 
 export type OrdersContextProviderProps = CollectionProps | TokenProps | ProfileProps;
 
-const orderCache = new OrderCache();
+// const orderCache = new OrderCache();
 
 const parseFiltersToApiQueryParams = (filter: TokensFilter): GetOrderItemsQuery => {
   const parsedFilters: GetOrderItemsQuery = {};
@@ -92,16 +92,21 @@ const parseFiltersToApiQueryParams = (filter: TokensFilter): GetOrderItemsQuery 
   return parsedFilters;
 };
 
-export const useCollectionOrderFetcher = (limit: number, filter: TokensFilter, collectionAddress: string) => {
+export const useCollectionOrderFetcher = (
+  limit: number,
+  filter: TokensFilter,
+  collectionAddress: string,
+  collectionChainId: ChainId
+) => {
   const props: CollectionProps = {
     kind: 'collection',
     limit,
     context: {
       collectionAddress
     }
-  };
+  } as unknown as CollectionProps;
 
-  return useOrderFetcher(limit, filter, props);
+  return useOrderFetcher(limit, filter, collectionChainId, props);
 };
 
 export const useProfileOrderFetcher = (limit: number, filter: TokensFilter, userAddress: string) => {
@@ -110,19 +115,29 @@ export const useProfileOrderFetcher = (limit: number, filter: TokensFilter, user
   const props: ProfileProps = {
     kind: 'profile',
     limit,
+    orderBy: 'startTime',
     context: {
       userAddress,
       side
     }
-  };
+  } as unknown as ProfileProps;
 
-  return useOrderFetcher(limit, filter, props);
+  const { selectedChain } = useAppContext();
+
+  const fetcher = useOrderFetcher(limit, filter, selectedChain, props);
+
+  useEffect(() => {
+    fetcher.fetch(false);
+  }, [selectedChain]);
+
+  return fetcher;
 };
 
 export const useTokenOrderFetcher = (
   limit: number,
   filter: TokensFilter,
   collectionAddress: string,
+  collectionChainId: ChainId,
   tokenId: string
 ) => {
   const props: TokenProps = {
@@ -133,14 +148,11 @@ export const useTokenOrderFetcher = (
       tokenId
     }
   };
-
-  return useOrderFetcher(limit, filter, props);
+  return useOrderFetcher(limit, filter, collectionChainId, props);
 };
 
-const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: FetcherProps) => {
-  const { chain } = useNetwork();
-  const chainId = String(chain?.id ?? 1) as ChainId;
-  const [orders, setOrders] = useState<SignedOBOrder[]>([]);
+const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, chainId: ChainId, props: FetcherProps) => {
+  const [orders, setOrders] = useState<(SignedOBOrder & { executionStatus: ExecutionStatus | null })[]>([]);
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [cursor, setCursor] = useState('');
@@ -250,10 +262,11 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: Fet
         throw new Error('Invalid query');
       }
 
-      const cacheKey = JSON.stringify(options);
+      // const cacheKey = JSON.stringify(options);
 
-      // use cached value if exists
-      let response = orderCache.get(cacheKey);
+      // not using cache for now
+      // let response = orderCache.get(cacheKey);
+      let response;
       if (!response) {
         response = await apiGet(options.endpoint, {
           query: options.query,
@@ -267,8 +280,8 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: Fet
       }
 
       if (response && response.result?.data) {
-        // save in cache
-        orderCache.set(cacheKey, response);
+        // not saving in cache
+        // orderCache.set(cacheKey, response);
 
         let newData;
         if (loadMore) {
@@ -278,7 +291,7 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: Fet
         }
 
         setOrders(
-          newData.map((order: Order) => {
+          newData.map((order: Order & { executionStatus: ExecutionStatus | null }) => {
             const orderItems = order.kind === 'single-collection' ? [order.item] : order.items;
             const nfts = orderItems.map((item) => {
               let tokens: OrderItemToken[];
@@ -316,7 +329,7 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: Fet
               };
             });
 
-            const signedObOrder: SignedOBOrder = {
+            const signedObOrder: SignedOBOrder & { executionStatus: ExecutionStatus | null } = {
               id: order.id,
               chainId: order.chainId,
               isSellOrder: order.isSellOrder,
@@ -337,7 +350,9 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: Fet
               extraParams: {
                 buyer: order.isPrivate ? order.taker.address : ''
               },
-              signedOrder: {} as unknown as ChainOBOrder
+              signedOrder: {} as unknown as ChainOBOrder,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              executionStatus: (order as any)?.executionStatus ?? null
             };
 
             return signedObOrder;

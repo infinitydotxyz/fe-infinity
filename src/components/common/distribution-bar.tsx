@@ -21,11 +21,7 @@ export const DistributionBar = ({ distribution }: Props) => {
                 <div className="font-bold">{`${item.percent}%`}</div>
                 <Spacer />
                 <div className="text-right text-sm">{item.label}</div>
-                {item?.value && (
-                  <>
-                    <div className="text-right ml-4 text-sm text-light">{item.value}</div>
-                  </>
-                )}
+                {item?.value ? <div className="text-right ml-4 text-sm text-light">{item.value}</div> : null}
               </div>
             </div>
           </div>

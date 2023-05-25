@@ -17,10 +17,11 @@ interface Props {
   isSelectable: (data: ERC721TokenCartItem) => boolean;
   data: ERC721TokenCartItem[];
   hasNextPage: boolean;
-  onFetchMore: () => void;
+  onFetchMore?: () => void;
   isError?: boolean;
   isLoading?: boolean;
   collectionFloorPrice?: string | number | null | undefined;
+  collectionCreator?: string;
 }
 
 export const TokenGrid = ({
@@ -34,7 +35,8 @@ export const TokenGrid = ({
   onFetchMore,
   isError,
   isLoading,
-  collectionFloorPrice
+  collectionFloorPrice,
+  collectionCreator
 }: Props) => {
   let contents;
 
@@ -44,7 +46,7 @@ export const TokenGrid = ({
     if (listMode) {
       contents = (
         <>
-          <div className={twMerge('space-y-1 flex flex-col')}>
+          <div className={twMerge('pb-20 space-y-1 flex flex-col')}>
             {cardData.map((data) => {
               return (
                 <GridItem
@@ -61,14 +63,14 @@ export const TokenGrid = ({
             })}
           </div>
 
-          {hasNextPage && <ScrollLoader onFetchMore={onFetchMore} />}
+          {hasNextPage && onFetchMore && <ScrollLoader onFetchMore={onFetchMore} />}
         </>
       );
     } else {
       contents = (
         <>
           <div
-            className="grid grid-flow-row-dense gap-2 3xl:grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))]
+            className="pb-20 grid grid-flow-row-dense gap-2 3xl:grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))]
                           sm:grid-cols-[repeat(auto-fill,_minmax(167px,_1fr))] grid-cols-[repeat(auto-fit,_minmax(160px,_1fr))]"
           >
             {cardData.map((data) => {
@@ -78,6 +80,7 @@ export const TokenGrid = ({
                   data={data}
                   selected={isSelected(data)}
                   collectionFloorPrice={collectionFloorPrice}
+                  collectionCreator={collectionCreator}
                   isSelectable={isSelectable}
                   onClick={(data) => {
                     onClick?.(data);
@@ -87,7 +90,7 @@ export const TokenGrid = ({
             })}
           </div>
 
-          {hasNextPage && <ScrollLoader onFetchMore={onFetchMore} />}
+          {hasNextPage && onFetchMore && <ScrollLoader onFetchMore={onFetchMore} />}
         </>
       );
     }

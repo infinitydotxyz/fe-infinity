@@ -5,10 +5,10 @@ import { twMerge } from 'tailwind-merge';
 
 export const Grid = (
   navBar: JSX.Element,
-  sideNavBar: JSX.Element,
   grid: JSX.Element,
   cart: JSX.Element,
   footer: JSX.Element,
+  dock: JSX.Element,
   gridRef: RefObject<HTMLDivElement>,
   containerRef: RefObject<HTMLDivElement>
 ) => {
@@ -16,8 +16,6 @@ export const Grid = (
 
   return (
     <div className={twMerge(bgColor, 'flex')}>
-      <div className="">{sideNavBar}</div>
-
       <div ref={containerRef} className="h-screen w-screen grid grid-rows-[auto_1fr] grid-cols-[auto_1fr_auto]">
         <div className="col-span-full">{navBar}</div>
         <div></div> {/* don't know why this is needed */}
@@ -31,6 +29,7 @@ export const Grid = (
           </div>
         </div>
         <div className="col-start-2">{footer}</div>
+        <div>{dock}</div>
       </div>
     </div>
   );

@@ -1,14 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  ChainId,
-  SearchBy,
-  SearchQuery,
-  SearchType,
-  SubQuery,
-  SubQueryType
-} from '@infinityxyz/lib-frontend/types/core';
+import { SearchBy, SearchQuery, SearchType, SubQuery, SubQueryType } from '@infinityxyz/lib-frontend/types/core';
 import { SearchResult } from 'src/components/common/search/types';
 import { useFetch } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { useNetwork } from 'wagmi';
 import { useDebounce } from '../useDebounce';
 
@@ -28,7 +22,8 @@ export const useSearch = <T extends SearchType = any, U extends SearchBy<T> = an
   search: ClientSearches<T, U, V>
 ) => {
   const { chain } = useNetwork();
-  const chainId = String(chain?.id ?? 1) as ChainId;
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
 
   const { debouncedValue: debouncedSearch } = useDebounce(search, 300);
 

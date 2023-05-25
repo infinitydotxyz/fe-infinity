@@ -1,60 +1,84 @@
-import { BsTwitter } from 'react-icons/bs';
-import { SiDiscord } from 'react-icons/si';
+import { useTheme } from 'next-themes';
+import { ReactNode, useEffect, useState } from 'react';
 import { AstraCartButton } from 'src/components/astra/astra-cart-button';
-import { borderColor, smallIconButtonStyle } from 'src/utils/ui-constants';
+import { ConnectButton, EZImage, ExternalLink, NextLink, Spacer } from 'src/components/common';
+import flowLogoDark from 'src/images/flow-logo-dark.svg';
+import flowLogoLight from 'src/images/flow-logo-light.svg';
+import { chainIdToName } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { borderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-
-import { ConnectButton, Spacer } from 'src/components/common';
+import { NetworkWarning } from '../common/network-warning';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
-import { ADropdown, ADropdownItem } from './astra-dropdown';
 
 export const ANavbar = () => {
+  const { selectedChain, isWalletNetworkSupported } = useAppContext();
+  const [, setLabelVal] = useState(chainIdToName(selectedChain));
+  const { theme } = useTheme();
+  const [logo, setLogo] = useState<ReactNode>(<EZImage src={flowLogoDark.src} className="w-28 h-9" />);
+
+  useEffect(() => {
+    setLabelVal(chainIdToName(selectedChain));
+  }, [selectedChain]);
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      setLogo(<EZImage src={flowLogoDark.src} className="w-28 h-9" />);
+    } else {
+      setLogo(<EZImage src={flowLogoLight.src} className="w-28 h-9" />);
+    }
+  }, [theme]);
+
   return (
-    <div className={twMerge('flex px-5 py-2 space-x-4 items-center border-b-[1px]', borderColor)}>
-      <div className="w-4/12">
-        <CollectionSearchInput expanded />
+    <div>
+      <div className={isWalletNetworkSupported ? 'hidden' : 'block'}>
+        <NetworkWarning />
       </div>
+      <div className={twMerge('flex px-6 py-2 space-x-4 items-center border-b-[1px]', borderColor)}>
+        <NextLink href="/trending">{logo}</NextLink>
 
-      <Spacer />
+        <div className="w-1/3">
+          <CollectionSearchInput expanded />
+        </div>
 
-      <ANavbarButtons />
+        <Spacer />
 
-      <ConnectButton />
-      <AstraCartButton />
+        <ExternalLink href="https://docs.flow.so" className="text-sm underline">
+          Docs
+        </ExternalLink>
+
+        {/* <ADropdown
+          hasBorder={true}
+          alignMenuRight={true}
+          label={labelVal}
+          innerClassName="w-40"
+          // items={Object.values(ChainId).map((chainId) => ({
+          //   label: chainIdToName(chainId),
+          //   onClick: () => {
+          //     setLabelVal(chainIdToName(chainId));
+          //     setSelectedChain(chainId);
+          //   }
+          // }))}
+          items={[
+            {
+              label: 'Ethereum (beta)',
+              onClick: () => {
+                setSelectedChain(ChainId.Mainnet);
+              }
+            },
+            {
+              label: 'Goerli',
+              onClick: () => {
+                setSelectedChain(ChainId.Goerli);
+              }
+            }
+          ]}
+        /> */}
+
+        <ConnectButton />
+
+        <AstraCartButton />
+      </div>
     </div>
-  );
-};
-
-// ===========================================================================
-
-export const ANavbarButtons = () => {
-  const menuItems = [
-    {
-      label: 'Twitter',
-      icon: <BsTwitter className={smallIconButtonStyle} />,
-      onClick: () => {
-        window.open('https://twitter.com/flowdotso');
-      }
-    } as ADropdownItem,
-    {
-      label: 'Discord',
-      icon: <SiDiscord className={smallIconButtonStyle} />,
-      onClick: () => {
-        window.open('https://discord.com/invite/flowdotso');
-      }
-    } as ADropdownItem
-    // {
-    //   label: 'Medium',
-    //   icon: <BsMedium className={smallIconButtonStyle} />,
-    //   onClick: () => {
-    //     window.open('https://flowdotso.medium.com');
-    //   }
-    // } as ADropdownItem
-  ];
-
-  return (
-    <>
-      <ADropdown label={`Community`} items={menuItems} alignMenuRight={true} />
-    </>
   );
 };

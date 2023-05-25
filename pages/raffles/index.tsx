@@ -1,4 +1,4 @@
-import { Spinner } from 'src/components/common';
+import { BouncingLogo } from 'src/components/common';
 import { RaffleDescription } from 'src/components/raffles/raffle-description';
 import { useRaffles } from 'src/hooks/api/useRaffles';
 import { APageBox } from 'src/components/astra/astra-page-box';
@@ -14,7 +14,7 @@ const RafflesPage = () => {
   return (
     <APageBox title="Raffles">
       <div className={twMerge(textColor, 'flex flex-col h-full w-full overflow-y-auto overflow-x-hidden')}>
-        {isLoading && <Spinner />}
+        {isLoading && <BouncingLogo />}
         {!isLoading &&
           raffles.map((raffle) => {
             return <RaffleDescription raffle={raffle} key={raffle.id} ethPrice={ethPrice} />;

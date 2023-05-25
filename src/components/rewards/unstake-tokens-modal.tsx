@@ -1,18 +1,10 @@
-import { formatEth } from '@infinityxyz/lib-frontend/utils';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
-import {
-  getLockRemainingDescription,
-  mapDurationToMonths,
-  useRemainingLockTime
-} from 'src/hooks/contract/staker/useRemainingLockTime';
-import { useUnstake } from 'src/hooks/contract/staker/useUnstake';
+import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 import { nFormatter } from 'src/utils';
-import { secondaryTextColor } from 'src/utils/ui-constants';
 import { useAccount } from 'wagmi';
-import { Spinner, toastError, toastSuccess } from '../common';
+import { BouncingLogo, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
-import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
 
 interface Props {
@@ -20,15 +12,11 @@ interface Props {
 }
 
 export const UnstakeTokensModal = ({ onClose }: Props) => {
-  // const [hoverRef, isHovered] = useHover<HTMLDivElement>();
   const { address: user } = useAccount();
   const { result: curationQuota } = useCurationQuota(user ?? null);
-  const [value, setValue] = useState(0);
+  const [value] = useState(0);
   const [isUnstaking, setIsUnstaking] = useState(false);
-  // const [isRageQuitting, setIsRageQuitting] = useState(false);
-  const { stakeAmounts, unlockedAmount } = useRemainingLockTime(curationQuota?.stake?.stakeInfo ?? null);
-  const { unstake } = useUnstake();
-  // const { userAmount: rageQuitYield, penalty: rageQuitPenalty, rageQuit } = useRageQuit();
+  const { unstake } = useStakerContract();
 
   const onUnstake = async () => {
     if (value <= 0) {
@@ -73,7 +61,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
     >
       <div>
         <div className="mt-4">
-          {stakeAmounts.length > 0 && (
+          {/* {stakeAmounts.length > 0 ? (
             <div className="text-md flex flex-col justify-between">
               <table>
                 <thead>
@@ -98,14 +86,14 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
                 </tbody>
               </table>
             </div>
-          )}
+          ) : null} */}
 
           <div className="text-m mt-4 flex justify-between">
             <span>Total staked</span>
             <span className="font-heading">{nFormatter(curationQuota?.totalStaked || 0)}</span>
           </div>
 
-          <div className="text-m mt-2 flex justify-between">
+          {/* <div className="text-m mt-2 flex justify-between">
             <span>Total unlocked</span>
             <span className="font-heading">{nFormatter(unlockedAmount || 0)}</span>
           </div>
@@ -129,7 +117,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
                 </Button>
               )}
             />
-          </div>
+          </div> */}
         </div>
 
         <Button size="large" className="w-full py-3 mt-4" onClick={onUnstake} disabled={isUnstaking}>
@@ -138,7 +126,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
 
         {isUnstaking && (
           <div className="mt-2 flex flex-row gap-2 items-center">
-            <Spinner />
+            <BouncingLogo />
             <span>Waiting for transaction to complete...</span>
           </div>
         )}

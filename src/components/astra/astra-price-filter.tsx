@@ -61,20 +61,22 @@ export const APriceFilter = ({ filter, setFilter }: Props) => {
                 }}
               />
             </div>
-            <Menu.Button
-              onClick={() => {
-                setMinPriceVal('');
-                setMaxPriceVal('');
-                const newFilter: TokensFilter = {};
-                newFilter.minPrice = '';
-                newFilter.maxPrice = '';
-                setFilter({ ...filter, ...newFilter });
-              }}
-              className={twMerge('mt-4 ml-1 text-sm', brandTextColor)}
-            >
-              Clear
-            </Menu.Button>
-            <Menu.Button className={twMerge('mt-4 mr-1 text-sm float-right', brandTextColor)}>Apply</Menu.Button>
+
+            <div className="flex mt-4 text-sm px-1">
+              <div
+                onClick={() => {
+                  setMinPriceVal('');
+                  setMaxPriceVal('');
+                  const newFilter: TokensFilter = {};
+                  newFilter.minPrice = '';
+                  newFilter.maxPrice = '';
+                  setFilter({ ...filter, ...newFilter });
+                }}
+                className={twMerge('cursor-pointer', brandTextColor)}
+              >
+                Clear
+              </div>
+            </div>
           </ACustomMenuItems>
         </ACustomMenuContents>
       )}

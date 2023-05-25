@@ -1,38 +1,42 @@
 import { BaseToken, ChainId, Erc721Token, OrdersSnippet } from '@infinityxyz/lib-frontend/types/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useIsMounted } from 'src/hooks/useIsMounted';
-import { ApiResponse } from 'src/utils';
+import { ApiResponse, nFormatter } from 'src/utils';
 import { fetchCollectionTokens, fetchProfileTokens } from 'src/utils/astra-utils';
 import { CartType } from 'src/utils/context/CartContext';
 import { ERC721TokenCartItem, TokensFilter } from 'src/utils/types';
-import { useNetwork } from 'wagmi';
 
 type ApiNftData = Erc721Token & {
   orderSnippet?: OrdersSnippet;
 };
 
-export function useCollectionTokenFetcher(collectionAddress: string | undefined, filter: TokensFilter) {
-  const { chain } = useNetwork();
-  const chainId = String(chain?.id ?? 1) as ChainId;
-
+export function useCollectionTokenFetcher(
+  collectionAddress: string | undefined,
+  collectionChainId: ChainId,
+  filter: TokensFilter
+) {
   return useTokenFetcher<ApiNftData, ERC721TokenCartItem>({
-    fetcher: (cursor, filters) => fetchCollectionTokens(collectionAddress || '', chainId, { cursor, ...filters }),
+    fetcher: (cursor, filters) =>
+      fetchCollectionTokens(collectionAddress || '', collectionChainId, { cursor, ...filters }),
     mapper: (data) => nftsToCardDataWithOrderFields(data),
     execute: collectionAddress !== '',
     filter
   });
 }
 
-export function useProfileTokenFetcher(userAddress: string | undefined, filter: TokensFilter) {
-  const { chain } = useNetwork();
-  const chainId = String(chain?.id ?? 1) as ChainId;
-
-  return useTokenFetcher<ApiNftData, ERC721TokenCartItem>({
+export function useProfileTokenFetcher(userAddress: string | undefined, chainId: ChainId, filter: TokensFilter) {
+  const fetcher = useTokenFetcher<ApiNftData, ERC721TokenCartItem>({
     fetcher: (cursor, filters) => fetchProfileTokens(userAddress || '', chainId, { cursor, ...filters }),
     mapper: (data) => nftsToCardDataWithOrderFields(data),
     execute: userAddress !== '',
     filter
   });
+
+  useEffect(() => {
+    fetcher.fetch(false);
+  }, [userAddress, chainId, filter]);
+
+  return fetcher;
 }
 
 function useTokenFetcher<From, To>({
@@ -98,15 +102,18 @@ export const nftsToCardDataWithOrderFields = (tokens: ApiNftData[]): ERC721Token
 
 export const nftToCardDataWithOrderFields = (item: ApiNftData): ERC721TokenCartItem => {
   const image =
-    item?.metadata?.image ||
     item?.image?.url ||
     item?.alchemyCachedImage ||
+    item?.metadata?.image ||
     item?.image?.originalUrl ||
     item?.zoraImage?.url ||
     '';
 
+  const mintPriceEth = nFormatter(item?.mintPrice);
+  const lastSalePriceEth = nFormatter(item?.lastSalePriceEth);
+
   const result: ERC721TokenCartItem = {
-    id: item.chainId + ':' + item.collectionAddress + '_' + item.tokenId,
+    id: item.chainId + ':' + item.collectionAddress + ':' + item.tokenId,
     name: item.metadata?.name ?? item.metadata?.title,
     title: item.collectionName ?? '',
     collectionName: item.collectionName ?? '',
@@ -124,7 +131,10 @@ export const nftToCardDataWithOrderFields = (item: ApiNftData): ERC721TokenCartI
     orderSnippet: item.ordersSnippet,
     hasBlueCheck: item.hasBlueCheck ?? false,
     attributes: item.metadata?.attributes ?? [],
-    cartType: CartType.None
+    cartType: CartType.None,
+    lastSalePriceEth,
+    lastSaleTimestamp: item.lastSaleTimestamp,
+    mintPriceEth
   };
 
   return result;

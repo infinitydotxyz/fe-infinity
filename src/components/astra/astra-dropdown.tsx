@@ -48,6 +48,7 @@ interface DropdownProps {
   alignMenuRight?: boolean;
   hasBorder?: boolean;
   innerClassName?: string;
+  menuItemClassName?: string;
 }
 
 export const ADropdown = ({
@@ -57,7 +58,8 @@ export const ADropdown = ({
   tooltip = '',
   hasBorder = true,
   alignMenuRight = false,
-  innerClassName = ''
+  innerClassName = '',
+  menuItemClassName = ''
 }: DropdownProps) => {
   return (
     <div className={twMerge(className, 'text-sm')}>
@@ -91,7 +93,7 @@ export const ADropdown = ({
                   }
 
                   return (
-                    <ACustomMenuItem key={idx} onClick={item.onClick}>
+                    <ACustomMenuItem key={idx} onClick={item.onClick} className={menuItemClassName}>
                       <div className={twMerge(hoverColorBrandText, 'flex items-center cursor-pointer')}>
                         {item.icon && <div className={twMerge('mr-4')}>{item.icon}</div>}
                         {item.label}
@@ -113,6 +115,7 @@ export const ADropdown = ({
 interface Props {
   onClick: () => void;
   children: ReactElement | string;
+  className?: string;
 }
 
 const ACustomMenuItem = (props: Props) => {
@@ -123,7 +126,8 @@ const ACustomMenuItem = (props: Props) => {
           className={twMerge(
             'flex w-full px-4 py-4 leading-5',
             active ? twMerge(hoverColor, 'rounded-lg cursor-pointer') : ' ',
-            disabled && 'cursor-not-allowed opacity-50'
+            disabled && 'cursor-not-allowed opacity-50',
+            props.className
           )}
         >
           {props.children}
