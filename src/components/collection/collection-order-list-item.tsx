@@ -37,7 +37,7 @@ export const CollectionOrderListItem = ({ order, orderType }: Props) => {
   );
 
   const orderStatus = order.executionStatus?.status;
-  const isActionable = !(orderStatus === 'matched-executed' || orderStatus === 'matched-pending-execution');
+  const isActionable = !(orderStatus === 'matched-executed' || orderStatus === 'matched-executing');
 
   useEffect(() => {
     setAddedToCart(
