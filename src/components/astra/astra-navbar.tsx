@@ -1,9 +1,7 @@
-import { useTheme } from 'next-themes';
-import { ReactNode, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AstraCartButton } from 'src/components/astra/astra-cart-button';
 import { ConnectButton, EZImage, ExternalLink, NextLink, Spacer } from 'src/components/common';
-import flowLogoDark from 'src/images/flow-logo-dark.svg';
-import flowLogoLight from 'src/images/flow-logo-light.svg';
+import flowLogoMark from 'src/images/flow-logo-mark.png';
 import { chainIdToName } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { borderColor } from 'src/utils/ui-constants';
@@ -14,20 +12,20 @@ import { CollectionSearchInput } from '../common/search/collection-search-input'
 export const ANavbar = () => {
   const { selectedChain, isWalletNetworkSupported } = useAppContext();
   const [, setLabelVal] = useState(chainIdToName(selectedChain));
-  const { theme } = useTheme();
-  const [logo, setLogo] = useState<ReactNode>(<EZImage src={flowLogoDark.src} className="w-28 h-9" />);
+  // const { theme } = useTheme();
+  const logo = <EZImage src={flowLogoMark.src} className="w-9 h-9" />;
 
   useEffect(() => {
     setLabelVal(chainIdToName(selectedChain));
   }, [selectedChain]);
 
-  useEffect(() => {
-    if (theme === 'dark') {
-      setLogo(<EZImage src={flowLogoDark.src} className="w-28 h-9" />);
-    } else {
-      setLogo(<EZImage src={flowLogoLight.src} className="w-28 h-9" />);
-    }
-  }, [theme]);
+  // useEffect(() => {
+  //   if (theme === 'dark') {
+  //     setLogo(<EZImage src={flowLogoDark.src} className="w-28 h-9" />);
+  //   } else {
+  //     setLogo(<EZImage src={flowLogoLight.src} className="w-28 h-9" />);
+  //   }
+  // }, [theme]);
 
   return (
     <div>

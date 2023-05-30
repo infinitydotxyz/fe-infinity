@@ -10,7 +10,7 @@ export const DISCORD_BOT_INVITE_URL =
 
 export const ETHERSCAN_BASE_URL = 'https://etherscan.io';
 
-export const FLOW_FEE_PCT = 2.5;
+export const FLOW_FEE_PCT = 2;
 export const FLOW_ROYALTY_PCT = 0;
 
 export const DEFAULT_LIMIT = 30;

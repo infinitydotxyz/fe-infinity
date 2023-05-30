@@ -694,18 +694,9 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
   return (
     <div className={twMerge('flex flex-row space-x-4 w-full', className)}>
       {!priceEditable ? (
-        <div className="flex w-full">
+        <div className="flex w-full space-x-2">
           {useSpacer && <Spacer />}
-          <div className={twMerge('flex flex-col items-end')}>
-            <div className="flex flex-row">
-              <div className={twMerge('font-bold font-heading')}>{nFormatter(Number(price), 3)}</div>
-              <div className={twMerge('font-bold font-heading ml-1')}>{EthSymbol}</div>
-            </div>
-            <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>{expiry}</div>
-          </div>
-        </div>
-      ) : (
-        <>
+
           <ADropdown
             hasBorder={true}
             alignMenuRight={true}
@@ -761,6 +752,18 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
                 }
               },
               {
+                label: ORDER_EXPIRY_TIME.SIX_MONTHS,
+                onClick: () => {
+                  onEditComplete?.(price);
+                  setExpiry(ORDER_EXPIRY_TIME.SIX_MONTHS);
+                  if (token) {
+                    token.orderExpiry = ORDER_EXPIRY_TIME.SIX_MONTHS;
+                  } else if (collection) {
+                    collection.offerExpiry = ORDER_EXPIRY_TIME.SIX_MONTHS;
+                  }
+                }
+              },
+              {
                 label: ORDER_EXPIRY_TIME.YEAR,
                 onClick: () => {
                   onEditComplete?.(price);
@@ -775,37 +778,45 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
             ]}
           />
 
-          <TextInputBox
-            inputClassName="font-heading text-sm text-right mr-2"
-            className="p-[6.5px]"
-            autoFocus={true}
-            addEthSymbol={true}
-            type="number"
-            value={price}
-            placeholder="Price"
-            onChange={(value) => {
-              let parsedValue = parseFloat(value);
-              if (parsedValue < 0) {
-                parsedValue = 0;
-                setPrice(String(parsedValue));
-              } else {
-                setPrice(String(value));
-              }
-              // onEditComplete?.(value);
-              if (token) {
-                token.orderPriceEth = parsedValue;
-              } else if (collection) {
-                collection.offerPriceEth = parsedValue;
-              }
-            }}
-            onEnter={() => {
-              onEditComplete?.(price);
-            }}
-            onMouseLeave={() => {
-              onEditComplete?.(price);
-            }}
-          />
-        </>
+          <div className={twMerge('flex flex-col items-end')}>
+            <div className="flex flex-row">
+              <div className={twMerge('font-bold font-heading')}>{nFormatter(Number(price), 3)}</div>
+              <div className={twMerge('font-bold font-heading ml-1')}>{EthSymbol}</div>
+            </div>
+            <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>{expiry}</div>
+          </div>
+        </div>
+      ) : (
+        <TextInputBox
+          inputClassName="font-heading text-sm text-right mr-2"
+          className="p-[6.5px]"
+          autoFocus={true}
+          addEthSymbol={true}
+          type="number"
+          value={price}
+          placeholder="Price"
+          onChange={(value) => {
+            let parsedValue = parseFloat(value);
+            if (parsedValue < 0) {
+              parsedValue = 0;
+              setPrice(String(parsedValue));
+            } else {
+              setPrice(String(value));
+            }
+            // onEditComplete?.(value);
+            if (token) {
+              token.orderPriceEth = parsedValue;
+            } else if (collection) {
+              collection.offerPriceEth = parsedValue;
+            }
+          }}
+          onEnter={() => {
+            onEditComplete?.(price);
+          }}
+          onMouseLeave={() => {
+            onEditComplete?.(price);
+          }}
+        />
       )}
     </div>
   );

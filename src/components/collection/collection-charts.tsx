@@ -158,7 +158,7 @@ export const CollectionCharts = ({
 
       <div className="flex">
         <div className="w-3/4 p-2">
-          {listingsData.length > 0 && (
+          {listingsData.length > 5 && (
             <ResponsiveBarChart
               graphType={BarChartType.Listings}
               data={listingsData}
@@ -169,34 +169,38 @@ export const CollectionCharts = ({
           {isListingsLoading && <Loading graphType={BarChartType.Listings} />}
         </div>
         <div className="w-1/4 p-2">
-          <OrdersChartDetails
-            orders={selectedListings}
-            index={selectedListingIndex}
-            valueClassName={secondaryTextColor}
-            setIndex={setSelectedListingIndex}
-            collectionAddress={collectionAddress}
-            collectionImage={collectionImage}
-          />
+          {listingsData.length > 5 && (
+            <OrdersChartDetails
+              orders={selectedListings}
+              index={selectedListingIndex}
+              valueClassName={secondaryTextColor}
+              setIndex={setSelectedListingIndex}
+              collectionAddress={collectionAddress}
+              collectionImage={collectionImage}
+            />
+          )}
         </div>
       </div>
 
       <div className="flex">
         <div className="w-3/4 p-2">
-          {bidsData.length > 0 && (
+          {bidsData.length > 5 && (
             <ResponsiveBarChart graphType={BarChartType.Bids} data={bidsData} displayDetails={displayBidDetails} />
           )}
 
           {isBidsLoading && <Loading graphType={BarChartType.Bids} />}
         </div>
         <div className="w-1/4 p-2">
-          <OrdersChartDetails
-            orders={selectedBids}
-            index={selectedBidIndex}
-            valueClassName={secondaryTextColor}
-            setIndex={setSelectedBidIndex}
-            collectionAddress={collectionAddress}
-            collectionImage={collectionImage}
-          />
+          {bidsData.length > 5 && (
+            <OrdersChartDetails
+              orders={selectedBids}
+              index={selectedBidIndex}
+              valueClassName={secondaryTextColor}
+              setIndex={setSelectedBidIndex}
+              collectionAddress={collectionAddress}
+              collectionImage={collectionImage}
+            />
+          )}
         </div>
       </div>
 
