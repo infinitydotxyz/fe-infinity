@@ -451,7 +451,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   </div>
                 </div>
                 <div className={twMerge('flex ml-2 items-center', secondaryTextColor)}>
-                  ⓘ Matched bids are automatically executed on your behalf for fast snipes.
+                  ⓘ Matched bids are executed on your behalf for automatic sniping.
                 </div>
               </div>
             </div>
