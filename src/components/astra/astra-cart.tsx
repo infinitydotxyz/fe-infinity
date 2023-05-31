@@ -83,9 +83,6 @@ export const AstraCart = ({
   }
   const [executionMode, setExecutionMode] = useState(ExecutionMode.Fast);
 
-  // collectionId -> price
-  // const [collectionCommonPrice, setCollectionCommonPrice] = useState<Map<string, string>>(new Map());
-
   const [tokenMap, setTokenMap] = useState<Map<string, ERC721TokenCartItem[]>>(new Map());
   const [collMap, setCollMap] = useState<Map<string, ERC721CollectionCartItem[]>>(new Map());
   const [orderMap, setOrderMap] = useState<Map<string, ERC721OrderCartItem[]>>(new Map());
@@ -157,15 +154,6 @@ export const AstraCart = ({
             key={`header-${first.id}`}
           >
             {first.collectionName}
-            {/* {cartType === CartType.TokenList && (
-              <div className="flex">
-                <CommonCollPrice
-                  collection={trimLowerCase(`${first.chainId}:${first.address}`)}
-                  collectionCommonPrice={collectionCommonPrice}
-                  setCollectionCommonPrice={setCollectionCommonPrice}
-                />
-              </div>
-            )} */}
           </div>
         );
 
@@ -180,13 +168,10 @@ export const AstraCart = ({
               : 0;
             newCartTotal += price;
           }
-          // const commonPrice = collectionCommonPrice.get(`${t.chainId}:${t.address}`) ?? '';
           divList.push(
             <AstraTokenCartItem
-              // key={getTokenCartItemKey(t) + commonPrice}
               key={getTokenCartItemKey(t)}
               token={t}
-              // collectionCommonPrice={commonPrice}
               onRemove={onTokenRemove}
               updateCartTotal={(newVal: string, oldVal: string) => {
                 newCartTotal += Number(newVal) - Number(oldVal);
@@ -521,20 +506,10 @@ interface Props2 {
   token: ERC721TokenCartItem;
   onRemove: (token: ERC721TokenCartItem) => void;
   updateCartTotal: (prevPrice: string, newPrice: string) => void;
-  // collectionCommonPrice: string;
 }
 
 const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
   const { cartType } = useCartContext();
-  // const collCommonPrice = cartType === CartType.TokenList && collectionCommonPrice ? collectionCommonPrice : '';
-
-  // const price = collCommonPrice
-  //   ? collCommonPrice
-  //   : token?.orderPriceEth
-  //   ? token?.orderPriceEth.toString()
-  //   : token?.orderSnippet?.listing?.orderItem?.startPriceEth
-  //   ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
-  //   : '';
 
   const price =
     token?.orderPriceEth !== undefined
@@ -821,8 +796,6 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
     </div>
   );
 };
-
-// interface Props6 {
 //   collection: string;
 //   collectionCommonPrice: Map<string, string>;
 //   setCollectionCommonPrice: (newMap: Map<string, string>) => void;
