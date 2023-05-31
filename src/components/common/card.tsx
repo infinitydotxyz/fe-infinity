@@ -45,8 +45,6 @@ export const GridCard = ({
     ? data.price
     : data?.orderSnippet?.listing?.orderItem?.startPriceEth
     ? data?.orderSnippet?.listing?.orderItem?.startPriceEth
-    : data?.orderPriceEth
-    ? data?.orderPriceEth
     : '';
 
   const basicTokenInfo: BasicTokenInfo = {

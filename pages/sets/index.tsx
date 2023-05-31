@@ -38,9 +38,7 @@ export default function SetsPage() {
       .map((a) => ({ sort: Math.random(), value: a }))
       .sort((a, b) => a.sort - b.sort)
       .map((a) => a.value);
-    const itemsToShow = randomItems
-      .slice(0, MAX_NUM_SWEEP_ITEMS)
-      .sort((a, b) => (a.orderPriceEth ?? 0) - (b.orderPriceEth ?? 0));
+    const itemsToShow = randomItems.slice(0, MAX_NUM_SWEEP_ITEMS).sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
     setTokensToShow(itemsToShow);
   };
 
@@ -76,7 +74,7 @@ export default function SetsPage() {
         tokenId,
         cartType,
         image: data[i].tokenImage,
-        orderPriceEth: data[i].priceEth,
+        price: data[i].priceEth,
         lastSalePriceEth: data[i].lastPriceEth,
         hasBlueCheck: data[i].hasBlueCheck,
         title: data[i].collectionName,

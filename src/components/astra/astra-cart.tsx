@@ -159,9 +159,7 @@ export const AstraCart = ({
 
         for (const t of tokenArray) {
           if (cartType !== CartType.Send) {
-            const price = t?.orderPriceEth
-              ? t?.orderPriceEth
-              : t?.price
+            const price = t?.price
               ? t?.price
               : t?.orderSnippet?.listing?.orderItem?.startPriceEth
               ? t?.orderSnippet?.listing?.orderItem?.startPriceEth
@@ -511,16 +509,13 @@ interface Props2 {
 const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
   const { cartType } = useCartContext();
 
-  const price =
-    token?.orderPriceEth !== undefined
-      ? token?.orderPriceEth.toString()
-      : token?.price
-      ? token?.price.toString()
-      : token?.orderSnippet?.listing?.orderItem?.startPriceEth
-      ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
-      : '';
+  const price = token?.price
+    ? token?.price.toString()
+    : token?.orderSnippet?.listing?.orderItem?.startPriceEth
+    ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
+    : '';
 
-  token.orderPriceEth = parseFloat(price);
+  token.price = parseFloat(price);
 
   const [editedPrice, setEditedPrice] = useState(price);
   const [editing, setEditing] = useState(price ? false : true);
@@ -780,7 +775,7 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
             }
             // onEditComplete?.(value);
             if (token) {
-              token.orderPriceEth = parsedValue;
+              token.price = parsedValue;
             } else if (collection) {
               collection.offerPriceEth = parsedValue;
             }

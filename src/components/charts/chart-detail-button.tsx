@@ -33,7 +33,7 @@ export const OrderbookRowButton = ({ order, outlineButtons = false, collectionAd
     id: '',
     title: '',
     image: order.tokenImage,
-    orderPriceEth: order.priceEth
+    price: order.priceEth
   };
 
   const onClickEdit = (order: CollectionOrder) => {
