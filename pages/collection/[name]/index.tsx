@@ -91,9 +91,9 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
   useEffect(() => {
     if (collSelection.length > 0) {
-      setCartType(CartType.CollectionOffer);
+      setCartType(CartType.CollectionBid);
     } else {
-      setCartType(CartType.TokenOffer);
+      setCartType(CartType.TokenBid);
     }
   }, [collSelection]);
 
@@ -232,9 +232,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 <div
                   className={twMerge(
                     'flex mr-1',
-                    cartType === CartType.CollectionOffer
-                      ? 'opacity-30 duration-300 pointer-events-none'
-                      : 'duration-300'
+                    cartType === CartType.CollectionBid ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300'
                   )}
                 >
                   <CollectionNftSearchInput
@@ -252,7 +250,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     primary
                     className="px-5 py-1 rounded-lg text-sm"
                     onClick={() => {
-                      setCartType(CartType.CollectionOffer);
+                      setCartType(CartType.CollectionBid);
                       if (isCollSelectable(collection as ERC721CollectionCartItem)) {
                         setShowCart(!showCart);
                         return toggleCollSelection(collection as ERC721CollectionCartItem);
@@ -273,7 +271,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     className={twMerge(
                       'flex flex-row rounded-lg border cursor-pointer',
                       borderColor,
-                      cartType === CartType.CollectionOffer
+                      cartType === CartType.CollectionBid
                         ? 'opacity-30 duration-300 pointer-events-none'
                         : 'duration-300'
                     )}
@@ -352,7 +350,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   <div
                     className={twMerge(
                       'flex space-x-1',
-                      cartType === CartType.CollectionOffer
+                      cartType === CartType.CollectionBid
                         ? 'opacity-30 duration-300 pointer-events-none'
                         : 'duration-300'
                     )}
@@ -375,9 +373,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   className={twMerge(
                     'flex flex-row rounded-lg border cursor-pointer',
                     borderColor,
-                    cartType === CartType.CollectionOffer
-                      ? 'opacity-30 duration-300 pointer-events-none'
-                      : 'duration-300'
+                    cartType === CartType.CollectionBid ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300'
                   )}
                 >
                   <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>
@@ -483,9 +479,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   listMode={listMode}
                   className={twMerge(
                     'px-4 py-4 min-h-[600px]',
-                    cartType === CartType.CollectionOffer
-                      ? 'opacity-30 duration-300 pointer-events-none'
-                      : 'duration-300'
+                    cartType === CartType.CollectionBid ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300'
                   )} // this min-height is to prevent the grid from collapsing when there are no items so filter menus can still render
                   onClick={onClickNFT}
                   isSelectable={isNFTSelectable}

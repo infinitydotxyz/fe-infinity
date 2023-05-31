@@ -29,7 +29,7 @@ export default function SetsPage() {
   const [selectedPriceRange, setSelectedPriceRange] = useState(priceRanges[3]);
   const MAX_NUM_SWEEP_ITEMS = 15;
 
-  setCartType(CartType.TokenOffer);
+  setCartType(CartType.TokenBid);
 
   const updateItemsToShow = (items?: ERC721TokenCartItem[]) => {
     // select 50 random items

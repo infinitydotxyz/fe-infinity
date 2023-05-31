@@ -138,7 +138,7 @@ export const AstraCart = ({
   const upateCartItemList = () => {
     let newCartTotal = 0;
     if (
-      (cartType === CartType.TokenList || cartType === CartType.TokenOffer || cartType === CartType.Send) &&
+      (cartType === CartType.TokenList || cartType === CartType.TokenBid || cartType === CartType.Send) &&
       tokenMap.size > 0
     ) {
       const divList: ReactNode[] = [];
@@ -187,7 +187,7 @@ export const AstraCart = ({
           {divList}
         </div>
       );
-    } else if (cartType === CartType.CollectionOffer && collMap.size > 0) {
+    } else if (cartType === CartType.CollectionBid && collMap.size > 0) {
       const divList: ReactNode[] = [];
       collMap.forEach((collArray) => {
         const first = collArray[0];
@@ -262,7 +262,7 @@ export const AstraCart = ({
     const cartItems: CartItem[] = getCurrentCartItems();
     setCurrentCartItems(cartItems);
 
-    if (cartType === CartType.TokenList || cartType === CartType.TokenOffer || cartType === CartType.Send) {
+    if (cartType === CartType.TokenList || cartType === CartType.TokenBid || cartType === CartType.Send) {
       tokenMap.clear();
       for (const item of cartItems) {
         const token = item as ERC721TokenCartItem;
@@ -273,7 +273,7 @@ export const AstraCart = ({
       setTokenMap(tokenMap);
     }
 
-    if (cartType === CartType.CollectionOffer) {
+    if (cartType === CartType.CollectionBid) {
       collMap.clear();
       for (const item of cartItems) {
         const coll = item as ERC721CollectionCartItem;
@@ -303,20 +303,20 @@ export const AstraCart = ({
       } else {
         setCheckoutBtnText('Sell');
       }
-    } else if (cartType === CartType.CollectionOffer) {
+    } else if (cartType === CartType.CollectionBid) {
       if (cartItems.length > 1) {
         setCartTitle('Collection Offers');
-        setCheckoutBtnText('Bid');
+        setCheckoutBtnText('Bulk Bid');
       } else {
         setCartTitle('Collection Offer');
         setCheckoutBtnText('Bid');
       }
-    } else if (cartType === CartType.TokenOffer) {
-      setCartTitle('Buy');
+    } else if (cartType === CartType.TokenBid) {
+      setCartTitle('Bid');
       if (cartItems.length > 1) {
-        setCheckoutBtnText('Bulk Buy');
+        setCheckoutBtnText('Bulk Bid');
       } else {
-        setCheckoutBtnText('Buy');
+        setCheckoutBtnText('Bid');
       }
     } else if (cartType === CartType.Send) {
       setCartTitle('Send');
@@ -353,14 +353,10 @@ export const AstraCart = ({
               <div
                 className={twMerge('ml-2 text-sm cursor-pointer', brandTextColor)}
                 onClick={() => {
-                  if (
-                    cartType === CartType.Send ||
-                    cartType === CartType.TokenList ||
-                    cartType === CartType.TokenOffer
-                  ) {
+                  if (cartType === CartType.Send || cartType === CartType.TokenList || cartType === CartType.TokenBid) {
                     onTokensClear();
                     // setCollectionCommonPrice(new Map());
-                  } else if (cartType === CartType.CollectionOffer) {
+                  } else if (cartType === CartType.CollectionBid) {
                     onCollsClear();
                   } else if (cartType === CartType.Cancel) {
                     onOrdersClear();

@@ -23,7 +23,7 @@ export const OrderbookRowButton = ({ order, outlineButtons = false, collectionAd
   const { isNFTSelected, toggleNFTSelection } = useAppContext();
   const { setCartType } = useCartContext();
 
-  const cartType = CartType.TokenOffer;
+  const cartType = CartType.TokenBid;
 
   const token: ERC721TokenCartItem = {
     tokenId: order.tokenId,

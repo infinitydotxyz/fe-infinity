@@ -2,8 +2,8 @@ import React, { useContext, useState } from 'react';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem } from '../types';
 
 export enum CartType {
-  CollectionOffer,
-  TokenOffer,
+  CollectionBid,
+  TokenBid,
   TokenList,
   Send,
   Cancel,
@@ -27,7 +27,7 @@ interface Props {
 }
 
 export const CartContextProvider = ({ children }: Props) => {
-  const [cartType, setCartType] = useState<CartType>(CartType.CollectionOffer);
+  const [cartType, setCartType] = useState<CartType>(CartType.CollectionBid);
   const [cartItems, setCartItems] = useState<Map<CartType, CartItem[]>>(new Map());
 
   const getCurrentCartItems = () => {

@@ -415,7 +415,7 @@ export const AppContextProvider = ({ children }: Props) => {
       if (!user || !signer) {
         toastError('No logged in user');
       } else {
-        const isBuyCart = cartType === CartType.TokenOffer;
+        const isBidCart = cartType === CartType.TokenBid;
         const isSellCart = cartType === CartType.TokenList;
         const isSendCart = cartType === CartType.Send;
 
@@ -428,7 +428,7 @@ export const AppContextProvider = ({ children }: Props) => {
           setCheckoutBtnStatus('Preparing orders');
           for (const token of tokens) {
             let order;
-            if (isBuyCart) {
+            if (isBidCart) {
               order = await tokenToOBOrder(token, orderNonce, false, currentBlock.timestamp);
             } else if (isSellCart) {
               order = await tokenToOBOrder(token, orderNonce, true, currentBlock.timestamp);

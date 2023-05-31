@@ -84,7 +84,7 @@ export const CollectionOrderListItem = ({ order, orderType }: Props) => {
               if (!isConnected) {
                 return;
               }
-              const newCartType = isCollBid ? CartType.CollectionOffer : CartType.TokenOffer;
+              const newCartType = isCollBid ? CartType.CollectionBid : CartType.TokenBid;
               editableCartItem.cartType = newCartType;
               if (!isCollBid && isNFTSelectable(editableCartItem as ERC721TokenCartItem)) {
                 setCartType(newCartType);
@@ -96,7 +96,7 @@ export const CollectionOrderListItem = ({ order, orderType }: Props) => {
               }
             }}
           >
-            {addedToCart && (cartType === CartType.TokenOffer || cartType === CartType.CollectionOffer) ? '✓' : ''}{' '}
+            {addedToCart && (cartType === CartType.TokenBid || cartType === CartType.CollectionBid) ? '✓' : ''}{' '}
             {orderType === 'Listing' ? 'Buy now' : 'Bid higher'}
           </Button>
         </div>

@@ -103,8 +103,8 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
                   orderType === 'listings'
                     ? CartType.TokenList
                     : isCollBid
-                    ? CartType.CollectionOffer
-                    : CartType.TokenOffer;
+                    ? CartType.CollectionBid
+                    : CartType.TokenBid;
                 editableCartItem.cartType = newCartType;
                 if (!isCollBid && isNFTSelectable(editableCartItem as ERC721TokenCartItem)) {
                   setCartType(newCartType);
@@ -117,9 +117,7 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
               }}
             >
               {addedToEditCart &&
-              (cartType === CartType.TokenList ||
-                cartType === CartType.TokenOffer ||
-                cartType === CartType.CollectionOffer)
+              (cartType === CartType.TokenList || cartType === CartType.TokenBid || cartType === CartType.CollectionBid)
                 ? '✓'
                 : ''}{' '}
               Edit in Cart
