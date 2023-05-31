@@ -78,16 +78,16 @@ export const getCartType = (path: string, selectedProfileTab: string): CartType 
   const isProfileSend = selectedProfileTab === ProfileTabs.Send.toString();
   const isProfileOrders = selectedProfileTab === ProfileTabs.Orders.toString();
 
-  const isCollectionOfferCart = isTrendingPage;
+  const isCollectionBidCart = isTrendingPage;
   const isTokenListCart = isProfilePage && isProfileItems;
-  const isTokenOfferCart = isCollectionPage;
+  const isTokenBidCart = isCollectionPage;
   const isSendCart = isProfilePage && isProfileSend;
   const isCancelCart = isProfilePage && isProfileOrders;
 
-  if (isCollectionOfferCart) {
-    return CartType.CollectionOffer;
-  } else if (isTokenOfferCart) {
-    return CartType.TokenOffer;
+  if (isCollectionBidCart) {
+    return CartType.CollectionBid;
+  } else if (isTokenBidCart) {
+    return CartType.TokenBid;
   } else if (isTokenListCart) {
     return CartType.TokenList;
   } else if (isSendCart) {
@@ -480,7 +480,7 @@ export const erc721OrderCartItemToCollectionCartItem = (order: ERC721OrderCartIt
     chainId: collInfo.chainId,
     address: collInfo.collectionAddress ?? '',
     hasBlueCheck: collInfo.hasBlueCheck ?? false,
-    cartType: CartType.CollectionOffer,
+    cartType: CartType.CollectionBid,
     tokenStandard: TokenStandard.ERC721,
     offerPriceEth: order.startPriceEth,
     deployer: '',

@@ -130,7 +130,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
 
   const isOwner = user && trimLowerCase(user) === trimLowerCase(token.owner?.toString());
   const isUserCollectionCreator = user && collectionCreator && trimLowerCase(user) === trimLowerCase(collectionCreator);
-  const newCartType = isOwner ? CartType.TokenList : CartType.TokenOffer;
+  const newCartType = isOwner ? CartType.TokenList : CartType.TokenBid;
   const cartToken = nftToCardDataWithOrderFields(token as Erc721Token);
   cartToken.cartType = newCartType;
   setCartType(newCartType);

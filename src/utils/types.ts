@@ -35,11 +35,10 @@ export enum ORDER_EXPIRY_TIME {
 export interface ERC721CollectionCartItem extends Erc721Collection {
   offerPriceEth?: number;
   offerExpiry?: ORDER_EXPIRY_TIME;
-  cartType: CartType.CollectionOffer;
+  cartType: CartType.CollectionBid;
 }
 
 export interface ERC721TokenCartItem extends ERC721CardData {
-  orderPriceEth?: number;
   orderExpiry?: ORDER_EXPIRY_TIME;
   cartType: CartType;
   lastSalePriceEth?: string | number | null | undefined;
@@ -48,7 +47,7 @@ export interface ERC721TokenCartItem extends ERC721CardData {
 }
 
 export interface ERC721OrderCartItem extends SignedOBOrder {
-  cartType: CartType.Cancel | CartType.CollectionOffer | CartType.TokenOffer;
+  cartType: CartType.Cancel | CartType.CollectionBid | CartType.TokenBid;
   executionStatus: ExecutionStatus | null;
 }
 

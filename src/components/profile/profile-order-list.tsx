@@ -65,7 +65,7 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
     if (newType === 'listings' || newType === 'offers-received') {
       setCartType(CartType.TokenList);
     } else if (newType === 'offers-made') {
-      setCartType(CartType.TokenOffer);
+      setCartType(CartType.TokenBid);
     }
     const newFilter = {
       ...filter,

@@ -81,7 +81,7 @@ export const CollectionOrderList = ({ collectionAddress, collectionChainId, clas
                 : order.nfts[0].tokens.length === 0
                 ? 'Collection Bid'
                 : 'Token Bid';
-            orderCartItem.cartType = orderType === 'Collection Bid' ? CartType.CollectionOffer : CartType.TokenOffer;
+            orderCartItem.cartType = orderType === 'Collection Bid' ? CartType.CollectionBid : CartType.TokenBid;
             return <CollectionOrderListItem key={order.id} order={orderCartItem} orderType={orderType} />;
           })}
 

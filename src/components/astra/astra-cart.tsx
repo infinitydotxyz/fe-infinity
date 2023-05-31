@@ -83,9 +83,6 @@ export const AstraCart = ({
   }
   const [executionMode, setExecutionMode] = useState(ExecutionMode.Fast);
 
-  // collectionId -> price
-  // const [collectionCommonPrice, setCollectionCommonPrice] = useState<Map<string, string>>(new Map());
-
   const [tokenMap, setTokenMap] = useState<Map<string, ERC721TokenCartItem[]>>(new Map());
   const [collMap, setCollMap] = useState<Map<string, ERC721CollectionCartItem[]>>(new Map());
   const [orderMap, setOrderMap] = useState<Map<string, ERC721OrderCartItem[]>>(new Map());
@@ -141,7 +138,7 @@ export const AstraCart = ({
   const upateCartItemList = () => {
     let newCartTotal = 0;
     if (
-      (cartType === CartType.TokenList || cartType === CartType.TokenOffer || cartType === CartType.Send) &&
+      (cartType === CartType.TokenList || cartType === CartType.TokenBid || cartType === CartType.Send) &&
       tokenMap.size > 0
     ) {
       const divList: ReactNode[] = [];
@@ -157,36 +154,22 @@ export const AstraCart = ({
             key={`header-${first.id}`}
           >
             {first.collectionName}
-            {/* {cartType === CartType.TokenList && (
-              <div className="flex">
-                <CommonCollPrice
-                  collection={trimLowerCase(`${first.chainId}:${first.address}`)}
-                  collectionCommonPrice={collectionCommonPrice}
-                  setCollectionCommonPrice={setCollectionCommonPrice}
-                />
-              </div>
-            )} */}
           </div>
         );
 
         for (const t of tokenArray) {
           if (cartType !== CartType.Send) {
-            const price = t?.orderPriceEth
-              ? t?.orderPriceEth
+            const price = t?.price
+              ? t?.price
               : t?.orderSnippet?.listing?.orderItem?.startPriceEth
               ? t?.orderSnippet?.listing?.orderItem?.startPriceEth
-              : t?.price
-              ? t?.price
               : 0;
             newCartTotal += price;
           }
-          // const commonPrice = collectionCommonPrice.get(`${t.chainId}:${t.address}`) ?? '';
           divList.push(
             <AstraTokenCartItem
-              // key={getTokenCartItemKey(t) + commonPrice}
               key={getTokenCartItemKey(t)}
               token={t}
-              // collectionCommonPrice={commonPrice}
               onRemove={onTokenRemove}
               updateCartTotal={(newVal: string, oldVal: string) => {
                 newCartTotal += Number(newVal) - Number(oldVal);
@@ -204,7 +187,7 @@ export const AstraCart = ({
           {divList}
         </div>
       );
-    } else if (cartType === CartType.CollectionOffer && collMap.size > 0) {
+    } else if (cartType === CartType.CollectionBid && collMap.size > 0) {
       const divList: ReactNode[] = [];
       collMap.forEach((collArray) => {
         const first = collArray[0];
@@ -279,7 +262,7 @@ export const AstraCart = ({
     const cartItems: CartItem[] = getCurrentCartItems();
     setCurrentCartItems(cartItems);
 
-    if (cartType === CartType.TokenList || cartType === CartType.TokenOffer || cartType === CartType.Send) {
+    if (cartType === CartType.TokenList || cartType === CartType.TokenBid || cartType === CartType.Send) {
       tokenMap.clear();
       for (const item of cartItems) {
         const token = item as ERC721TokenCartItem;
@@ -290,7 +273,7 @@ export const AstraCart = ({
       setTokenMap(tokenMap);
     }
 
-    if (cartType === CartType.CollectionOffer) {
+    if (cartType === CartType.CollectionBid) {
       collMap.clear();
       for (const item of cartItems) {
         const coll = item as ERC721CollectionCartItem;
@@ -320,20 +303,20 @@ export const AstraCart = ({
       } else {
         setCheckoutBtnText('Sell');
       }
-    } else if (cartType === CartType.CollectionOffer) {
+    } else if (cartType === CartType.CollectionBid) {
       if (cartItems.length > 1) {
         setCartTitle('Collection Offers');
-        setCheckoutBtnText('Bid');
+        setCheckoutBtnText('Bulk Bid');
       } else {
         setCartTitle('Collection Offer');
         setCheckoutBtnText('Bid');
       }
-    } else if (cartType === CartType.TokenOffer) {
-      setCartTitle('Buy');
+    } else if (cartType === CartType.TokenBid) {
+      setCartTitle('Bid');
       if (cartItems.length > 1) {
-        setCheckoutBtnText('Bulk Buy');
+        setCheckoutBtnText('Bulk Bid');
       } else {
-        setCheckoutBtnText('Buy');
+        setCheckoutBtnText('Bid');
       }
     } else if (cartType === CartType.Send) {
       setCartTitle('Send');
@@ -370,14 +353,10 @@ export const AstraCart = ({
               <div
                 className={twMerge('ml-2 text-sm cursor-pointer', brandTextColor)}
                 onClick={() => {
-                  if (
-                    cartType === CartType.Send ||
-                    cartType === CartType.TokenList ||
-                    cartType === CartType.TokenOffer
-                  ) {
+                  if (cartType === CartType.Send || cartType === CartType.TokenList || cartType === CartType.TokenBid) {
                     onTokensClear();
                     // setCollectionCommonPrice(new Map());
-                  } else if (cartType === CartType.CollectionOffer) {
+                  } else if (cartType === CartType.CollectionBid) {
                     onCollsClear();
                   } else if (cartType === CartType.Cancel) {
                     onOrdersClear();
@@ -521,31 +500,18 @@ interface Props2 {
   token: ERC721TokenCartItem;
   onRemove: (token: ERC721TokenCartItem) => void;
   updateCartTotal: (prevPrice: string, newPrice: string) => void;
-  // collectionCommonPrice: string;
 }
 
 const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
   const { cartType } = useCartContext();
-  // const collCommonPrice = cartType === CartType.TokenList && collectionCommonPrice ? collectionCommonPrice : '';
 
-  // const price = collCommonPrice
-  //   ? collCommonPrice
-  //   : token?.orderPriceEth
-  //   ? token?.orderPriceEth.toString()
-  //   : token?.orderSnippet?.listing?.orderItem?.startPriceEth
-  //   ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
-  //   : '';
+  const price = token?.price
+    ? token?.price.toString()
+    : token?.orderSnippet?.listing?.orderItem?.startPriceEth
+    ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
+    : '';
 
-  const price =
-    token?.orderPriceEth !== undefined
-      ? token?.orderPriceEth.toString()
-      : token?.orderSnippet?.listing?.orderItem?.startPriceEth
-      ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
-      : token?.price
-      ? token?.price.toString()
-      : '';
-
-  token.orderPriceEth = parseFloat(price);
+  token.price = parseFloat(price);
 
   const [editedPrice, setEditedPrice] = useState(price);
   const [editing, setEditing] = useState(price ? false : true);
@@ -686,7 +652,7 @@ interface Props5 {
 }
 
 const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete, useSpacer, currentPrice }: Props5) => {
-  const [price, setPrice] = useState(currentPrice?.toString() ?? '');
+  const [price, setPrice] = useState(nFormatter(parseFloat(currentPrice ?? '0'), 3)?.toString() ?? '');
   const [expiry, setExpiry] = useState(getDefaultOrderExpiryTime());
 
   const priceEditable = !currentPrice || editing;
@@ -805,7 +771,7 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
             }
             // onEditComplete?.(value);
             if (token) {
-              token.orderPriceEth = parsedValue;
+              token.price = parsedValue;
             } else if (collection) {
               collection.offerPriceEth = parsedValue;
             }
@@ -821,8 +787,6 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
     </div>
   );
 };
-
-// interface Props6 {
 //   collection: string;
 //   collectionCommonPrice: Map<string, string>;
 //   setCollectionCommonPrice: (newMap: Map<string, string>) => void;
