@@ -78,6 +78,7 @@ interface Props4 {
   type: string;
   placeholder: string;
   addEthSymbol?: boolean;
+  addPctSymbol?: boolean;
   onChange?: (value: string) => void;
   tooltip?: TooltipSpec;
   icon?: ReactNode;
@@ -98,6 +99,7 @@ export const TextInputBox = ({
   label,
   icon,
   addEthSymbol = false,
+  addPctSymbol = false,
   type,
   placeholder,
   onChange,
@@ -147,6 +149,7 @@ export const TextInputBox = ({
           }}
         />
         {addEthSymbol && <div className="pr-2 select-none">{EthSymbol}</div>}
+        {addPctSymbol && <div className="pr-2 select-none">%</div>}
       </div>
     </InputBox>
   );

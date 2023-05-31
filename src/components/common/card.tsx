@@ -40,11 +40,15 @@ export const GridCard = ({
   const title = data?.title;
   const tokenId = data?.tokenId;
   const hasBlueCheck = data?.hasBlueCheck ?? false;
-  const buyNowPrice = data?.orderSnippet?.listing?.orderItem?.startPriceEth
+
+  const price = data?.price
+    ? data.price
+    : data?.orderSnippet?.listing?.orderItem?.startPriceEth
     ? data?.orderSnippet?.listing?.orderItem?.startPriceEth
     : data?.orderPriceEth
     ? data?.orderPriceEth
     : '';
+
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: data?.tokenId ?? '',
     collectionAddress: data?.address ?? '',
@@ -140,9 +144,9 @@ export const GridCard = ({
 
           <div className="flex mt-1 items-center">
             <div>
-              {buyNowPrice ? (
+              {price ? (
                 <div className="flex items-center rounded-sm space-x-1 text-sm">
-                  <div className={twMerge('truncate font-medium', borderColor)}>{nFormatter(buyNowPrice, 4)}</div>
+                  <div className={twMerge('truncate font-medium', borderColor)}>{nFormatter(price, 4)}</div>
                   <div className="text-xs">{EthSymbol}</div>
                 </div>
               ) : null}

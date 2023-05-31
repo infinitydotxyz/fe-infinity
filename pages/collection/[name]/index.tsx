@@ -15,7 +15,7 @@ import { CollectionCharts } from 'src/components/collection/collection-charts';
 import { CollectionItemsPageSidebar } from 'src/components/collection/collection-items-page-sidebar';
 import { CollectionOrderList } from 'src/components/collection/collection-orders-list';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
-import { CenteredContent, ExternalLink, EZImage, Spacer, TextInputBox } from 'src/components/common';
+import { CenteredContent, EZImage, ExternalLink, Spacer, TextInputBox } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
 import { useCollectionTokenFetcher } from 'src/hooks/api/useTokenFetcher';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
@@ -23,7 +23,14 @@ import { apiGet, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { ERC721CollectionCartItem, ERC721TokenCartItem, TokensFilter } from 'src/utils/types';
-import { borderColor, brandTextColor, hoverColor, iconButtonStyle, selectedColor } from 'src/utils/ui-constants';
+import {
+  borderColor,
+  brandTextColor,
+  hoverColor,
+  iconButtonStyle,
+  secondaryTextColor,
+  selectedColor
+} from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface CollectionDashboardProps {
@@ -50,12 +57,14 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const [filter, setFilter] = useState<TokensFilter>({});
   const chainId = collection.chainId as ChainId;
   const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, chainId, filter);
+  const [mutatedData, setMutatedData] = useState<ERC721TokenCartItem[]>(data);
   const { setRef } = useScrollInfo();
-  const tabs = ['Items', 'Bids', 'Analytics'];
+  const tabs = ['Bid', 'Bids', 'Analytics'];
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
   const { cartType, setCartType } = useCartContext();
   const [numSweep, setNumSweep] = useState('');
   const [customSweep, setCustomSweep] = useState('');
+  const [bidBelowPct, setBidBelowPct] = useState('');
   const { showCart, setShowCart } = useAppContext();
   const [selectedTraits, setSelectedTraits] = useState<string[]>([]);
 
@@ -89,13 +98,30 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   }, [collSelection]);
 
   useEffect(() => {
-    const numToSelect = Math.min(data.length, parseInt(numSweep), MAX_NUM_SWEEP_ITEMS);
+    const numToSelect = Math.min(mutatedData.length, parseInt(numSweep), MAX_NUM_SWEEP_ITEMS);
     const tokens = [];
     for (let i = 0; i < numToSelect; i++) {
-      tokens.push(data[i]);
+      tokens.push(mutatedData[i]);
     }
     toggleMultipleNFTSelection(tokens);
   }, [numSweep]);
+
+  useEffect(() => {
+    const bidBelowPctNum = parseFloat(bidBelowPct);
+    const mutatedTokens = [];
+    for (const token of data) {
+      const tokenOrigPrice = token?.orderSnippet?.listing?.orderItem?.startPriceEth
+        ? token?.orderSnippet?.listing?.orderItem?.startPriceEth
+        : 0;
+
+      const bidPrice = tokenOrigPrice * (1 - bidBelowPctNum / 100);
+
+      const mutatedToken = token;
+      mutatedToken.price = bidPrice;
+      mutatedTokens.push(mutatedToken);
+    }
+    setMutatedData(mutatedTokens);
+  }, [bidBelowPct]);
 
   const onTabChange = (tab: string) => {
     setSelectedTab(tab);
@@ -200,46 +226,151 @@ export default function ItemsPage(props: CollectionDashboardProps) {
         <CollectionPageHeader {...headerProps} />
 
         <div ref={setRef} className="overflow-y-auto scrollbar-hide">
-          {selectedTab === 'Items' && (
-            <div className="flex mt-2 px-4">
-              <div
-                className={twMerge(
-                  'flex mr-1',
-                  cartType === CartType.CollectionOffer ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300'
-                )}
-              >
-                <CollectionNftSearchInput
-                  slug={collection.slug}
-                  expanded
-                  collectionFloorPrice={floorPrice}
-                  chainId={chainId}
-                />
+          {selectedTab === 'Bid' && (
+            <div className={twMerge('mt-2 px-4')}>
+              <div className={twMerge('flex')}>
+                <div
+                  className={twMerge(
+                    'flex mr-1',
+                    cartType === CartType.CollectionOffer
+                      ? 'opacity-30 duration-300 pointer-events-none'
+                      : 'duration-300'
+                  )}
+                >
+                  <CollectionNftSearchInput
+                    slug={collection.slug}
+                    expanded
+                    collectionFloorPrice={floorPrice}
+                    chainId={chainId}
+                  />
+                </div>
+
+                <Spacer />
+
+                <div className="flex space-x-2 text-sm">
+                  <AButton
+                    primary
+                    className="px-5 py-1 rounded-lg text-sm"
+                    onClick={() => {
+                      setCartType(CartType.CollectionOffer);
+                      if (isCollSelectable(collection as ERC721CollectionCartItem)) {
+                        setShowCart(!showCart);
+                        return toggleCollSelection(collection as ERC721CollectionCartItem);
+                      }
+                    }}
+                  >
+                    {isCollSelected(collection as ERC721CollectionCartItem) ? (
+                      <div className="flex items-center space-x-1">
+                        <AiOutlineCheckCircle className={'h-4 w-4'} />
+                        <div>Collection Bid</div>
+                      </div>
+                    ) : (
+                      'Collection Bid'
+                    )}
+                  </AButton>
+
+                  <div
+                    className={twMerge(
+                      'flex flex-row rounded-lg border cursor-pointer',
+                      borderColor,
+                      cartType === CartType.CollectionOffer
+                        ? 'opacity-30 duration-300 pointer-events-none'
+                        : 'duration-300'
+                    )}
+                  >
+                    <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>
+                      <GiBroom className={twMerge(iconButtonStyle, brandTextColor)} />
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        numSweep === '5' && selectedColor
+                      )}
+                      onClick={() => {
+                        numSweep === '5' ? setNumSweep('') : setNumSweep('5');
+                      }}
+                    >
+                      5
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        numSweep === '10' && selectedColor
+                      )}
+                      onClick={() => {
+                        numSweep === '10' ? setNumSweep('') : setNumSweep('10');
+                      }}
+                    >
+                      10
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        numSweep === '20' && selectedColor
+                      )}
+                      onClick={() => {
+                        numSweep === '20' ? setNumSweep('') : setNumSweep('20');
+                      }}
+                    >
+                      20
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        numSweep === '50' && selectedColor
+                      )}
+                      onClick={() => {
+                        numSweep === '50' ? setNumSweep('') : setNumSweep('50');
+                      }}
+                    >
+                      50
+                    </div>
+                    <div className="px-4 h-full flex items-center">
+                      <TextInputBox
+                        autoFocus={true}
+                        inputClassName="text-sm"
+                        className="border-0 w-14 p-0 text-sm"
+                        type="number"
+                        placeholder="Custom"
+                        value={customSweep}
+                        onChange={(value) => {
+                          setNumSweep(value);
+                          setCustomSweep(value);
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div
+                    className={twMerge(
+                      'flex space-x-1',
+                      cartType === CartType.CollectionOffer
+                        ? 'opacity-30 duration-300 pointer-events-none'
+                        : 'duration-300'
+                    )}
+                  >
+                    <ASortButton filter={filter} setFilter={setFilter} />
+                    <AStatusFilterButton filter={filter} setFilter={setFilter} />
+                    <APriceFilter filter={filter} setFilter={setFilter} />
+                    <ATraitFilter
+                      collectionAddress={collection.address}
+                      filter={filter}
+                      setFilter={setFilter}
+                      collectionAttributes={props.collectionAttributes}
+                    />
+                  </div>
+                </div>
               </div>
 
-              <Spacer />
-
-              <div className="flex space-x-2 text-sm">
-                <AButton
-                  primary
-                  className="px-5 py-1 rounded-lg text-sm"
-                  onClick={() => {
-                    setCartType(CartType.CollectionOffer);
-                    if (isCollSelectable(collection as ERC721CollectionCartItem)) {
-                      setShowCart(!showCart);
-                      return toggleCollSelection(collection as ERC721CollectionCartItem);
-                    }
-                  }}
-                >
-                  {isCollSelected(collection as ERC721CollectionCartItem) ? (
-                    <div className="flex items-center space-x-1">
-                      <AiOutlineCheckCircle className={'h-4 w-4'} />
-                      <div>Collection Bid</div>
-                    </div>
-                  ) : (
-                    'Collection Bid'
-                  )}
-                </AButton>
-
+              <div className="flex mt-2 text-sm">
                 <div
                   className={twMerge(
                     'flex flex-row rounded-lg border cursor-pointer',
@@ -250,93 +381,81 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   )}
                 >
                   <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>
-                    <GiBroom className={twMerge(iconButtonStyle, brandTextColor)} />
+                    Bid below price:
                   </div>
                   <div
                     className={twMerge(
                       'px-4 h-full flex items-center border-r-[1px]',
                       borderColor,
                       hoverColor,
-                      numSweep === '5' && selectedColor
+                      bidBelowPct === '1' && selectedColor
                     )}
                     onClick={() => {
-                      numSweep === '5' ? setNumSweep('') : setNumSweep('5');
+                      bidBelowPct === '1' ? setBidBelowPct('') : setBidBelowPct('1');
                     }}
                   >
-                    5
+                    1%
                   </div>
                   <div
                     className={twMerge(
                       'px-4 h-full flex items-center border-r-[1px]',
                       borderColor,
                       hoverColor,
-                      numSweep === '10' && selectedColor
+                      bidBelowPct === '2' && selectedColor
                     )}
                     onClick={() => {
-                      numSweep === '10' ? setNumSweep('') : setNumSweep('10');
+                      bidBelowPct === '2' ? setBidBelowPct('') : setBidBelowPct('2');
                     }}
                   >
-                    10
+                    2%
                   </div>
                   <div
                     className={twMerge(
                       'px-4 h-full flex items-center border-r-[1px]',
                       borderColor,
                       hoverColor,
-                      numSweep === '20' && selectedColor
+                      bidBelowPct === '5' && selectedColor
                     )}
                     onClick={() => {
-                      numSweep === '20' ? setNumSweep('') : setNumSweep('20');
+                      bidBelowPct === '5' ? setBidBelowPct('') : setBidBelowPct('5');
                     }}
                   >
-                    20
+                    5%
                   </div>
                   <div
                     className={twMerge(
                       'px-4 h-full flex items-center border-r-[1px]',
                       borderColor,
                       hoverColor,
-                      numSweep === '50' && selectedColor
+                      bidBelowPct === '10' && selectedColor
                     )}
                     onClick={() => {
-                      numSweep === '50' ? setNumSweep('') : setNumSweep('50');
+                      bidBelowPct === '10' ? setBidBelowPct('') : setBidBelowPct('10');
                     }}
                   >
-                    50
+                    10%
                   </div>
-                  <div className="px-4 h-full flex items-center">
+                  <div className="p-3 h-full flex items-center">
                     <TextInputBox
-                      autoFocus={true}
+                      addPctSymbol={true}
+                      autoFocus={false}
                       inputClassName="text-sm"
-                      className="border-0 w-14 p-0 text-sm"
+                      className="border-0 w-20 p-0 text-sm"
                       type="number"
                       placeholder="Custom"
-                      value={customSweep}
+                      value={String(bidBelowPct)}
                       onChange={(value) => {
-                        setNumSweep(value);
-                        setCustomSweep(value);
+                        let valueNum = parseFloat(value);
+                        if (valueNum > 100) {
+                          valueNum = 100;
+                        }
+                        setBidBelowPct(valueNum.toString());
                       }}
                     />
                   </div>
                 </div>
-
-                <div
-                  className={twMerge(
-                    'flex space-x-1',
-                    cartType === CartType.CollectionOffer
-                      ? 'opacity-30 duration-300 pointer-events-none'
-                      : 'duration-300'
-                  )}
-                >
-                  <ASortButton filter={filter} setFilter={setFilter} />
-                  <AStatusFilterButton filter={filter} setFilter={setFilter} />
-                  <APriceFilter filter={filter} setFilter={setFilter} />
-                  <ATraitFilter
-                    collectionAddress={collection.address}
-                    filter={filter}
-                    setFilter={setFilter}
-                    collectionAttributes={props.collectionAttributes}
-                  />
+                <div className={twMerge('flex ml-2 items-center', secondaryTextColor)}>
+                  ⓘ Matched bids are automatically executed on your behalf for fast snipes.
                 </div>
               </div>
             </div>
@@ -355,7 +474,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               })}
             </div>
           )}
-          {selectedTab === 'Items' && (
+          {selectedTab === 'Bid' && (
             <div className="flex flex-row">
               <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
                 <TokenGrid

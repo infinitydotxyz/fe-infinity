@@ -173,10 +173,10 @@ export const AstraCart = ({
           if (cartType !== CartType.Send) {
             const price = t?.orderPriceEth
               ? t?.orderPriceEth
-              : t?.orderSnippet?.listing?.orderItem?.startPriceEth
-              ? t?.orderSnippet?.listing?.orderItem?.startPriceEth
               : t?.price
               ? t?.price
+              : t?.orderSnippet?.listing?.orderItem?.startPriceEth
+              ? t?.orderSnippet?.listing?.orderItem?.startPriceEth
               : 0;
             newCartTotal += price;
           }
@@ -539,10 +539,10 @@ const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
   const price =
     token?.orderPriceEth !== undefined
       ? token?.orderPriceEth.toString()
-      : token?.orderSnippet?.listing?.orderItem?.startPriceEth
-      ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
       : token?.price
       ? token?.price.toString()
+      : token?.orderSnippet?.listing?.orderItem?.startPriceEth
+      ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
       : '';
 
   token.orderPriceEth = parseFloat(price);
