@@ -656,7 +656,7 @@ interface Props5 {
 }
 
 const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete, useSpacer, currentPrice }: Props5) => {
-  const [price, setPrice] = useState(currentPrice?.toString() ?? '');
+  const [price, setPrice] = useState(nFormatter(parseFloat(currentPrice ?? '0'), 3)?.toString() ?? '');
   const [expiry, setExpiry] = useState(getDefaultOrderExpiryTime());
 
   const priceEditable = !currentPrice || editing;
