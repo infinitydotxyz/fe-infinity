@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { FaDiscord } from 'react-icons/fa';
 import { GiBroom } from 'react-icons/gi';
+import { HiOutlineLightBulb } from 'react-icons/hi';
 import { AButton } from 'src/components/astra/astra-button';
 import { APriceFilter } from 'src/components/astra/astra-price-filter';
 import { ASortButton } from 'src/components/astra/astra-sort-button';
@@ -450,8 +451,9 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     />
                   </div>
                 </div>
-                <div className={twMerge('flex ml-2 items-center', secondaryTextColor)}>
-                  ⓘ Matched bids are executed on your behalf for automatic sniping.
+                <div className={twMerge('flex ml-2 items-center space-x-1', secondaryTextColor)}>
+                  <HiOutlineLightBulb className="w-6 h-6" />
+                  <div className="mt-1">Matched bids are automatically sniped on your behalf.</div>
                 </div>
               </div>
             </div>
