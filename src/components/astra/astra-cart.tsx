@@ -331,10 +331,10 @@ export const AstraCart = ({
       }
     } else if (cartType === CartType.CollectionBid) {
       if (cartItems.length > 1) {
-        setCartTitle('Collection Offers');
+        setCartTitle('Collection Bids');
         setCheckoutBtnText('Bulk Bid');
       } else {
-        setCartTitle('Collection Offer');
+        setCartTitle('Collection Bid');
         setCheckoutBtnText('Bid');
       }
     } else if (cartType === CartType.TokenBid) {
