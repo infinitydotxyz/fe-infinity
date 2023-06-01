@@ -60,7 +60,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, chainId, filter);
   const [mutatedData, setMutatedData] = useState<ERC721TokenCartItem[]>(data);
   const { setRef } = useScrollInfo();
-  const tabs = ['Bid', 'Bids', 'Analytics'];
+  const tabs = ['Bid', 'Buy', 'Bids', 'Analytics'];
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
   const { cartType, setCartType } = useCartContext();
   const [numSweep, setNumSweep] = useState('');
@@ -70,6 +70,22 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const [selectedTraits, setSelectedTraits] = useState<string[]>([]);
 
   const MAX_NUM_SWEEP_ITEMS = 50;
+
+  useEffect(() => {
+    if (selectedTab === 'Bid') {
+      delete filter.orderType;
+      delete filter.source;
+      setFilter({
+        ...filter
+      });
+    } else if (selectedTab === 'Buy') {
+      setFilter({
+        ...filter,
+        orderType: 'listing',
+        source: 'flow'
+      });
+    }
+  }, [selectedTab]);
 
   useEffect(() => {
     if (filter.traitTypes?.length) {
@@ -227,7 +243,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
         <CollectionPageHeader {...headerProps} />
 
         <div ref={setRef} className="overflow-y-auto scrollbar-hide">
-          {selectedTab === 'Bid' && (
+          {(selectedTab === 'Bid' || selectedTab === 'Buy') && (
             <div className={twMerge('mt-2 px-4')}>
               <div className={twMerge('flex')}>
                 <div
@@ -368,94 +384,97 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   </div>
                 </div>
               </div>
-
-              <div className="flex mt-2 text-sm">
-                <div
-                  className={twMerge(
-                    'flex flex-row rounded-lg border cursor-pointer',
-                    borderColor,
-                    cartType === CartType.CollectionBid ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300'
-                  )}
-                >
-                  <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>
-                    Bid below price:
-                  </div>
+              {selectedTab === 'Bid' && (
+                <div className="flex mt-2 text-sm">
                   <div
                     className={twMerge(
-                      'px-4 h-full flex items-center border-r-[1px]',
+                      'flex flex-row rounded-lg border cursor-pointer',
                       borderColor,
-                      hoverColor,
-                      bidBelowPct === '1' && selectedColor
+                      cartType === CartType.CollectionBid
+                        ? 'opacity-30 duration-300 pointer-events-none'
+                        : 'duration-300'
                     )}
-                    onClick={() => {
-                      bidBelowPct === '1' ? setBidBelowPct('') : setBidBelowPct('1');
-                    }}
                   >
-                    1%
-                  </div>
-                  <div
-                    className={twMerge(
-                      'px-4 h-full flex items-center border-r-[1px]',
-                      borderColor,
-                      hoverColor,
-                      bidBelowPct === '2' && selectedColor
-                    )}
-                    onClick={() => {
-                      bidBelowPct === '2' ? setBidBelowPct('') : setBidBelowPct('2');
-                    }}
-                  >
-                    2%
-                  </div>
-                  <div
-                    className={twMerge(
-                      'px-4 h-full flex items-center border-r-[1px]',
-                      borderColor,
-                      hoverColor,
-                      bidBelowPct === '5' && selectedColor
-                    )}
-                    onClick={() => {
-                      bidBelowPct === '5' ? setBidBelowPct('') : setBidBelowPct('5');
-                    }}
-                  >
-                    5%
-                  </div>
-                  <div
-                    className={twMerge(
-                      'px-4 h-full flex items-center border-r-[1px]',
-                      borderColor,
-                      hoverColor,
-                      bidBelowPct === '10' && selectedColor
-                    )}
-                    onClick={() => {
-                      bidBelowPct === '10' ? setBidBelowPct('') : setBidBelowPct('10');
-                    }}
-                  >
-                    10%
-                  </div>
-                  <div className="p-3 h-full flex items-center">
-                    <TextInputBox
-                      addPctSymbol={true}
-                      autoFocus={false}
-                      inputClassName="text-sm"
-                      className="border-0 w-20 p-0 text-sm"
-                      type="number"
-                      placeholder="Custom"
-                      value={String(bidBelowPct)}
-                      onChange={(value) => {
-                        let valueNum = parseFloat(value);
-                        if (valueNum > 100) {
-                          valueNum = 100;
-                        }
-                        setBidBelowPct(valueNum.toString());
+                    <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>
+                      Bid below price:
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        bidBelowPct === '1' && selectedColor
+                      )}
+                      onClick={() => {
+                        bidBelowPct === '1' ? setBidBelowPct('') : setBidBelowPct('1');
                       }}
-                    />
+                    >
+                      1%
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        bidBelowPct === '2' && selectedColor
+                      )}
+                      onClick={() => {
+                        bidBelowPct === '2' ? setBidBelowPct('') : setBidBelowPct('2');
+                      }}
+                    >
+                      2%
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        bidBelowPct === '5' && selectedColor
+                      )}
+                      onClick={() => {
+                        bidBelowPct === '5' ? setBidBelowPct('') : setBidBelowPct('5');
+                      }}
+                    >
+                      5%
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        bidBelowPct === '10' && selectedColor
+                      )}
+                      onClick={() => {
+                        bidBelowPct === '10' ? setBidBelowPct('') : setBidBelowPct('10');
+                      }}
+                    >
+                      10%
+                    </div>
+                    <div className="p-3 h-full flex items-center">
+                      <TextInputBox
+                        addPctSymbol={true}
+                        autoFocus={false}
+                        inputClassName="text-sm"
+                        className="border-0 w-20 p-0 text-sm"
+                        type="number"
+                        placeholder="Custom"
+                        value={String(bidBelowPct)}
+                        onChange={(value) => {
+                          let valueNum = parseFloat(value);
+                          if (valueNum > 100) {
+                            valueNum = 100;
+                          }
+                          setBidBelowPct(valueNum.toString());
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className={twMerge('flex ml-2 items-center space-x-1', secondaryTextColor)}>
+                    <HiOutlineLightBulb className="w-6 h-6" />
+                    <div className="mt-1">Matched bids are automatically sniped on your behalf.</div>
                   </div>
                 </div>
-                <div className={twMerge('flex ml-2 items-center space-x-1', secondaryTextColor)}>
-                  <HiOutlineLightBulb className="w-6 h-6" />
-                  <div className="mt-1">Matched bids are automatically sniped on your behalf.</div>
-                </div>
-              </div>
+              )}
             </div>
           )}
           {selectedTraits.length > 0 && (
@@ -472,7 +491,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               })}
             </div>
           )}
-          {selectedTab === 'Bid' && (
+
+          {(selectedTab === 'Bid' || selectedTab === 'Buy') && (
             <div className="flex flex-row">
               <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
                 <TokenGrid

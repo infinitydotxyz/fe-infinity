@@ -71,6 +71,7 @@ export type TokensFilter = {
   traitValues?: string[];
   orderBy?: string;
   cursor?: string;
+  source?: string;
 };
 
 export interface GlobalRewards {

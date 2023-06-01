@@ -395,7 +395,9 @@ export const AstraCart = ({
           <div className="space-y-3 px-1">
             <div className="flex justify-between">
               <div className={twMerge(secondaryTextColor, 'font-medium')}>Cart total: </div>
-              <div className="font-heading">{nFormatter(Number(cartTotal))} WETH</div>
+              <div className="font-heading">
+                {nFormatter(Number(cartTotal))} {EthSymbol}
+              </div>
             </div>
             {user && (
               <div className="space-y-3">
