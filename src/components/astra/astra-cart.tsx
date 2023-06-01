@@ -164,7 +164,7 @@ export const AstraCart = ({
 
         for (const t of tokenArray) {
           if (cartType !== CartType.Send) {
-            const price = t?.orderPriceEth ?? 0;
+            const price = t?.orderPriceEth ?? t?.price ?? t?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0;
             newCartTotal += price;
           }
           divList.push(
@@ -472,7 +472,6 @@ export const AstraCart = ({
         )}
       </div>
 
-      {/* future-todo: change the chainId check here when more chains are supported */}
       <div className="m-6 flex flex-col">
         <AButton
           className="p-3 z-30"
@@ -524,7 +523,7 @@ const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
     ? token?.price.toString()
     : token?.orderSnippet?.listing?.orderItem?.startPriceEth
     ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
-    : '';
+    : '0';
   const gasCostEth = token?.orderSnippet?.listing?.orderItem?.gasCostEth ?? 0;
   const feeCostEth = token?.orderSnippet?.listing?.orderItem?.feeCostEth ?? 0;
 
@@ -534,7 +533,8 @@ const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
   const finalFeeCostEth = Math.min(calcFeeCostEth, feeCostEth);
 
   const deltaPrice = gasCostEth + finalFeeCostEth;
-  const finalPrice = price ? parseFloat(price) + deltaPrice : 0;
+
+  const finalPrice = token?.orderPriceEth ? token?.orderPriceEth : price ? parseFloat(price) + deltaPrice : 0;
   token.orderPriceEth = finalPrice;
 
   const [editedPrice, setEditedPrice] = useState(finalPrice.toString());

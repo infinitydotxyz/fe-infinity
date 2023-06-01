@@ -19,12 +19,14 @@ import {
 } from '@infinityxyz/lib-frontend/utils';
 import { Contract } from 'ethers';
 import { defaultAbiCoder, parseEther } from 'ethers/lib/utils.js';
+import { CollectionPageTabs } from 'pages/collection/[name]';
 import { ProfileTabs } from 'pages/profile/[address]';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { toastError, toastSuccess, toastWarning } from 'src/components/common';
 import { WaitingForTxModal } from 'src/components/common/waiting-for-tx-modal';
+import { useChain } from 'src/hooks/useChain';
 import { useCollectionSelection } from 'src/hooks/useCollectionSelection';
 import { useNFTSelection } from 'src/hooks/useNFTSelection';
 import { useOrderSelection } from 'src/hooks/useOrderSelection';
@@ -49,8 +51,6 @@ import {
 import { DEFAULT_MAX_GAS_PRICE_WEI, ZERO_ADDRESS } from '../constants';
 import { fetchOrderNonce, postOrdersV2 } from '../orderbook-utils';
 import { CartType, useCartContext } from './CartContext';
-import { useChain } from 'src/hooks/useChain';
-import { CollectionPageTabs } from 'pages/collection/[name]';
 
 type AppContextType = {
   selectedChain: ChainId;
