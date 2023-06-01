@@ -85,6 +85,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const MAX_NUM_SWEEP_ITEMS = 50;
 
   useEffect(() => {
+    setMutatedData(data);
+  }, [data]);
+
+  useEffect(() => {
     if (selectedCollectionTab === CollectionPageTabs.Bid.toString()) {
       delete filter.orderType;
       delete filter.source;
