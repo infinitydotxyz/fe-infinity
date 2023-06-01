@@ -12,9 +12,10 @@ import { CollectionSearchInput } from '../common/search/collection-search-input'
 
 interface Props {
   userAddress: string;
+  isOwner: boolean;
 }
 
-export const ProfileNFTs = ({ userAddress }: Props) => {
+export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
   const [selectedCollection, setSelectedCollection] = useState<CollectionSearchDto>();
   const [filter, setFilter] = useState<TokensFilter>({});
   const { isNFTSelected, isNFTSelectable, listMode, toggleNFTSelection, toggleMultipleNFTSelection } = useAppContext();
@@ -162,11 +163,11 @@ export const ProfileNFTs = ({ userAddress }: Props) => {
                 </div>
               </div>
 
-              {multiSelect()}
+              {isOwner && multiSelect()}
             </div>
-          ) : (
+          ) : isOwner ? (
             multiSelect()
-          )}
+          ) : null}
         </div>
       </div>
 

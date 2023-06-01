@@ -41,6 +41,13 @@ interface CollectionDashboardProps {
   error?: Error;
 }
 
+export enum CollectionPageTabs {
+  Bid = 'Bid',
+  Buy = 'Buy',
+  Bids = 'Bids',
+  Analytics = 'Analytics'
+}
+
 export default function ItemsPage(props: CollectionDashboardProps) {
   const collection = props.collection;
 
@@ -53,6 +60,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     toggleCollSelection,
     isCollSelected,
     isCollSelectable,
+    selectedCollectionTab,
+    setSelectedCollectionTab,
     collSelection
   } = useAppContext();
   const [filter, setFilter] = useState<TokensFilter>({});
@@ -60,8 +69,12 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, chainId, filter);
   const [mutatedData, setMutatedData] = useState<ERC721TokenCartItem[]>(data);
   const { setRef } = useScrollInfo();
-  const tabs = ['Bid', 'Buy', 'Bids', 'Analytics'];
-  const [selectedTab, setSelectedTab] = useState(tabs[0]);
+  const tabs = [
+    CollectionPageTabs.Bid.toString(),
+    CollectionPageTabs.Buy.toString(),
+    CollectionPageTabs.Bids.toString(),
+    CollectionPageTabs.Analytics.toString()
+  ];
   const { cartType, setCartType } = useCartContext();
   const [numSweep, setNumSweep] = useState('');
   const [customSweep, setCustomSweep] = useState('');
@@ -72,20 +85,20 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const MAX_NUM_SWEEP_ITEMS = 50;
 
   useEffect(() => {
-    if (selectedTab === 'Bid') {
+    if (selectedCollectionTab === CollectionPageTabs.Bid.toString()) {
       delete filter.orderType;
       delete filter.source;
       setFilter({
         ...filter
       });
-    } else if (selectedTab === 'Buy') {
+    } else if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
       setFilter({
         ...filter,
         orderType: 'listing',
         source: 'flow'
       });
     }
-  }, [selectedTab]);
+  }, [selectedCollectionTab]);
 
   useEffect(() => {
     if (filter.traitTypes?.length) {
@@ -109,8 +122,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   useEffect(() => {
     if (collSelection.length > 0) {
       setCartType(CartType.CollectionBid);
-    } else {
+    } else if (selectedCollectionTab === CollectionPageTabs.Bid.toString()) {
       setCartType(CartType.TokenBid);
+    } else if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
+      setCartType(CartType.TokenBuy);
     }
   }, [collSelection]);
 
@@ -141,7 +156,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   }, [bidBelowPct]);
 
   const onTabChange = (tab: string) => {
-    setSelectedTab(tab);
+    setSelectedCollectionTab(tab);
   };
 
   const onClickNFT = (token: ERC721TokenCartItem) => {
@@ -243,7 +258,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
         <CollectionPageHeader {...headerProps} />
 
         <div ref={setRef} className="overflow-y-auto scrollbar-hide">
-          {(selectedTab === 'Bid' || selectedTab === 'Buy') && (
+          {(selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
+            selectedCollectionTab === CollectionPageTabs.Buy.toString()) && (
             <div className={twMerge('mt-2 px-4')}>
               <div className={twMerge('flex')}>
                 <div
@@ -384,7 +400,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   </div>
                 </div>
               </div>
-              {selectedTab === 'Bid' && (
+              {selectedCollectionTab === CollectionPageTabs.Bid.toString() && (
                 <div className="flex mt-2 text-sm">
                   <div
                     className={twMerge(
@@ -492,7 +508,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
             </div>
           )}
 
-          {(selectedTab === 'Bid' || selectedTab === 'Buy') && (
+          {(selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
+            selectedCollectionTab === CollectionPageTabs.Buy.toString()) && (
             <div className="flex flex-row">
               <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
                 <TokenGrid
@@ -523,13 +540,13 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               </div>
             </div>
           )}
-          {selectedTab === 'Bids' && (
+          {selectedCollectionTab === 'Bids' && (
             <CollectionOrderList
               collectionAddress={collection.address}
               collectionChainId={collection.chainId as ChainId}
             />
           )}
-          {selectedTab === 'Analytics' && (
+          {selectedCollectionTab === 'Analytics' && (
             <CollectionCharts
               collectionAddress={collection.address}
               collectionChainId={chainId}

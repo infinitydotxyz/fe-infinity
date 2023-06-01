@@ -46,11 +46,7 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
   const [addedToCancelCart, setAddedToCancelCart] = useState(isOrderSelected(order));
 
   const orderStatus = order.executionStatus?.status;
-  const isActionable = !(
-    orderStatus === 'matched-executed' ||
-    orderStatus === 'matched-executing' ||
-    orderStatus === 'matched-pending-execution'
-  );
+  const isActionable = !(orderStatus === 'matched-executed' || orderStatus === 'matched-executing');
 
   useEffect(() => {
     setAddedToEditCart(
@@ -86,7 +82,7 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
         <div className="w-1/6">
           <div className={twMerge(secondaryTextColor, 'font-medium')}>Price</div>
           <div className="">
-            <EthPrice label={`${nFormatter(startPriceEth, 3)}`} />
+            <EthPrice label={`${nFormatter(startPriceEth, 2)}`} />
           </div>
         </div>
 

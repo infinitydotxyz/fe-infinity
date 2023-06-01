@@ -50,6 +50,7 @@ import { DEFAULT_MAX_GAS_PRICE_WEI, ZERO_ADDRESS } from '../constants';
 import { fetchOrderNonce, postOrdersV2 } from '../orderbook-utils';
 import { CartType, useCartContext } from './CartContext';
 import { useChain } from 'src/hooks/useChain';
+import { CollectionPageTabs } from 'pages/collection/[name]';
 
 type AppContextType = {
   selectedChain: ChainId;
@@ -61,6 +62,9 @@ type AppContextType = {
 
   selectedProfileTab: string;
   setSelectedProfileTab: (value: string) => void;
+
+  selectedCollectionTab: string;
+  setSelectedCollectionTab: (value: string) => void;
 
   isCheckingOut: boolean;
   setIsCheckingOut: (value: boolean) => void;
@@ -114,6 +118,8 @@ export const AppContextProvider = ({ children }: Props) => {
   const [showCart, setShowCart] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [selectedProfileTab, setSelectedProfileTab] = useState(ProfileTabs.Items.toString());
+  const [selectedCollectionTab, setSelectedCollectionTab] = useState(CollectionPageTabs.Bid.toString());
+
   const [listMode, setListMode] = useState(false);
   const [txnHash, setTxnHash] = useState<string>('');
   const [isCheckingOut, setIsCheckingOut] = useState(false);
@@ -652,6 +658,9 @@ export const AppContextProvider = ({ children }: Props) => {
 
     selectedProfileTab,
     setSelectedProfileTab,
+
+    selectedCollectionTab,
+    setSelectedCollectionTab,
 
     isCheckingOut,
     setIsCheckingOut,

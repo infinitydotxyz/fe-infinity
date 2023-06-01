@@ -16,6 +16,7 @@ import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, ORD
 import { CartType } from './context/CartContext';
 import { BigNumber } from '@ethersproject/bignumber/lib/bignumber';
 import { formatUnits, parseUnits } from 'ethers/lib/utils.js';
+import { CollectionPageTabs } from 'pages/collection/[name]';
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
 
@@ -70,17 +71,22 @@ export const toChecksumAddress = (address?: string): string => {
   return '';
 };
 
-export const getCartType = (path: string, selectedProfileTab: string): CartType => {
+export const getCartType = (path: string, selectedProfileTab: string, selectedCollectionTab: string): CartType => {
   const isTrendingPage = path.includes('trending');
   const isCollectionPage = path.includes('collection');
   const isProfilePage = path.includes('profile');
+
   const isProfileItems = selectedProfileTab === ProfileTabs.Items.toString();
   const isProfileSend = selectedProfileTab === ProfileTabs.Send.toString();
   const isProfileOrders = selectedProfileTab === ProfileTabs.Orders.toString();
 
+  const isCollectionBidTab = selectedCollectionTab === CollectionPageTabs.Bid.toString();
+  const isCollectionBuyTab = selectedCollectionTab === CollectionPageTabs.Buy.toString();
+
   const isCollectionBidCart = isTrendingPage;
   const isTokenListCart = isProfilePage && isProfileItems;
-  const isTokenBidCart = isCollectionPage;
+  const isTokenBidCart = isCollectionPage && isCollectionBidTab;
+  const isTokenBuyCart = isCollectionPage && isCollectionBuyTab;
   const isSendCart = isProfilePage && isProfileSend;
   const isCancelCart = isProfilePage && isProfileOrders;
 
@@ -88,6 +94,8 @@ export const getCartType = (path: string, selectedProfileTab: string): CartType 
     return CartType.CollectionBid;
   } else if (isTokenBidCart) {
     return CartType.TokenBid;
+  } else if (isTokenBuyCart) {
+    return CartType.TokenBuy;
   } else if (isTokenListCart) {
     return CartType.TokenList;
   } else if (isSendCart) {
