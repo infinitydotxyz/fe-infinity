@@ -98,8 +98,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     } else if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
       setFilter({
         ...filter,
-        orderType: 'listing',
-        source: 'flow'
+        orderType: 'listing'
       });
     }
   }, [selectedCollectionTab]);

@@ -49,7 +49,7 @@ interface Props {
   onTokenSend: (toAddress: string) => void;
 }
 
-export const getTokenFinalPrice = (token: ERC721TokenCartItem): number => {
+const getTokenFinalPrice = (token: ERC721TokenCartItem, cartType: CartType): number => {
   const price = token?.price
     ? token?.price.toString()
     : token?.orderSnippet?.listing?.orderItem?.startPriceEth
@@ -63,7 +63,10 @@ export const getTokenFinalPrice = (token: ERC721TokenCartItem): number => {
   const calcFeeCostEth = parseFloat(formatEther(calcFeesWei));
   const finalFeeCostEth = Math.min(calcFeeCostEth, feeCostEth);
 
-  const deltaPrice = gasCostEth + finalFeeCostEth;
+  let deltaPrice = gasCostEth + finalFeeCostEth;
+  if (cartType === CartType.TokenBuy) {
+    deltaPrice = 0;
+  }
 
   const finalPrice = token?.orderPriceEth ? token?.orderPriceEth : price ? parseFloat(price) + deltaPrice : 0;
   return finalPrice;
@@ -184,7 +187,7 @@ export const AstraCart = ({
 
         for (const t of tokenArray) {
           if (cartType !== CartType.Send) {
-            const price = getTokenFinalPrice(t);
+            const price = getTokenFinalPrice(t, cartType);
             newCartTotal += price;
           }
           divList.push(
@@ -539,7 +542,7 @@ interface Props2 {
 const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
   const { cartType } = useCartContext();
 
-  const finalPrice = getTokenFinalPrice(token);
+  const finalPrice = getTokenFinalPrice(token, cartType);
   token.orderPriceEth = finalPrice;
 
   const [editedPrice, setEditedPrice] = useState(finalPrice.toString());
