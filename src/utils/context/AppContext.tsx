@@ -545,7 +545,7 @@ export const AppContextProvider = ({ children }: Props) => {
       currencyAddress = ZERO_ADDRESS; // sell orders are always in ETH
     }
     const gasPrice = await getEstimatedGasPrice(provider);
-    const ethPrice = token.price ?? 0;
+    const ethPrice = token.orderPriceEth ?? 0;
     if (ethPrice === 0) {
       throw new Error('Price cannot be 0');
     }
