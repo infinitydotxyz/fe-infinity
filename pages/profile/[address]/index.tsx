@@ -18,6 +18,7 @@ export default function ProfileItemsPage() {
   const tabs = [ProfileTabs.Items.toString(), ProfileTabs.Orders.toString()];
   const { selectedProfileTab } = useAppContext();
   const router = useRouter();
+  const { showCart } = useAppContext();
 
   const [content, setContent] = useState<ReactNode>(
     <CenteredContent>
@@ -47,11 +48,13 @@ export default function ProfileItemsPage() {
           <ProfilePageHeader expanded={expanded} tabs={tabs} />
 
           <div ref={setRef} className="flex overflow-y-auto scrollbar-hide px-6">
-            <div className="flex w-1/5 mt-2 mb-[90px]">
-              <ProfileCollections userAddress={addressFromPath} key={addressFromPath} />
-            </div>
+            {!showCart && (
+              <div className="flex w-1/5 mt-2 mb-[90px]">
+                <ProfileCollections userAddress={addressFromPath} key={addressFromPath} />
+              </div>
+            )}
 
-            <div className="w-4/5">
+            <div className={showCart ? 'w-full' : 'w-4/5'}>
               {selectedProfileTab === ProfileTabs.Items && (
                 <ProfileNFTs userAddress={addressFromPath} key={addressFromPath} isOwner={isOwner} />
               )}
@@ -66,7 +69,7 @@ export default function ProfileItemsPage() {
         </div>
       );
     }
-  }, [router.isReady, router.asPath, selectedProfileTab, address]);
+  }, [router.isReady, router.asPath, selectedProfileTab, address, showCart]);
 
   return content;
 }
