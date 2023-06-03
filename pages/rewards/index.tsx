@@ -17,7 +17,9 @@ const RewardsPage = () => {
         defaultOption={tabs[0]}
         onChange={setSelected}
       />
-      <div className={twMerge(textColor, 'flex flex-col h-full w-full overflow-y-auto overflow-x-hidden')}>
+      <div
+        className={twMerge(textColor, 'flex flex-col h-full w-full overflow-y-auto overflow-x-hidden scrollbar-hide')}
+      >
         {selected === 'My Rewards' && <MyRewards />}
         {selected === 'Global Rewards' && <GlobalRewards />}
       </div>
