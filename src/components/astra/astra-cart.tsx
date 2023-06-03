@@ -1,7 +1,7 @@
 import { getAddress } from '@ethersproject/address';
 import { RadioGroup } from '@headlessui/react';
 import { ChainId } from '@infinityxyz/lib-frontend/types/core';
-import { ETHEREUM_WETH_ADDRESS, GOERLI_WETH_ADDRESS } from '@infinityxyz/lib-frontend/utils';
+import { ETHEREUM_WETH_ADDRESS, GOERLI_WETH_ADDRESS, PROTOCOL_FEE_BPS } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 import { FiEdit3 } from 'react-icons/fi';
@@ -36,6 +36,7 @@ import { useAccount, useBalance, useNetwork, useProvider } from 'wagmi';
 import { RadioButtonCard } from '../common/radio-button-card';
 import { UniswapModal } from '../common/uniswap-model';
 import { ADropdown } from './astra-dropdown';
+import { formatEther, parseEther } from 'ethers/lib/utils.js';
 
 interface Props {
   onTokensClear: () => void;
@@ -48,6 +49,29 @@ interface Props {
   onTokenSend: (toAddress: string) => void;
 }
 
+const getTokenFinalPrice = (token: ERC721TokenCartItem, cartType: CartType): number => {
+  const price = token?.price
+    ? token?.price.toString()
+    : token?.orderSnippet?.listing?.orderItem?.startPriceEth
+    ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
+    : '0';
+  const gasCostEth = token?.orderSnippet?.listing?.orderItem?.gasCostEth ?? 0;
+  const feeCostEth = token?.orderSnippet?.listing?.orderItem?.feeCostEth ?? 0;
+
+  const priceWei = parseEther(price.toString());
+  const calcFeesWei = priceWei.mul(PROTOCOL_FEE_BPS).div(10_000);
+  const calcFeeCostEth = parseFloat(formatEther(calcFeesWei));
+  const finalFeeCostEth = Math.min(calcFeeCostEth, feeCostEth);
+
+  let deltaPrice = gasCostEth + finalFeeCostEth;
+  if (cartType === CartType.TokenBuy) {
+    deltaPrice = 0;
+  }
+
+  const finalPrice = token?.orderPriceEth ? token?.orderPriceEth : price ? parseFloat(price) + deltaPrice : 0;
+  return finalPrice;
+};
+
 export const AstraCart = ({
   onTokensClear,
   onCollsClear,
@@ -59,7 +83,8 @@ export const AstraCart = ({
   onTokenSend
 }: Props) => {
   const router = useRouter();
-  const { selectedProfileTab, isCheckingOut, setIsCheckingOut, checkoutBtnStatus } = useAppContext();
+  const { selectedProfileTab, selectedCollectionTab, isCheckingOut, setIsCheckingOut, checkoutBtnStatus } =
+    useAppContext();
   const [cartTitle, setCartTitle] = useState('Cart');
   const [checkoutBtnText, setCheckoutBtnText] = useState('Checkout');
   const [sendToAddress, setSendToAddress] = useState('');
@@ -94,19 +119,19 @@ export const AstraCart = ({
   const { data: wethBalance, isLoading } = useBalance({
     address: user,
     token: WETH_ADDRESS as `0x{string}`,
-    watch: true
+    watch: false
   });
 
   const { data: ethBalance, isLoading: isEthBalanceLoading } = useBalance({
     address: user,
-    watch: true
+    watch: false
   });
 
   let cartItemList: ReactNode;
   const [cartContent, setCartContent] = useState<ReactNode>(cartItemList);
 
   useEffect(() => {
-    if (cartType === CartType.Send || cartType === CartType.Cancel) {
+    if (cartType === CartType.Send || cartType === CartType.Cancel || cartType === CartType.TokenBuy) {
       setCartTabOptions(['Totals']);
     } else {
       setCartTabOptions(['Totals', 'Options']);
@@ -138,7 +163,10 @@ export const AstraCart = ({
   const upateCartItemList = () => {
     let newCartTotal = 0;
     if (
-      (cartType === CartType.TokenList || cartType === CartType.TokenBid || cartType === CartType.Send) &&
+      (cartType === CartType.TokenList ||
+        cartType === CartType.TokenBid ||
+        cartType === CartType.TokenBuy ||
+        cartType === CartType.Send) &&
       tokenMap.size > 0
     ) {
       const divList: ReactNode[] = [];
@@ -159,11 +187,7 @@ export const AstraCart = ({
 
         for (const t of tokenArray) {
           if (cartType !== CartType.Send) {
-            const price = t?.price
-              ? t?.price
-              : t?.orderSnippet?.listing?.orderItem?.startPriceEth
-              ? t?.orderSnippet?.listing?.orderItem?.startPriceEth
-              : 0;
+            const price = getTokenFinalPrice(t, cartType);
             newCartTotal += price;
           }
           divList.push(
@@ -254,15 +278,20 @@ export const AstraCart = ({
   };
 
   useEffect(() => {
-    const cartType = getCartType(router.asPath, selectedProfileTab);
+    const cartType = getCartType(router.asPath, selectedProfileTab, selectedCollectionTab);
     setCartType(cartType);
-  }, [router.pathname, selectedProfileTab]);
+  }, [router.pathname, selectedProfileTab, selectedCollectionTab]);
 
   useEffect(() => {
     const cartItems: CartItem[] = getCurrentCartItems();
     setCurrentCartItems(cartItems);
 
-    if (cartType === CartType.TokenList || cartType === CartType.TokenBid || cartType === CartType.Send) {
+    if (
+      cartType === CartType.TokenList ||
+      cartType === CartType.TokenBid ||
+      cartType === CartType.TokenBuy ||
+      cartType === CartType.Send
+    ) {
       tokenMap.clear();
       for (const item of cartItems) {
         const token = item as ERC721TokenCartItem;
@@ -305,10 +334,10 @@ export const AstraCart = ({
       }
     } else if (cartType === CartType.CollectionBid) {
       if (cartItems.length > 1) {
-        setCartTitle('Collection Offers');
+        setCartTitle('Collection Bids');
         setCheckoutBtnText('Bulk Bid');
       } else {
-        setCartTitle('Collection Offer');
+        setCartTitle('Collection Bid');
         setCheckoutBtnText('Bid');
       }
     } else if (cartType === CartType.TokenBid) {
@@ -318,6 +347,9 @@ export const AstraCart = ({
       } else {
         setCheckoutBtnText('Bid');
       }
+    } else if (cartType === CartType.TokenBuy) {
+      setCartTitle('Buy');
+      setCheckoutBtnText('Buy');
     } else if (cartType === CartType.Send) {
       setCartTitle('Send');
       if (cartItems.length > 1) {
@@ -353,9 +385,13 @@ export const AstraCart = ({
               <div
                 className={twMerge('ml-2 text-sm cursor-pointer', brandTextColor)}
                 onClick={() => {
-                  if (cartType === CartType.Send || cartType === CartType.TokenList || cartType === CartType.TokenBid) {
+                  if (
+                    cartType === CartType.Send ||
+                    cartType === CartType.TokenList ||
+                    cartType === CartType.TokenBid ||
+                    cartType === CartType.TokenBuy
+                  ) {
                     onTokensClear();
-                    // setCollectionCommonPrice(new Map());
                   } else if (cartType === CartType.CollectionBid) {
                     onCollsClear();
                   } else if (cartType === CartType.Cancel) {
@@ -395,7 +431,9 @@ export const AstraCart = ({
           <div className="space-y-3 px-1">
             <div className="flex justify-between">
               <div className={twMerge(secondaryTextColor, 'font-medium')}>Cart total: </div>
-              <div className="font-heading">{nFormatter(Number(cartTotal))} WETH</div>
+              <div className="font-heading">
+                {nFormatter(Number(cartTotal))} {EthSymbol}
+              </div>
             </div>
             {user && (
               <div className="space-y-3">
@@ -457,7 +495,6 @@ export const AstraCart = ({
         )}
       </div>
 
-      {/* future-todo: change the chainId check here when more chains are supported */}
       <div className="m-6 flex flex-col">
         <AButton
           className="p-3 z-30"
@@ -505,16 +542,11 @@ interface Props2 {
 const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
   const { cartType } = useCartContext();
 
-  const price = token?.price
-    ? token?.price.toString()
-    : token?.orderSnippet?.listing?.orderItem?.startPriceEth
-    ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
-    : '';
+  const finalPrice = getTokenFinalPrice(token, cartType);
+  token.orderPriceEth = finalPrice;
 
-  token.price = parseFloat(price);
-
-  const [editedPrice, setEditedPrice] = useState(price);
-  const [editing, setEditing] = useState(price ? false : true);
+  const [editedPrice, setEditedPrice] = useState(finalPrice.toString());
+  const [editing, setEditing] = useState(finalPrice ? false : true);
 
   return (
     <div key={getTokenCartItemKey(token)} className="flex items-center w-full">
@@ -652,7 +684,7 @@ interface Props5 {
 }
 
 const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete, useSpacer, currentPrice }: Props5) => {
-  const [price, setPrice] = useState(nFormatter(parseFloat(currentPrice ?? '0'), 3)?.toString() ?? '');
+  const [price, setPrice] = useState(nFormatter(parseFloat(currentPrice ?? '0'), 2)?.toString() ?? '');
   const [expiry, setExpiry] = useState(getDefaultOrderExpiryTime());
 
   const priceEditable = !currentPrice || editing;
@@ -746,7 +778,7 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
 
           <div className={twMerge('flex flex-col items-end')}>
             <div className="flex flex-row">
-              <div className={twMerge('font-bold font-heading')}>{nFormatter(Number(price), 3)}</div>
+              <div className={twMerge('font-bold font-heading')}>{nFormatter(Number(price), 2)}</div>
               <div className={twMerge('font-bold font-heading ml-1')}>{EthSymbol}</div>
             </div>
             <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>{expiry}</div>
@@ -771,7 +803,7 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
             }
             // onEditComplete?.(value);
             if (token) {
-              token.price = parsedValue;
+              token.orderPriceEth = parsedValue;
             } else if (collection) {
               collection.offerPriceEth = parsedValue;
             }
@@ -787,31 +819,3 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
     </div>
   );
 };
-//   collection: string;
-//   collectionCommonPrice: Map<string, string>;
-//   setCollectionCommonPrice: (newMap: Map<string, string>) => void;
-// }
-
-// const CommonCollPrice = ({ collection, collectionCommonPrice, setCollectionCommonPrice }: Props6) => {
-//   const [price, setPrice] = useState(collectionCommonPrice.get(collection) ?? '');
-//   return (
-//     <div className="flex w-full items-center space-x-2 py-4 justify-between">
-//       <div className="flex text-sm font-normal">Common Price:</div>
-//       <div className="flex w-2/5">
-//         <TextInputBox
-//           inputClassName="font-heading text-sm font-normal text-right mr-2"
-//           className="p-[6.5px]"
-//           autoFocus={true}
-//           addEthSymbol={true}
-//           type="number"
-//           value={price}
-//           placeholder="Price"
-//           onChange={(value) => {
-//             setPrice(value);
-//             setCollectionCommonPrice(new Map(collectionCommonPrice).set(collection, value));
-//           }}
-//         />
-//       </div>
-//     </div>
-//   );
-// };

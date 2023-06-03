@@ -34,6 +34,8 @@ export const useCollectionSelection = (): CollectionSelectionResult => {
 
   const removeCollFromSelection = (value: ERC721CollectionCartItem) => {
     if (isCollSelected(value)) {
+      delete value.offerPriceEth;
+      delete value.offerExpiry;
       const copy = new Map(collSelectionMap);
       copy.delete(getCollectionKeyId(value));
       setCollSelectionMap(copy);

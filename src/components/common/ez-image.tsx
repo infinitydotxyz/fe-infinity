@@ -25,6 +25,8 @@ export const EZImage = ({
   const [error, setError] = useState(false);
   let src = replaceIPFSWithGateway(_src ?? '');
 
+  let isVideo = false;
+
   // avoid the console errors
 
   if (!src) {
@@ -62,10 +64,20 @@ export const EZImage = ({
     };
   }, [src]);
 
-  let imgUrl = src;
+  const imgUrl = src;
+
   if (error) {
-    imgUrl = missingImage;
+    isVideo = true; // future-todo: handle this better
   }
+
+  const imageDivClass = twMerge(
+    cover ? 'bg-cover' : 'bg-contain',
+    center ? 'bg-center' : 'bg-top',
+    loaded ? 'opacity-100' : 'opacity-0',
+    fade ? 'transition-opacity duration-500' : '',
+    ' w-full h-full bg-no-repeat',
+    className
+  );
 
   return (
     <div
@@ -79,17 +91,15 @@ export const EZImage = ({
         }
       }}
     >
-      <div
-        className={twMerge(
-          cover ? 'bg-cover' : 'bg-contain',
-          center ? 'bg-center' : 'bg-top',
-          loaded ? 'opacity-100' : 'opacity-0',
-          fade ? 'transition-opacity duration-500' : '',
-          ' w-full h-full bg-no-repeat',
-          className
-        )}
-        style={{ backgroundImage: `url(${imgUrl})` }}
-      />
+      {isVideo ? (
+        <div className={imageDivClass}>
+          <video autoPlay muted loop>
+            <source src={imgUrl} />
+          </video>
+        </div>
+      ) : (
+        <div className={imageDivClass} style={{ backgroundImage: `url(${imgUrl})` }} />
+      )}
     </div>
   );
 };

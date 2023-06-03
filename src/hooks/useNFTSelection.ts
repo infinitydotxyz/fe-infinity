@@ -43,6 +43,8 @@ export const useNFTSelection = (): NFTSelectionResult => {
     copy.clear();
     const copy2 = new Map(nftSelectionMap);
     for (const value of values) {
+      delete value.orderPriceEth;
+      delete value.orderExpiry;
       copy.set(getTokenCartItemKey(value), value);
     }
     copy2.set(cartType, copy);
@@ -51,6 +53,8 @@ export const useNFTSelection = (): NFTSelectionResult => {
 
   const removeNFTFromSelection = (value: ERC721TokenCartItem) => {
     if (isNFTSelected(value)) {
+      delete value.orderPriceEth;
+      delete value.orderExpiry;
       const copy = new Map(nftSelectionMap.get(cartType));
       const copy2 = new Map(nftSelectionMap);
 
@@ -69,6 +73,8 @@ export const useNFTSelection = (): NFTSelectionResult => {
     for (const item of items) {
       const value = item as ERC721TokenCartItem;
       if (isNFTSelected(value)) {
+        delete value.orderPriceEth;
+        delete value.orderExpiry;
         copy.delete(getTokenCartItemKey(value));
       }
     }

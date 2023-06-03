@@ -1,28 +1,38 @@
-import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { useProfileTokenFetcher } from 'src/hooks/api/useTokenFetcher';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { SelectedCollectionType, useProfileContext } from 'src/utils/context/ProfileContext';
 import { TokensFilter } from 'src/utils/types';
 import { borderColor, hoverColor, hoverColorBrandText, selectedColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { EZImage, TextInputBox } from '../common';
+import { Checkbox, EZImage, Spacer, TextInputBox } from '../common';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
 
 interface Props {
   userAddress: string;
+  isOwner: boolean;
 }
 
-export const ProfileNFTs = ({ userAddress }: Props) => {
-  const [selectedCollection, setSelectedCollection] = useState<CollectionSearchDto>();
+export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
+  const { selectedCollection, setSelectedCollection } = useProfileContext();
   const [filter, setFilter] = useState<TokensFilter>({});
-  const { isNFTSelected, isNFTSelectable, listMode, toggleNFTSelection, toggleMultipleNFTSelection } = useAppContext();
+  const {
+    isNFTSelected,
+    isNFTSelectable,
+    listMode,
+    toggleNFTSelection,
+    toggleMultipleNFTSelection,
+    selectedProfileTab
+  } = useAppContext();
   const { selectedChain } = useAppContext();
 
   const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(userAddress, selectedChain, filter);
   const [numSweep, setNumSweep] = useState('');
   const [customSweep, setCustomSweep] = useState('');
+
+  const [hideSpamSelected, setHideSpamSelected] = useState(true);
 
   useEffect(() => {
     const numToSelect = Math.min(data.length, parseInt(numSweep));
@@ -37,7 +47,21 @@ export const ProfileNFTs = ({ userAddress }: Props) => {
     fetch(false);
   }, [filter]);
 
-  const handleCollectionSearchResult = (result: CollectionSearchDto) => {
+  useEffect(() => {
+    const newFilter = { ...filter };
+    newFilter.hideSpam = hideSpamSelected;
+    setFilter(newFilter);
+  }, [hideSpamSelected]);
+
+  useEffect(() => {
+    if (selectedCollection) {
+      handleCollectionSearchResult(selectedCollection);
+    } else {
+      handleCollectionSearchClear();
+    }
+  }, [selectedCollection, selectedProfileTab]);
+
+  const handleCollectionSearchResult = (result: SelectedCollectionType) => {
     const newFilter = { ...filter };
     newFilter.collections = [result.address];
     setFilter(newFilter);
@@ -127,47 +151,50 @@ export const ProfileNFTs = ({ userAddress }: Props) => {
 
   return (
     <>
-      <div className={twMerge(borderColor, 'flex border-t-[1px]')}>
-        <div className="flex px-4 mt-2">
-          <div className="flex w-full items-center space-x-4">
-            <div className="flex flex-1">
-              <CollectionSearchInput
-                expanded
-                profileSearch
-                setSelectedCollection={(value) => {
-                  handleCollectionSearchResult(value);
+      <div className="flex flex-col px-4 mt-2 space-y-2 text-sm">
+        <div className="flex space-x-4">
+          <CollectionSearchInput
+            expanded
+            profileSearch
+            setSelectedCollection={(value) => {
+              const selectedColl: SelectedCollectionType = {
+                address: value.address,
+                name: value.name,
+                imageUrl: value.profileImage
+              };
+              handleCollectionSearchResult(selectedColl);
+            }}
+          />
+          {isOwner && multiSelect()}
+
+          <Spacer />
+          <div className="flex">
+            <Checkbox
+              label="Hide spam"
+              checked={hideSpamSelected}
+              onChange={() => {
+                setHideSpamSelected(!hideSpamSelected);
+              }}
+            />
+          </div>
+        </div>
+
+        {selectedCollection ? (
+          <div className={twMerge('flex items-center rounded-lg border p-2 w-fit', borderColor)}>
+            <div className="flex items-center">
+              <EZImage src={selectedCollection.imageUrl} className="w-6 h-6 rounded-full mr-2" />
+              <div className="text-sm font-medium">{selectedCollection.name}</div>
+            </div>
+            <div className="ml-2">
+              <MdClose
+                className={twMerge('h-4 w-4 cursor-pointer', hoverColorBrandText)}
+                onClick={() => {
+                  handleCollectionSearchClear();
                 }}
               />
             </div>
-
-            {/* <div className={twMerge(secondaryTextColor, 'flex flex-1 text-xs')}>
-              Showing only NFTs from supported collections
-            </div> */}
           </div>
-
-          {selectedCollection ? (
-            <div className="flex">
-              <div className={twMerge('flex items-center rounded-lg border px-2 ml-2', borderColor)}>
-                <div className="flex items-center">
-                  <EZImage src={selectedCollection.profileImage} className="w-6 h-6 rounded-full mr-2" />
-                  <div className="text-sm font-medium">{selectedCollection.name}</div>
-                </div>
-                <div className="ml-2">
-                  <MdClose
-                    className={twMerge('h-4 w-4 cursor-pointer', hoverColorBrandText)}
-                    onClick={() => {
-                      handleCollectionSearchClear();
-                    }}
-                  />
-                </div>
-              </div>
-
-              {multiSelect()}
-            </div>
-          ) : (
-            multiSelect()
-          )}
-        </div>
+        ) : null}
       </div>
 
       <TokenGrid

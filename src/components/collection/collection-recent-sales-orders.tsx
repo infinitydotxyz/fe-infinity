@@ -183,7 +183,7 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
                 </div>
               </div>
               <div className={twMerge('text-right')}>
-                {nFormatter(item.priceEth)} {EthSymbol}
+                {nFormatter(item.priceEth, 2)} {EthSymbol}
               </div>
 
               <ToolTip isTooltipOpen={tooltipOpen} left={tooltipLeft} top={tooltipTop} data={tooltipData} />

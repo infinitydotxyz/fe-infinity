@@ -72,7 +72,7 @@ export const CollectionOrderListItem = ({ order, orderType }: Props) => {
         <div className="w-1/6">
           <div className={twMerge(secondaryTextColor, 'font-medium')}>Price</div>
           <div className="">
-            <EthPrice label={`${nFormatter(startPriceEth, 3)}`} />
+            <EthPrice label={`${nFormatter(startPriceEth, 2)}`} />
           </div>
         </div>
 

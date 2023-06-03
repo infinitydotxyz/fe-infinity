@@ -109,8 +109,8 @@ export const nftToCardDataWithOrderFields = (item: ApiNftData): ERC721TokenCartI
     item?.zoraImage?.url ||
     '';
 
-  const mintPriceEth = nFormatter(item?.mintPrice);
-  const lastSalePriceEth = nFormatter(item?.lastSalePriceEth);
+  const mintPriceEth = nFormatter(item?.mintPrice, 2);
+  const lastSalePriceEth = nFormatter(item?.lastSalePriceEth, 2);
 
   const result: ERC721TokenCartItem = {
     id: item.chainId + ':' + item.collectionAddress + ':' + item.tokenId,
@@ -122,7 +122,7 @@ export const nftToCardDataWithOrderFields = (item: ApiNftData): ERC721TokenCartI
     image: image,
     displayType: item.displayType,
     isVideo: isVideoNft(item),
-    price: item?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0,
+    price: item?.ordersSnippet?.listing?.orderItem?.startPriceEth ?? 0,
     chainId: item.chainId,
     tokenAddress: item.collectionAddress ?? item.collectionAddress,
     address: item.collectionAddress ?? item.collectionAddress,

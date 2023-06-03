@@ -20,7 +20,7 @@ import { CenteredContent, EZImage, ExternalLink, Spacer, TextInputBox } from 'sr
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
 import { useCollectionTokenFetcher } from 'src/hooks/api/useTokenFetcher';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
-import { apiGet, nFormatter } from 'src/utils';
+import { CollectionPageTabs, apiGet, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { ERC721CollectionCartItem, ERC721TokenCartItem, TokensFilter } from 'src/utils/types';
@@ -53,6 +53,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     toggleCollSelection,
     isCollSelected,
     isCollSelectable,
+    selectedCollectionTab,
+    setSelectedCollectionTab,
     collSelection
   } = useAppContext();
   const [filter, setFilter] = useState<TokensFilter>({});
@@ -60,16 +62,39 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, chainId, filter);
   const [mutatedData, setMutatedData] = useState<ERC721TokenCartItem[]>(data);
   const { setRef } = useScrollInfo();
-  const tabs = ['Bid', 'Bids', 'Analytics'];
-  const [selectedTab, setSelectedTab] = useState(tabs[0]);
+  const tabs = [
+    CollectionPageTabs.Bid.toString(),
+    // CollectionPageTabs.Buy.toString(),
+    CollectionPageTabs.Bids.toString(),
+    CollectionPageTabs.Analytics.toString()
+  ];
   const { cartType, setCartType } = useCartContext();
   const [numSweep, setNumSweep] = useState('');
   const [customSweep, setCustomSweep] = useState('');
   const [bidBelowPct, setBidBelowPct] = useState('');
-  const { showCart, setShowCart } = useAppContext();
+  const { showCart } = useAppContext();
   const [selectedTraits, setSelectedTraits] = useState<string[]>([]);
 
   const MAX_NUM_SWEEP_ITEMS = 50;
+
+  useEffect(() => {
+    setMutatedData(data);
+  }, [data]);
+
+  useEffect(() => {
+    if (selectedCollectionTab === CollectionPageTabs.Bid.toString()) {
+      delete filter.orderType;
+      delete filter.source;
+      setFilter({
+        ...filter
+      });
+    } else if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
+      setFilter({
+        ...filter,
+        orderType: 'listing'
+      });
+    }
+  }, [selectedCollectionTab]);
 
   useEffect(() => {
     if (filter.traitTypes?.length) {
@@ -93,8 +118,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   useEffect(() => {
     if (collSelection.length > 0) {
       setCartType(CartType.CollectionBid);
-    } else {
+    } else if (selectedCollectionTab === CollectionPageTabs.Bid.toString()) {
       setCartType(CartType.TokenBid);
+    } else if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
+      setCartType(CartType.TokenBuy);
     }
   }, [collSelection]);
 
@@ -125,7 +152,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   }, [bidBelowPct]);
 
   const onTabChange = (tab: string) => {
-    setSelectedTab(tab);
+    setSelectedCollectionTab(tab);
   };
 
   const onClickNFT = (token: ERC721TokenCartItem) => {
@@ -227,7 +254,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
         <CollectionPageHeader {...headerProps} />
 
         <div ref={setRef} className="overflow-y-auto scrollbar-hide">
-          {selectedTab === 'Bid' && (
+          {(selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
+            selectedCollectionTab === CollectionPageTabs.Buy.toString()) && (
             <div className={twMerge('mt-2 px-4')}>
               <div className={twMerge('flex')}>
                 <div
@@ -253,7 +281,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     onClick={() => {
                       setCartType(CartType.CollectionBid);
                       if (isCollSelectable(collection as ERC721CollectionCartItem)) {
-                        setShowCart(!showCart);
                         return toggleCollSelection(collection as ERC721CollectionCartItem);
                       }
                     }}
@@ -368,94 +395,97 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   </div>
                 </div>
               </div>
-
-              <div className="flex mt-2 text-sm">
-                <div
-                  className={twMerge(
-                    'flex flex-row rounded-lg border cursor-pointer',
-                    borderColor,
-                    cartType === CartType.CollectionBid ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300'
-                  )}
-                >
-                  <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>
-                    Bid below price:
-                  </div>
+              {selectedCollectionTab === CollectionPageTabs.Bid.toString() && (
+                <div className="flex mt-2 text-sm">
                   <div
                     className={twMerge(
-                      'px-4 h-full flex items-center border-r-[1px]',
+                      'flex flex-row rounded-lg border cursor-pointer',
                       borderColor,
-                      hoverColor,
-                      bidBelowPct === '1' && selectedColor
+                      cartType === CartType.CollectionBid
+                        ? 'opacity-30 duration-300 pointer-events-none'
+                        : 'duration-300'
                     )}
-                    onClick={() => {
-                      bidBelowPct === '1' ? setBidBelowPct('') : setBidBelowPct('1');
-                    }}
                   >
-                    1%
-                  </div>
-                  <div
-                    className={twMerge(
-                      'px-4 h-full flex items-center border-r-[1px]',
-                      borderColor,
-                      hoverColor,
-                      bidBelowPct === '2' && selectedColor
-                    )}
-                    onClick={() => {
-                      bidBelowPct === '2' ? setBidBelowPct('') : setBidBelowPct('2');
-                    }}
-                  >
-                    2%
-                  </div>
-                  <div
-                    className={twMerge(
-                      'px-4 h-full flex items-center border-r-[1px]',
-                      borderColor,
-                      hoverColor,
-                      bidBelowPct === '5' && selectedColor
-                    )}
-                    onClick={() => {
-                      bidBelowPct === '5' ? setBidBelowPct('') : setBidBelowPct('5');
-                    }}
-                  >
-                    5%
-                  </div>
-                  <div
-                    className={twMerge(
-                      'px-4 h-full flex items-center border-r-[1px]',
-                      borderColor,
-                      hoverColor,
-                      bidBelowPct === '10' && selectedColor
-                    )}
-                    onClick={() => {
-                      bidBelowPct === '10' ? setBidBelowPct('') : setBidBelowPct('10');
-                    }}
-                  >
-                    10%
-                  </div>
-                  <div className="p-3 h-full flex items-center">
-                    <TextInputBox
-                      addPctSymbol={true}
-                      autoFocus={false}
-                      inputClassName="text-sm"
-                      className="border-0 w-20 p-0 text-sm"
-                      type="number"
-                      placeholder="Custom"
-                      value={String(bidBelowPct)}
-                      onChange={(value) => {
-                        let valueNum = parseFloat(value);
-                        if (valueNum > 100) {
-                          valueNum = 100;
-                        }
-                        setBidBelowPct(valueNum.toString());
+                    <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>
+                      Bid below price:
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        bidBelowPct === '1' && selectedColor
+                      )}
+                      onClick={() => {
+                        bidBelowPct === '1' ? setBidBelowPct('') : setBidBelowPct('1');
                       }}
-                    />
+                    >
+                      1%
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        bidBelowPct === '2' && selectedColor
+                      )}
+                      onClick={() => {
+                        bidBelowPct === '2' ? setBidBelowPct('') : setBidBelowPct('2');
+                      }}
+                    >
+                      2%
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        bidBelowPct === '5' && selectedColor
+                      )}
+                      onClick={() => {
+                        bidBelowPct === '5' ? setBidBelowPct('') : setBidBelowPct('5');
+                      }}
+                    >
+                      5%
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        bidBelowPct === '10' && selectedColor
+                      )}
+                      onClick={() => {
+                        bidBelowPct === '10' ? setBidBelowPct('') : setBidBelowPct('10');
+                      }}
+                    >
+                      10%
+                    </div>
+                    <div className="p-3 h-full flex items-center">
+                      <TextInputBox
+                        addPctSymbol={true}
+                        autoFocus={false}
+                        inputClassName="text-sm"
+                        className="border-0 w-20 p-0 text-sm"
+                        type="number"
+                        placeholder="Custom"
+                        value={String(bidBelowPct)}
+                        onChange={(value) => {
+                          let valueNum = parseFloat(value);
+                          if (valueNum > 100) {
+                            valueNum = 100;
+                          }
+                          setBidBelowPct(valueNum.toString());
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className={twMerge('flex ml-2 items-center space-x-1', secondaryTextColor)}>
+                    <HiOutlineLightBulb className="w-6 h-6" />
+                    <div className="mt-1">Matched bids are automatically sniped on your behalf.</div>
                   </div>
                 </div>
-                <div className={twMerge('flex ml-2 items-center space-x-1', secondaryTextColor)}>
-                  <HiOutlineLightBulb className="w-6 h-6" />
-                  <div className="mt-1">Matched bids are automatically sniped on your behalf.</div>
-                </div>
-              </div>
+              )}
             </div>
           )}
           {selectedTraits.length > 0 && (
@@ -472,7 +502,9 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               })}
             </div>
           )}
-          {selectedTab === 'Bid' && (
+
+          {(selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
+            selectedCollectionTab === CollectionPageTabs.Buy.toString()) && (
             <div className="flex flex-row">
               <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
                 <TokenGrid
@@ -503,13 +535,13 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               </div>
             </div>
           )}
-          {selectedTab === 'Bids' && (
+          {selectedCollectionTab === CollectionPageTabs.Bids && (
             <CollectionOrderList
               collectionAddress={collection.address}
               collectionChainId={collection.chainId as ChainId}
             />
           )}
-          {selectedTab === 'Analytics' && (
+          {selectedCollectionTab === CollectionPageTabs.Analytics && (
             <CollectionCharts
               collectionAddress={collection.address}
               collectionChainId={chainId}

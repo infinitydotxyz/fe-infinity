@@ -97,13 +97,13 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
     return null;
   }
 
-  const listingPrice = nFormatter(token.ordersSnippet?.listing?.orderItem?.startPriceEth);
+  const listingPrice = nFormatter(token.ordersSnippet?.listing?.orderItem?.startPriceEth, 2);
   const listingExpiry = token.ordersSnippet?.listing?.orderItem?.endTimeMs;
   const listingExpiryStr = listingExpiry ? format(listingExpiry) : '-';
   const listingTime = token.ordersSnippet?.listing?.orderItem?.startTimeMs;
   const listingTimeStr = listingTime ? format(listingTime) : '-';
 
-  const offerPrice = nFormatter(token.ordersSnippet?.offer?.orderItem?.startPriceEth);
+  const offerPrice = nFormatter(token.ordersSnippet?.offer?.orderItem?.startPriceEth, 2);
   const offerExpiry = token.ordersSnippet?.offer?.orderItem?.endTimeMs;
   const offerExpiryStr = offerExpiry ? format(offerExpiry) : '-';
   const offerTime = token.ordersSnippet?.offer?.orderItem?.startTimeMs;
@@ -130,8 +130,9 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
 
   const isOwner = user && trimLowerCase(user) === trimLowerCase(token.owner?.toString());
   const isUserCollectionCreator = user && collectionCreator && trimLowerCase(user) === trimLowerCase(collectionCreator);
-  const newCartType = isOwner ? CartType.TokenList : CartType.TokenBid;
   const cartToken = nftToCardDataWithOrderFields(token as Erc721Token);
+
+  const newCartType = isOwner ? CartType.TokenList : listingPrice ? CartType.TokenBuy : CartType.TokenBid;
   cartToken.cartType = newCartType;
   setCartType(newCartType);
 
@@ -253,7 +254,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                   <div>
                     <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Collection Floor</div>
                     <div>
-                      {nFormatter(parseFloat(String(floorPrice)))} {EthSymbol}
+                      {nFormatter(parseFloat(String(floorPrice)), 2)} {EthSymbol}
                     </div>
                   </div>
                 ) : null}

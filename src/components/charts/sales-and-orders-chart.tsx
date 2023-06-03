@@ -117,7 +117,7 @@ function SalesAndOrdersChart({ width, height, data, saleColor, listingColor, bid
   const getChartDimensions = ({ width = 0, height = 0 }: { width?: number; height?: number }) => {
     const margin = {
       top: 10,
-      right: 0,
+      right: 45,
       bottom: 50,
       left: 45
     };

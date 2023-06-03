@@ -19,12 +19,13 @@ import {
 } from '@infinityxyz/lib-frontend/utils';
 import { Contract } from 'ethers';
 import { defaultAbiCoder, parseEther } from 'ethers/lib/utils.js';
-import { ProfileTabs } from 'pages/profile/[address]';
+import { CollectionPageTabs, ProfileTabs } from 'src/utils';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { toastError, toastSuccess, toastWarning } from 'src/components/common';
 import { WaitingForTxModal } from 'src/components/common/waiting-for-tx-modal';
+import { useChain } from 'src/hooks/useChain';
 import { useCollectionSelection } from 'src/hooks/useCollectionSelection';
 import { useNFTSelection } from 'src/hooks/useNFTSelection';
 import { useOrderSelection } from 'src/hooks/useOrderSelection';
@@ -49,7 +50,6 @@ import {
 import { DEFAULT_MAX_GAS_PRICE_WEI, ZERO_ADDRESS } from '../constants';
 import { fetchOrderNonce, postOrdersV2 } from '../orderbook-utils';
 import { CartType, useCartContext } from './CartContext';
-import { useChain } from 'src/hooks/useChain';
 
 type AppContextType = {
   selectedChain: ChainId;
@@ -61,6 +61,9 @@ type AppContextType = {
 
   selectedProfileTab: string;
   setSelectedProfileTab: (value: string) => void;
+
+  selectedCollectionTab: string;
+  setSelectedCollectionTab: (value: string) => void;
 
   isCheckingOut: boolean;
   setIsCheckingOut: (value: boolean) => void;
@@ -114,6 +117,8 @@ export const AppContextProvider = ({ children }: Props) => {
   const [showCart, setShowCart] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [selectedProfileTab, setSelectedProfileTab] = useState(ProfileTabs.Items.toString());
+  const [selectedCollectionTab, setSelectedCollectionTab] = useState(CollectionPageTabs.Bid.toString());
+
   const [listMode, setListMode] = useState(false);
   const [txnHash, setTxnHash] = useState<string>('');
   const [isCheckingOut, setIsCheckingOut] = useState(false);
@@ -539,7 +544,7 @@ export const AppContextProvider = ({ children }: Props) => {
       currencyAddress = ZERO_ADDRESS; // sell orders are always in ETH
     }
     const gasPrice = await getEstimatedGasPrice(provider);
-    const ethPrice = token.price ?? 0;
+    const ethPrice = token.orderPriceEth ?? 0;
     if (ethPrice === 0) {
       throw new Error('Price cannot be 0');
     }
@@ -652,6 +657,9 @@ export const AppContextProvider = ({ children }: Props) => {
 
     selectedProfileTab,
     setSelectedProfileTab,
+
+    selectedCollectionTab,
+    setSelectedCollectionTab,
 
     isCheckingOut,
     setIsCheckingOut,

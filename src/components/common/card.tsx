@@ -1,22 +1,25 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { HiCheckCircle, HiPlusCircle } from 'react-icons/hi';
-import { ellipsisString, nFormatter } from 'src/utils';
+import { HiCheckCircle, HiOutlineLightBulb, HiPlusCircle } from 'react-icons/hi';
+import { ellipsisString, nFormatter, CollectionPageTabs } from 'src/utils';
 import { BasicTokenInfo, ERC721TokenCartItem } from 'src/utils/types';
 import {
   borderColor,
   brandTextColor,
-  secondaryBgColor,
   hoverColorBrandText,
   iconButtonStyle,
-  selectionBorder,
+  secondaryBgColor,
   secondaryBtnBgColorText,
-  secondaryTextColor
+  secondaryTextColor,
+  selectionBorder
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AButton } from '../astra/astra-button';
 import { TokenCardModal } from '../astra/token-grid/token-card-modal';
-import { BlueCheck, EthSymbol, EZImage, Spacer } from '../common';
+import { BlueCheck, EZImage, EthSymbol } from '../common';
+import { formatEther, parseEther } from 'ethers/lib/utils.js';
+import { PROTOCOL_FEE_BPS } from '@infinityxyz/lib-frontend/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 interface Props {
   data: ERC721TokenCartItem;
@@ -40,12 +43,23 @@ export const GridCard = ({
   const title = data?.title;
   const tokenId = data?.tokenId;
   const hasBlueCheck = data?.hasBlueCheck ?? false;
+  const { selectedCollectionTab } = useAppContext();
 
   const price = data?.price
     ? data.price
     : data?.orderSnippet?.listing?.orderItem?.startPriceEth
     ? data?.orderSnippet?.listing?.orderItem?.startPriceEth
-    : '';
+    : 0;
+  const gasCostEth = data?.orderSnippet?.listing?.orderItem?.gasCostEth ?? 0;
+  const feeCostEth = data?.orderSnippet?.listing?.orderItem?.feeCostEth ?? 0;
+
+  const priceWei = parseEther(price.toString());
+  const calcFeesWei = priceWei.mul(PROTOCOL_FEE_BPS).div(10_000);
+  const calcFeeCostEth = parseFloat(formatEther(calcFeesWei));
+  const finalFeeCostEth = Math.min(calcFeeCostEth, feeCostEth);
+
+  const deltaPrice = gasCostEth + finalFeeCostEth;
+  const showDeltaPrice = deltaPrice > 0 && selectedCollectionTab === CollectionPageTabs.Bid.toString();
 
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: data?.tokenId ?? '',
@@ -140,12 +154,18 @@ export const GridCard = ({
             </div>
           </div>
 
-          <div className="flex mt-1 items-center">
+          <div className="flex mt-1 items-center justify-between">
             <div>
               {price ? (
                 <div className="flex items-center rounded-sm space-x-1 text-sm">
-                  <div className={twMerge('truncate font-medium', borderColor)}>{nFormatter(price, 4)}</div>
+                  <div className={twMerge('truncate font-medium', borderColor)}>{nFormatter(price, 2)}</div>
                   <div className="text-xs">{EthSymbol}</div>
+
+                  <div className={twMerge('flex items-center space-x-1 rounded-md text-[10px]')}>
+                    {showDeltaPrice && (
+                      <div className={twMerge('truncate font-medium', borderColor)}> + {nFormatter(deltaPrice, 2)}</div>
+                    )}
+                  </div>
                 </div>
               ) : null}
 
@@ -155,8 +175,6 @@ export const GridCard = ({
                 </div>
               ) : null}
             </div>
-
-            <Spacer />
 
             <AButton
               className={twMerge('rounded-md text-xs', secondaryBtnBgColorText)}
@@ -168,7 +186,7 @@ export const GridCard = ({
                 router.replace({ pathname, query }, undefined, { shallow: true });
               }}
             >
-              Details
+              <HiOutlineLightBulb className="w-4 h-4" />
             </AButton>
           </div>
         </div>

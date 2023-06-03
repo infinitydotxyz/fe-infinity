@@ -1,8 +1,11 @@
-import { ChainId, CollectionSaleAndOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, CollectionHistoricalSale, CollectionSaleAndOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { CollectionRecentSalesOrders } from './collection-recent-sales-orders';
+import { ResponsiveSalesChart, SalesChartData } from '../charts/sales-chart';
+import { BouncingLogo } from '../common';
+import { ScatterChartType } from '../charts/types';
 
 export type Props = {
   className?: string;
@@ -17,33 +20,33 @@ export const CollectionItemsPageSidebar = ({
   collectionAddress,
   collectionImage
 }: Props) => {
-  // const [salesChartData, setSalesChartData] = useState<SalesChartData[]>([]);
+  const [salesChartData, setSalesChartData] = useState<SalesChartData[]>([]);
   const [recentSalesOrdersData, setRecentSalesOrdersData] = useState<CollectionSaleAndOrder[]>([]);
-  // const [isSalesChartLoading, setIsSalesChartLoading] = useState(true);
+  const [isSalesChartLoading, setIsSalesChartLoading] = useState(true);
 
-  // const fetchSalesChartData = async () => {
-  //   setIsSalesChartLoading(true);
-  //   const { result, error } = await apiGet(`/collections/${chainId}:${collectionAddress}/sales`);
+  const fetchSalesChartData = async () => {
+    setIsSalesChartLoading(true);
+    const { result, error } = await apiGet(`/collections/${collectionChainId}:${collectionAddress}/sales`);
 
-  //   if (error) {
-  //     console.error(error);
-  //     setIsSalesChartLoading(false);
-  //     return;
-  //   }
+    if (error) {
+      console.error(error);
+      setIsSalesChartLoading(false);
+      return;
+    }
 
-  //   const chartData = result.map((sale: CollectionHistoricalSale) => {
-  //     return {
-  //       salePrice: sale.salePriceEth,
-  //       tokenImage: sale.tokenImage,
-  //       collectionAddress,
-  //       tokenId: sale.tokenId,
-  //       timestamp: sale.timestamp
-  //     } as SalesChartData;
-  //   });
+    const chartData = result.map((sale: CollectionHistoricalSale) => {
+      return {
+        salePrice: sale.salePriceEth,
+        tokenImage: sale.tokenImage,
+        collectionAddress,
+        tokenId: sale.tokenId,
+        timestamp: sale.timestamp
+      } as SalesChartData;
+    });
 
-  //   setSalesChartData(chartData);
-  //   setIsSalesChartLoading(false);
-  // };
+    setSalesChartData(chartData);
+    setIsSalesChartLoading(false);
+  };
 
   const fetchRecentSalesAndOrders = async () => {
     const { result, error } = await apiGet(`/collections/${collectionChainId}:${collectionAddress}/salesorders`);
@@ -76,7 +79,7 @@ export const CollectionItemsPageSidebar = ({
   };
 
   useEffect(() => {
-    // fetchSalesChartData();
+    fetchSalesChartData();
     fetchRecentSalesAndOrders();
 
     const interval = setInterval(() => {
@@ -87,12 +90,12 @@ export const CollectionItemsPageSidebar = ({
   }, [collectionAddress, collectionChainId]);
 
   return (
-    <div className={twMerge('flex flex-col py-4 w-full pr-4', className)}>
-      {/* <div>
+    <div className={twMerge('flex flex-col py-[0.87rem] w-full pr-4', className)}>
+      <div>
         {salesChartData.length > 0 && <ResponsiveSalesChart graphType={ScatterChartType.Sales} data={salesChartData} />}
 
         {isSalesChartLoading && <BouncingLogo />}
-      </div> */}
+      </div>
 
       <div>
         {recentSalesOrdersData.length > 0 && (

@@ -77,7 +77,7 @@ const MyRewards = () => {
   const xflBalanceObj = useBalance({
     address,
     token: FLOW_TOKEN.address as `0x${string}`,
-    watch: true,
+    watch: false,
     cacheTime: 5_000
   });
   const xflBalance = parseFloat(xflBalanceObj?.data?.formatted ?? '0');

@@ -39,6 +39,7 @@ export interface ERC721CollectionCartItem extends Erc721Collection {
 }
 
 export interface ERC721TokenCartItem extends ERC721CardData {
+  orderPriceEth?: number;
   orderExpiry?: ORDER_EXPIRY_TIME;
   cartType: CartType;
   lastSalePriceEth?: string | number | null | undefined;
@@ -71,6 +72,8 @@ export type TokensFilter = {
   traitValues?: string[];
   orderBy?: string;
   cursor?: string;
+  source?: string;
+  hideSpam?: boolean;
 };
 
 export interface GlobalRewards {
