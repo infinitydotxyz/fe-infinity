@@ -27,9 +27,9 @@ export const isLocalhost = () => !isServer() && (window?.location?.host || '').i
 export const isProd = () => process.env.NODE_ENV === 'production';
 
 export enum CollectionPageTabs {
-  Bid = 'Bid',
+  Bid = 'Place Bid',
   Buy = 'Buy',
-  Bids = 'Bids',
+  Bids = 'Live Bids',
   Analytics = 'Analytics'
 }
 

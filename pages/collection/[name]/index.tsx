@@ -64,7 +64,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const { setRef } = useScrollInfo();
   const tabs = [
     CollectionPageTabs.Bid.toString(),
-    CollectionPageTabs.Buy.toString(),
+    // CollectionPageTabs.Buy.toString(),
     CollectionPageTabs.Bids.toString(),
     CollectionPageTabs.Analytics.toString()
   ];
@@ -535,13 +535,13 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               </div>
             </div>
           )}
-          {selectedCollectionTab === 'Bids' && (
+          {selectedCollectionTab === CollectionPageTabs.Bids && (
             <CollectionOrderList
               collectionAddress={collection.address}
               collectionChainId={collection.chainId as ChainId}
             />
           )}
-          {selectedCollectionTab === 'Analytics' && (
+          {selectedCollectionTab === CollectionPageTabs.Analytics && (
             <CollectionCharts
               collectionAddress={collection.address}
               collectionChainId={chainId}
