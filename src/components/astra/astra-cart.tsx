@@ -119,12 +119,12 @@ export const AstraCart = ({
   const { data: wethBalance, isLoading } = useBalance({
     address: user,
     token: WETH_ADDRESS as `0x{string}`,
-    watch: true
+    watch: false
   });
 
   const { data: ethBalance, isLoading: isEthBalanceLoading } = useBalance({
     address: user,
-    watch: true
+    watch: false
   });
 
   let cartItemList: ReactNode;

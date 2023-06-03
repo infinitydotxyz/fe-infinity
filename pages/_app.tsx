@@ -4,18 +4,18 @@ import LogRocket from 'logrocket';
 import { ThemeProvider } from 'next-themes';
 import type { AppProps } from 'next/app';
 import { Router, useRouter } from 'next/router';
-import { memo, StrictMode, useEffect } from 'react';
+import { StrictMode, memo, useEffect } from 'react';
 import { Layout } from 'src/components/astra/layout';
 import 'src/settings/tailwind/globals.scss';
 import { isLocalhost } from 'src/utils/common-utils';
 import { AppContextProvider } from 'src/utils/context/AppContext';
 import { CartContextProvider } from 'src/utils/context/CartContext';
 
-import { jsonRpcProvider } from '@wagmi/core/providers/jsonRpc';
+import { publicProvider } from '@wagmi/core/providers/public';
 import NProgress from 'nprogress'; //nprogress module
-import '../styles/nprogress.css'; //styles of nprogress
-import { WagmiConfig, configureChains, createClient, goerli, mainnet } from 'wagmi';
 import { ProfileContextProvider } from 'src/utils/context/ProfileContext';
+import { WagmiConfig, configureChains, createClient, mainnet } from 'wagmi';
+import '../styles/nprogress.css'; //styles of nprogress
 NProgress.configure({ showSpinner: false });
 
 //Binding events.
@@ -29,22 +29,8 @@ if (!isLocalhost()) {
   LogRocket.init('0pu9ak/nftco');
 }
 
-const alchemyApiKeyMainnet = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_MAINNET ?? '';
-const alchemyApiKeyGoerli = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_GOERLI ?? '';
 const supportedChains = [mainnet];
-const { chains, provider } = configureChains(supportedChains, [
-  jsonRpcProvider({
-    rpc: (chain) => {
-      if (chain.id === goerli.id) {
-        return { http: `https://eth-goerli.g.alchemy.com/v2/${alchemyApiKeyGoerli}` };
-      } else if (chain.id === mainnet.id) {
-        return { http: `https://eth-mainnet.g.alchemy.com/v2/${alchemyApiKeyMainnet}` };
-      } else {
-        throw new Error(`Unsupported chain ${chain?.id}`);
-      }
-    }
-  })
-]);
+const { chains, provider } = configureChains(supportedChains, [publicProvider()]);
 
 const client = createClient(
   getDefaultClient({
