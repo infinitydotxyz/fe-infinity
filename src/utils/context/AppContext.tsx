@@ -19,8 +19,7 @@ import {
 } from '@infinityxyz/lib-frontend/utils';
 import { Contract } from 'ethers';
 import { defaultAbiCoder, parseEther } from 'ethers/lib/utils.js';
-import { CollectionPageTabs } from 'pages/collection/[name]';
-import { ProfileTabs } from 'pages/profile/[address]';
+import { CollectionPageTabs, ProfileTabs } from 'src/utils';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';

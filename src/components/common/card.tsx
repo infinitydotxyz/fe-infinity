@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { HiCheckCircle, HiOutlineLightBulb, HiPlusCircle } from 'react-icons/hi';
-import { ellipsisString, nFormatter } from 'src/utils';
+import { ellipsisString, nFormatter, CollectionPageTabs } from 'src/utils';
 import { BasicTokenInfo, ERC721TokenCartItem } from 'src/utils/types';
 import {
   borderColor,
@@ -20,7 +20,6 @@ import { BlueCheck, EZImage, EthSymbol } from '../common';
 import { formatEther, parseEther } from 'ethers/lib/utils.js';
 import { PROTOCOL_FEE_BPS } from '@infinityxyz/lib-frontend/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { CollectionPageTabs } from 'pages/collection/[name]';
 
 interface Props {
   data: ERC721TokenCartItem;

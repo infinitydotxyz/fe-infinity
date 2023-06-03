@@ -20,7 +20,7 @@ import { CenteredContent, EZImage, ExternalLink, Spacer, TextInputBox } from 'sr
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
 import { useCollectionTokenFetcher } from 'src/hooks/api/useTokenFetcher';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
-import { apiGet, nFormatter } from 'src/utils';
+import { CollectionPageTabs, apiGet, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { ERC721CollectionCartItem, ERC721TokenCartItem, TokensFilter } from 'src/utils/types';
@@ -39,13 +39,6 @@ interface CollectionDashboardProps {
   collectionAllTimeStats?: CollectionStats;
   collectionAttributes?: CollectionAttributes;
   error?: Error;
-}
-
-export enum CollectionPageTabs {
-  Bid = 'Bid',
-  Buy = 'Buy',
-  Bids = 'Bids',
-  Analytics = 'Analytics'
 }
 
 export default function ItemsPage(props: CollectionDashboardProps) {

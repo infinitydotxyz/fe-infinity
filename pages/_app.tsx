@@ -15,6 +15,7 @@ import { jsonRpcProvider } from '@wagmi/core/providers/jsonRpc';
 import NProgress from 'nprogress'; //nprogress module
 import '../styles/nprogress.css'; //styles of nprogress
 import { WagmiConfig, configureChains, createClient, goerli, mainnet } from 'wagmi';
+import { ProfileContextProvider } from 'src/utils/context/ProfileContext';
 NProgress.configure({ showSpinner: false });
 
 //Binding events.
@@ -75,7 +76,9 @@ const App = (props: AppProps) => {
         >
           <CartContextProvider>
             <AppContextProvider>
-              <AppBody {...props} />
+              <ProfileContextProvider>
+                <AppBody {...props} />
+              </ProfileContextProvider>
             </AppContextProvider>
           </CartContextProvider>
         </ConnectKitProvider>
