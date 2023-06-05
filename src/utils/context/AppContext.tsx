@@ -33,11 +33,13 @@ import {
   approveERC20,
   approveERC721,
   approveERC721ForChainNFTs,
+  canTakeMultipleOneOrders,
   cancelMultipleOrders,
   checkERC20Balance,
   checkOnChainOwnership,
   signBulkOrders,
-  signSingleOrder
+  signSingleOrder,
+  takeMultipleOneOrders
 } from 'src/utils/orders';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem } from 'src/utils/types';
 import { useAccount, useNetwork, useProvider, useSigner } from 'wagmi';
@@ -420,11 +422,35 @@ export const AppContextProvider = ({ children }: Props) => {
       if (!user || !signer) {
         toastError('No logged in user');
       } else {
+        const isBuyCart = cartType === CartType.TokenBuy;
         const isBidCart = cartType === CartType.TokenBid;
         const isSellCart = cartType === CartType.TokenList;
-        const isSendCart = cartType === CartType.Send;
 
-        if (!isSendCart) {
+        if (isBuyCart) {
+          // get the signed sell orders, skip any undefined orders
+          const signedListings = [];
+          for (const token of tokens) {
+            console.log(token);
+            const signedListing = token.orderSnippet?.listing?.signedOrder;
+            if (signedListing) {
+              signedListings.push(signedListing);
+            }
+          }
+          // check if valid execution
+          console.log(signedListings);
+          const validExecution = await canTakeMultipleOneOrders(signer as JsonRpcSigner, signedListings);
+          if (!validExecution) {
+            toastError('Invalid execution');
+            return false;
+          } else {
+            // execute
+            setCheckoutBtnStatus('Buying listings');
+            const { hash } = await takeMultipleOneOrders(signer as JsonRpcSigner, chainId, signedListings);
+            toastSuccess('Sent txn to chain for execution');
+            setTxnHash(hash);
+            return true;
+          }
+        } else if (isBidCart || isSellCart) {
           // prepare orders
           const preSignedOrders: OBOrder[] = [];
           setCheckoutBtnStatus('Fetching nonce');
