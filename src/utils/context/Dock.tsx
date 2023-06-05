@@ -1,6 +1,6 @@
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
-import { ProfileTabs } from 'pages/profile/[address]';
+import { ProfileTabs } from 'src/utils';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { BiGlobeAlt, BiWalletAlt } from 'react-icons/bi';
 import { FiTarget } from 'react-icons/fi';

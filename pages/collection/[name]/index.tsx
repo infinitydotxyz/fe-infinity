@@ -20,7 +20,7 @@ import { CenteredContent, EZImage, ExternalLink, Spacer, TextInputBox } from 'sr
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
 import { useCollectionTokenFetcher } from 'src/hooks/api/useTokenFetcher';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
-import { apiGet, nFormatter } from 'src/utils';
+import { CollectionPageTabs, apiGet, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { ERC721CollectionCartItem, ERC721TokenCartItem, TokensFilter } from 'src/utils/types';
@@ -39,13 +39,6 @@ interface CollectionDashboardProps {
   collectionAllTimeStats?: CollectionStats;
   collectionAttributes?: CollectionAttributes;
   error?: Error;
-}
-
-export enum CollectionPageTabs {
-  Bid = 'Bid',
-  Buy = 'Buy',
-  Bids = 'Bids',
-  Analytics = 'Analytics'
 }
 
 export default function ItemsPage(props: CollectionDashboardProps) {
@@ -71,7 +64,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const { setRef } = useScrollInfo();
   const tabs = [
     CollectionPageTabs.Bid.toString(),
-    CollectionPageTabs.Buy.toString(),
+    // CollectionPageTabs.Buy.toString(),
     CollectionPageTabs.Bids.toString(),
     CollectionPageTabs.Analytics.toString()
   ];
@@ -98,8 +91,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     } else if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
       setFilter({
         ...filter,
-        orderType: 'listing',
-        source: 'flow'
+        orderType: 'listing'
       });
     }
   }, [selectedCollectionTab]);
@@ -543,13 +535,13 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               </div>
             </div>
           )}
-          {selectedCollectionTab === 'Bids' && (
+          {selectedCollectionTab === CollectionPageTabs.Bids && (
             <CollectionOrderList
               collectionAddress={collection.address}
               collectionChainId={collection.chainId as ChainId}
             />
           )}
-          {selectedCollectionTab === 'Analytics' && (
+          {selectedCollectionTab === CollectionPageTabs.Analytics && (
             <CollectionCharts
               collectionAddress={collection.address}
               collectionChainId={chainId}

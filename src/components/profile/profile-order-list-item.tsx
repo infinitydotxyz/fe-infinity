@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { FiEdit3, FiTrash2 } from 'react-icons/fi';
 import { Button, EthPrice } from 'src/components/common';
 import { erc721OrderCartItemToCollectionCartItem, erc721OrderCartItemToTokenCartItem, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -60,7 +61,7 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
   return (
     <div className={twMerge(standardBorderCard, 'flex mx-4 text-sm')}>
       <div className="flex justify-between items-center w-full">
-        <div className="w-1/4">
+        <div className="w-1/3">
           <OrderbookItem canShowAssetModal={true} nameItem={true} key={`${order.id} ${order.chainId}`} order={order} />
         </div>
 
@@ -87,8 +88,16 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
         </div>
 
         {orderType === 'listings' || orderType === 'offers-made' ? (
-          <div className="w-1/4 flex justify-end">
+          <div className="w-1/8 flex justify-end">
             <Button
+              variant={
+                addedToEditCart &&
+                (cartType === CartType.TokenList ||
+                  cartType === CartType.TokenBid ||
+                  cartType === CartType.CollectionBid)
+                  ? 'primary'
+                  : 'outline'
+              }
               disabled={!isActionable}
               className="mr-2"
               onClick={() => {
@@ -112,14 +121,11 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
                 }
               }}
             >
-              {addedToEditCart &&
-              (cartType === CartType.TokenList || cartType === CartType.TokenBid || cartType === CartType.CollectionBid)
-                ? '✓'
-                : ''}{' '}
-              Edit in Cart
+              <FiEdit3 className="w-4 h-4" />
             </Button>
 
             <Button
+              variant={addedToCancelCart && cartType === CartType.Cancel ? 'primary' : 'outline'}
               disabled={!isActionable}
               onClick={() => {
                 if (!isConnected) {
@@ -131,7 +137,7 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
                 toggleOrderSelection(order);
               }}
             >
-              {addedToCancelCart && cartType === CartType.Cancel ? '✓' : ''} Cancel
+              <FiTrash2 className="w-4 h-4" />
             </Button>
           </div>
         ) : null}

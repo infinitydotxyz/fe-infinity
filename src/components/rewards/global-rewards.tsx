@@ -1,5 +1,5 @@
 import { TokenomicsConfigDto } from '@infinityxyz/lib-frontend/types/dto';
-import { BouncingLogo, CenteredContent, ExternalLink } from 'src/components/common';
+import { BouncingLogo, CenteredContent } from 'src/components/common';
 import { FLOW_TOKEN, useFetch } from 'src/utils';
 import { secondaryBgColor, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -75,7 +75,7 @@ const GlobalRewards = ({ showCount }: Props) => {
           <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName="bg-[#66d981]" />
         </div> */}
 
-        <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
+        {/* <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
           <div className="text-2xl font-medium underline">Creator Rewards</div>
           <div>100k ${FLOW_TOKEN.symbol} per day</div>
           <div>
@@ -85,9 +85,9 @@ const GlobalRewards = ({ showCount }: Props) => {
             </ExternalLink>{' '}
             to get whitelisted.
           </div>
-        </div>
+        </div> */}
       </div>
-      <CenteredContent>Leaderboards coming soon.</CenteredContent>
+      {/* <CenteredContent>Leaderboards coming soon.</CenteredContent> */}
     </div>
   );
 };

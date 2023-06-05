@@ -73,6 +73,7 @@ export type TokensFilter = {
   orderBy?: string;
   cursor?: string;
   source?: string;
+  hideSpam?: boolean;
 };
 
 export interface GlobalRewards {

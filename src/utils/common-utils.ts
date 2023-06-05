@@ -9,14 +9,12 @@ import {
   POLYGON_CHAIN_SCANNER_BASE,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
-import { ProfileTabs } from 'pages/profile/[address]';
 import { normalize } from 'path';
 import { ReactNode } from 'react';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
 import { CartType } from './context/CartContext';
 import { BigNumber } from '@ethersproject/bignumber/lib/bignumber';
 import { formatUnits, parseUnits } from 'ethers/lib/utils.js';
-import { CollectionPageTabs } from 'pages/collection/[name]';
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
 
@@ -27,6 +25,19 @@ export const isServer = () => typeof window === 'undefined';
 export const isLocalhost = () => !isServer() && (window?.location?.host || '').indexOf('localhost') >= 0;
 
 export const isProd = () => process.env.NODE_ENV === 'production';
+
+export enum CollectionPageTabs {
+  Bid = 'Place Bids',
+  Buy = 'Buy',
+  Bids = 'Live Bids',
+  Analytics = 'Analytics'
+}
+
+export enum ProfileTabs {
+  Items = 'Items',
+  Orders = 'Orders',
+  Send = 'Send'
+}
 
 export const displayTypeToProps = (displayType: string | undefined): { isCover: boolean; padding: string } => {
   let isCover = true;

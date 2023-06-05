@@ -77,7 +77,7 @@ const MyRewards = () => {
   const xflBalanceObj = useBalance({
     address,
     token: FLOW_TOKEN.address as `0x${string}`,
-    watch: true,
+    watch: false,
     cacheTime: 5_000
   });
   const xflBalance = parseFloat(xflBalanceObj?.data?.formatted ?? '0');
@@ -174,7 +174,7 @@ const MyRewards = () => {
 
       <RewardsSection
         title="Token Balance"
-        subTitle={`Stake $${FLOW_TOKEN.symbol} to boost rewards. The more tokens you stake, higher the reward boost. See docs for more info.`}
+        subTitle={`Stake $${FLOW_TOKEN.symbol} to boost platform rewards. The more tokens you stake, higher the boost. Currently applies to NFT buy rewards. See docs for more info.`}
         sideInfo={
           <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
             <div>${FLOW_TOKEN.symbol}</div>
