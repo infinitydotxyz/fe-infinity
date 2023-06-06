@@ -28,7 +28,7 @@ export const isProd = () => process.env.NODE_ENV === 'production';
 
 export enum CollectionPageTabs {
   Bid = 'Place Bids',
-  Buy = 'Buy',
+  Buy = 'Buy Now',
   Bids = 'Live Bids',
   Analytics = 'Analytics'
 }

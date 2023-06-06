@@ -64,7 +64,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const { setRef } = useScrollInfo();
   const tabs = [
     CollectionPageTabs.Bid.toString(),
-    // CollectionPageTabs.Buy.toString(),
+    CollectionPageTabs.Buy.toString(),
     CollectionPageTabs.Bids.toString(),
     CollectionPageTabs.Analytics.toString()
   ];

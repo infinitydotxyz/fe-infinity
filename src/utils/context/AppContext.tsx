@@ -430,14 +430,12 @@ export const AppContextProvider = ({ children }: Props) => {
           // get the signed sell orders, skip any undefined orders
           const signedListings = [];
           for (const token of tokens) {
-            console.log(token);
-            const signedListing = token.orderSnippet?.listing?.signedOrder;
+            const signedListing = token.orderSnippet?.listing?.signedOrder.rawOrder;
             if (signedListing) {
               signedListings.push(signedListing);
             }
           }
           // check if valid execution
-          console.log(signedListings);
           const validExecution = await canTakeMultipleOneOrders(signer as JsonRpcSigner, signedListings);
           if (!validExecution) {
             toastError('Invalid execution');
