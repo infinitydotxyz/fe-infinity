@@ -1,8 +1,6 @@
-import { useState } from 'react';
-import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
+import { useEffect, useState } from 'react';
 import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 import { nFormatter } from 'src/utils';
-import { useAccount } from 'wagmi';
 import { BouncingLogo, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { Modal } from '../common/modal';
@@ -12,15 +10,13 @@ interface Props {
 }
 
 export const UnstakeTokensModal = ({ onClose }: Props) => {
-  const { address: user } = useAccount();
-  const { result: curationQuota } = useCurationQuota(user ?? null);
-  const [value] = useState(0);
+  const [value, setValue] = useState(0);
   const [isUnstaking, setIsUnstaking] = useState(false);
-  const { unstake } = useStakerContract();
+  const { unstake, stakeBalance } = useStakerContract();
 
   const onUnstake = async () => {
     if (value <= 0) {
-      toastError('Please enter a valid unstake amount');
+      toastError('Nothing to unstake.');
       return;
     }
 
@@ -36,6 +32,15 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
       setIsUnstaking(false);
     }
   };
+
+  useEffect(() => {
+    stakeBalance().then((res) => {
+      if (res) {
+        const stakeBal = parseFloat(res);
+        setValue(stakeBal);
+      }
+    });
+  }, []);
 
   // const onRageQuit = async () => {
   //   setIsRageQuitting(true);
@@ -90,7 +95,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
 
           <div className="text-m mt-4 flex justify-between">
             <span>Total staked</span>
-            <span className="font-heading">{nFormatter(curationQuota?.totalStaked || 0)}</span>
+            <span className="font-heading">{nFormatter(value)}</span>
           </div>
 
           {/* <div className="text-m mt-2 flex justify-between">
