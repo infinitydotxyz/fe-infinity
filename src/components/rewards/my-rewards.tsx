@@ -35,7 +35,7 @@ const RewardsSection = (props: RewardsSectionProps) => {
 };
 
 const MyRewards = () => {
-  const NUM_DAILY_BUY_REWARDS = 9_000_000;
+  // const NUM_DAILY_BUY_REWARDS = 9_000_000;
 
   const { chain } = useNetwork();
   const chainId = String(chain?.id);
@@ -67,12 +67,12 @@ const MyRewards = () => {
 
   const platformLast24HrVol = globalRewards?.last24HrsVolumeETH ?? 0;
 
-  let xflEarnedLast24hrs;
-  if (platformLast24HrVol !== 0) {
-    const baseReward = (buyerLast24HrVol / platformLast24HrVol) * NUM_DAILY_BUY_REWARDS;
-    xflEarnedLast24hrs = nFormatter(baseReward * rewardBoost);
-  }
-  xflEarnedLast24hrs = xflEarnedLast24hrs ?? 0;
+  // let xflEarnedLast24hrs;
+  // if (platformLast24HrVol !== 0) {
+  //   const baseReward = (buyerLast24HrVol / platformLast24HrVol) * NUM_DAILY_BUY_REWARDS;
+  //   xflEarnedLast24hrs = nFormatter(baseReward * rewardBoost);
+  // }
+  // xflEarnedLast24hrs = xflEarnedLast24hrs ?? 0;
 
   const xflBalanceObj = useBalance({
     address,
@@ -174,7 +174,7 @@ const MyRewards = () => {
 
       <RewardsSection
         title="Token Balance"
-        subTitle={`Stake $${FLOW_TOKEN.symbol} to boost platform rewards. The more tokens you stake, higher the boost. Currently applies to NFT buy rewards. See docs for more info.`}
+        subTitle={`Stake $${FLOW_TOKEN.symbol} to boost platform rewards. V1 rewards are complete. New platform rewards coming soon. See docs for more info.`}
         sideInfo={
           <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
             <div>${FLOW_TOKEN.symbol}</div>
@@ -198,20 +198,20 @@ const MyRewards = () => {
               <Spacer />
             </div>
             <div className="w-full flex mt-4 items-center flex-wrap space-x-3">
-              <Button size="large" onClick={() => setShowBuyTokensModal(true)}>
+              <Button size="large" variant="outline" onClick={() => setShowBuyTokensModal(true)}>
                 Buy ${FLOW_TOKEN.symbol}
               </Button>
 
-              <Button size="large" onClick={() => setShowStakeTokensModal(true)}>
+              <Button size="large" variant="outline" onClick={() => setShowStakeTokensModal(true)}>
                 Stake
               </Button>
 
-              <Button disabled size="large" variant="outline" onClick={() => setShowUnstakeTokensModal(true)}>
+              <Button size="large" variant="outline" onClick={() => setShowUnstakeTokensModal(true)}>
                 Unstake
               </Button>
-              <div className={twMerge(secondaryTextColor, 'ml-2 text-xs')}>
+              {/* <div className={twMerge(secondaryTextColor, 'ml-2 text-xs')}>
                 Unstake available on Aug 3rd 2023 00:00 UTC)
-              </div>
+              </div> */}
             </div>
           </div>
         }
@@ -220,8 +220,7 @@ const MyRewards = () => {
       {referralReward > 0 && (
         <RewardsSection
           title="Referral Rewards"
-          subTitle={`Refer users to Flow, and earn $${FLOW_TOKEN.symbol} when users join. The more users you refer, the more you earn. 
-          Referrals will also increase your reward boost.`}
+          subTitle={`Earned referral V1 rewards.`}
           sideInfo={
             <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
               {/* <div className="mt-2 flex items-center space-x-2">
@@ -258,7 +257,7 @@ const MyRewards = () => {
 
       <RewardsSection
         title="Airdrop"
-        subTitle={`Airdrop is calculated based on $INFT holdings, staked $INFT, $FLUR holdings and the past 6 month buy volume (> 9000 USDC total) on Blur and OpenSea.`}
+        subTitle={`Earned V1 airdrop rewards.`}
         sideInfo={
           <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
             <div className="items-center flex mt-2 text-sm">
@@ -270,7 +269,9 @@ const MyRewards = () => {
             </div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{nFormatter(airdropReward)}</div>
+                <div className="text-2xl font-heading font-bold">
+                  {nFormatter(airdropClaimStatus === 'Earned' ? airdropReward : 0)}
+                </div>
                 <div className="text-sm mt-1">${FLOW_TOKEN.symbol}</div>
               </div>
               <Spacer />
@@ -287,8 +288,7 @@ const MyRewards = () => {
 
       <RewardsSection
         title="Buy Rewards"
-        subTitle={`Earn buy rewards for every NFT purchase you make on the platform. 
-          Every day 9M $${FLOW_TOKEN.symbol} is distributed to buyers proportional to their buy volume. Claimable on Aug 3 2023.`}
+        subTitle={`Earned V1 buy rewards. Claimable on Aug 3 2023.`}
         sideInfo={
           <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
             <div>Volume</div>
@@ -323,14 +323,14 @@ const MyRewards = () => {
             </div>
 
             <div className={twMerge('mt-5 items-center space-y-2')}>
-              <div className="flex items-center space-x-2">
+              {/* <div className="flex items-center space-x-2">
                 <div className="text-sm">Earned rewards (last 24hrs): </div>
                 <div className={twMerge(secondaryBgColor, 'ml-2 p-2 rounded-md')}>
                   {xflEarnedLast24hrs} ${FLOW_TOKEN.symbol}
                 </div>
-              </div>
+              </div> */}
               <div className="flex items-center space-x-2">
-                <div className="text-sm">Total earned (excl. last 24hrs): </div>
+                <div className="text-sm">Total earned: </div>
                 <div className={twMerge(secondaryBgColor, 'ml-2 p-2 rounded-md')}>
                   {xflEarnedTotal} ${FLOW_TOKEN.symbol}
                 </div>
