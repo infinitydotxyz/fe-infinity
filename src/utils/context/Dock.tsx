@@ -1,9 +1,8 @@
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
-import { ProfileTabs } from 'src/utils';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { BiGlobeAlt, BiWalletAlt } from 'react-icons/bi';
-import { FiTarget } from 'react-icons/fi';
+import { GiJeweledChalice } from 'react-icons/gi';
 import { HiOutlineTag } from 'react-icons/hi';
 import { MdOutlineDarkMode, MdOutlineLightMode } from 'react-icons/md';
 import { RxDiscordLogo } from 'react-icons/rx';
@@ -11,6 +10,7 @@ import { TbSend } from 'react-icons/tb';
 import { TfiTwitter } from 'react-icons/tfi';
 import { HelpToolTip } from 'src/components/common';
 import { SnipeModal } from 'src/components/common/snipe-modal';
+import { ProfileTabs } from 'src/utils';
 import { MouseProvider } from 'src/utils/context/MouseProvider';
 import { twMerge } from 'tailwind-merge';
 import { useAccount } from 'wagmi';
@@ -18,7 +18,6 @@ import { borderColor, hoverColorBrandText, secondaryBgColor } from '../ui-consta
 import { useAppContext } from './AppContext';
 import DockItem from './DockItem';
 import { DockContextType } from './types';
-import { GiJeweledChalice } from 'react-icons/gi';
 
 /**
  * <DockContext> provider.
@@ -75,7 +74,7 @@ const Dock = () => {
             }}
           >
             <ul className={twMerge('flex items-center justify-center space-x-3', dockHeight)}>
-              <DockItem className={dockItemClassname}>
+              {/* <DockItem className={dockItemClassname}>
                 <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Pixelpack</div>}>
                   <div className={itemClassname}>
                     <FiTarget
@@ -86,7 +85,7 @@ const Dock = () => {
                     />
                   </div>
                 </HelpToolTip>
-              </DockItem>
+              </DockItem> */}
 
               <DockItem highlighted={router.asPath.startsWith('/trending')} className={dockItemClassname}>
                 <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Explore</div>}>
