@@ -374,7 +374,7 @@ const MyRewards = () => {
 
       <RewardsSection
         title="Creator Rewards"
-        subTitle="Creators of whitelisted collections earn rewards on every purchase of the collection's NFTs on Flow."
+        subTitle="Creators of whitelisted collections earn rewards on every purchase of the collection's NFTs on Pixelpack."
         sideInfo={
           <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
             <div>Earned</div>

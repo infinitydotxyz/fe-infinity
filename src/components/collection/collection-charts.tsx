@@ -205,8 +205,8 @@ export const CollectionCharts = ({
       </div>
 
       <div className={twMerge('w-full p-2 flex space-x-5 text-xs mt-6 z-50', secondaryTextColor)}>
-        <ExternalLink href="https://flow.so/terms">Terms</ExternalLink>
-        <ExternalLink href="https://flow.so/privacy-policy">Privacy Policy</ExternalLink>
+        <ExternalLink href="https://pixelpack.io/terms">Terms</ExternalLink>
+        <ExternalLink href="https://pixelpack.io/privacy-policy">Privacy Policy</ExternalLink>
       </div>
     </div>
   );

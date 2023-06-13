@@ -57,7 +57,7 @@ const GlobalRewards = ({ showCount }: Props) => {
           <div>200M ${FLOW_TOKEN.symbol} until supply runs out.</div>
           <div>
             There's a fixed supply of referral rewards. Will be discontinued once the product is made public. See{' '}
-            <ExternalLink href="https://docs.flow.so/referrals" className="underline">
+            <ExternalLink href="https://docs.pixelpack.io/referrals" className="underline">
               docs
             </ExternalLink>{' '}
             for details.
@@ -70,7 +70,7 @@ const GlobalRewards = ({ showCount }: Props) => {
           <div>800M ${FLOW_TOKEN.symbol} total.</div>
           <div>
             Airdrop is based on past trading activity. Cumulative buy volumes more than 9000 USDC in the last 6 months
-            on OS and Blur are eligible. Earn it by referring 2 friends to Flow via your referral link.
+            on OS and Blur are eligible. Earn it by referring 2 friends to Pixelpack via your referral link.
           </div>
           <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName="bg-[#66d981]" />
         </div> */}
@@ -80,7 +80,7 @@ const GlobalRewards = ({ showCount }: Props) => {
           <div>100k ${FLOW_TOKEN.symbol} per day</div>
           <div>
             Whitelisted collections (currently less than 5) earn rewards for their creators. Ping us on{' '}
-            <ExternalLink href="https://discord.gg/flowdotso" className="underline">
+            <ExternalLink href="https://discord.gg/pixelpackio" className="underline">
               discord
             </ExternalLink>{' '}
             to get whitelisted.

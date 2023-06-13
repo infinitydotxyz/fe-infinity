@@ -76,7 +76,7 @@ const Dock = () => {
           >
             <ul className={twMerge('flex items-center justify-center space-x-3', dockHeight)}>
               <DockItem className={dockItemClassname}>
-                <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Flow</div>}>
+                <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Pixelpack</div>}>
                   <div className={itemClassname}>
                     <FiTarget
                       className={twMerge(iconClassname, hoverColorBrandText)}
@@ -188,7 +188,7 @@ const Dock = () => {
                   <a
                     className={itemClassname}
                     aria-label="Discord"
-                    href="https://discord.gg/flowdotso"
+                    href="https://discord.gg/pixelpackio"
                     rel="external nofollow noopener noreferrer"
                     target="_blank"
                   >
@@ -202,7 +202,7 @@ const Dock = () => {
                   <a
                     className={itemClassname}
                     aria-label="Twitter"
-                    href="https://twitter.com/flowdotso"
+                    href="https://twitter.com/pixelpackio"
                     rel="external nofollow noopener noreferrer"
                     target="_blank"
                   >

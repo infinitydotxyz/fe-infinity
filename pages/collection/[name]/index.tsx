@@ -169,7 +169,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
             <EZImage src={collection.metadata.profileImage} className="h-40 w-40 rounded-lg overflow-clip" />
           ) : null}
           <div className="text-3xl font-heading font-medium">
-            {collection?.metadata?.name ?? 'This collection'} is not supported on Flow
+            {collection?.metadata?.name ?? 'This collection'} is not supported on Pixelpack
           </div>
           <div className="flex flex-col text-md">
             <span>Common reasons a collection is not supported:</span>
@@ -181,7 +181,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
             </ul>
             <div className="flex items-center space-x-2">
               <div>If this is a mistake, let us know on</div>
-              <ExternalLink href="https://discord.gg/flowdotso">
+              <ExternalLink href="https://discord.gg/pixelpackio">
                 <FaDiscord className={twMerge('text-brand-discord cursor-pointer mt-1', iconButtonStyle)} />
               </ExternalLink>
             </div>
@@ -229,8 +229,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     <Head>
       <meta property="og:title" content={collection.metadata?.name} />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content={`https://flow.so/collection/${collection?.slug}`} />
-      <meta property="og:site_name" content="flow.so" />
+      <meta property="og:url" content={`https://pixelpack.io/collection/${collection?.slug}`} />
+      <meta property="og:site_name" content="pixelpack.io" />
       <meta property="og:image" content={collection.metadata?.bannerImage || collection.metadata?.profileImage} />
       <meta property="og:image:alt" content={collection.metadata?.description} />
       <meta property="og:description" content={collection.metadata?.description} />
@@ -238,7 +238,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
       <meta name="theme-color" content="#000000" />
 
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content="@flowdotso" />
+      <meta name="twitter:site" content="@pixelpackio" />
       <meta name="twitter:title" content={collection.metadata?.name} />
       <meta name="twitter:description" content={collection.metadata?.description} />
       <meta name="twitter:image" content={collection.metadata?.bannerImage || collection.metadata?.profileImage} />
