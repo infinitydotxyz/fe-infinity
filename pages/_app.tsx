@@ -34,7 +34,7 @@ const { chains, provider } = configureChains(supportedChains, [publicProvider()]
 
 const client = createClient(
   getDefaultClient({
-    appName: 'Flow',
+    appName: 'Pixelpack',
     chains: chains,
     provider
   })

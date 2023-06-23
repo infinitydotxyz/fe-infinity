@@ -22,7 +22,7 @@ export const NextLink = ({ children, className = '', href, title }: Props) => {
   );
 };
 
-// use for external links (https://flow.so)
+// use for external links (https://pixelpack.io)
 export const ExternalLink = ({ children, className = '', target = '_blank', ...props }: Props) => {
   if (!props.href) {
     return <></>;
