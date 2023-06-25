@@ -2,7 +2,7 @@ import { BaseToken, ChainId, Erc721Token, OrdersSnippet } from '@infinityxyz/lib
 import { getSearchFriendlyString } from '@infinityxyz/lib-frontend/utils';
 import { useEffect, useState } from 'react';
 import { useIsMounted } from 'src/hooks/useIsMounted';
-import { ApiResponse, nFormatter } from 'src/utils';
+import { ApiResponse, SITE_HOST, nFormatter } from 'src/utils';
 import { fetchCollectionListings, fetchCollectionTokens, fetchProfileTokens } from 'src/utils/astra-utils';
 import { CartType } from 'src/utils/context/CartContext';
 import { ERC721TokenCartItem, AggregatedOrder, TokensFilter } from 'src/utils/types';
@@ -187,7 +187,14 @@ export const nftToCardDataWithOrderFields = (item: ApiNftData): ERC721TokenCartI
     cartType: CartType.None,
     lastSalePriceEth,
     lastSaleTimestamp: item.lastSaleTimestamp,
-    mintPriceEth
+    mintPriceEth,
+    source: {
+      name: '',
+      domain: '',
+      id: '',
+      url: '',
+      icon: SITE_HOST + '/favicon.ico'
+    }
   };
 
   return result;
