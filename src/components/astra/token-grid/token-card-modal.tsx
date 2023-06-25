@@ -321,7 +321,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                     </div>
 
                     <div className="space-y-1 mr-1.5">
-                      <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>Top offer</div>
+                      <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>Top bid</div>
                       {offerPrice ? (
                         <div>
                           {offerPrice} {EthSymbol}

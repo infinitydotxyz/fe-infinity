@@ -75,7 +75,7 @@ export const GridCard = ({
     collectionCreator
   };
 
-  const lastSalePrice = data?.lastSalePriceEth;
+  const lastSalePrice = nFormatter(Number(data?.lastSalePriceEth ?? 0));
 
   const router = useRouter();
   const isCollectionPage = router.asPath.includes('/collection');
