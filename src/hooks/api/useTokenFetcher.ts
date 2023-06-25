@@ -1,14 +1,28 @@
 import { BaseToken, ChainId, Erc721Token, OrdersSnippet } from '@infinityxyz/lib-frontend/types/core';
+import { getSearchFriendlyString } from '@infinityxyz/lib-frontend/utils';
 import { useEffect, useState } from 'react';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { ApiResponse, nFormatter } from 'src/utils';
-import { fetchCollectionTokens, fetchProfileTokens } from 'src/utils/astra-utils';
+import { fetchCollectionListings, fetchCollectionTokens, fetchProfileTokens } from 'src/utils/astra-utils';
 import { CartType } from 'src/utils/context/CartContext';
-import { ERC721TokenCartItem, TokensFilter } from 'src/utils/types';
+import { ERC721TokenCartItem, AggregatedOrder, TokensFilter } from 'src/utils/types';
 
 type ApiNftData = Erc721Token & {
   orderSnippet?: OrdersSnippet;
 };
+
+export function useCollectionListingsFetcher(
+  collectionAddress: string | undefined,
+  collectionChainId: ChainId,
+  tokenId?: string
+) {
+  return useTokenFetcher<AggregatedOrder, ERC721TokenCartItem>({
+    fetcher: (cursor) => fetchCollectionListings(collectionAddress || '', collectionChainId, tokenId, cursor),
+    mapper: (data) => resvListingsToCardData(data),
+    execute: collectionAddress !== '',
+    filter: {}
+  });
+}
 
 export function useCollectionTokenFetcher(
   collectionAddress: string | undefined,
@@ -86,6 +100,45 @@ function useTokenFetcher<From, To>({
 
   return { error, data, hasNextPage, isLoading, fetch };
 }
+
+export const resvListingsToCardData = (tokens: AggregatedOrder[]): ERC721TokenCartItem[] => {
+  let result: ERC721TokenCartItem[] = (tokens || []).map((item: AggregatedOrder) => {
+    return resvListingToCardData(item);
+  });
+
+  // remove any with blank images
+  result = result.filter((x) => {
+    return x.image && x.image.length > 0;
+  });
+
+  return result;
+};
+
+export const resvListingToCardData = (item: AggregatedOrder): ERC721TokenCartItem => {
+  const image = item?.criteria?.data?.token?.image ?? '';
+
+  const result: ERC721TokenCartItem = {
+    id: item.tokenSetId,
+    name: item?.criteria?.data?.token?.name ?? '',
+    title: item?.criteria?.data?.token?.name ?? '',
+    chainId: item.chainId,
+    lastSalePriceEth: item?.lastSalePriceEth ?? 0,
+    mintPriceEth: item?.mintPriceEth ?? 0,
+    validFrom: item?.validFrom * 1000 ?? 0,
+    validUntil: item?.validUntil * 1000 ?? 0,
+    orderSide: item?.side ?? '',
+    collectionName: item?.criteria?.data?.collection?.name ?? '',
+    collectionSlug: getSearchFriendlyString(item?.criteria?.data?.collection?.name ?? ''),
+    image,
+    price: item?.price?.amount?.native ?? 0,
+    address: item.contract,
+    tokenId: item?.criteria?.data?.token?.tokenId ?? '',
+    cartType: CartType.None,
+    source: { ...item.source }
+  };
+
+  return result;
+};
 
 export const nftsToCardDataWithOrderFields = (tokens: ApiNftData[]): ERC721TokenCartItem[] => {
   let result: ERC721TokenCartItem[] = (tokens || []).map((item: ApiNftData) => {

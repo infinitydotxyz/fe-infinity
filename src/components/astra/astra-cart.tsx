@@ -438,6 +438,17 @@ export const AstraCart = ({
             {user && (
               <div className="space-y-3">
                 <div className="flex justify-between">
+                  <span className={twMerge(secondaryTextColor, 'font-medium')}>ETH Balance: </span>
+                  {isEthBalanceLoading ? (
+                    <span>Loading...</span>
+                  ) : (
+                    <span className="font-heading">
+                      {nFormatter(Number(ethBalance?.formatted))} {EthSymbol}
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex justify-between">
                   <span className={twMerge(secondaryTextColor, 'font-medium')}>WETH Balance: </span>
 
                   <div>
@@ -457,17 +468,6 @@ export const AstraCart = ({
                       Wrap ETH
                     </AButton>
                   </div>
-                </div>
-
-                <div className="flex justify-between">
-                  <span className={twMerge(secondaryTextColor, 'font-medium')}>ETH Balance: </span>
-                  {isEthBalanceLoading ? (
-                    <span>Loading...</span>
-                  ) : (
-                    <span className="font-heading">
-                      {nFormatter(Number(ethBalance?.formatted))} {EthSymbol}
-                    </span>
-                  )}
                 </div>
               </div>
             )}
@@ -576,9 +576,10 @@ const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
             }}
             useSpacer
             currentPrice={editedPrice}
+            hideExpiry={cartType === CartType.TokenBuy}
           ></PriceAndExpiry>
         )}
-        {!editing && cartType !== CartType.Send && (
+        {!editing && cartType !== CartType.Send && cartType !== CartType.TokenBuy && (
           <FiEdit3 className={twMerge(smallIconButtonStyle, 'cursor-pointer')} onClick={() => setEditing(true)} />
         )}
       </div>
@@ -681,9 +682,19 @@ interface Props5 {
   onEditComplete?: (price: string) => void;
   useSpacer?: boolean;
   currentPrice?: string;
+  hideExpiry?: boolean;
 }
 
-const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete, useSpacer, currentPrice }: Props5) => {
+const PriceAndExpiry = ({
+  token,
+  collection,
+  className,
+  editing,
+  onEditComplete,
+  useSpacer,
+  currentPrice,
+  hideExpiry
+}: Props5) => {
   const [price, setPrice] = useState(nFormatter(parseFloat(currentPrice ?? '0'), 2)?.toString() ?? '');
   const [expiry, setExpiry] = useState(getDefaultOrderExpiryTime());
 
@@ -695,93 +706,95 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
         <div className="flex w-full space-x-2">
           {useSpacer && <Spacer />}
 
-          <ADropdown
-            hasBorder={true}
-            alignMenuRight={true}
-            label={expiry}
-            innerClassName="w-24"
-            items={[
-              {
-                label: ORDER_EXPIRY_TIME.HOUR,
-                onClick: () => {
-                  onEditComplete?.(price);
-                  setExpiry(ORDER_EXPIRY_TIME.HOUR);
-                  if (token) {
-                    token.orderExpiry = ORDER_EXPIRY_TIME.HOUR;
-                  } else if (collection) {
-                    collection.offerExpiry = ORDER_EXPIRY_TIME.HOUR;
+          {!hideExpiry && (
+            <ADropdown
+              hasBorder={true}
+              alignMenuRight={true}
+              label={expiry}
+              innerClassName="w-24"
+              items={[
+                {
+                  label: ORDER_EXPIRY_TIME.HOUR,
+                  onClick: () => {
+                    onEditComplete?.(price);
+                    setExpiry(ORDER_EXPIRY_TIME.HOUR);
+                    if (token) {
+                      token.orderExpiry = ORDER_EXPIRY_TIME.HOUR;
+                    } else if (collection) {
+                      collection.offerExpiry = ORDER_EXPIRY_TIME.HOUR;
+                    }
+                  }
+                },
+                {
+                  label: ORDER_EXPIRY_TIME.DAY,
+                  onClick: () => {
+                    onEditComplete?.(price);
+                    setExpiry(ORDER_EXPIRY_TIME.DAY);
+                    if (token) {
+                      token.orderExpiry = ORDER_EXPIRY_TIME.DAY;
+                    } else if (collection) {
+                      collection.offerExpiry = ORDER_EXPIRY_TIME.DAY;
+                    }
+                  }
+                },
+                {
+                  label: ORDER_EXPIRY_TIME.WEEK,
+                  onClick: () => {
+                    onEditComplete?.(price);
+                    setExpiry(ORDER_EXPIRY_TIME.WEEK);
+                    if (token) {
+                      token.orderExpiry = ORDER_EXPIRY_TIME.WEEK;
+                    } else if (collection) {
+                      collection.offerExpiry = ORDER_EXPIRY_TIME.WEEK;
+                    }
+                  }
+                },
+                {
+                  label: ORDER_EXPIRY_TIME.MONTH,
+                  onClick: () => {
+                    onEditComplete?.(price);
+                    setExpiry(ORDER_EXPIRY_TIME.MONTH);
+                    if (token) {
+                      token.orderExpiry = ORDER_EXPIRY_TIME.MONTH;
+                    } else if (collection) {
+                      collection.offerExpiry = ORDER_EXPIRY_TIME.MONTH;
+                    }
+                  }
+                },
+                {
+                  label: ORDER_EXPIRY_TIME.SIX_MONTHS,
+                  onClick: () => {
+                    onEditComplete?.(price);
+                    setExpiry(ORDER_EXPIRY_TIME.SIX_MONTHS);
+                    if (token) {
+                      token.orderExpiry = ORDER_EXPIRY_TIME.SIX_MONTHS;
+                    } else if (collection) {
+                      collection.offerExpiry = ORDER_EXPIRY_TIME.SIX_MONTHS;
+                    }
+                  }
+                },
+                {
+                  label: ORDER_EXPIRY_TIME.YEAR,
+                  onClick: () => {
+                    onEditComplete?.(price);
+                    setExpiry(ORDER_EXPIRY_TIME.YEAR);
+                    if (token) {
+                      token.orderExpiry = ORDER_EXPIRY_TIME.YEAR;
+                    } else if (collection) {
+                      collection.offerExpiry = ORDER_EXPIRY_TIME.YEAR;
+                    }
                   }
                 }
-              },
-              {
-                label: ORDER_EXPIRY_TIME.DAY,
-                onClick: () => {
-                  onEditComplete?.(price);
-                  setExpiry(ORDER_EXPIRY_TIME.DAY);
-                  if (token) {
-                    token.orderExpiry = ORDER_EXPIRY_TIME.DAY;
-                  } else if (collection) {
-                    collection.offerExpiry = ORDER_EXPIRY_TIME.DAY;
-                  }
-                }
-              },
-              {
-                label: ORDER_EXPIRY_TIME.WEEK,
-                onClick: () => {
-                  onEditComplete?.(price);
-                  setExpiry(ORDER_EXPIRY_TIME.WEEK);
-                  if (token) {
-                    token.orderExpiry = ORDER_EXPIRY_TIME.WEEK;
-                  } else if (collection) {
-                    collection.offerExpiry = ORDER_EXPIRY_TIME.WEEK;
-                  }
-                }
-              },
-              {
-                label: ORDER_EXPIRY_TIME.MONTH,
-                onClick: () => {
-                  onEditComplete?.(price);
-                  setExpiry(ORDER_EXPIRY_TIME.MONTH);
-                  if (token) {
-                    token.orderExpiry = ORDER_EXPIRY_TIME.MONTH;
-                  } else if (collection) {
-                    collection.offerExpiry = ORDER_EXPIRY_TIME.MONTH;
-                  }
-                }
-              },
-              {
-                label: ORDER_EXPIRY_TIME.SIX_MONTHS,
-                onClick: () => {
-                  onEditComplete?.(price);
-                  setExpiry(ORDER_EXPIRY_TIME.SIX_MONTHS);
-                  if (token) {
-                    token.orderExpiry = ORDER_EXPIRY_TIME.SIX_MONTHS;
-                  } else if (collection) {
-                    collection.offerExpiry = ORDER_EXPIRY_TIME.SIX_MONTHS;
-                  }
-                }
-              },
-              {
-                label: ORDER_EXPIRY_TIME.YEAR,
-                onClick: () => {
-                  onEditComplete?.(price);
-                  setExpiry(ORDER_EXPIRY_TIME.YEAR);
-                  if (token) {
-                    token.orderExpiry = ORDER_EXPIRY_TIME.YEAR;
-                  } else if (collection) {
-                    collection.offerExpiry = ORDER_EXPIRY_TIME.YEAR;
-                  }
-                }
-              }
-            ]}
-          />
+              ]}
+            />
+          )}
 
           <div className={twMerge('flex flex-col items-end')}>
             <div className="flex flex-row">
               <div className={twMerge('font-bold font-heading')}>{nFormatter(Number(price), 2)}</div>
               <div className={twMerge('font-bold font-heading ml-1')}>{EthSymbol}</div>
             </div>
-            <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>{expiry}</div>
+            {!hideExpiry && <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>{expiry}</div>}
           </div>
         </div>
       ) : (

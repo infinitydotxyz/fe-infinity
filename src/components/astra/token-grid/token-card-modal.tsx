@@ -97,16 +97,24 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
     return null;
   }
 
-  const listingPrice = nFormatter(token.ordersSnippet?.listing?.orderItem?.startPriceEth, 2);
-  const listingExpiry = token.ordersSnippet?.listing?.orderItem?.endTimeMs;
+  const listingPrice = nFormatter(
+    token.ordersSnippet?.listing?.orderItem?.startPriceEth ?? data?.orderSide === 'sell'
+      ? data?.orderPriceEth
+      : undefined,
+    2
+  );
+  const listingExpiry = token.ordersSnippet?.listing?.orderItem?.endTimeMs ?? data?.validUntil;
   const listingExpiryStr = listingExpiry ? format(listingExpiry) : '-';
-  const listingTime = token.ordersSnippet?.listing?.orderItem?.startTimeMs;
+  const listingTime = token.ordersSnippet?.listing?.orderItem?.startTimeMs ?? data?.validFrom;
   const listingTimeStr = listingTime ? format(listingTime) : '-';
 
-  const offerPrice = nFormatter(token.ordersSnippet?.offer?.orderItem?.startPriceEth, 2);
-  const offerExpiry = token.ordersSnippet?.offer?.orderItem?.endTimeMs;
+  const offerPrice = nFormatter(
+    token.ordersSnippet?.offer?.orderItem?.startPriceEth ?? data?.orderSide === 'buy' ? data?.orderPriceEth : undefined,
+    2
+  );
+  const offerExpiry = token.ordersSnippet?.offer?.orderItem?.endTimeMs ?? data?.validUntil;
   const offerExpiryStr = offerExpiry ? format(offerExpiry) : '-';
-  const offerTime = token.ordersSnippet?.offer?.orderItem?.startTimeMs;
+  const offerTime = token.ordersSnippet?.offer?.orderItem?.startTimeMs ?? data?.validFrom;
   const offerTimeStr = offerTime ? format(offerTime) : '-';
 
   const collectionCreator = data.collectionCreator ?? collectionFloorAndCreator.creator;

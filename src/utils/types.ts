@@ -45,6 +45,16 @@ export interface ERC721TokenCartItem extends ERC721CardData {
   lastSalePriceEth?: string | number | null | undefined;
   lastSaleTimestamp?: number;
   mintPriceEth?: string | number | null | undefined;
+  validFrom?: number;
+  validUntil?: number;
+  orderSide?: string;
+  source?: {
+    id: string;
+    domain: string;
+    name: string;
+    icon: string;
+    url: string;
+  };
 }
 
 export interface ERC721OrderCartItem extends SignedOBOrder {
@@ -60,6 +70,12 @@ export interface BasicTokenInfo {
   collectionCreator?: string;
   lastSalePriceEth?: string | number | null | undefined;
   mintPriceEth?: string | number | null | undefined;
+  orderPriceEth?: number | undefined;
+  orderStartTimeMs?: number;
+  orderEndTimeMs?: number;
+  validFrom?: number;
+  validUntil?: number;
+  orderSide?: string;
 }
 
 export type TokensFilter = {
@@ -93,3 +109,65 @@ export const getSortLabel = (key?: string, defaultLabel?: string): string => {
   // default if blank
   return result || defaultLabel || SORT_LABELS[SORT_FILTERS.tokenIdNumeric];
 };
+
+export interface AggregatedOrders {
+  orders: AggregatedOrder[];
+}
+
+export interface AggregatedOrder {
+  id: string;
+  kind: string;
+  side: string;
+  status: string;
+  tokenSetId: string;
+  chainId: string;
+  contract: string;
+  maker: string;
+  taker: string;
+  lastSalePriceEth: number;
+  mintPriceEth: number;
+  validFrom: number;
+  validUntil: number;
+  price: {
+    currency: {
+      contract: string;
+      name: string;
+      symbol: string;
+      decimals: number;
+    };
+    amount: {
+      raw: string;
+      decimal: number;
+      usd: number;
+      native: number;
+    };
+    netAmount: {
+      raw: string;
+      decimal: number;
+      usd: number;
+      native: number;
+    };
+  };
+  criteria: {
+    kind: string;
+    data: {
+      token: {
+        tokenId: string;
+        name: string;
+        image: string;
+      };
+      collection: {
+        tokenId: string;
+        name: string;
+        image: string;
+      };
+    };
+  };
+  source: {
+    id: string;
+    domain: string;
+    name: string;
+    icon: string;
+    url: string;
+  };
+}

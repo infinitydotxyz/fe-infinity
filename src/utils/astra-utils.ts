@@ -7,6 +7,28 @@ import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 
 export type TokenFetcherOptions = { cursor?: string } & TokensFilter;
 
+export const fetchCollectionListings = async (
+  collection: string,
+  chainId: string,
+  tokenId?: string,
+  continuation?: string
+): Promise<ApiResponse> => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const query: any = {
+    collection,
+    chainId
+  };
+  if (tokenId) {
+    query.tokenId = tokenId;
+  }
+  if (continuation) {
+    query.continuation = continuation;
+  }
+
+  const response = await httpGet(`/v2/orders`, query);
+  return response;
+};
+
 export const fetchCollectionTokens = async (
   collectionAddress: string,
   collectionChainId: ChainId,

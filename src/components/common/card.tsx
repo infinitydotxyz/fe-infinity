@@ -68,6 +68,10 @@ export const GridCard = ({
     collectionFloorPrice,
     lastSalePriceEth: data?.lastSalePriceEth,
     mintPriceEth: data?.mintPriceEth,
+    orderPriceEth: data?.price,
+    validFrom: data?.validFrom,
+    validUntil: data?.validUntil,
+    orderSide: data?.orderSide,
     collectionCreator
   };
 
@@ -166,6 +170,12 @@ export const GridCard = ({
                       <div className={twMerge('truncate font-medium', borderColor)}> + {nFormatter(deltaPrice, 2)}</div>
                     )}
                   </div>
+
+                  {data?.source?.icon && (
+                    <div className={twMerge('flex items-center')}>
+                      <EZImage src={data?.source?.icon} className="w-4 h-4 rounded-full" />
+                    </div>
+                  )}
                 </div>
               ) : null}
 
