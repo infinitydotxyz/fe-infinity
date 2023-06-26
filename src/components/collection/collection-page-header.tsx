@@ -218,12 +218,14 @@ export const CollectionPageHeader = ({
         <Spacer />
 
         <div className="flex text-sm divide-x divide-light-border dark:divide-dark-border items-center">
-          <div className="flex pr-4 gap-2 whitespace-nowrap font-medium">
-            <span className={secondaryTextColor}>Floor </span>
-            <span className="">
-              {floorPrice ?? '-'} {EthSymbol}
-            </span>
-          </div>
+          {Number(floorPrice) > 0 && (
+            <div className="flex pr-4 gap-2 whitespace-nowrap font-medium">
+              <span className={secondaryTextColor}>Floor </span>
+              <span className="">
+                {floorPrice ?? '-'} {EthSymbol}
+              </span>
+            </div>
+          )}
           <div className="flex px-4 gap-2 whitespace-nowrap font-medium">
             <span className={secondaryTextColor}>Total Vol </span>
             <span className="">

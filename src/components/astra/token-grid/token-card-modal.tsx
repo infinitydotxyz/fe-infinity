@@ -125,7 +125,8 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
     : offerPrice
     ? Number(offerPrice) - Number(floorPrice)
     : 0;
-  const floorPricePercentDiff = floorPrice ? `${nFormatter((floorPriceDiff / Number(floorPrice)) * 100)}%` : 0;
+  const floorPricePercentDiff =
+    floorPrice && Number(floorPrice) > 0 ? `${nFormatter((floorPriceDiff / Number(floorPrice)) * 100)}%` : 0;
 
   const markupPrice = listingPrice || offerPrice;
   const markupPriceDiff =
@@ -244,7 +245,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                   <div>
                     <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Mint Price</div>
                     <div>
-                      {data.mintPriceEth} {EthSymbol}
+                      {nFormatter(parseFloat(String(data.mintPriceEth)), 2)} {EthSymbol}
                     </div>
                   </div>
                 ) : null}
@@ -253,12 +254,12 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                   <div>
                     <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Last Price</div>
                     <div>
-                      {data.lastSalePriceEth} {EthSymbol}
+                      {nFormatter(parseFloat(String(data.lastSalePriceEth)), 2)} {EthSymbol}
                     </div>
                   </div>
                 ) : null}
 
-                {floorPrice ? (
+                {Number(floorPrice) > 0 ? (
                   <div>
                     <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Collection Floor</div>
                     <div>
@@ -317,7 +318,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                       <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>
                         Floor difference
                       </div>
-                      <div>{floorPricePercentDiff ?? '-'}</div>
+                      <div>{Number(floorPricePercentDiff) > 0 ? 'floorPricePercentDiff' : '-'}</div>
                     </div>
 
                     <div className="space-y-1 mr-1.5">
