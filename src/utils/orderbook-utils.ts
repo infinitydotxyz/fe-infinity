@@ -64,6 +64,30 @@ export const fetchOrderNonce = async (user: string, chainId: ChainId): Promise<n
   }
 };
 
+export const fetchMinXflBalanceForZeroFee = async (
+  chainId?: string,
+  collection?: string,
+  user?: string
+): Promise<number> => {
+  try {
+    const response = await apiGet(`/v2/orders/minxflbalanceforzerofees`, {
+      requiresAuth: false,
+      query: {
+        chainId,
+        collection,
+        user
+      }
+    });
+    if (typeof response.result === 'number') {
+      return response.result;
+    }
+    return response.result;
+  } catch (err) {
+    console.error('Failed fetching min xfl balance for zero fee');
+    throw err;
+  }
+};
+
 export const bigNumToDate = (time: BigNumberish): Date => {
   return new Date(BigNumber.from(time).toNumber() * 1000);
 };

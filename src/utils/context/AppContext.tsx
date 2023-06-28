@@ -17,9 +17,10 @@ import {
   getTxnCurrencyAddress,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
-import { Contract } from 'ethers';
+import { adaptEthersSigner } from '@reservoir0x/ethers-wallet-adapter';
+import { Execute } from '@reservoir0x/reservoir-sdk';
+import { Contract, ethers } from 'ethers';
 import { defaultAbiCoder, parseEther } from 'ethers/lib/utils.js';
-import { CollectionPageTabs, ProfileTabs } from 'src/utils';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -29,29 +30,53 @@ import { useChain } from 'src/hooks/useChain';
 import { useCollectionSelection } from 'src/hooks/useCollectionSelection';
 import { useNFTSelection } from 'src/hooks/useNFTSelection';
 import { useOrderSelection } from 'src/hooks/useOrderSelection';
+import { CollectionPageTabs, ProfileTabs } from 'src/utils';
 import {
   approveERC20,
   approveERC721,
   approveERC721ForChainNFTs,
-  canTakeMultipleOneOrders,
   cancelMultipleOrders,
   checkERC20Balance,
   checkOnChainOwnership,
   signBulkOrders,
-  signSingleOrder,
-  takeMultipleOneOrders
+  signSingleOrder
 } from 'src/utils/orders';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem } from 'src/utils/types';
-import { useAccount, useNetwork, useProvider, useSigner } from 'wagmi';
+import { useAccount, useBalance, useNetwork, useProvider, useSigner } from 'wagmi';
+import { getReservoirClient } from '../astra-utils';
 import {
   extractErrorMsg,
   getDefaultOrderExpiryTime,
   getEstimatedGasPrice,
   getOrderExpiryTimeInMsFromEnum
 } from '../common-utils';
-import { DEFAULT_MAX_GAS_PRICE_WEI, ZERO_ADDRESS } from '../constants';
-import { fetchOrderNonce, postOrdersV2 } from '../orderbook-utils';
+import { DEFAULT_MAX_GAS_PRICE_WEI, FEE_BPS, FEE_WALLET_ADDRESS, FLOW_TOKEN, ZERO_ADDRESS } from '../constants';
+import { fetchMinXflBalanceForZeroFee, fetchOrderNonce, postOrdersV2 } from '../orderbook-utils';
 import { CartType, useCartContext } from './CartContext';
+
+type ReservoirOrderbookType =
+  | 'reservoir'
+  | 'blur'
+  | 'looks-rare'
+  | 'x2y2'
+  | 'universe'
+  | 'flow'
+  | 'opensea'
+  | undefined;
+
+type ReservoirOrderKindType =
+  | 'seaport-v1.5'
+  | 'blur'
+  | 'looks-rare'
+  | 'looks-rare-v2'
+  | 'zeroex-v4'
+  | 'seaport'
+  | 'seaport-v1.4'
+  | 'x2y2'
+  | 'universe'
+  | 'flow'
+  | 'alienswap'
+  | undefined;
 
 type AppContextType = {
   selectedChain: ChainId;
@@ -132,6 +157,14 @@ export const AppContextProvider = ({ children }: Props) => {
   const chainId = String(chain?.id);
   const { address: user } = useAccount();
   const { cartType } = useCartContext();
+
+  const xflBalanceObj = useBalance({
+    address: user,
+    token: FLOW_TOKEN.address as `0x${string}`,
+    watch: false,
+    cacheTime: 5_000
+  });
+  const xflBalance = parseFloat(xflBalanceObj?.data?.formatted ?? '0');
 
   useEffect(() => {
     switch (chain?.id) {
@@ -427,28 +460,34 @@ export const AppContextProvider = ({ children }: Props) => {
         const isSellCart = cartType === CartType.TokenList;
 
         if (isBuyCart) {
-          // get the signed sell orders, skip any undefined orders
-          const signedListings = [];
+          const client = getReservoirClient(chainId);
+          const tokenSet = [];
           for (const token of tokens) {
-            const signedListing = token.orderSnippet?.listing?.signedOrder.rawOrder;
-            if (signedListing) {
-              signedListings.push(signedListing);
+            const collection = trimLowerCase(token.address || token.tokenAddress || '');
+            const tokenId = token.tokenId;
+            if (!collection || !tokenId) {
+              continue;
             }
+            tokenSet.push({ token: `${collection}:${tokenId}` });
           }
-          // check if valid execution
-          const validExecution = await canTakeMultipleOneOrders(signer as JsonRpcSigner, signedListings);
-          if (!validExecution) {
-            toastError('Invalid execution');
-            return false;
-          } else {
-            // execute
-            setCheckoutBtnStatus('Buying listings');
-            const { hash } = await takeMultipleOneOrders(signer as JsonRpcSigner, chainId, signedListings);
-            toastSuccess('Sent txn to chain for execution');
-            setTxnHash(hash);
-            return true;
-          }
-        } else if (isBidCart || isSellCart) {
+
+          client.actions
+            .buyToken({
+              items: tokenSet,
+              wallet: adaptEthersSigner(signer),
+              chainId: Number(chainId),
+              onProgress: (steps: Execute['steps']) => {
+                setCheckoutBtnStatus(steps[steps.length - 1].action);
+              }
+            })
+            .then(() => {
+              return true;
+            })
+            .catch((err) => {
+              console.error(err);
+              return false;
+            });
+        } else if (isBidCart) {
           // prepare orders
           const preSignedOrders: OBOrder[] = [];
           setCheckoutBtnStatus('Fetching nonce');
@@ -456,12 +495,7 @@ export const AppContextProvider = ({ children }: Props) => {
           const currentBlock = await provider.getBlock('latest');
           setCheckoutBtnStatus('Preparing orders');
           for (const token of tokens) {
-            let order;
-            if (isBidCart) {
-              order = await tokenToOBOrder(token, orderNonce, false, currentBlock.timestamp);
-            } else if (isSellCart) {
-              order = await tokenToOBOrder(token, orderNonce, true, currentBlock.timestamp);
-            }
+            const order = await tokenToOBOrder(token, orderNonce, false, currentBlock.timestamp);
             orderNonce += 1;
             if (order) {
               preSignedOrders.push(order);
@@ -483,6 +517,75 @@ export const AppContextProvider = ({ children }: Props) => {
             toastSuccess('Order(s) now live');
           }
           return true;
+        } else if (isSellCart) {
+          // prepare orders
+          const client = getReservoirClient(chainId);
+          const tokenSet = [];
+          const currentBlock = await provider.getBlock('latest');
+          const listingTimeSeconds = currentBlock.timestamp;
+
+          // calculate fees
+          let automatedRoyalties = true;
+          let fees = [`${FEE_WALLET_ADDRESS}:${FEE_BPS}`];
+          const minXflBalanceForZeroFee = await fetchMinXflBalanceForZeroFee();
+          if (minXflBalanceForZeroFee) {
+            if (xflBalance && xflBalance >= minXflBalanceForZeroFee) {
+              automatedRoyalties = false;
+              fees = [];
+            }
+          }
+
+          for (const token of tokens) {
+            const collection = trimLowerCase(token.address || token.tokenAddress || '');
+            const tokenId = token.tokenId;
+            if (!collection || !tokenId) {
+              continue;
+            }
+
+            const ethPrice = token.orderPriceEth ?? 0;
+            if (ethPrice === 0) {
+              throw new Error('Price cannot be 0');
+            }
+            const weiPrice = ethers.utils.parseEther(ethPrice.toString()).toString();
+
+            const expiry = token.orderExpiry ?? getDefaultOrderExpiryTime();
+            const endTimeSeconds = getOrderExpiryTimeInMsFromEnum(listingTimeSeconds * 1000, expiry) / 1000;
+            tokenSet.push({
+              token: `${collection}:${tokenId}`,
+              weiPrice,
+              listingTime: listingTimeSeconds.toString(),
+              expirationTime: endTimeSeconds.toString(),
+              orderbook: 'reservoir' as ReservoirOrderbookType,
+              orderKind: 'seaport-v1.5' as ReservoirOrderKindType,
+              automatedRoyalties,
+              fees,
+              currency: ZERO_ADDRESS, // default ETH for listings and mainnet NFTs
+              options: {
+                'seaport-v1.5': {
+                  useOffChainCancellation: true
+                }
+              }
+            });
+          }
+
+          // list
+          client.actions
+            .listToken({
+              chainId: Number(chainId),
+              listings: tokenSet,
+              wallet: adaptEthersSigner(signer),
+              onProgress: (steps: Execute['steps']) => {
+                console.log(steps);
+                setCheckoutBtnStatus(steps[steps.length - 1].action);
+              }
+            })
+            .then(() => {
+              return true;
+            })
+            .catch((err) => {
+              console.error(err);
+              return false;
+            });
         }
       }
     } catch (ex) {

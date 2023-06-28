@@ -4,8 +4,30 @@ import { SORT_FILTERS, TokensFilter } from 'src/utils/types';
 import { ApiResponse } from './api-utils';
 import { API_BASE, LARGE_LIMIT } from './constants';
 import { ChainId } from '@infinityxyz/lib-frontend/types/core';
+import { ReservoirClient, createClient } from '@reservoir0x/reservoir-sdk';
 
 export type TokenFetcherOptions = { cursor?: string } & TokensFilter;
+
+let reservoirClient: ReservoirClient;
+
+export const getReservoirClient = (chainId: string): ReservoirClient => {
+  if (reservoirClient) {
+    return reservoirClient;
+  }
+
+  reservoirClient = createClient({
+    chains: [
+      {
+        id: Number(chainId),
+        baseApiUrl: 'https://api.reservoir.tools', // future-todo: change to other chain urls
+        active: true,
+        apiKey: process.env.NEXT_PUBLIC_RESERVOIR_API_KEY
+      }
+    ],
+    source: 'pixelpack.io'
+  });
+  return reservoirClient;
+};
 
 export const fetchCollectionListings = async (
   collection: string,
