@@ -1,13 +1,13 @@
 import { getAddress } from '@ethersproject/address';
-import { RadioGroup } from '@headlessui/react';
 import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { ETHEREUM_WETH_ADDRESS, GOERLI_WETH_ADDRESS, PROTOCOL_FEE_BPS } from '@infinityxyz/lib-frontend/utils';
+import { formatEther, parseEther } from 'ethers/lib/utils.js';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 import { FiEdit3 } from 'react-icons/fi';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
-import { EthSymbol, EZImage, Spacer, TextInputBox, ToggleTab } from 'src/components/common';
+import { EZImage, EthSymbol, Spacer, TextInputBox, ToggleTab } from 'src/components/common';
 import {
   ellipsisString,
   getCartType,
@@ -33,10 +33,8 @@ import {
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useAccount, useBalance, useNetwork, useProvider } from 'wagmi';
-import { RadioButtonCard } from '../common/radio-button-card';
 import { UniswapModal } from '../common/uniswap-model';
 import { ADropdown } from './astra-dropdown';
-import { formatEther, parseEther } from 'ethers/lib/utils.js';
 
 interface Props {
   onTokensClear: () => void;
@@ -99,14 +97,14 @@ export const AstraCart = ({
   const { cartType, setCartType, getCurrentCartItems, cartItems } = useCartContext();
   const [currentCartItems, setCurrentCartItems] = useState<CartItem[]>([]);
   const [cartTotal, setCartTotal] = useState(0);
-  const [cartTabOptions, setCartTabOptions] = useState(['Totals', 'Options']);
+  const [cartTabOptions, setCartTabOptions] = useState(['Totals']);
   const [selectedTab, setSelectedTab] = useState(cartTabOptions[0]);
 
-  enum ExecutionMode {
-    Fast = 'Fast',
-    Batched = 'Batched'
-  }
-  const [executionMode, setExecutionMode] = useState(ExecutionMode.Fast);
+  // enum ExecutionMode {
+  //   Fast = 'Fast',
+  //   Batched = 'Batched'
+  // }
+  // const [executionMode, setExecutionMode] = useState(ExecutionMode.Fast);
 
   const [tokenMap, setTokenMap] = useState<Map<string, ERC721TokenCartItem[]>>(new Map());
   const [collMap, setCollMap] = useState<Map<string, ERC721CollectionCartItem[]>>(new Map());
@@ -134,7 +132,7 @@ export const AstraCart = ({
     if (cartType === CartType.Send || cartType === CartType.Cancel || cartType === CartType.TokenBuy) {
       setCartTabOptions(['Totals']);
     } else {
-      setCartTabOptions(['Totals', 'Options']);
+      setCartTabOptions(['Totals']);
     }
   }, [cartType]);
 
@@ -474,7 +472,7 @@ export const AstraCart = ({
           </div>
         )}
 
-        {selectedTab === 'Options' && (
+        {/* {selectedTab === 'Options' && (
           <div className="h-60 overflow-y-scroll">
             <div className="space-y-3 px-1">
               <RadioGroup value={executionMode} onChange={setExecutionMode} className="space-y-2">
@@ -492,7 +490,7 @@ export const AstraCart = ({
               </RadioGroup>
             </div>
           </div>
-        )}
+        )} */}
       </div>
 
       <div className="m-6 flex flex-col">
