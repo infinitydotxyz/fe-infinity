@@ -540,6 +540,54 @@ export const erc721OrderCartItemToCollectionCartItem = (order: ERC721OrderCartIt
   return result;
 };
 
+export const erc721TokenCartItemToCollectionCartItem = (order: ERC721TokenCartItem): ERC721CollectionCartItem => {
+  // this function assumes single item orders only not m of n types
+
+  const result: ERC721CollectionCartItem = {
+    chainId: order.chainId ?? '',
+    address: order.address ?? order.tokenAddress ?? '',
+    hasBlueCheck: order.hasBlueCheck ?? false,
+    cartType: CartType.CollectionBid,
+    tokenStandard: TokenStandard.ERC721,
+    offerPriceEth: order.price,
+    deployer: '',
+    deployedAt: 0,
+    deployedAtBlock: 0,
+    owner: '',
+    numOwnersUpdatedAt: 0,
+    metadata: {
+      name: order.collectionName ?? order.criteria?.data?.collection?.name ?? '',
+      description: '',
+      profileImage: order.criteria?.data?.collection?.image ?? '',
+      bannerImage: '',
+      symbol: '',
+      links: {
+        timestamp: 0
+      }
+    },
+    slug: order.collectionSlug ?? '',
+    numNfts: 0,
+    numTraitTypes: 0,
+    indexInitiator: '',
+    state: {
+      version: 0,
+      create: {
+        step: CreationFlow.Complete,
+        updatedAt: 0,
+        error: undefined,
+        progress: 0,
+        zoraCursor: undefined,
+        reservoirCursor: undefined
+      },
+      export: {
+        done: false
+      }
+    }
+  };
+
+  return result;
+};
+
 export const chainIdToName = (chainId: ChainId) => {
   return chainId === ChainId.Mainnet
     ? 'Ethereum (beta)'

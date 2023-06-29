@@ -19,6 +19,7 @@ import { BouncingLogo, CenteredContent, EZImage, ScrollLoader, toastError, toast
 import { CollectionSearchInput } from '../common/search/collection-search-input';
 import { StatusIcon } from '../common/status-icon';
 import { ProfileOrderListItem } from './profile-order-list-item';
+import { ProfileManualOrderListItem } from './profile-manual-order-list-item';
 
 interface Props {
   userAddress: string;
@@ -46,7 +47,7 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
   const [filter, setFilter] = useState<TokensFilter>({
     orderType: DEFAULT_ORDER_TYPE_FILTER
   });
-  const { orders, isLoading, hasNextPage, fetch } = useProfileOrderFetcher(50, filter, userAddress);
+  const { orders, profileOrders, isLoading, hasNextPage, fetch } = useProfileOrderFetcher(50, filter, userAddress);
 
   const handleCollectionSearchResult = (result: SelectedCollectionType) => {
     const newFilter = { ...filter };
@@ -222,24 +223,25 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
             </div>
           )}
 
-          {!isLoading && hasNextPage === false && orders?.length === 0 ? (
+          {!isLoading && hasNextPage === false && selectedOrderType !== 'listings' && orders?.length === 0 ? (
             <CenteredContent>
-              <div className="font-heading mt-4">
-                No{' '}
-                {selectedOrderType === 'listings'
-                  ? 'Listings'
-                  : selectedOrderType === 'offers-made'
-                  ? 'Bids'
-                  : 'Offers'}
-              </div>
+              <div className="font-heading mt-4">No {selectedOrderType === 'offers-made' ? 'Bids' : 'Offers'}</div>
             </CenteredContent>
           ) : null}
 
-          {orders?.map((order) => {
-            const orderCartItem = order as ERC721OrderCartItem;
-            orderCartItem.cartType = CartType.Cancel;
-            return <ProfileOrderListItem key={order.id} order={orderCartItem} orderType={filter.orderType} />;
-          })}
+          {selectedOrderType !== 'listings' &&
+            orders?.map((order) => {
+              const orderCartItem = order as ERC721OrderCartItem;
+              orderCartItem.cartType = CartType.Cancel;
+              return <ProfileOrderListItem key={order.id} order={orderCartItem} orderType={filter.orderType} />;
+            })}
+
+          {selectedOrderType === 'listings' &&
+            profileOrders?.map((order) => {
+              const orderCartItem = order;
+              orderCartItem.cartType = CartType.Cancel;
+              return <ProfileManualOrderListItem key={order.id} order={orderCartItem} orderType={filter.orderType} />;
+            })}
 
           {hasNextPage === true ? (
             <ScrollLoader

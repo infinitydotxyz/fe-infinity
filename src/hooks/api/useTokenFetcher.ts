@@ -118,7 +118,7 @@ export const resvListingToCardData = (item: AggregatedOrder): ERC721TokenCartIte
   const image = item?.criteria?.data?.token?.image ?? '';
 
   const result: ERC721TokenCartItem = {
-    id: item.tokenSetId,
+    id: item.id,
     name: item?.criteria?.data?.token?.name ?? '',
     title: item?.criteria?.data?.token?.name ?? '',
     chainId: item.chainId,
@@ -134,7 +134,8 @@ export const resvListingToCardData = (item: AggregatedOrder): ERC721TokenCartIte
     address: item.contract,
     tokenId: item?.criteria?.data?.token?.tokenId ?? '',
     cartType: CartType.None,
-    source: { ...item.source }
+    source: { ...item.source },
+    criteria: { ...item.criteria }
   };
 
   return result;

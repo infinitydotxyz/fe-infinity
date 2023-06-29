@@ -55,6 +55,21 @@ export interface ERC721TokenCartItem extends ERC721CardData {
     icon: string;
     url: string;
   };
+  criteria?: {
+    kind: string;
+    data: {
+      token: {
+        tokenId: string;
+        name: string;
+        image: string;
+      };
+      collection: {
+        id: string;
+        name: string;
+        image: string;
+      };
+    };
+  };
 }
 
 export interface ERC721OrderCartItem extends SignedOBOrder {
@@ -157,7 +172,7 @@ export interface AggregatedOrder {
         image: string;
       };
       collection: {
-        tokenId: string;
+        id: string;
         name: string;
         image: string;
       };
