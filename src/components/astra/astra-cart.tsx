@@ -76,7 +76,6 @@ export const AstraCart = ({
   onOrdersClear,
   onTokenRemove,
   onCollRemove,
-  onOrderRemove,
   onCheckout,
   onTokenSend
 }: Props) => {
@@ -108,7 +107,7 @@ export const AstraCart = ({
 
   const [tokenMap, setTokenMap] = useState<Map<string, ERC721TokenCartItem[]>>(new Map());
   const [collMap, setCollMap] = useState<Map<string, ERC721CollectionCartItem[]>>(new Map());
-  const [orderMap, setOrderMap] = useState<Map<string, ERC721OrderCartItem[]>>(new Map());
+  const [orderMap, setOrderMap] = useState<Map<string, ERC721TokenCartItem[]>>(new Map());
 
   // future-todo change when supporting more chains
   const WETH_ADDRESS =
@@ -244,15 +243,17 @@ export const AstraCart = ({
       orderMap.forEach((ordArray) => {
         const first = ordArray[0];
         const orderId = first.id;
+        const isCollBid = first.criteria?.kind === 'collection'; // adi-todo fix this
+        const firstCollName = isCollBid ? first.criteria?.data?.collection?.name : first.collectionName;
 
         divList.push(
           <div className="w-full rounded-md truncate font-bold font-heading min-h-[25px]" key={`header-${orderId}`}>
-            {first.nfts.length > 1 ? 'Multiple Collections' : first.nfts[0].collectionName}
+            {firstCollName}
           </div>
         );
 
         for (const t of ordArray) {
-          divList.push(<AstraCancelCartItem key={orderId} order={t} onRemove={onOrderRemove} />);
+          divList.push(<AstraCancelCartItem key={orderId} order={t} onRemove={onTokenRemove} />);
         }
 
         divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
@@ -314,7 +315,7 @@ export const AstraCart = ({
     if (cartType === CartType.Cancel) {
       orderMap.clear();
       for (const item of cartItems) {
-        const order = item as ERC721OrderCartItem;
+        const order = item as ERC721TokenCartItem;
         const orders = orderMap.get(order.id ?? '') ?? [];
         orders.push(order);
         orderMap.set(order.id ?? '', orders);
@@ -635,18 +636,18 @@ const AstraCollectionCartItem = ({ collection, onRemove, updateCartTotal }: Prop
 };
 
 interface Props4 {
-  order: ERC721OrderCartItem;
-  onRemove: (order: ERC721OrderCartItem) => void;
+  order: ERC721TokenCartItem;
+  onRemove: (order: ERC721TokenCartItem) => void;
 }
 
 const AstraCancelCartItem = ({ order, onRemove }: Props4) => {
+  const isCollBid = order.criteria?.kind === 'collection'; // adi-todo
+  const image = isCollBid ? order.criteria?.data?.collection?.image : order.image;
+  const tokenId = isCollBid ? '' : order.tokenId;
   return (
     <div key={order.id} className="flex items-center w-full">
       <div className="relative">
-        <EZImage
-          className={twMerge('h-12 w-12 rounded-lg overflow-clip')}
-          src={order.nfts[0]?.tokens[0]?.tokenImage ?? order.nfts[0].collectionImage}
-        />
+        <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={image} />
         <div className={twMerge('absolute top-[-5px] right-[-5px] rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
           <MdClose
             className={twMerge(extraSmallIconButtonStyle, inverseTextColor)}
@@ -658,15 +659,7 @@ const AstraCancelCartItem = ({ order, onRemove }: Props4) => {
       </div>
 
       <div className="ml-3 flex flex-col w-full text-sm font-bold font-heading">
-        <div>
-          {order.nfts.length > 1
-            ? 'Multiple tokens'
-            : order.nfts[0].tokens.length > 1
-            ? 'Multiple tokens'
-            : order.nfts[0].tokens.length === 1
-            ? ellipsisString(order.nfts[0]?.tokens[0]?.tokenId)
-            : ''}
-        </div>
+        <div>{ellipsisString(tokenId)}</div>
       </div>
     </div>
   );
