@@ -1,11 +1,11 @@
 import { ChainId } from '@infinityxyz/lib-frontend/types/core';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useCollectionBidsFetcher } from 'src/hooks/api/useTokenFetcher';
 import { CartType } from 'src/utils/context/CartContext';
 import { twMerge } from 'tailwind-merge';
-import { BouncingLogo, CenteredContent, ScrollLoader, Spacer } from '../common';
+import { BouncingLogo, CenteredContent, Checkbox, ScrollLoader, Spacer } from '../common';
 import { StatusIcon } from '../common/status-icon';
-import { CollectionManualBidListItem } from './collection-manual-coll-bid-list-item';
+import { CollectionManualBidListItem } from './collection-manual-bid-list-item';
 
 interface Props {
   collectionAddress: string;
@@ -13,13 +13,14 @@ interface Props {
   className?: string;
 }
 
-export const CollectionManualCollectionBidList = ({ collectionAddress, collectionChainId, className }: Props) => {
+export const CollectionManualBidList = ({ collectionAddress, collectionChainId, className }: Props) => {
+  const [onlyCollectionBids, setOnlyCollectionBids] = useState(false);
   const {
     data: orders,
     isLoading,
     hasNextPage,
     fetch
-  } = useCollectionBidsFetcher(collectionAddress, collectionChainId, undefined, true);
+  } = useCollectionBidsFetcher(collectionAddress, collectionChainId, undefined, onlyCollectionBids);
 
   useEffect(() => {
     fetch(false);
@@ -29,7 +30,7 @@ export const CollectionManualCollectionBidList = ({ collectionAddress, collectio
     }, 30 * 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [onlyCollectionBids]);
 
   return (
     <div className={twMerge('min-h-[50vh] pb-20', className)}>
@@ -38,6 +39,13 @@ export const CollectionManualCollectionBidList = ({ collectionAddress, collectio
         <div className="flex text-sm items-cente px-4">
           <StatusIcon status="pending-indefinite" label="Live" />
         </div>
+        <Checkbox
+          label="Only collections bids"
+          checked={onlyCollectionBids}
+          onChange={() => {
+            setOnlyCollectionBids(!onlyCollectionBids);
+          }}
+        />
       </div>
 
       <div className="flex">
@@ -57,8 +65,19 @@ export const CollectionManualCollectionBidList = ({ collectionAddress, collectio
           ) : null}
 
           {orders?.map((order) => {
-            order.cartType = CartType.CollectionBid;
-            return <CollectionManualBidListItem key={order.id} order={order} orderType="Collection Bid" />;
+            const orderKind = order.criteria?.kind;
+            let orderType = 'Collection Bid' as 'Collection Bid' | 'Token Bid' | 'Attribute Bid';
+            if (orderKind === 'collection') {
+              order.cartType = CartType.CollectionBid;
+            } else if (orderKind === 'token') {
+              orderType = 'Token Bid';
+              order.cartType = CartType.TokenBid;
+            } else if (orderKind === 'attribute') {
+              // future-todo support in the future
+              orderType = 'Attribute Bid';
+              order.cartType = CartType.None;
+            }
+            return <CollectionManualBidListItem key={order.id} order={order} orderType={orderType} />;
           })}
 
           {hasNextPage === true ? (

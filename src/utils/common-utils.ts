@@ -550,6 +550,7 @@ export const erc721TokenCartItemToCollectionCartItem = (order: ERC721TokenCartIt
   // this function assumes single item orders only not m of n types
 
   const result: ERC721CollectionCartItem = {
+    id: order.id,
     chainId: order.chainId ?? '',
     address: order.address ?? order.tokenAddress ?? '',
     hasBlueCheck: order.hasBlueCheck ?? false,

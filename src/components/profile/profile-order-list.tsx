@@ -239,27 +239,38 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
             </div>
           )}
 
-          {!isLoading && hasNextPage === false && selectedOrderType !== 'listings' && orders?.length === 0 ? (
+          {!isLoading &&
+          hasNextPage === false &&
+          (selectedOrderType === 'listings' ||
+            selectedOrderType === 'bids-placed' ||
+            selectedOrderType === 'offers-received') &&
+          profileOrders?.length === 0 ? (
             <CenteredContent>
               <div className="font-heading mt-4">
                 No{' '}
                 {selectedOrderType === 'bids-placed'
                   ? 'Bids'
-                  : selectedOrderType === 'intents-placed'
-                  ? 'Intents'
+                  : selectedOrderType === 'listings'
+                  ? 'Listings'
                   : 'Offers'}
               </div>
             </CenteredContent>
           ) : null}
 
-          {selectedOrderType !== 'listings' &&
+          {!isLoading && hasNextPage === false && selectedOrderType === 'intents-placed' && orders?.length === 0 ? (
+            <CenteredContent>
+              <div className="font-heading mt-4">No Intents</div>
+            </CenteredContent>
+          ) : null}
+
+          {selectedOrderType === 'intents-placed' &&
             orders?.map((order) => {
               const orderCartItem = order as ERC721OrderCartItem;
               orderCartItem.cartType = CartType.Cancel;
               return <ProfileOrderListItem key={order.id} order={orderCartItem} orderType={filter.orderType} />;
             })}
 
-          {selectedOrderType === 'listings' &&
+          {selectedOrderType !== 'intents-placed' &&
             profileOrders?.map((order) => {
               const orderCartItem = order;
               orderCartItem.cartType = CartType.Cancel;

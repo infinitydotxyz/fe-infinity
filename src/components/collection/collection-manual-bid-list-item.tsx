@@ -12,43 +12,51 @@ import { ManualOrderbookItem } from '../orderbook/manual-orderbook-item';
 
 interface Props {
   order: ERC721TokenCartItem;
-  orderType: 'Collection Bid';
+  orderType: 'Collection Bid' | 'Token Bid' | 'Attribute Bid';
 }
 
 export const CollectionManualBidListItem = ({ order, orderType }: Props) => {
   const [startPriceEth] = useState(order.price);
   const { isConnected } = useAccount();
   const { cartType, cartItems, setCartType } = useCartContext();
-  const { isCollSelectable, isCollSelected, toggleCollSelection } = useAppContext();
+  const { isCollSelectable, isCollSelected, isNFTSelectable, isNFTSelected, toggleCollSelection, toggleNFTSelection } =
+    useAppContext();
 
-  const editableCartItem: ERC721CollectionCartItem = erc721TokenCartItemToCollectionCartItem(order);
+  const isCollBid = orderType === 'Collection Bid';
+  let editableCartItem: ERC721CollectionCartItem | ERC721TokenCartItem = order;
+  if (isCollBid) {
+    editableCartItem = erc721TokenCartItemToCollectionCartItem(order);
+  }
 
-  const [addedToCart, setAddedToCart] = useState(isCollSelected(editableCartItem as ERC721CollectionCartItem));
+  const [addedToCart, setAddedToCart] = useState(
+    isCollBid
+      ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
+      : isNFTSelected(editableCartItem as ERC721TokenCartItem)
+  );
 
-  const isActionable = true;
+  const isActionable = orderType !== 'Attribute Bid';
 
   useEffect(() => {
-    setAddedToCart(isCollSelected(editableCartItem as ERC721CollectionCartItem));
+    setAddedToCart(
+      isCollBid
+        ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
+        : isNFTSelected(editableCartItem as ERC721TokenCartItem)
+    );
   }, [cartType, cartItems]);
 
   return (
     <div className={twMerge(standardBorderCard, 'flex mx-4 text-sm')}>
       <div className="flex justify-between items-center w-full">
         <div className="w-1/3">
-          <ManualOrderbookItem
-            canShowAssetModal={true}
-            nameItem={true}
-            key={`${order.id} ${order.chainId}`}
-            order={order}
-          />
+          <ManualOrderbookItem canShowAssetModal={!isCollBid} order={editableCartItem} isCollBid={isCollBid} />
         </div>
 
         <div className="w-1/6">
           <div className={twMerge(secondaryTextColor, 'font-medium')}>Order type</div>
           <div className="">{orderType}</div>
-          <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>
-            Expires {format(order.validUntil ?? 0)}
-          </div>
+          {order.validUntil ? (
+            <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>Expires {format(order.validUntil)}</div>
+          ) : null}
         </div>
 
         <div className="w-1/6">
@@ -66,14 +74,17 @@ export const CollectionManualBidListItem = ({ order, orderType }: Props) => {
               if (!isConnected) {
                 return;
               }
-              editableCartItem.cartType = CartType.CollectionBid;
-              if (isCollSelectable(editableCartItem as ERC721CollectionCartItem)) {
+              editableCartItem.cartType = isCollBid ? CartType.CollectionBid : CartType.TokenBid;
+              if (isCollBid && isCollSelectable(editableCartItem as ERC721CollectionCartItem)) {
                 setCartType(CartType.CollectionBid);
                 toggleCollSelection(editableCartItem as ERC721CollectionCartItem);
+              } else if (!isCollBid && isNFTSelectable(editableCartItem as ERC721TokenCartItem)) {
+                setCartType(CartType.TokenBid);
+                toggleNFTSelection(editableCartItem as ERC721TokenCartItem);
               }
             }}
           >
-            {addedToCart && cartType === CartType.CollectionBid ? '✓' : ''} {'Bid higher'}
+            {addedToCart ? '✓' : ''} {'Bid higher'}
           </Button>
         </div>
       </div>

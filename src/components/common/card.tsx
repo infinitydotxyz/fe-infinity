@@ -45,7 +45,7 @@ export const GridCard = ({
   const hasBlueCheck = data?.hasBlueCheck ?? false;
   const { selectedCollectionTab } = useAppContext();
 
-  const price = data?.price
+  let price = data?.price
     ? data.price
     : data?.orderSnippet?.listing?.orderItem?.startPriceEth
     ? data?.orderSnippet?.listing?.orderItem?.startPriceEth
@@ -60,6 +60,16 @@ export const GridCard = ({
 
   const deltaPrice = gasCostEth + finalFeeCostEth;
   const showDeltaPrice = deltaPrice > 0 && selectedCollectionTab === CollectionPageTabs.Intent.toString();
+  const hidePrice = selectedCollectionTab === CollectionPageTabs.Bid.toString();
+  if (hidePrice) {
+    price = 0;
+    data.price = 0;
+    if (data.orderSnippet?.listing?.orderItem) {
+      data.orderSnippet.listing.orderItem.startPriceEth = 0;
+      data.orderSnippet.listing.orderItem.gasCostEth = 0;
+      data.orderSnippet.listing.orderItem.feeCostEth = 0;
+    }
+  }
 
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: data?.tokenId ?? '',

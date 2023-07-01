@@ -106,7 +106,21 @@ function useTokenFetcher<From, To>({
       const result = response.result;
       const newData = mapper(result.data);
       setCursor(result.cursor);
-      setData(loadMore ? (state) => [...state, ...newData] : newData);
+      setData(
+        loadMore
+          ? (state) => {
+              // eliminate duplicates
+              const newState = [...state, ...newData];
+              const unique = newState.filter((item, index) => {
+                return (
+                  newState.findIndex((x) => (x as ERC721TokenCartItem).id === (item as ERC721TokenCartItem).id) ===
+                  index
+                );
+              });
+              return unique;
+            }
+          : newData
+      );
       setHasNextPage(result.hasNextPage);
       setError(undefined);
     }
@@ -131,12 +145,12 @@ export const resvOrdersToCardData = (tokens: AggregatedOrder[]): ERC721TokenCart
 };
 
 export const resvOrderToCardData = (item: AggregatedOrder): ERC721TokenCartItem => {
-  const image = item?.criteria?.data?.token?.image ?? '';
+  const image = item?.criteria?.data?.token?.image ?? item?.criteria?.data?.collection?.image ?? '';
 
   const result: ERC721TokenCartItem = {
     id: item.id,
-    name: item?.criteria?.data?.token?.name ?? '',
-    title: item?.criteria?.data?.token?.name ?? '',
+    name: item?.criteria?.data?.token?.name ?? item?.criteria?.data?.collection?.name ?? '',
+    title: item?.criteria?.data?.token?.name ?? item?.criteria?.data?.collection?.name ?? '',
     chainId: item.chainId,
     lastSalePriceEth: item?.lastSalePriceEth ?? 0,
     mintPriceEth: item?.mintPriceEth ?? 0,
