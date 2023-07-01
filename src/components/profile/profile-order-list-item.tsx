@@ -32,7 +32,7 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
   } = useAppContext();
 
   let editableCartItem: ERC721CollectionCartItem | ERC721TokenCartItem;
-  const isCollBid = orderType === 'offers-made' && order.nfts[0].tokens.length === 0;
+  const isCollBid = orderType === 'intents-placed' && order.nfts[0].tokens.length === 0;
   if (isCollBid) {
     editableCartItem = erc721OrderCartItemToCollectionCartItem(order);
   } else {
@@ -67,7 +67,15 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
 
         <div className="w-1/6">
           <div className={twMerge(secondaryTextColor, 'font-medium')}>Order type</div>
-          <div className="">{orderType === 'listings' ? 'Listing' : orderType === 'offers-made' ? 'Bid' : 'Offer'}</div>
+          <div className="">
+            {orderType === 'listings'
+              ? 'Listing'
+              : orderType === 'bids-placed'
+              ? 'Bid'
+              : orderType === 'intents-placed'
+              ? 'Intent'
+              : 'Offer'}
+          </div>
           <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>Expires {format(order.endTimeMs)}</div>
         </div>
         <div className="w-1/4">
@@ -87,14 +95,14 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
           </div>
         </div>
 
-        {orderType === 'listings' || orderType === 'offers-made' ? (
+        {orderType === 'listings' || orderType === 'bids-placed' || orderType === 'intents-placed' ? (
           <div className="w-1/8 flex justify-end">
             <Button
               variant={
                 addedToEditCart &&
                 (cartType === CartType.TokenList ||
                   cartType === CartType.TokenBid ||
-                  cartType === CartType.CollectionBid)
+                  cartType === CartType.CollectionBidIntent)
                   ? 'primary'
                   : 'outline'
               }
@@ -107,8 +115,12 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
                 const newCartType =
                   orderType === 'listings'
                     ? CartType.TokenList
+                    : orderType === 'bids-placed'
+                    ? CartType.TokenBid
+                    : orderType === 'intents-placed'
+                    ? CartType.TokenBidIntent
                     : isCollBid
-                    ? CartType.CollectionBid
+                    ? CartType.CollectionBidIntent
                     : CartType.TokenBid;
                 editableCartItem.cartType = newCartType;
                 if (!isCollBid && isNFTSelectable(editableCartItem as ERC721TokenCartItem)) {

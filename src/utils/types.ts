@@ -73,7 +73,13 @@ export interface ERC721TokenCartItem extends ERC721CardData {
 }
 
 export interface ERC721OrderCartItem extends SignedOBOrder {
-  cartType: CartType.Cancel | CartType.CollectionBid | CartType.TokenBid;
+  cartType:
+    | CartType.Cancel
+    | CartType.CollectionBid
+    | CartType.TokenBid
+    | CartType.CollectionBidIntent
+    | CartType.TokenBidIntent
+    | CartType.TokenList;
   executionStatus: ExecutionStatus | null;
 }
 
@@ -95,7 +101,7 @@ export interface BasicTokenInfo {
 
 export type TokensFilter = {
   sort?: string;
-  orderType?: 'listings' | 'offers-made' | 'offers-received' | 'listing' | 'offer' | '';
+  orderType?: 'listings' | 'bids-placed' | 'intents-placed' | 'offers-received' | 'listing' | 'offer' | '';
   collections?: string[];
   minPrice?: string;
   maxPrice?: string;

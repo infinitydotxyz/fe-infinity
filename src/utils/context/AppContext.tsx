@@ -10,6 +10,7 @@ import {
   SignedOBOrder
 } from '@infinityxyz/lib-frontend/types/core';
 import {
+  ETHEREUM_WETH_ADDRESS,
   NULL_ADDRESS,
   getCurrentOBOrderPrice,
   getExchangeAddress,
@@ -144,7 +145,7 @@ export const AppContextProvider = ({ children }: Props) => {
   const [showCart, setShowCart] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [selectedProfileTab, setSelectedProfileTab] = useState(ProfileTabs.Items.toString());
-  const [selectedCollectionTab, setSelectedCollectionTab] = useState(CollectionPageTabs.Bid.toString());
+  const [selectedCollectionTab, setSelectedCollectionTab] = useState(CollectionPageTabs.Intent.toString());
 
   const [listMode, setListMode] = useState(false);
   const [txnHash, setTxnHash] = useState<string>('');
@@ -456,8 +457,9 @@ export const AppContextProvider = ({ children }: Props) => {
         toastError('No logged in user');
       } else {
         const isBuyCart = cartType === CartType.TokenBuy;
-        const isBidCart = cartType === CartType.TokenBid;
+        const isTokenBidIntentCart = cartType === CartType.TokenBidIntent;
         const isSellCart = cartType === CartType.TokenList;
+        const isBidCart = cartType === CartType.TokenBid;
 
         if (isBuyCart) {
           const client = getReservoirClient(chainId);
@@ -487,7 +489,7 @@ export const AppContextProvider = ({ children }: Props) => {
               console.error(err);
               return false;
             });
-        } else if (isBidCart) {
+        } else if (isTokenBidIntentCart) {
           // prepare orders
           const preSignedOrders: OBOrder[] = [];
           setCheckoutBtnStatus('Fetching nonce');
@@ -573,6 +575,63 @@ export const AppContextProvider = ({ children }: Props) => {
             .listToken({
               chainId: Number(chainId),
               listings: tokenSet,
+              wallet: adaptEthersSigner(signer),
+              onProgress: (steps: Execute['steps']) => {
+                console.log(steps);
+                setCheckoutBtnStatus(steps[steps.length - 1].action);
+              }
+            })
+            .then(() => {
+              return true;
+            })
+            .catch((err) => {
+              console.error(err);
+              return false;
+            });
+        } else if (isBidCart) {
+          // prepare orders
+          const client = getReservoirClient(chainId);
+          const tokenSet = [];
+          const currentBlock = await provider.getBlock('latest');
+          const bidTimeSeconds = currentBlock.timestamp;
+
+          for (const token of tokens) {
+            const collection = trimLowerCase(token.address || token.tokenAddress || '');
+            const tokenId = token.tokenId;
+            if (!collection || !tokenId) {
+              continue;
+            }
+
+            const ethPrice = token.orderPriceEth ?? 0;
+            if (ethPrice === 0) {
+              throw new Error('Price cannot be 0');
+            }
+            const weiPrice = ethers.utils.parseEther(ethPrice.toString()).toString();
+
+            const expiry = token.orderExpiry ?? getDefaultOrderExpiryTime();
+            const endTimeSeconds = getOrderExpiryTimeInMsFromEnum(bidTimeSeconds * 1000, expiry) / 1000;
+            tokenSet.push({
+              token: `${collection}:${tokenId}`,
+              weiPrice,
+              listingTime: bidTimeSeconds.toString(),
+              expirationTime: endTimeSeconds.toString(),
+              orderbook: 'reservoir' as ReservoirOrderbookType,
+              orderKind: 'seaport-v1.5' as ReservoirOrderKindType,
+              automatedRoyalties: false,
+              currency: ETHEREUM_WETH_ADDRESS, // default WETH for bids and ETH mainnet NFTs
+              options: {
+                'seaport-v1.5': {
+                  useOffChainCancellation: true
+                }
+              }
+            });
+          }
+
+          // bid
+          client.actions
+            .placeBid({
+              chainId: Number(chainId),
+              bids: tokenSet,
               wallet: adaptEthersSigner(signer),
               onProgress: (steps: Execute['steps']) => {
                 console.log(steps);

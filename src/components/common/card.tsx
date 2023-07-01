@@ -59,7 +59,7 @@ export const GridCard = ({
   const finalFeeCostEth = Math.min(calcFeeCostEth, feeCostEth);
 
   const deltaPrice = gasCostEth + finalFeeCostEth;
-  const showDeltaPrice = deltaPrice > 0 && selectedCollectionTab === CollectionPageTabs.Bid.toString();
+  const showDeltaPrice = deltaPrice > 0 && selectedCollectionTab === CollectionPageTabs.Intent.toString();
 
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: data?.tokenId ?? '',

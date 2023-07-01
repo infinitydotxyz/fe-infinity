@@ -3,7 +3,7 @@ import { getSearchFriendlyString } from '@infinityxyz/lib-frontend/utils';
 import { useEffect, useState } from 'react';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { ApiResponse, SITE_HOST, nFormatter } from 'src/utils';
-import { fetchCollectionListings, fetchCollectionTokens, fetchProfileTokens } from 'src/utils/astra-utils';
+import { fetchCollectionReservoirOrders, fetchCollectionTokens, fetchProfileTokens } from 'src/utils/astra-utils';
 import { CartType } from 'src/utils/context/CartContext';
 import { ERC721TokenCartItem, AggregatedOrder, TokensFilter } from 'src/utils/types';
 
@@ -17,8 +17,24 @@ export function useCollectionListingsFetcher(
   tokenId?: string
 ) {
   return useTokenFetcher<AggregatedOrder, ERC721TokenCartItem>({
-    fetcher: (cursor) => fetchCollectionListings(collectionAddress || '', collectionChainId, tokenId, cursor),
-    mapper: (data) => resvListingsToCardData(data),
+    fetcher: (cursor) =>
+      fetchCollectionReservoirOrders(collectionAddress || '', collectionChainId, tokenId, cursor, 'sell'),
+    mapper: (data) => resvOrdersToCardData(data),
+    execute: collectionAddress !== '',
+    filter: {}
+  });
+}
+
+export function useCollectionBidsFetcher(
+  collectionAddress: string | undefined,
+  collectionChainId: ChainId,
+  tokenId?: string,
+  collBidsOnly?: boolean
+) {
+  return useTokenFetcher<AggregatedOrder, ERC721TokenCartItem>({
+    fetcher: (cursor) =>
+      fetchCollectionReservoirOrders(collectionAddress || '', collectionChainId, tokenId, cursor, 'buy', collBidsOnly),
+    mapper: (data) => resvOrdersToCardData(data),
     execute: collectionAddress !== '',
     filter: {}
   });
@@ -101,9 +117,9 @@ function useTokenFetcher<From, To>({
   return { error, data, hasNextPage, isLoading, fetch };
 }
 
-export const resvListingsToCardData = (tokens: AggregatedOrder[]): ERC721TokenCartItem[] => {
+export const resvOrdersToCardData = (tokens: AggregatedOrder[]): ERC721TokenCartItem[] => {
   let result: ERC721TokenCartItem[] = (tokens || []).map((item: AggregatedOrder) => {
-    return resvListingToCardData(item);
+    return resvOrderToCardData(item);
   });
 
   // remove any with blank images
@@ -114,7 +130,7 @@ export const resvListingsToCardData = (tokens: AggregatedOrder[]): ERC721TokenCa
   return result;
 };
 
-export const resvListingToCardData = (item: AggregatedOrder): ERC721TokenCartItem => {
+export const resvOrderToCardData = (item: AggregatedOrder): ERC721TokenCartItem => {
   const image = item?.criteria?.data?.token?.image ?? '';
 
   const result: ERC721TokenCartItem = {

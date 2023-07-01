@@ -24,7 +24,7 @@ export const ProfileManualOrderListItem = ({ order, orderType }: Props) => {
     useAppContext();
 
   let editableCartItem: ERC721CollectionCartItem | ERC721TokenCartItem;
-  const isCollBid = orderType === 'offers-made' && order.criteria?.kind === 'collection'; // adi-todo: fix this
+  const isCollBid = orderType === 'bids-placed' && order.criteria?.kind === 'collection';
   if (isCollBid) {
     editableCartItem = erc721TokenCartItemToCollectionCartItem(order);
   } else {
@@ -72,7 +72,7 @@ export const ProfileManualOrderListItem = ({ order, orderType }: Props) => {
 
         <div className="w-1/6">
           <div className={twMerge(secondaryTextColor, 'font-medium')}>Order type</div>
-          <div className="">{orderType === 'listings' ? 'Listing' : orderType === 'offers-made' ? 'Bid' : 'Offer'}</div>
+          <div className="">{orderType === 'listings' ? 'Listing' : orderType === 'bids-placed' ? 'Bid' : 'Offer'}</div>
           <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>
             Expires {format(order.validUntil ?? 0)}
           </div>
@@ -85,7 +85,7 @@ export const ProfileManualOrderListItem = ({ order, orderType }: Props) => {
           </div>
         </div>
 
-        {orderType === 'listings' || orderType === 'offers-made' ? (
+        {orderType === 'listings' || orderType === 'bids-placed' ? (
           <div className="w-1/8 flex justify-end">
             <Button
               variant={

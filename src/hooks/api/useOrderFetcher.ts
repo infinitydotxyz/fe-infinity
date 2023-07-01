@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import { DEFAULT_LIMIT, apiGet } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { ERC721TokenCartItem, SORT_FILTERS, TokensFilter } from 'src/utils/types';
-import { resvListingsToCardData } from './useTokenFetcher';
+import { resvOrdersToCardData } from './useTokenFetcher';
 
 interface BaseProps {
   kind?: 'collection' | 'token' | 'profile';
@@ -56,7 +56,7 @@ const parseFiltersToApiQueryParams = (filter: TokensFilter): GetOrderItemsQuery 
         if (filter.orderType === 'listings') {
           parsedFilters.isSellOrder = true;
         }
-        if (filter.orderType === 'offers-made') {
+        if (filter.orderType === 'intents-placed') {
           parsedFilters.isSellOrder = false;
         }
         if (filter.orderType === 'offers-received') {
@@ -112,7 +112,7 @@ export const useCollectionOrderFetcher = (
 
 export const useProfileOrderFetcher = (limit: number, filter: TokensFilter, userAddress: string) => {
   const side =
-    filter.orderType === 'listings' || filter.orderType === 'offers-made' ? Queries.Side.Maker : Queries.Side.Taker;
+    filter.orderType === 'listings' || filter.orderType === 'intents-placed' ? Queries.Side.Maker : Queries.Side.Taker;
   const props: ProfileProps = {
     kind: 'profile',
     limit,
@@ -293,7 +293,7 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, chainId: C
         }
 
         if (props.kind === 'profile') {
-          setProfileOrders(resvListingsToCardData(newData));
+          setProfileOrders(resvOrdersToCardData(newData));
         } else {
           setOrders(
             newData.map((order: Order & { executionStatus: ExecutionStatus | null }) => {

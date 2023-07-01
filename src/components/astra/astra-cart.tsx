@@ -162,6 +162,7 @@ export const AstraCart = ({
     if (
       (cartType === CartType.TokenList ||
         cartType === CartType.TokenBid ||
+        cartType === CartType.TokenBidIntent ||
         cartType === CartType.TokenBuy ||
         cartType === CartType.Send) &&
       tokenMap.size > 0
@@ -208,7 +209,7 @@ export const AstraCart = ({
           {divList}
         </div>
       );
-    } else if (cartType === CartType.CollectionBid && collMap.size > 0) {
+    } else if ((cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent) && collMap.size > 0) {
       const divList: ReactNode[] = [];
       collMap.forEach((collArray) => {
         const first = collArray[0];
@@ -243,7 +244,7 @@ export const AstraCart = ({
       orderMap.forEach((ordArray) => {
         const first = ordArray[0];
         const orderId = first.id;
-        const isCollBid = first.criteria?.kind === 'collection'; // adi-todo fix this
+        const isCollBid = first.criteria?.kind === 'collection';
         const firstCollName = isCollBid ? first.criteria?.data?.collection?.name : first.collectionName;
 
         divList.push(
@@ -288,6 +289,7 @@ export const AstraCart = ({
     if (
       cartType === CartType.TokenList ||
       cartType === CartType.TokenBid ||
+      cartType === CartType.TokenBidIntent ||
       cartType === CartType.TokenBuy ||
       cartType === CartType.Send
     ) {
@@ -301,7 +303,7 @@ export const AstraCart = ({
       setTokenMap(tokenMap);
     }
 
-    if (cartType === CartType.CollectionBid) {
+    if (cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent) {
       collMap.clear();
       for (const item of cartItems) {
         const coll = item as ERC721CollectionCartItem;
@@ -339,12 +341,26 @@ export const AstraCart = ({
         setCartTitle('Collection Bid');
         setCheckoutBtnText('Bid');
       }
+    } else if (cartType === CartType.CollectionBidIntent) {
+      setCartTitle('Collection Bid Intent');
+      if (cartItems.length > 1) {
+        setCheckoutBtnText('Express Intents');
+      } else {
+        setCheckoutBtnText('Express Intent');
+      }
     } else if (cartType === CartType.TokenBid) {
       setCartTitle('Bid');
       if (cartItems.length > 1) {
         setCheckoutBtnText('Bulk Bid');
       } else {
         setCheckoutBtnText('Bid');
+      }
+    } else if (cartType === CartType.TokenBidIntent) {
+      setCartTitle('Token Bid Intent');
+      if (cartItems.length > 1) {
+        setCheckoutBtnText('Express Intents');
+      } else {
+        setCheckoutBtnText('Express Intent');
       }
     } else if (cartType === CartType.TokenBuy) {
       setCartTitle('Buy');
@@ -388,10 +404,11 @@ export const AstraCart = ({
                     cartType === CartType.Send ||
                     cartType === CartType.TokenList ||
                     cartType === CartType.TokenBid ||
+                    cartType === CartType.TokenBidIntent ||
                     cartType === CartType.TokenBuy
                   ) {
                     onTokensClear();
-                  } else if (cartType === CartType.CollectionBid) {
+                  } else if (cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent) {
                     onCollsClear();
                   } else if (cartType === CartType.Cancel) {
                     onOrdersClear();
@@ -641,7 +658,7 @@ interface Props4 {
 }
 
 const AstraCancelCartItem = ({ order, onRemove }: Props4) => {
-  const isCollBid = order.criteria?.kind === 'collection'; // adi-todo
+  const isCollBid = order.criteria?.kind === 'collection';
   const image = isCollBid ? order.criteria?.data?.collection?.image : order.image;
   const tokenId = isCollBid ? '' : order.tokenId;
   return (

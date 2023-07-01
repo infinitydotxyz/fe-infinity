@@ -29,22 +29,28 @@ export const getReservoirClient = (chainId: string): ReservoirClient => {
   return reservoirClient;
 };
 
-export const fetchCollectionListings = async (
+export const fetchCollectionReservoirOrders = async (
   collection: string,
   chainId: string,
   tokenId?: string,
-  continuation?: string
+  continuation?: string,
+  side?: 'buy' | 'sell',
+  collBidsOnly?: boolean
 ): Promise<ApiResponse> => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const query: any = {
     collection,
-    chainId
+    chainId,
+    side
   };
   if (tokenId) {
     query.tokenId = tokenId;
   }
   if (continuation) {
     query.continuation = continuation;
+  }
+  if (collBidsOnly) {
+    query.collBidsOnly = true;
   }
 
   const response = await httpGet(`/v2/orders`, query);

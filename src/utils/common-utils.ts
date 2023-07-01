@@ -27,10 +27,12 @@ export const isLocalhost = () => !isServer() && (window?.location?.host || '').i
 export const isProd = () => process.env.NODE_ENV === 'production';
 
 export enum CollectionPageTabs {
-  Bid = 'Place Bids',
+  Intent = 'Express Intent',
   Buy = 'Buy Now',
-  Bids = 'Live Bids',
-  Analytics = 'Analytics'
+  LiveIntents = 'Live Intents',
+  Analytics = 'Analytics',
+  Bid = 'Place Bids',
+  LiveBids = 'Live Bids'
 }
 
 export enum ProfileTabs {
@@ -91,11 +93,13 @@ export const getCartType = (path: string, selectedProfileTab: string, selectedCo
   const isProfileSend = selectedProfileTab === ProfileTabs.Send.toString();
   const isProfileOrders = selectedProfileTab === ProfileTabs.Orders.toString();
 
+  const isCollectionIntentTab = selectedCollectionTab === CollectionPageTabs.Intent.toString();
   const isCollectionBidTab = selectedCollectionTab === CollectionPageTabs.Bid.toString();
   const isCollectionBuyTab = selectedCollectionTab === CollectionPageTabs.Buy.toString();
 
   const isCollectionBidCart = isTrendingPage;
   const isTokenListCart = isProfilePage && isProfileItems;
+  const isTokenBidIntentCart = isCollectionPage && isCollectionIntentTab;
   const isTokenBidCart = isCollectionPage && isCollectionBidTab;
   const isTokenBuyCart = isCollectionPage && isCollectionBuyTab;
   const isSendCart = isProfilePage && isProfileSend;
@@ -103,8 +107,8 @@ export const getCartType = (path: string, selectedProfileTab: string, selectedCo
 
   if (isCollectionBidCart) {
     return CartType.CollectionBid;
-  } else if (isTokenBidCart) {
-    return CartType.TokenBid;
+  } else if (isTokenBidIntentCart) {
+    return CartType.TokenBidIntent;
   } else if (isTokenBuyCart) {
     return CartType.TokenBuy;
   } else if (isTokenListCart) {
@@ -113,6 +117,8 @@ export const getCartType = (path: string, selectedProfileTab: string, selectedCo
     return CartType.Send;
   } else if (isCancelCart) {
     return CartType.Cancel;
+  } else if (isTokenBidCart) {
+    return CartType.TokenBid;
   }
   return CartType.None;
 };

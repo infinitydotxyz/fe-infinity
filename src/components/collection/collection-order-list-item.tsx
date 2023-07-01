@@ -12,7 +12,7 @@ import { OrderExecutionStatusIcon, OrderMatchStatusIcon } from '../common/status
 import { OrderbookItem } from '../orderbook/orderbook-item';
 interface Props {
   order: ERC721OrderCartItem;
-  orderType: 'Listing' | 'Token Bid' | 'Collection Bid';
+  orderType: 'Listing' | 'Token Bid' | 'Collection Bid' | 'Token Bid Intent' | 'Collection Bid Intent';
 }
 
 export const CollectionOrderListItem = ({ order, orderType }: Props) => {
@@ -84,7 +84,7 @@ export const CollectionOrderListItem = ({ order, orderType }: Props) => {
               if (!isConnected) {
                 return;
               }
-              const newCartType = isCollBid ? CartType.CollectionBid : CartType.TokenBid;
+              const newCartType = isCollBid ? CartType.CollectionBidIntent : CartType.TokenBid;
               editableCartItem.cartType = newCartType;
               if (!isCollBid && isNFTSelectable(editableCartItem as ERC721TokenCartItem)) {
                 setCartType(newCartType);
@@ -96,7 +96,9 @@ export const CollectionOrderListItem = ({ order, orderType }: Props) => {
               }
             }}
           >
-            {addedToCart && (cartType === CartType.TokenBid || cartType === CartType.CollectionBid) ? '✓' : ''}{' '}
+            {addedToCart && (cartType === CartType.TokenBidIntent || cartType === CartType.CollectionBidIntent)
+              ? '✓'
+              : ''}{' '}
             {orderType === 'Listing' ? 'Buy now' : 'Bid higher'}
           </Button>
         </div>
