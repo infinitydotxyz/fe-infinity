@@ -45,7 +45,7 @@ export const GridCard = ({
   const hasBlueCheck = data?.hasBlueCheck ?? false;
   const { selectedCollectionTab } = useAppContext();
 
-  const price = data?.price
+  let price = data?.price
     ? data.price
     : data?.orderSnippet?.listing?.orderItem?.startPriceEth
     ? data?.orderSnippet?.listing?.orderItem?.startPriceEth
@@ -59,7 +59,17 @@ export const GridCard = ({
   const finalFeeCostEth = Math.min(calcFeeCostEth, feeCostEth);
 
   const deltaPrice = gasCostEth + finalFeeCostEth;
-  const showDeltaPrice = deltaPrice > 0 && selectedCollectionTab === CollectionPageTabs.Bid.toString();
+  const showDeltaPrice = deltaPrice > 0 && selectedCollectionTab === CollectionPageTabs.Intent.toString();
+  const hidePrice = selectedCollectionTab === CollectionPageTabs.Bid.toString();
+  if (hidePrice) {
+    price = 0;
+    data.price = 0;
+    if (data.orderSnippet?.listing?.orderItem) {
+      data.orderSnippet.listing.orderItem.startPriceEth = 0;
+      data.orderSnippet.listing.orderItem.gasCostEth = 0;
+      data.orderSnippet.listing.orderItem.feeCostEth = 0;
+    }
+  }
 
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: data?.tokenId ?? '',
@@ -68,10 +78,14 @@ export const GridCard = ({
     collectionFloorPrice,
     lastSalePriceEth: data?.lastSalePriceEth,
     mintPriceEth: data?.mintPriceEth,
+    orderPriceEth: data?.price,
+    validFrom: data?.validFrom,
+    validUntil: data?.validUntil,
+    orderSide: data?.orderSide,
     collectionCreator
   };
 
-  const lastSalePrice = data?.lastSalePriceEth;
+  const lastSalePrice = nFormatter(Number(data?.lastSalePriceEth ?? 0));
 
   const router = useRouter();
   const isCollectionPage = router.asPath.includes('/collection');
@@ -166,6 +180,12 @@ export const GridCard = ({
                       <div className={twMerge('truncate font-medium', borderColor)}> + {nFormatter(deltaPrice, 2)}</div>
                     )}
                   </div>
+
+                  {data?.source?.icon && (
+                    <div className={twMerge('flex items-center')}>
+                      <EZImage src={data?.source?.icon} className="w-4 h-4 rounded-full" />
+                    </div>
+                  )}
                 </div>
               ) : null}
 

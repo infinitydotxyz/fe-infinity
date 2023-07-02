@@ -8,7 +8,7 @@ import { nftToCardDataWithOrderFields } from 'src/hooks/api/useTokenFetcher';
 import { apiGet, ellipsisAddress, ellipsisString, getChainScannerBase, nFormatter, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
-import { BasicTokenInfo } from 'src/utils/types';
+import { BasicTokenInfo, ReservoirTokenV6 } from 'src/utils/types';
 import { borderColor, dropShadow, secondaryBgColor, secondaryTextColor } from 'src/utils/ui-constants';
 import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
@@ -56,8 +56,27 @@ const useCollectionInfo = (chainId: string, collection: string) => {
   };
 };
 
+const useBestBidAskInfo = (chainId: string, collection: string, tokenId: string) => {
+  const endpoint = `/v2/orders/token/bestbidask`;
+  const data = useFetch<ReservoirTokenV6>(endpoint, { query: { chainId, collection, tokenId } });
+
+  return {
+    bestAsk: data.result?.market?.floorAsk?.price?.amount?.native,
+    askValidFrom: (data.result?.market?.floorAsk?.validFrom ?? 0) * 1000,
+    askValidUntil: (data.result?.market?.floorAsk?.validUntil ?? 0) * 1000,
+    bestBid: data.result?.market?.topBid?.price?.amount?.native,
+    bidValidFrom: (data.result?.market?.topBid?.validFrom ?? 0) * 1000,
+    bidValidUntil: (data.result?.market?.topBid?.validUntil ?? 0) * 1000
+  };
+};
+
 export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.Element | null => {
   const { token, error, collectionAttributes } = useFetchAssetInfo(data.chainId, data.collectionAddress, data.tokenId);
+  const { bestAsk, bestBid, askValidFrom, askValidUntil, bidValidFrom, bidValidUntil } = useBestBidAskInfo(
+    data.chainId,
+    data.collectionAddress,
+    data.tokenId
+  );
 
   let collectionFloorAndCreator: { floorPrice?: number; creator?: string } = {};
   if (!data.collectionFloorPrice || !data.collectionCreator) {
@@ -97,16 +116,16 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
     return null;
   }
 
-  const listingPrice = nFormatter(token.ordersSnippet?.listing?.orderItem?.startPriceEth, 2);
-  const listingExpiry = token.ordersSnippet?.listing?.orderItem?.endTimeMs;
+  const listingPrice = nFormatter(bestAsk, 2);
+  const listingExpiry = askValidUntil;
   const listingExpiryStr = listingExpiry ? format(listingExpiry) : '-';
-  const listingTime = token.ordersSnippet?.listing?.orderItem?.startTimeMs;
+  const listingTime = askValidFrom;
   const listingTimeStr = listingTime ? format(listingTime) : '-';
 
-  const offerPrice = nFormatter(token.ordersSnippet?.offer?.orderItem?.startPriceEth, 2);
-  const offerExpiry = token.ordersSnippet?.offer?.orderItem?.endTimeMs;
+  const offerPrice = nFormatter(bestBid, 2);
+  const offerExpiry = bidValidUntil;
   const offerExpiryStr = offerExpiry ? format(offerExpiry) : '-';
-  const offerTime = token.ordersSnippet?.offer?.orderItem?.startTimeMs;
+  const offerTime = bidValidFrom;
   const offerTimeStr = offerTime ? format(offerTime) : '-';
 
   const collectionCreator = data.collectionCreator ?? collectionFloorAndCreator.creator;
@@ -117,7 +136,8 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
     : offerPrice
     ? Number(offerPrice) - Number(floorPrice)
     : 0;
-  const floorPricePercentDiff = floorPrice ? `${nFormatter((floorPriceDiff / Number(floorPrice)) * 100)}%` : 0;
+  const floorPricePercentDiff =
+    floorPrice && Number(floorPrice) > 0 ? `${nFormatter((floorPriceDiff / Number(floorPrice)) * 100)}%` : 0;
 
   const markupPrice = listingPrice || offerPrice;
   const markupPriceDiff =
@@ -236,7 +256,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                   <div>
                     <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Mint Price</div>
                     <div>
-                      {data.mintPriceEth} {EthSymbol}
+                      {nFormatter(parseFloat(String(data.mintPriceEth)), 2)} {EthSymbol}
                     </div>
                   </div>
                 ) : null}
@@ -245,12 +265,12 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                   <div>
                     <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Last Price</div>
                     <div>
-                      {data.lastSalePriceEth} {EthSymbol}
+                      {nFormatter(parseFloat(String(data.lastSalePriceEth)), 2)} {EthSymbol}
                     </div>
                   </div>
                 ) : null}
 
-                {floorPrice ? (
+                {Number(floorPrice) > 0 ? (
                   <div>
                     <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Collection Floor</div>
                     <div>
@@ -309,11 +329,11 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                       <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>
                         Floor difference
                       </div>
-                      <div>{floorPricePercentDiff ?? '-'}</div>
+                      <div>{Number(floorPricePercentDiff) > 0 ? 'floorPricePercentDiff' : '-'}</div>
                     </div>
 
                     <div className="space-y-1 mr-1.5">
-                      <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>Top offer</div>
+                      <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>Top bid</div>
                       {offerPrice ? (
                         <div>
                           {offerPrice} {EthSymbol}

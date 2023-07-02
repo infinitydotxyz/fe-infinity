@@ -14,11 +14,12 @@ import { ATraitFilter } from 'src/components/astra/astra-trait-filter';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { CollectionCharts } from 'src/components/collection/collection-charts';
 import { CollectionItemsPageSidebar } from 'src/components/collection/collection-items-page-sidebar';
+import { CollectionManualBidList } from 'src/components/collection/collection-manual-bid-list';
 import { CollectionOrderList } from 'src/components/collection/collection-orders-list';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
-import { CenteredContent, EZImage, ExternalLink, Spacer, TextInputBox } from 'src/components/common';
+import { CenteredContent, EZImage, ExternalLink, TextInputBox } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
-import { useCollectionTokenFetcher } from 'src/hooks/api/useTokenFetcher';
+import { useCollectionListingsFetcher, useCollectionTokenFetcher } from 'src/hooks/api/useTokenFetcher';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
 import { CollectionPageTabs, apiGet, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -57,17 +58,31 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     setSelectedCollectionTab,
     collSelection
   } = useAppContext();
+
   const [filter, setFilter] = useState<TokensFilter>({});
   const chainId = collection.chainId as ChainId;
-  const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, chainId, filter);
-  const [mutatedData, setMutatedData] = useState<ERC721TokenCartItem[]>(data);
   const { setRef } = useScrollInfo();
+
+  const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, chainId, filter);
+  const {
+    data: listings,
+    error: listingsError,
+    hasNextPage: listingsHasNextPage,
+    isLoading: listingsIsLoading,
+    fetch: fetchListings
+  } = useCollectionListingsFetcher(collection.address, chainId);
+
+  const [mutatedData, setMutatedData] = useState<ERC721TokenCartItem[]>(listings);
+
   const tabs = [
+    CollectionPageTabs.Buy.toString(),
     CollectionPageTabs.Bid.toString(),
-    // CollectionPageTabs.Buy.toString(),
-    CollectionPageTabs.Bids.toString(),
+    CollectionPageTabs.Intent.toString(),
+    CollectionPageTabs.LiveBids.toString(),
+    CollectionPageTabs.LiveIntents.toString(),
     CollectionPageTabs.Analytics.toString()
   ];
+
   const { cartType, setCartType } = useCartContext();
   const [numSweep, setNumSweep] = useState('');
   const [customSweep, setCustomSweep] = useState('');
@@ -78,21 +93,30 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const MAX_NUM_SWEEP_ITEMS = 50;
 
   useEffect(() => {
-    setMutatedData(data);
-  }, [data]);
+    if (
+      selectedCollectionTab === CollectionPageTabs.Intent.toString() ||
+      selectedCollectionTab === CollectionPageTabs.Bid.toString()
+    ) {
+      setMutatedData(data);
+    } else if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
+      setMutatedData(listings);
+    }
+  }, [data, listings]);
 
   useEffect(() => {
-    if (selectedCollectionTab === CollectionPageTabs.Bid.toString()) {
+    if (selectedCollectionTab === CollectionPageTabs.Intent.toString()) {
       delete filter.orderType;
       delete filter.source;
+      filter.sort = 'lowestPrice';
       setFilter({
         ...filter
       });
+    } else if (selectedCollectionTab === CollectionPageTabs.Bid.toString()) {
+      const newFilter = { ...filter };
+      newFilter.sort = 'tokenIdNumeric';
+      setFilter(newFilter);
     } else if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
-      setFilter({
-        ...filter,
-        orderType: 'listing'
-      });
+      fetchListings(false);
     }
   }, [selectedCollectionTab]);
 
@@ -118,10 +142,12 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   useEffect(() => {
     if (collSelection.length > 0) {
       setCartType(CartType.CollectionBid);
-    } else if (selectedCollectionTab === CollectionPageTabs.Bid.toString()) {
-      setCartType(CartType.TokenBid);
+    } else if (selectedCollectionTab === CollectionPageTabs.Intent.toString()) {
+      setCartType(CartType.TokenBidIntent);
     } else if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
       setCartType(CartType.TokenBuy);
+    } else if (selectedCollectionTab === CollectionPageTabs.Bid.toString()) {
+      setCartType(CartType.TokenBid);
     }
   }, [collSelection]);
 
@@ -174,10 +200,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
           <div className="flex flex-col text-md">
             <span>Common reasons a collection is not supported:</span>
             <ul className="list-disc list-inside mt-2 mb-2">
+              <li>Pixelpack offers a trusted and curated selection of NFTs</li>
               <li>Collection is not ERC-721</li>
-              <li>Low volumes</li>
+              <li>Collection has low volumes</li>
               <li>Creator(s) rugged the project</li>
-              <li>Dead community</li>
             </ul>
             <div className="flex items-center space-x-2">
               <div>If this is a mistake, let us know on</div>
@@ -254,7 +280,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
         <CollectionPageHeader {...headerProps} />
 
         <div ref={setRef} className="overflow-y-auto scrollbar-hide">
-          {(selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
+          {(selectedCollectionTab === CollectionPageTabs.Intent.toString() ||
+            selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
             selectedCollectionTab === CollectionPageTabs.Buy.toString()) && (
             <div className={twMerge('mt-2 px-4')}>
               <div className={twMerge('flex')}>
@@ -272,34 +299,35 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   />
                 </div>
 
-                <Spacer />
-
                 <div className="flex space-x-2 text-sm">
-                  <AButton
-                    primary
-                    className="px-5 py-1 rounded-lg text-sm"
-                    onClick={() => {
-                      setCartType(CartType.CollectionBid);
-                      if (isCollSelectable(collection as ERC721CollectionCartItem)) {
-                        return toggleCollSelection(collection as ERC721CollectionCartItem);
-                      }
-                    }}
-                  >
-                    {isCollSelected(collection as ERC721CollectionCartItem) ? (
-                      <div className="flex items-center space-x-1">
-                        <AiOutlineCheckCircle className={'h-4 w-4'} />
-                        <div>Collection Bid</div>
-                      </div>
-                    ) : (
-                      'Collection Bid'
-                    )}
-                  </AButton>
+                  {(selectedCollectionTab === CollectionPageTabs.Intent ||
+                    selectedCollectionTab === CollectionPageTabs.Bid.toString()) && (
+                    <AButton
+                      primary
+                      className="px-5 py-1 rounded-lg text-sm"
+                      onClick={() => {
+                        setCartType(CartType.CollectionBid);
+                        if (isCollSelectable(collection as ERC721CollectionCartItem)) {
+                          return toggleCollSelection(collection as ERC721CollectionCartItem);
+                        }
+                      }}
+                    >
+                      {isCollSelected(collection as ERC721CollectionCartItem) ? (
+                        <div className="flex items-center space-x-1">
+                          <AiOutlineCheckCircle className={'h-4 w-4'} />
+                          <div>Collection Bid</div>
+                        </div>
+                      ) : (
+                        'Collection Bid'
+                      )}
+                    </AButton>
+                  )}
 
                   <div
                     className={twMerge(
                       'flex flex-row rounded-lg border cursor-pointer',
                       borderColor,
-                      cartType === CartType.CollectionBid
+                      cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent
                         ? 'opacity-30 duration-300 pointer-events-none'
                         : 'duration-300'
                     )}
@@ -375,33 +403,54 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     </div>
                   </div>
 
-                  <div
-                    className={twMerge(
-                      'flex space-x-1',
-                      cartType === CartType.CollectionBid
-                        ? 'opacity-30 duration-300 pointer-events-none'
-                        : 'duration-300'
-                    )}
-                  >
-                    <ASortButton filter={filter} setFilter={setFilter} />
-                    <AStatusFilterButton filter={filter} setFilter={setFilter} />
-                    <APriceFilter filter={filter} setFilter={setFilter} />
-                    <ATraitFilter
-                      collectionAddress={collection.address}
-                      filter={filter}
-                      setFilter={setFilter}
-                      collectionAttributes={props.collectionAttributes}
-                    />
-                  </div>
+                  {selectedCollectionTab === CollectionPageTabs.Intent && (
+                    <div
+                      className={twMerge(
+                        'flex space-x-1',
+                        cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent
+                          ? 'opacity-30 duration-300 pointer-events-none'
+                          : 'duration-300'
+                      )}
+                    >
+                      <ASortButton filter={filter} setFilter={setFilter} />
+                      <AStatusFilterButton filter={filter} setFilter={setFilter} />
+                      <APriceFilter filter={filter} setFilter={setFilter} />
+                      <ATraitFilter
+                        collectionAddress={collection.address}
+                        filter={filter}
+                        setFilter={setFilter}
+                        collectionAttributes={props.collectionAttributes}
+                      />
+                    </div>
+                  )}
+
+                  {selectedCollectionTab === CollectionPageTabs.Bid && (
+                    <div
+                      className={twMerge(
+                        'flex space-x-1',
+                        cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent
+                          ? 'opacity-30 duration-300 pointer-events-none'
+                          : 'duration-300'
+                      )}
+                    >
+                      <ATraitFilter
+                        collectionAddress={collection.address}
+                        filter={filter}
+                        setFilter={setFilter}
+                        collectionAttributes={props.collectionAttributes}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
-              {selectedCollectionTab === CollectionPageTabs.Bid.toString() && (
+
+              {selectedCollectionTab === CollectionPageTabs.Intent.toString() && (
                 <div className="flex mt-2 text-sm">
                   <div
                     className={twMerge(
                       'flex flex-row rounded-lg border cursor-pointer',
                       borderColor,
-                      cartType === CartType.CollectionBid
+                      cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent
                         ? 'opacity-30 duration-300 pointer-events-none'
                         : 'duration-300'
                     )}
@@ -480,6 +529,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                       />
                     </div>
                   </div>
+
                   <div className={twMerge('flex ml-2 items-center space-x-1', secondaryTextColor)}>
                     <HiOutlineLightBulb className="w-6 h-6" />
                     <div className="mt-1">Matched bids are automatically sniped on your behalf.</div>
@@ -488,6 +538,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               )}
             </div>
           )}
+
           {selectedTraits.length > 0 && (
             <div className="flex px-4 mt-2 space-x-2">
               {selectedTraits.map((trait) => {
@@ -503,26 +554,54 @@ export default function ItemsPage(props: CollectionDashboardProps) {
             </div>
           )}
 
-          {(selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
+          {(selectedCollectionTab === CollectionPageTabs.Intent.toString() ||
+            selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
             selectedCollectionTab === CollectionPageTabs.Buy.toString()) && (
             <div className="flex flex-row">
               <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
                 <TokenGrid
+                  key={selectedCollectionTab}
                   collectionCreator={collectionCreator}
                   collectionFloorPrice={floorPrice}
                   listMode={listMode}
                   className={twMerge(
                     'px-4 py-4 min-h-[600px]',
-                    cartType === CartType.CollectionBid ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300'
+                    cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent
+                      ? 'opacity-30 duration-300 pointer-events-none'
+                      : 'duration-300'
                   )} // this min-height is to prevent the grid from collapsing when there are no items so filter menus can still render
                   onClick={onClickNFT}
                   isSelectable={isNFTSelectable}
                   isSelected={isNFTSelected}
-                  data={data}
-                  hasNextPage={hasNextPage}
-                  onFetchMore={() => fetch(true)}
-                  isError={!!error}
-                  isLoading={!!isLoading}
+                  data={mutatedData}
+                  hasNextPage={
+                    selectedCollectionTab === CollectionPageTabs.Intent.toString()
+                      ? hasNextPage
+                      : selectedCollectionTab === CollectionPageTabs.Bid.toString()
+                      ? hasNextPage
+                      : listingsHasNextPage
+                  }
+                  onFetchMore={() =>
+                    selectedCollectionTab === CollectionPageTabs.Intent.toString()
+                      ? fetch(true)
+                      : selectedCollectionTab === CollectionPageTabs.Bid.toString()
+                      ? fetch(true)
+                      : fetchListings(true)
+                  }
+                  isError={
+                    selectedCollectionTab === CollectionPageTabs.Intent.toString()
+                      ? !!error
+                      : selectedCollectionTab === CollectionPageTabs.Bid.toString()
+                      ? !!error
+                      : !!listingsError
+                  }
+                  isLoading={
+                    selectedCollectionTab === CollectionPageTabs.Intent.toString()
+                      ? !!isLoading
+                      : selectedCollectionTab === CollectionPageTabs.Bid.toString()
+                      ? !!isLoading
+                      : !!listingsIsLoading
+                  }
                 />
               </div>
 
@@ -535,12 +614,21 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               </div>
             </div>
           )}
-          {selectedCollectionTab === CollectionPageTabs.Bids && (
+
+          {selectedCollectionTab === CollectionPageTabs.LiveBids && (
+            <CollectionManualBidList
+              collectionAddress={collection.address}
+              collectionChainId={collection.chainId as ChainId}
+            />
+          )}
+
+          {selectedCollectionTab === CollectionPageTabs.LiveIntents && (
             <CollectionOrderList
               collectionAddress={collection.address}
               collectionChainId={collection.chainId as ChainId}
             />
           )}
+
           {selectedCollectionTab === CollectionPageTabs.Analytics && (
             <CollectionCharts
               collectionAddress={collection.address}

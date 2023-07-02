@@ -1,42 +1,34 @@
 import { useEffect, useState } from 'react';
 import { FiEdit3, FiTrash2 } from 'react-icons/fi';
 import { Button, EthPrice } from 'src/components/common';
-import { erc721OrderCartItemToCollectionCartItem, erc721OrderCartItemToTokenCartItem, nFormatter } from 'src/utils';
+import { erc721TokenCartItemToCollectionCartItem, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
-import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, TokensFilter } from 'src/utils/types';
+import { ERC721CollectionCartItem, ERC721TokenCartItem, TokensFilter } from 'src/utils/types';
 import { secondaryTextColor, standardBorderCard } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { useAccount } from 'wagmi';
-import { OrderExecutionStatusIcon, OrderMatchStatusIcon } from '../common/status-icon';
-import { OrderbookItem } from '../orderbook/orderbook-item';
+import { ManualOrderbookItem } from '../orderbook/manual-orderbook-item';
+
 interface Props {
-  order: ERC721OrderCartItem;
+  order: ERC721TokenCartItem;
   orderType: TokensFilter['orderType'];
 }
 
-export const ProfileOrderListItem = ({ order, orderType }: Props) => {
-  const [startPriceEth] = useState(order.startPriceEth);
+export const ProfileManualOrderListItem = ({ order, orderType }: Props) => {
+  const [startPriceEth] = useState(order.price);
   const { isConnected } = useAccount();
   const { cartType, cartItems, setCartType } = useCartContext();
-  const {
-    isNFTSelectable,
-    isNFTSelected,
-    toggleNFTSelection,
-    isOrderSelected,
-    toggleOrderSelection,
-    isCollSelectable,
-    isCollSelected,
-    toggleCollSelection
-  } = useAppContext();
+  const { isNFTSelectable, isNFTSelected, toggleNFTSelection, isCollSelectable, isCollSelected, toggleCollSelection } =
+    useAppContext();
 
   let editableCartItem: ERC721CollectionCartItem | ERC721TokenCartItem;
-  const isCollBid = orderType === 'intents-placed' && order.nfts[0].tokens.length === 0;
+  const isCollBid = orderType === 'bids-placed' && order.criteria?.kind === 'collection';
   if (isCollBid) {
-    editableCartItem = erc721OrderCartItemToCollectionCartItem(order);
+    editableCartItem = erc721TokenCartItemToCollectionCartItem(order);
   } else {
-    editableCartItem = erc721OrderCartItemToTokenCartItem(order);
+    editableCartItem = order;
   }
 
   const [addedToEditCart, setAddedToEditCart] = useState(
@@ -44,10 +36,13 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
       ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
       : isNFTSelected(editableCartItem as ERC721TokenCartItem)
   );
-  const [addedToCancelCart, setAddedToCancelCart] = useState(isOrderSelected(order));
+  const [addedToCancelCart, setAddedToCancelCart] = useState(
+    isCollBid
+      ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
+      : isNFTSelected(editableCartItem as ERC721TokenCartItem)
+  );
 
-  const orderStatus = order.executionStatus?.status;
-  const isActionable = !(orderStatus === 'matched-executed' || orderStatus === 'matched-executing');
+  const isActionable = true;
 
   useEffect(() => {
     setAddedToEditCart(
@@ -55,14 +50,23 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
         ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
         : isNFTSelected(editableCartItem as ERC721TokenCartItem)
     );
-    setAddedToCancelCart(isOrderSelected(order));
+    setAddedToCancelCart(
+      isCollBid
+        ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
+        : isNFTSelected(editableCartItem as ERC721TokenCartItem)
+    );
   }, [cartType, cartItems]);
 
   return (
     <div className={twMerge(standardBorderCard, 'flex mx-4 text-sm')}>
       <div className="flex justify-between items-center w-full">
         <div className="w-1/3">
-          <OrderbookItem canShowAssetModal={true} nameItem={true} key={`${order.id} ${order.chainId}`} order={order} />
+          <ManualOrderbookItem
+            isCollBid={isCollBid}
+            canShowAssetModal={!isCollBid}
+            key={`${order.id} ${order.chainId}`}
+            order={editableCartItem}
+          />
         </div>
 
         <div className="w-1/6">
@@ -71,21 +75,14 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
             {orderType === 'listings'
               ? 'Listing'
               : orderType === 'bids-placed'
-              ? 'Bid'
-              : orderType === 'intents-placed'
-              ? 'Intent'
+              ? isCollBid
+                ? 'Collection Bid'
+                : 'Bid'
               : 'Offer'}
           </div>
-          <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>Expires {format(order.endTimeMs)}</div>
-        </div>
-        <div className="w-1/4">
-          <div className={twMerge(secondaryTextColor, 'font-medium')}>Match Status</div>
-          <OrderMatchStatusIcon executionStatus={order.executionStatus} />
-        </div>
-
-        <div className="w-1/4">
-          <div className={twMerge(secondaryTextColor, 'font-medium')}>Execution Status</div>
-          <OrderExecutionStatusIcon executionStatus={order.executionStatus} isSellOrder={order.isSellOrder} />
+          {order.validUntil ? (
+            <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>Expires {format(order.validUntil)}</div>
+          ) : null}
         </div>
 
         <div className="w-1/6">
@@ -95,14 +92,14 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
           </div>
         </div>
 
-        {orderType === 'listings' || orderType === 'bids-placed' || orderType === 'intents-placed' ? (
+        {orderType === 'listings' || orderType === 'bids-placed' ? (
           <div className="w-1/8 flex justify-end">
             <Button
               variant={
                 addedToEditCart &&
                 (cartType === CartType.TokenList ||
                   cartType === CartType.TokenBid ||
-                  cartType === CartType.CollectionBidIntent)
+                  cartType === CartType.CollectionBid)
                   ? 'primary'
                   : 'outline'
               }
@@ -115,12 +112,8 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
                 const newCartType =
                   orderType === 'listings'
                     ? CartType.TokenList
-                    : orderType === 'bids-placed'
-                    ? CartType.TokenBid
-                    : orderType === 'intents-placed'
-                    ? CartType.TokenBidIntent
                     : isCollBid
-                    ? CartType.CollectionBidIntent
+                    ? CartType.CollectionBid
                     : CartType.TokenBid;
                 editableCartItem.cartType = newCartType;
                 if (!isCollBid && isNFTSelectable(editableCartItem as ERC721TokenCartItem)) {
@@ -144,9 +137,13 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
                   return;
                 }
                 const newCartType = CartType.Cancel;
-                order.cartType = newCartType;
+                editableCartItem.cartType = newCartType;
                 setCartType(newCartType);
-                toggleOrderSelection(order);
+                if (isCollBid) {
+                  toggleCollSelection(editableCartItem as ERC721CollectionCartItem);
+                } else {
+                  toggleNFTSelection(editableCartItem as ERC721TokenCartItem);
+                }
               }}
             >
               <FiTrash2 className="w-4 h-4" />
@@ -162,7 +159,7 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
                 if (!isConnected) {
                   return;
                 }
-                const newCartType = CartType.TokenList;
+                const newCartType = CartType.AcceptOffer;
                 editableCartItem.cartType = newCartType;
                 if (isNFTSelectable(editableCartItem as ERC721TokenCartItem)) {
                   setCartType(newCartType);
@@ -170,7 +167,7 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
                 }
               }}
             >
-              {addedToEditCart && cartType === CartType.TokenList ? '✓' : ''} Sell Now
+              {addedToEditCart && cartType === CartType.AcceptOffer ? '✓' : ''} Accept Offer
             </Button>
           </div>
         ) : null}

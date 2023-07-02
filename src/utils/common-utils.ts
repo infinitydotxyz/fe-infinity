@@ -27,10 +27,12 @@ export const isLocalhost = () => !isServer() && (window?.location?.host || '').i
 export const isProd = () => process.env.NODE_ENV === 'production';
 
 export enum CollectionPageTabs {
+  Intent = 'Express Intent',
+  Buy = 'Buy Now',
+  LiveIntents = 'Live Intents',
+  Analytics = 'Analytics',
   Bid = 'Place Bids',
-  Buy = 'Buy',
-  Bids = 'Live Bids',
-  Analytics = 'Analytics'
+  LiveBids = 'Live Bids'
 }
 
 export enum ProfileTabs {
@@ -91,11 +93,13 @@ export const getCartType = (path: string, selectedProfileTab: string, selectedCo
   const isProfileSend = selectedProfileTab === ProfileTabs.Send.toString();
   const isProfileOrders = selectedProfileTab === ProfileTabs.Orders.toString();
 
+  const isCollectionIntentTab = selectedCollectionTab === CollectionPageTabs.Intent.toString();
   const isCollectionBidTab = selectedCollectionTab === CollectionPageTabs.Bid.toString();
   const isCollectionBuyTab = selectedCollectionTab === CollectionPageTabs.Buy.toString();
 
   const isCollectionBidCart = isTrendingPage;
   const isTokenListCart = isProfilePage && isProfileItems;
+  const isTokenBidIntentCart = isCollectionPage && isCollectionIntentTab;
   const isTokenBidCart = isCollectionPage && isCollectionBidTab;
   const isTokenBuyCart = isCollectionPage && isCollectionBuyTab;
   const isSendCart = isProfilePage && isProfileSend;
@@ -103,8 +107,8 @@ export const getCartType = (path: string, selectedProfileTab: string, selectedCo
 
   if (isCollectionBidCart) {
     return CartType.CollectionBid;
-  } else if (isTokenBidCart) {
-    return CartType.TokenBid;
+  } else if (isTokenBidIntentCart) {
+    return CartType.TokenBidIntent;
   } else if (isTokenBuyCart) {
     return CartType.TokenBuy;
   } else if (isTokenListCart) {
@@ -113,6 +117,8 @@ export const getCartType = (path: string, selectedProfileTab: string, selectedCo
     return CartType.Send;
   } else if (isCancelCart) {
     return CartType.Cancel;
+  } else if (isTokenBidCart) {
+    return CartType.TokenBid;
   }
   return CartType.None;
 };
@@ -518,6 +524,58 @@ export const erc721OrderCartItemToCollectionCartItem = (order: ERC721OrderCartIt
       }
     },
     slug: collInfo.collectionSlug ?? '',
+    numNfts: 0,
+    numTraitTypes: 0,
+    indexInitiator: '',
+    state: {
+      version: 0,
+      create: {
+        step: CreationFlow.Complete,
+        updatedAt: 0,
+        error: undefined,
+        progress: 0,
+        zoraCursor: undefined,
+        reservoirCursor: undefined
+      },
+      export: {
+        done: false
+      }
+    }
+  };
+
+  return result;
+};
+
+export const erc721TokenCartItemToCollectionCartItem = (order: ERC721TokenCartItem): ERC721CollectionCartItem => {
+  // this function assumes single item orders only not m of n types
+
+  const result: ERC721CollectionCartItem = {
+    id: order.id,
+    chainId: order.chainId ?? '',
+    address: order.address ?? order.tokenAddress ?? '',
+    hasBlueCheck: order.hasBlueCheck ?? false,
+    cartType: CartType.CollectionBid,
+    tokenStandard: TokenStandard.ERC721,
+    offerPriceEth: order.price,
+    deployer: '',
+    deployedAt: 0,
+    deployedAtBlock: 0,
+    owner: '',
+    numOwnersUpdatedAt: 0,
+    criteria: order.criteria,
+    source: order.source,
+    image: order.criteria?.data?.collection?.image ?? '',
+    metadata: {
+      name: order.collectionName ?? order.criteria?.data?.collection?.name ?? '',
+      description: '',
+      profileImage: order.criteria?.data?.collection?.image ?? '',
+      bannerImage: '',
+      symbol: '',
+      links: {
+        timestamp: 0
+      }
+    },
+    slug: order.collectionSlug ?? '',
     numNfts: 0,
     numTraitTypes: 0,
     indexInitiator: '',

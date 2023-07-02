@@ -1,13 +1,13 @@
 import { getAddress } from '@ethersproject/address';
-import { RadioGroup } from '@headlessui/react';
 import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { ETHEREUM_WETH_ADDRESS, GOERLI_WETH_ADDRESS, PROTOCOL_FEE_BPS } from '@infinityxyz/lib-frontend/utils';
+import { formatEther, parseEther } from 'ethers/lib/utils.js';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 import { FiEdit3 } from 'react-icons/fi';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
-import { EthSymbol, EZImage, Spacer, TextInputBox, ToggleTab } from 'src/components/common';
+import { EZImage, EthSymbol, Spacer, TextInputBox, ToggleTab } from 'src/components/common';
 import {
   ellipsisString,
   getCartType,
@@ -33,10 +33,8 @@ import {
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useAccount, useBalance, useNetwork, useProvider } from 'wagmi';
-import { RadioButtonCard } from '../common/radio-button-card';
 import { UniswapModal } from '../common/uniswap-model';
 import { ADropdown } from './astra-dropdown';
-import { formatEther, parseEther } from 'ethers/lib/utils.js';
 
 interface Props {
   onTokensClear: () => void;
@@ -78,7 +76,6 @@ export const AstraCart = ({
   onOrdersClear,
   onTokenRemove,
   onCollRemove,
-  onOrderRemove,
   onCheckout,
   onTokenSend
 }: Props) => {
@@ -99,18 +96,18 @@ export const AstraCart = ({
   const { cartType, setCartType, getCurrentCartItems, cartItems } = useCartContext();
   const [currentCartItems, setCurrentCartItems] = useState<CartItem[]>([]);
   const [cartTotal, setCartTotal] = useState(0);
-  const [cartTabOptions, setCartTabOptions] = useState(['Totals', 'Options']);
+  const [cartTabOptions] = useState(['Totals']);
   const [selectedTab, setSelectedTab] = useState(cartTabOptions[0]);
 
-  enum ExecutionMode {
-    Fast = 'Fast',
-    Batched = 'Batched'
-  }
-  const [executionMode, setExecutionMode] = useState(ExecutionMode.Fast);
+  // enum ExecutionMode {
+  //   Fast = 'Fast',
+  //   Batched = 'Batched'
+  // }
+  // const [executionMode, setExecutionMode] = useState(ExecutionMode.Fast);
 
   const [tokenMap, setTokenMap] = useState<Map<string, ERC721TokenCartItem[]>>(new Map());
   const [collMap, setCollMap] = useState<Map<string, ERC721CollectionCartItem[]>>(new Map());
-  const [orderMap, setOrderMap] = useState<Map<string, ERC721OrderCartItem[]>>(new Map());
+  const [orderMap, setOrderMap] = useState<Map<string, ERC721TokenCartItem[]>>(new Map());
 
   // future-todo change when supporting more chains
   const WETH_ADDRESS =
@@ -129,14 +126,6 @@ export const AstraCart = ({
 
   let cartItemList: ReactNode;
   const [cartContent, setCartContent] = useState<ReactNode>(cartItemList);
-
-  useEffect(() => {
-    if (cartType === CartType.Send || cartType === CartType.Cancel || cartType === CartType.TokenBuy) {
-      setCartTabOptions(['Totals']);
-    } else {
-      setCartTabOptions(['Totals', 'Options']);
-    }
-  }, [cartType]);
 
   const onCartTabOptionsChange = (value: string) => {
     switch (value) {
@@ -165,7 +154,9 @@ export const AstraCart = ({
     if (
       (cartType === CartType.TokenList ||
         cartType === CartType.TokenBid ||
+        cartType === CartType.TokenBidIntent ||
         cartType === CartType.TokenBuy ||
+        cartType === CartType.AcceptOffer ||
         cartType === CartType.Send) &&
       tokenMap.size > 0
     ) {
@@ -211,7 +202,7 @@ export const AstraCart = ({
           {divList}
         </div>
       );
-    } else if (cartType === CartType.CollectionBid && collMap.size > 0) {
+    } else if ((cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent) && collMap.size > 0) {
       const divList: ReactNode[] = [];
       collMap.forEach((collArray) => {
         const first = collArray[0];
@@ -246,15 +237,23 @@ export const AstraCart = ({
       orderMap.forEach((ordArray) => {
         const first = ordArray[0];
         const orderId = first.id;
+        const isCollBid = first.criteria?.kind === 'collection';
+        const firstCollName = isCollBid ? first.criteria?.data?.collection?.name : first.collectionName;
 
         divList.push(
           <div className="w-full rounded-md truncate font-bold font-heading min-h-[25px]" key={`header-${orderId}`}>
-            {first.nfts.length > 1 ? 'Multiple Collections' : first.nfts[0].collectionName}
+            {firstCollName}
           </div>
         );
 
         for (const t of ordArray) {
-          divList.push(<AstraCancelCartItem key={orderId} order={t} onRemove={onOrderRemove} />);
+          divList.push(
+            isCollBid ? (
+              <AstraCancelCartItem key={orderId} order={t} onCollectionRemove={onCollRemove} />
+            ) : (
+              <AstraCancelCartItem key={orderId} order={t} onTokenRemove={onTokenRemove} />
+            )
+          );
         }
 
         divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
@@ -289,7 +288,9 @@ export const AstraCart = ({
     if (
       cartType === CartType.TokenList ||
       cartType === CartType.TokenBid ||
+      cartType === CartType.TokenBidIntent ||
       cartType === CartType.TokenBuy ||
+      cartType === CartType.AcceptOffer ||
       cartType === CartType.Send
     ) {
       tokenMap.clear();
@@ -302,7 +303,7 @@ export const AstraCart = ({
       setTokenMap(tokenMap);
     }
 
-    if (cartType === CartType.CollectionBid) {
+    if (cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent) {
       collMap.clear();
       for (const item of cartItems) {
         const coll = item as ERC721CollectionCartItem;
@@ -316,7 +317,7 @@ export const AstraCart = ({
     if (cartType === CartType.Cancel) {
       orderMap.clear();
       for (const item of cartItems) {
-        const order = item as ERC721OrderCartItem;
+        const order = item as ERC721TokenCartItem;
         const orders = orderMap.get(order.id ?? '') ?? [];
         orders.push(order);
         orderMap.set(order.id ?? '', orders);
@@ -340,12 +341,26 @@ export const AstraCart = ({
         setCartTitle('Collection Bid');
         setCheckoutBtnText('Bid');
       }
+    } else if (cartType === CartType.CollectionBidIntent) {
+      setCartTitle('Collection Bid Intent');
+      if (cartItems.length > 1) {
+        setCheckoutBtnText('Express Intents');
+      } else {
+        setCheckoutBtnText('Express Intent');
+      }
     } else if (cartType === CartType.TokenBid) {
       setCartTitle('Bid');
       if (cartItems.length > 1) {
         setCheckoutBtnText('Bulk Bid');
       } else {
         setCheckoutBtnText('Bid');
+      }
+    } else if (cartType === CartType.TokenBidIntent) {
+      setCartTitle('Token Bid Intent');
+      if (cartItems.length > 1) {
+        setCheckoutBtnText('Express Intents');
+      } else {
+        setCheckoutBtnText('Express Intent');
       }
     } else if (cartType === CartType.TokenBuy) {
       setCartTitle('Buy');
@@ -363,6 +378,13 @@ export const AstraCart = ({
         setCheckoutBtnText('Cancel Orders');
       } else {
         setCheckoutBtnText('Cancel Order');
+      }
+    } else if (cartType === CartType.AcceptOffer) {
+      setCartTitle('Offers');
+      if (cartItems.length > 1) {
+        setCheckoutBtnText('Accept Offers');
+      } else {
+        setCheckoutBtnText('Accept Offer');
       }
     }
 
@@ -389,10 +411,11 @@ export const AstraCart = ({
                     cartType === CartType.Send ||
                     cartType === CartType.TokenList ||
                     cartType === CartType.TokenBid ||
+                    cartType === CartType.TokenBidIntent ||
                     cartType === CartType.TokenBuy
                   ) {
                     onTokensClear();
-                  } else if (cartType === CartType.CollectionBid) {
+                  } else if (cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent) {
                     onCollsClear();
                   } else if (cartType === CartType.Cancel) {
                     onOrdersClear();
@@ -438,6 +461,17 @@ export const AstraCart = ({
             {user && (
               <div className="space-y-3">
                 <div className="flex justify-between">
+                  <span className={twMerge(secondaryTextColor, 'font-medium')}>ETH Balance: </span>
+                  {isEthBalanceLoading ? (
+                    <span>Loading...</span>
+                  ) : (
+                    <span className="font-heading">
+                      {nFormatter(Number(ethBalance?.formatted))} {EthSymbol}
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex justify-between">
                   <span className={twMerge(secondaryTextColor, 'font-medium')}>WETH Balance: </span>
 
                   <div>
@@ -458,23 +492,12 @@ export const AstraCart = ({
                     </AButton>
                   </div>
                 </div>
-
-                <div className="flex justify-between">
-                  <span className={twMerge(secondaryTextColor, 'font-medium')}>ETH Balance: </span>
-                  {isEthBalanceLoading ? (
-                    <span>Loading...</span>
-                  ) : (
-                    <span className="font-heading">
-                      {nFormatter(Number(ethBalance?.formatted))} {EthSymbol}
-                    </span>
-                  )}
-                </div>
               </div>
             )}
           </div>
         )}
 
-        {selectedTab === 'Options' && (
+        {/* {selectedTab === 'Options' && (
           <div className="h-60 overflow-y-scroll">
             <div className="space-y-3 px-1">
               <RadioGroup value={executionMode} onChange={setExecutionMode} className="space-y-2">
@@ -492,7 +515,7 @@ export const AstraCart = ({
               </RadioGroup>
             </div>
           </div>
-        )}
+        )} */}
       </div>
 
       <div className="m-6 flex flex-col">
@@ -576,9 +599,10 @@ const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
             }}
             useSpacer
             currentPrice={editedPrice}
+            hideExpiry={cartType === CartType.TokenBuy || cartType === CartType.AcceptOffer}
           ></PriceAndExpiry>
         )}
-        {!editing && cartType !== CartType.Send && (
+        {!editing && cartType !== CartType.Send && cartType !== CartType.TokenBuy && (
           <FiEdit3 className={twMerge(smallIconButtonStyle, 'cursor-pointer')} onClick={() => setEditing(true)} />
         )}
       </div>
@@ -636,38 +660,33 @@ const AstraCollectionCartItem = ({ collection, onRemove, updateCartTotal }: Prop
 };
 
 interface Props4 {
-  order: ERC721OrderCartItem;
-  onRemove: (order: ERC721OrderCartItem) => void;
+  order: ERC721TokenCartItem | ERC721CollectionCartItem;
+  onTokenRemove?: (order: ERC721TokenCartItem) => void;
+  onCollectionRemove?: (order: ERC721CollectionCartItem) => void;
 }
 
-const AstraCancelCartItem = ({ order, onRemove }: Props4) => {
+const AstraCancelCartItem = ({ order, onTokenRemove, onCollectionRemove }: Props4) => {
+  const isCollBid = order.criteria?.kind === 'collection';
+  const image = isCollBid ? order.criteria?.data?.collection?.image : order.image;
+  const tokenId = isCollBid ? '' : (order as ERC721TokenCartItem).tokenId;
   return (
     <div key={order.id} className="flex items-center w-full">
       <div className="relative">
-        <EZImage
-          className={twMerge('h-12 w-12 rounded-lg overflow-clip')}
-          src={order.nfts[0]?.tokens[0]?.tokenImage ?? order.nfts[0].collectionImage}
-        />
+        <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={image} />
         <div className={twMerge('absolute top-[-5px] right-[-5px] rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
           <MdClose
             className={twMerge(extraSmallIconButtonStyle, inverseTextColor)}
             onClick={() => {
-              onRemove(order);
+              isCollBid
+                ? onCollectionRemove?.(order as ERC721CollectionCartItem)
+                : onTokenRemove?.(order as ERC721TokenCartItem);
             }}
           />
         </div>
       </div>
 
       <div className="ml-3 flex flex-col w-full text-sm font-bold font-heading">
-        <div>
-          {order.nfts.length > 1
-            ? 'Multiple tokens'
-            : order.nfts[0].tokens.length > 1
-            ? 'Multiple tokens'
-            : order.nfts[0].tokens.length === 1
-            ? ellipsisString(order.nfts[0]?.tokens[0]?.tokenId)
-            : ''}
-        </div>
+        <div>{ellipsisString(tokenId)}</div>
       </div>
     </div>
   );
@@ -681,9 +700,19 @@ interface Props5 {
   onEditComplete?: (price: string) => void;
   useSpacer?: boolean;
   currentPrice?: string;
+  hideExpiry?: boolean;
 }
 
-const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete, useSpacer, currentPrice }: Props5) => {
+const PriceAndExpiry = ({
+  token,
+  collection,
+  className,
+  editing,
+  onEditComplete,
+  useSpacer,
+  currentPrice,
+  hideExpiry
+}: Props5) => {
   const [price, setPrice] = useState(nFormatter(parseFloat(currentPrice ?? '0'), 2)?.toString() ?? '');
   const [expiry, setExpiry] = useState(getDefaultOrderExpiryTime());
 
@@ -695,93 +724,95 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
         <div className="flex w-full space-x-2">
           {useSpacer && <Spacer />}
 
-          <ADropdown
-            hasBorder={true}
-            alignMenuRight={true}
-            label={expiry}
-            innerClassName="w-24"
-            items={[
-              {
-                label: ORDER_EXPIRY_TIME.HOUR,
-                onClick: () => {
-                  onEditComplete?.(price);
-                  setExpiry(ORDER_EXPIRY_TIME.HOUR);
-                  if (token) {
-                    token.orderExpiry = ORDER_EXPIRY_TIME.HOUR;
-                  } else if (collection) {
-                    collection.offerExpiry = ORDER_EXPIRY_TIME.HOUR;
+          {!hideExpiry && (
+            <ADropdown
+              hasBorder={true}
+              alignMenuRight={true}
+              label={expiry}
+              innerClassName="w-24"
+              items={[
+                {
+                  label: ORDER_EXPIRY_TIME.HOUR,
+                  onClick: () => {
+                    onEditComplete?.(price);
+                    setExpiry(ORDER_EXPIRY_TIME.HOUR);
+                    if (token) {
+                      token.orderExpiry = ORDER_EXPIRY_TIME.HOUR;
+                    } else if (collection) {
+                      collection.offerExpiry = ORDER_EXPIRY_TIME.HOUR;
+                    }
+                  }
+                },
+                {
+                  label: ORDER_EXPIRY_TIME.DAY,
+                  onClick: () => {
+                    onEditComplete?.(price);
+                    setExpiry(ORDER_EXPIRY_TIME.DAY);
+                    if (token) {
+                      token.orderExpiry = ORDER_EXPIRY_TIME.DAY;
+                    } else if (collection) {
+                      collection.offerExpiry = ORDER_EXPIRY_TIME.DAY;
+                    }
+                  }
+                },
+                {
+                  label: ORDER_EXPIRY_TIME.WEEK,
+                  onClick: () => {
+                    onEditComplete?.(price);
+                    setExpiry(ORDER_EXPIRY_TIME.WEEK);
+                    if (token) {
+                      token.orderExpiry = ORDER_EXPIRY_TIME.WEEK;
+                    } else if (collection) {
+                      collection.offerExpiry = ORDER_EXPIRY_TIME.WEEK;
+                    }
+                  }
+                },
+                {
+                  label: ORDER_EXPIRY_TIME.MONTH,
+                  onClick: () => {
+                    onEditComplete?.(price);
+                    setExpiry(ORDER_EXPIRY_TIME.MONTH);
+                    if (token) {
+                      token.orderExpiry = ORDER_EXPIRY_TIME.MONTH;
+                    } else if (collection) {
+                      collection.offerExpiry = ORDER_EXPIRY_TIME.MONTH;
+                    }
+                  }
+                },
+                {
+                  label: ORDER_EXPIRY_TIME.SIX_MONTHS,
+                  onClick: () => {
+                    onEditComplete?.(price);
+                    setExpiry(ORDER_EXPIRY_TIME.SIX_MONTHS);
+                    if (token) {
+                      token.orderExpiry = ORDER_EXPIRY_TIME.SIX_MONTHS;
+                    } else if (collection) {
+                      collection.offerExpiry = ORDER_EXPIRY_TIME.SIX_MONTHS;
+                    }
+                  }
+                },
+                {
+                  label: ORDER_EXPIRY_TIME.YEAR,
+                  onClick: () => {
+                    onEditComplete?.(price);
+                    setExpiry(ORDER_EXPIRY_TIME.YEAR);
+                    if (token) {
+                      token.orderExpiry = ORDER_EXPIRY_TIME.YEAR;
+                    } else if (collection) {
+                      collection.offerExpiry = ORDER_EXPIRY_TIME.YEAR;
+                    }
                   }
                 }
-              },
-              {
-                label: ORDER_EXPIRY_TIME.DAY,
-                onClick: () => {
-                  onEditComplete?.(price);
-                  setExpiry(ORDER_EXPIRY_TIME.DAY);
-                  if (token) {
-                    token.orderExpiry = ORDER_EXPIRY_TIME.DAY;
-                  } else if (collection) {
-                    collection.offerExpiry = ORDER_EXPIRY_TIME.DAY;
-                  }
-                }
-              },
-              {
-                label: ORDER_EXPIRY_TIME.WEEK,
-                onClick: () => {
-                  onEditComplete?.(price);
-                  setExpiry(ORDER_EXPIRY_TIME.WEEK);
-                  if (token) {
-                    token.orderExpiry = ORDER_EXPIRY_TIME.WEEK;
-                  } else if (collection) {
-                    collection.offerExpiry = ORDER_EXPIRY_TIME.WEEK;
-                  }
-                }
-              },
-              {
-                label: ORDER_EXPIRY_TIME.MONTH,
-                onClick: () => {
-                  onEditComplete?.(price);
-                  setExpiry(ORDER_EXPIRY_TIME.MONTH);
-                  if (token) {
-                    token.orderExpiry = ORDER_EXPIRY_TIME.MONTH;
-                  } else if (collection) {
-                    collection.offerExpiry = ORDER_EXPIRY_TIME.MONTH;
-                  }
-                }
-              },
-              {
-                label: ORDER_EXPIRY_TIME.SIX_MONTHS,
-                onClick: () => {
-                  onEditComplete?.(price);
-                  setExpiry(ORDER_EXPIRY_TIME.SIX_MONTHS);
-                  if (token) {
-                    token.orderExpiry = ORDER_EXPIRY_TIME.SIX_MONTHS;
-                  } else if (collection) {
-                    collection.offerExpiry = ORDER_EXPIRY_TIME.SIX_MONTHS;
-                  }
-                }
-              },
-              {
-                label: ORDER_EXPIRY_TIME.YEAR,
-                onClick: () => {
-                  onEditComplete?.(price);
-                  setExpiry(ORDER_EXPIRY_TIME.YEAR);
-                  if (token) {
-                    token.orderExpiry = ORDER_EXPIRY_TIME.YEAR;
-                  } else if (collection) {
-                    collection.offerExpiry = ORDER_EXPIRY_TIME.YEAR;
-                  }
-                }
-              }
-            ]}
-          />
+              ]}
+            />
+          )}
 
           <div className={twMerge('flex flex-col items-end')}>
             <div className="flex flex-row">
               <div className={twMerge('font-bold font-heading')}>{nFormatter(Number(price), 2)}</div>
               <div className={twMerge('font-bold font-heading ml-1')}>{EthSymbol}</div>
             </div>
-            <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>{expiry}</div>
+            {!hideExpiry && <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>{expiry}</div>}
           </div>
         </div>
       ) : (

@@ -17,7 +17,6 @@ interface Props {
 
 export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
   const { selectedCollection, setSelectedCollection } = useProfileContext();
-  const [filter, setFilter] = useState<TokensFilter>({});
   const {
     isNFTSelected,
     isNFTSelectable,
@@ -28,11 +27,12 @@ export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
   } = useAppContext();
   const { selectedChain } = useAppContext();
 
+  const [hideSpamSelected, setHideSpamSelected] = useState(true);
+  const [filter, setFilter] = useState<TokensFilter>({ hideSpam: hideSpamSelected });
+
   const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(userAddress, selectedChain, filter);
   const [numSweep, setNumSweep] = useState('');
   const [customSweep, setCustomSweep] = useState('');
-
-  const [hideSpamSelected, setHideSpamSelected] = useState(true);
 
   useEffect(() => {
     const numToSelect = Math.min(data.length, parseInt(numSweep));
