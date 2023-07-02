@@ -8,7 +8,7 @@ import { nftToCardDataWithOrderFields } from 'src/hooks/api/useTokenFetcher';
 import { apiGet, ellipsisAddress, ellipsisString, getChainScannerBase, nFormatter, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
-import { BasicTokenInfo } from 'src/utils/types';
+import { BasicTokenInfo, ReservoirTokenV6 } from 'src/utils/types';
 import { borderColor, dropShadow, secondaryBgColor, secondaryTextColor } from 'src/utils/ui-constants';
 import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
@@ -56,8 +56,27 @@ const useCollectionInfo = (chainId: string, collection: string) => {
   };
 };
 
+const useBestBidAskInfo = (chainId: string, collection: string, tokenId: string) => {
+  const endpoint = `/v2/orders/token/bestbidask`;
+  const data = useFetch<ReservoirTokenV6>(endpoint, { query: { chainId, collection, tokenId } });
+
+  return {
+    bestAsk: data.result?.market?.floorAsk?.price?.amount?.native,
+    askValidFrom: (data.result?.market?.floorAsk?.validFrom ?? 0) * 1000,
+    askValidUntil: (data.result?.market?.floorAsk?.validUntil ?? 0) * 1000,
+    bestBid: data.result?.market?.topBid?.price?.amount?.native,
+    bidValidFrom: (data.result?.market?.topBid?.validFrom ?? 0) * 1000,
+    bidValidUntil: (data.result?.market?.topBid?.validUntil ?? 0) * 1000
+  };
+};
+
 export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.Element | null => {
   const { token, error, collectionAttributes } = useFetchAssetInfo(data.chainId, data.collectionAddress, data.tokenId);
+  const { bestAsk, bestBid, askValidFrom, askValidUntil, bidValidFrom, bidValidUntil } = useBestBidAskInfo(
+    data.chainId,
+    data.collectionAddress,
+    data.tokenId
+  );
 
   let collectionFloorAndCreator: { floorPrice?: number; creator?: string } = {};
   if (!data.collectionFloorPrice || !data.collectionCreator) {
@@ -97,24 +116,16 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
     return null;
   }
 
-  const listingPrice = nFormatter(
-    token.ordersSnippet?.listing?.orderItem?.startPriceEth ?? data?.orderSide === 'sell'
-      ? data?.orderPriceEth
-      : undefined,
-    2
-  );
-  const listingExpiry = token.ordersSnippet?.listing?.orderItem?.endTimeMs ?? data?.validUntil;
+  const listingPrice = nFormatter(bestAsk, 2);
+  const listingExpiry = askValidUntil;
   const listingExpiryStr = listingExpiry ? format(listingExpiry) : '-';
-  const listingTime = token.ordersSnippet?.listing?.orderItem?.startTimeMs ?? data?.validFrom;
+  const listingTime = askValidFrom;
   const listingTimeStr = listingTime ? format(listingTime) : '-';
 
-  const offerPrice = nFormatter(
-    token.ordersSnippet?.offer?.orderItem?.startPriceEth ?? data?.orderSide === 'buy' ? data?.orderPriceEth : undefined,
-    2
-  );
-  const offerExpiry = token.ordersSnippet?.offer?.orderItem?.endTimeMs ?? data?.validUntil;
+  const offerPrice = nFormatter(bestBid, 2);
+  const offerExpiry = bidValidUntil;
   const offerExpiryStr = offerExpiry ? format(offerExpiry) : '-';
-  const offerTime = token.ordersSnippet?.offer?.orderItem?.startTimeMs ?? data?.validFrom;
+  const offerTime = bidValidFrom;
   const offerTimeStr = offerTime ? format(offerTime) : '-';
 
   const collectionCreator = data.collectionCreator ?? collectionFloorAndCreator.creator;

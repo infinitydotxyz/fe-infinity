@@ -303,3 +303,63 @@ export interface ReservoirUserTopOffer {
     };
   };
 }
+
+export interface ReservoirTokenV6 {
+  token: {
+    chainId: string;
+    isFlagged?: boolean;
+    lastFlagUpdate?: string;
+    lastFlagChange?: string | null;
+    contract: string;
+    tokenId: string;
+    name: string;
+    description: string;
+    image: string;
+    kind: string;
+    owner: string;
+    collection: {
+      id: string;
+      name: string;
+      slug: string;
+      image: string;
+    };
+  };
+  market: {
+    floorAsk: ReservoirOrderData;
+    topBid: ReservoirOrderData;
+  };
+}
+
+export interface ReservoirOrderData {
+  id: string;
+  maker: string;
+  validFrom: number;
+  validUntil: number;
+  price: {
+    currency: {
+      contract: string;
+      name: string;
+      symbol: string;
+      decimals: number;
+    };
+    amount: {
+      raw: string;
+      decimal: number;
+      usd: number;
+      native: number;
+    };
+    netAmount: {
+      raw: string;
+      decimal: number;
+      usd: number;
+      native: number;
+    };
+  };
+  source: {
+    id: string;
+    domain: string;
+    name: string;
+    icon: string;
+    url: string;
+  };
+}
