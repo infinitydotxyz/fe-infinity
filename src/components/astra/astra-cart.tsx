@@ -247,7 +247,13 @@ export const AstraCart = ({
         );
 
         for (const t of ordArray) {
-          divList.push(<AstraCancelCartItem key={orderId} order={t} onRemove={onTokenRemove} />);
+          divList.push(
+            isCollBid ? (
+              <AstraCancelCartItem key={orderId} order={t} onCollectionRemove={onCollRemove} />
+            ) : (
+              <AstraCancelCartItem key={orderId} order={t} onTokenRemove={onTokenRemove} />
+            )
+          );
         }
 
         divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
@@ -654,14 +660,15 @@ const AstraCollectionCartItem = ({ collection, onRemove, updateCartTotal }: Prop
 };
 
 interface Props4 {
-  order: ERC721TokenCartItem;
-  onRemove: (order: ERC721TokenCartItem) => void;
+  order: ERC721TokenCartItem | ERC721CollectionCartItem;
+  onTokenRemove?: (order: ERC721TokenCartItem) => void;
+  onCollectionRemove?: (order: ERC721CollectionCartItem) => void;
 }
 
-const AstraCancelCartItem = ({ order, onRemove }: Props4) => {
+const AstraCancelCartItem = ({ order, onTokenRemove, onCollectionRemove }: Props4) => {
   const isCollBid = order.criteria?.kind === 'collection';
   const image = isCollBid ? order.criteria?.data?.collection?.image : order.image;
-  const tokenId = isCollBid ? '' : order.tokenId;
+  const tokenId = isCollBid ? '' : (order as ERC721TokenCartItem).tokenId;
   return (
     <div key={order.id} className="flex items-center w-full">
       <div className="relative">
@@ -670,7 +677,9 @@ const AstraCancelCartItem = ({ order, onRemove }: Props4) => {
           <MdClose
             className={twMerge(extraSmallIconButtonStyle, inverseTextColor)}
             onClick={() => {
-              onRemove(order);
+              isCollBid
+                ? onCollectionRemove?.(order as ERC721CollectionCartItem)
+                : onTokenRemove?.(order as ERC721TokenCartItem);
             }}
           />
         </div>

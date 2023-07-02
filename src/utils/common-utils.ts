@@ -564,6 +564,7 @@ export const erc721TokenCartItemToCollectionCartItem = (order: ERC721TokenCartIt
     numOwnersUpdatedAt: 0,
     criteria: order.criteria,
     source: order.source,
+    image: order.criteria?.data?.collection?.image ?? '',
     metadata: {
       name: order.collectionName ?? order.criteria?.data?.collection?.name ?? '',
       description: '',

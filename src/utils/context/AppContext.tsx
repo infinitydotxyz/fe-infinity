@@ -718,6 +718,30 @@ export const AppContextProvider = ({ children }: Props) => {
       } else {
         const isCollBidCart = cartType === CartType.CollectionBid;
         const isCollBidIntentCart = cartType === CartType.CollectionBidIntent;
+        const isCancelCart = cartType === CartType.Cancel;
+
+        if (isCancelCart) {
+          const client = getReservoirClient(chainId);
+          const orderIds = collections.map((collection) => collection.id ?? '');
+          // remove empty ids
+          const orderIdsNonEmpty = orderIds.filter((id) => id !== '');
+          await client.actions
+            .cancelOrder({
+              ids: orderIdsNonEmpty,
+              wallet: adaptEthersSigner(signer),
+              chainId: Number(chainId),
+              onProgress: (steps: Execute['steps']) => {
+                setCheckoutBtnStatus(steps[steps.length - 1].action);
+              }
+            })
+            .then(() => {
+              return true;
+            })
+            .catch((err) => {
+              console.error(err);
+              return false;
+            });
+        }
 
         if (isCollBidCart) {
           const client = getReservoirClient(chainId);
