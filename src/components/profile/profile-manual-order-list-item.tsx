@@ -71,7 +71,15 @@ export const ProfileManualOrderListItem = ({ order, orderType }: Props) => {
 
         <div className="w-1/6">
           <div className={twMerge(secondaryTextColor, 'font-medium')}>Order type</div>
-          <div className="">{orderType === 'listings' ? 'Listing' : orderType === 'bids-placed' ? 'Bid' : 'Offer'}</div>
+          <div className="">
+            {orderType === 'listings'
+              ? 'Listing'
+              : orderType === 'bids-placed'
+              ? isCollBid
+                ? 'Collection Bid'
+                : 'Bid'
+              : 'Offer'}
+          </div>
           {order.validUntil ? (
             <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>Expires {format(order.validUntil)}</div>
           ) : null}
@@ -151,7 +159,7 @@ export const ProfileManualOrderListItem = ({ order, orderType }: Props) => {
                 if (!isConnected) {
                   return;
                 }
-                const newCartType = CartType.TokenList;
+                const newCartType = CartType.AcceptOffer;
                 editableCartItem.cartType = newCartType;
                 if (isNFTSelectable(editableCartItem as ERC721TokenCartItem)) {
                   setCartType(newCartType);
@@ -159,7 +167,7 @@ export const ProfileManualOrderListItem = ({ order, orderType }: Props) => {
                 }
               }}
             >
-              {addedToEditCart && cartType === CartType.TokenList ? '✓' : ''} Sell Now
+              {addedToEditCart && cartType === CartType.AcceptOffer ? '✓' : ''} Accept Offer
             </Button>
           </div>
         ) : null}

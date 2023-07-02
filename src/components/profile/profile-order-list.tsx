@@ -285,7 +285,7 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
             profileOrders?.map((order) => {
               const orderCartItem = order;
               selectedOrderType === 'offers-received'
-                ? (orderCartItem.cartType = CartType.OfferAccept)
+                ? (orderCartItem.cartType = CartType.AcceptOffer)
                 : (orderCartItem.cartType = CartType.Cancel);
               return <ProfileManualOrderListItem key={order.id} order={orderCartItem} orderType={filter.orderType} />;
             })}

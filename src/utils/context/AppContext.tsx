@@ -460,6 +460,63 @@ export const AppContextProvider = ({ children }: Props) => {
         const isTokenBidIntentCart = cartType === CartType.TokenBidIntent;
         const isSellCart = cartType === CartType.TokenList;
         const isBidCart = cartType === CartType.TokenBid;
+        const isCancelCart = cartType === CartType.Cancel;
+        const isAcceptOfferCart = cartType === CartType.AcceptOffer;
+
+        if (isAcceptOfferCart) {
+          const client = getReservoirClient(chainId);
+          const tokenSet = [];
+          for (const token of tokens) {
+            const collection = trimLowerCase(token.address || token.tokenAddress || '');
+            const tokenId = token.tokenId;
+            if (!collection || !tokenId) {
+              continue;
+            }
+            tokenSet.push({ token: `${collection}:${tokenId}` });
+          }
+          await client.actions
+            .acceptOffer({
+              items: tokenSet,
+              wallet: adaptEthersSigner(signer),
+              chainId: Number(chainId),
+              onProgress: (steps: Execute['steps']) => {
+                setCheckoutBtnStatus(steps[steps.length - 1].action);
+              },
+              options: {
+                normalizeRoyalties: false,
+                partial: false,
+                allowInactiveOrderIds: false
+              }
+            })
+            .then(() => {
+              return true;
+            })
+            .catch((err) => {
+              console.error(err);
+              return false;
+            });
+        }
+
+        if (isCancelCart) {
+          const client = getReservoirClient(chainId);
+          const orderIds = tokens.map((token) => token.id);
+          await client.actions
+            .cancelOrder({
+              ids: orderIds,
+              wallet: adaptEthersSigner(signer),
+              chainId: Number(chainId),
+              onProgress: (steps: Execute['steps']) => {
+                setCheckoutBtnStatus(steps[steps.length - 1].action);
+              }
+            })
+            .then(() => {
+              return true;
+            })
+            .catch((err) => {
+              console.error(err);
+              return false;
+            });
+        }
 
         if (isBuyCart) {
           const client = getReservoirClient(chainId);
@@ -589,7 +646,6 @@ export const AppContextProvider = ({ children }: Props) => {
               return false;
             });
         } else if (isBidCart) {
-          // prepare orders
           const client = getReservoirClient(chainId);
           const tokenSet = [];
           const currentBlock = await provider.getBlock('latest');
@@ -660,36 +716,97 @@ export const AppContextProvider = ({ children }: Props) => {
       if (!user || !signer) {
         toastError('No logged in user');
       } else {
-        // sign orders
-        const preSignedOrders: OBOrder[] = [];
-        setCheckoutBtnStatus('Fetching nonce');
-        let orderNonce = await fetchOrderNonce(user, chainId as ChainId);
-        const currentBlock = await provider.getBlock('latest');
-        setCheckoutBtnStatus('Preparing orders');
-        for (const collection of collections) {
-          const order = await collectionToOBOrder(collection, orderNonce, currentBlock.timestamp);
-          orderNonce += 1;
-          if (order) {
-            preSignedOrders.push(order);
+        const isCollBidCart = cartType === CartType.CollectionBid;
+        const isCollBidIntentCart = cartType === CartType.CollectionBidIntent;
+
+        if (isCollBidCart) {
+          const client = getReservoirClient(chainId);
+          const collectionSet = [];
+          const currentBlock = await provider.getBlock('latest');
+          const bidTimeSeconds = currentBlock.timestamp;
+
+          for (const collection of collections) {
+            if (!collection.address) {
+              continue;
+            }
+
+            const ethPrice = collection.offerPriceEth ?? 0;
+            if (ethPrice === 0) {
+              throw new Error('Price cannot be 0');
+            }
+            const weiPrice = ethers.utils.parseEther(ethPrice.toString()).toString();
+
+            const expiry = collection.offerExpiry ?? getDefaultOrderExpiryTime();
+            const endTimeSeconds = getOrderExpiryTimeInMsFromEnum(bidTimeSeconds * 1000, expiry) / 1000;
+            collectionSet.push({
+              collection: collection.address,
+              weiPrice,
+              listingTime: bidTimeSeconds.toString(),
+              expirationTime: endTimeSeconds.toString(),
+              orderbook: 'reservoir' as ReservoirOrderbookType,
+              orderKind: 'seaport-v1.5' as ReservoirOrderKindType,
+              automatedRoyalties: false,
+              currency: ETHEREUM_WETH_ADDRESS, // default WETH for bids and ETH mainnet NFTs
+              options: {
+                'seaport-v1.5': {
+                  useOffChainCancellation: true
+                }
+              }
+            });
           }
+
+          // bid
+          client.actions
+            .placeBid({
+              chainId: Number(chainId),
+              bids: collectionSet,
+              wallet: adaptEthersSigner(signer),
+              onProgress: (steps: Execute['steps']) => {
+                console.log(steps);
+                setCheckoutBtnStatus(steps[steps.length - 1].action);
+              }
+            })
+            .then(() => {
+              return true;
+            })
+            .catch((err) => {
+              console.error(err);
+              return false;
+            });
         }
 
-        // sign orders
-        setCheckoutBtnStatus('Signing orders');
-        const signedOrders: SignedOBOrder[] | undefined = await signOrders(
-          signer as JsonRpcSigner,
-          chainId,
-          preSignedOrders
-        );
+        if (isCollBidIntentCart) {
+          // sign orders
+          const preSignedOrders: OBOrder[] = [];
+          setCheckoutBtnStatus('Fetching nonce');
+          let orderNonce = await fetchOrderNonce(user, chainId as ChainId);
+          const currentBlock = await provider.getBlock('latest');
+          setCheckoutBtnStatus('Preparing orders');
+          for (const collection of collections) {
+            const order = await collectionToOBOrder(collection, orderNonce, currentBlock.timestamp);
+            orderNonce += 1;
+            if (order) {
+              preSignedOrders.push(order);
+            }
+          }
 
-        // post orders
-        if (signedOrders) {
-          setCheckoutBtnStatus('Sending orders');
-          await postOrdersV2(chainId as ChainId, signedOrders);
-          toastSuccess('Order(s) now live');
+          // sign orders
+          setCheckoutBtnStatus('Signing orders');
+          const signedOrders: SignedOBOrder[] | undefined = await signOrders(
+            signer as JsonRpcSigner,
+            chainId,
+            preSignedOrders
+          );
+
+          // post orders
+          if (signedOrders) {
+            setCheckoutBtnStatus('Sending orders');
+            await postOrdersV2(chainId as ChainId, signedOrders);
+            toastSuccess('Order(s) now live');
+          }
+
+          return true;
         }
-
-        return true;
       }
     } catch (ex) {
       console.error(ex);
@@ -700,6 +817,7 @@ export const AppContextProvider = ({ children }: Props) => {
   };
 
   const handleOrdersCancel = async (ordersToCancel: ERC721OrderCartItem[]): Promise<boolean> => {
+    console.log('handleOrdersCancel', ordersToCancel);
     try {
       if (signer) {
         setCheckoutBtnStatus('Mapping nonces');

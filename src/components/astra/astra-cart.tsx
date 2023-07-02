@@ -96,7 +96,7 @@ export const AstraCart = ({
   const { cartType, setCartType, getCurrentCartItems, cartItems } = useCartContext();
   const [currentCartItems, setCurrentCartItems] = useState<CartItem[]>([]);
   const [cartTotal, setCartTotal] = useState(0);
-  const [cartTabOptions, setCartTabOptions] = useState(['Totals']);
+  const [cartTabOptions] = useState(['Totals']);
   const [selectedTab, setSelectedTab] = useState(cartTabOptions[0]);
 
   // enum ExecutionMode {
@@ -127,14 +127,6 @@ export const AstraCart = ({
   let cartItemList: ReactNode;
   const [cartContent, setCartContent] = useState<ReactNode>(cartItemList);
 
-  useEffect(() => {
-    if (cartType === CartType.Send || cartType === CartType.Cancel || cartType === CartType.TokenBuy) {
-      setCartTabOptions(['Totals']);
-    } else {
-      setCartTabOptions(['Totals']);
-    }
-  }, [cartType]);
-
   const onCartTabOptionsChange = (value: string) => {
     switch (value) {
       case 'Totals':
@@ -164,6 +156,7 @@ export const AstraCart = ({
         cartType === CartType.TokenBid ||
         cartType === CartType.TokenBidIntent ||
         cartType === CartType.TokenBuy ||
+        cartType === CartType.AcceptOffer ||
         cartType === CartType.Send) &&
       tokenMap.size > 0
     ) {
@@ -291,6 +284,7 @@ export const AstraCart = ({
       cartType === CartType.TokenBid ||
       cartType === CartType.TokenBidIntent ||
       cartType === CartType.TokenBuy ||
+      cartType === CartType.AcceptOffer ||
       cartType === CartType.Send
     ) {
       tokenMap.clear();
@@ -378,6 +372,13 @@ export const AstraCart = ({
         setCheckoutBtnText('Cancel Orders');
       } else {
         setCheckoutBtnText('Cancel Order');
+      }
+    } else if (cartType === CartType.AcceptOffer) {
+      setCartTitle('Offers');
+      if (cartItems.length > 1) {
+        setCheckoutBtnText('Accept Offers');
+      } else {
+        setCheckoutBtnText('Accept Offer');
       }
     }
 
@@ -592,7 +593,7 @@ const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
             }}
             useSpacer
             currentPrice={editedPrice}
-            hideExpiry={cartType === CartType.TokenBuy}
+            hideExpiry={cartType === CartType.TokenBuy || cartType === CartType.AcceptOffer}
           ></PriceAndExpiry>
         )}
         {!editing && cartType !== CartType.Send && cartType !== CartType.TokenBuy && (

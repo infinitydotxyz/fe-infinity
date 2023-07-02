@@ -305,13 +305,23 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, chainId: C
 
         if (props.kind === 'profile') {
           if (props.context?.side === Queries.Side.Maker) {
-            setProfileOrders(resvOrdersToCardData(newData));
+            if (filter.orderType !== 'intents-placed') {
+              setProfileOrders(resvOrdersToCardData(newData));
+            }
           } else {
             setNumTokensWithOffers(response.result.totalTokensWithBids);
             setTotalOffersValue(response.result.totalAmount);
             setProfileOrders(resvUserTopOffersToCardData(newData));
           }
-        } else {
+        }
+
+        if (
+          props.kind === 'token' ||
+          props.kind === 'collection' ||
+          (props.kind === 'profile' &&
+            props.context?.side === Queries.Side.Maker &&
+            filter.orderType === 'intents-placed')
+        ) {
           setOrders(
             newData.map((order: Order & { executionStatus: ExecutionStatus | null }) => {
               const orderItems = order.kind === 'single-collection' ? [order.item] : order.items;

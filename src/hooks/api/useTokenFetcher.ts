@@ -161,7 +161,7 @@ export const resvUserTopOfferToCardData = (item: ReservoirUserTopOffer): ERC721T
     price: item?.price?.amount?.native ?? 0,
     address: item.token?.contract,
     tokenId: item?.token?.tokenId ?? '',
-    cartType: CartType.OfferAccept,
+    cartType: CartType.AcceptOffer,
     source: { ...item.source },
     criteria: { ...item.criteria }
   };

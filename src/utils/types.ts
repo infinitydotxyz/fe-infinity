@@ -37,6 +37,33 @@ export interface ERC721CollectionCartItem extends Erc721Collection {
   offerPriceEth?: number;
   offerExpiry?: ORDER_EXPIRY_TIME;
   cartType: CartType.CollectionBid;
+  image?: string;
+  source?: {
+    id: string;
+    domain: string;
+    name: string;
+    icon: string;
+    url: string;
+  };
+  criteria?: {
+    kind: string;
+    data: {
+      token: {
+        tokenId: string;
+        name: string;
+        image: string;
+      };
+      collection: {
+        id: string;
+        name: string;
+        image: string;
+      };
+      attribute: {
+        key: string;
+        value: string;
+      };
+    };
+  };
 }
 
 export interface ERC721TokenCartItem extends ERC721CardData {
