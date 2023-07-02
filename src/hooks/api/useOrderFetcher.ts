@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import { DEFAULT_LIMIT, apiGet } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { ERC721TokenCartItem, SORT_FILTERS, TokensFilter } from 'src/utils/types';
-import { resvOrdersToCardData } from './useTokenFetcher';
+import { resvOrdersToCardData, resvUserTopOffersToCardData } from './useTokenFetcher';
 
 interface BaseProps {
   kind?: 'collection' | 'token' | 'profile';
@@ -160,6 +160,8 @@ export const useTokenOrderFetcher = (
 const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, chainId: ChainId, props: FetcherProps) => {
   const [orders, setOrders] = useState<(SignedOBOrder & { executionStatus: ExecutionStatus | null })[]>([]);
   const [profileOrders, setProfileOrders] = useState<ERC721TokenCartItem[]>([]);
+  const [totalOffersValue, setTotalOffersValue] = useState<number>(0);
+  const [numTokensWithOffers, setNumTokensWithOffers] = useState<number>(0);
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [cursor, setCursor] = useState('');
@@ -302,7 +304,13 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, chainId: C
         }
 
         if (props.kind === 'profile') {
-          setProfileOrders(resvOrdersToCardData(newData));
+          if (props.context?.side === Queries.Side.Maker) {
+            setProfileOrders(resvOrdersToCardData(newData));
+          } else {
+            setNumTokensWithOffers(response.result.totalTokensWithBids);
+            setTotalOffersValue(response.result.totalAmount);
+            setProfileOrders(resvUserTopOffersToCardData(newData));
+          }
         } else {
           setOrders(
             newData.map((order: Order & { executionStatus: ExecutionStatus | null }) => {
@@ -383,5 +391,5 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, chainId: C
     setIsLoading(false);
   };
 
-  return { orders, profileOrders, isLoading, hasNextPage, fetch, error };
+  return { orders, profileOrders, totalOffersValue, numTokensWithOffers, isLoading, hasNextPage, fetch, error };
 };

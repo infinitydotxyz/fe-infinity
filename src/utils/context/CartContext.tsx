@@ -7,6 +7,7 @@ export enum CartType {
   TokenBidIntent,
   TokenBid,
   TokenList,
+  OfferAccept,
   TokenBuy,
   Send,
   Cancel,

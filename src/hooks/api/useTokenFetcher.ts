@@ -5,7 +5,7 @@ import { useIsMounted } from 'src/hooks/useIsMounted';
 import { ApiResponse, SITE_HOST, nFormatter } from 'src/utils';
 import { fetchCollectionReservoirOrders, fetchCollectionTokens, fetchProfileTokens } from 'src/utils/astra-utils';
 import { CartType } from 'src/utils/context/CartContext';
-import { ERC721TokenCartItem, AggregatedOrder, TokensFilter } from 'src/utils/types';
+import { AggregatedOrder, ERC721TokenCartItem, ReservoirUserTopOffer, TokensFilter } from 'src/utils/types';
 
 type ApiNftData = Erc721Token & {
   orderSnippet?: OrdersSnippet;
@@ -130,6 +130,44 @@ function useTokenFetcher<From, To>({
 
   return { error, data, hasNextPage, isLoading, fetch };
 }
+
+export const resvUserTopOffersToCardData = (topOffers: ReservoirUserTopOffer[]): ERC721TokenCartItem[] => {
+  let result: ERC721TokenCartItem[] = (topOffers || []).map((item: ReservoirUserTopOffer) => {
+    return resvUserTopOfferToCardData(item);
+  });
+
+  // remove any with blank images
+  result = result.filter((x) => {
+    return x.image && x.image.length > 0;
+  });
+
+  return result;
+};
+
+export const resvUserTopOfferToCardData = (item: ReservoirUserTopOffer): ERC721TokenCartItem => {
+  const image = item?.token?.image ?? '';
+
+  const result: ERC721TokenCartItem = {
+    id: item.id,
+    name: item?.token?.name ?? '',
+    title: item?.token?.name ?? '',
+    chainId: item.chainId,
+    lastSalePriceEth: item?.token?.lastSalePrice?.amount.native ?? 0,
+    validFrom: item?.validFrom * 1000 ?? 0,
+    validUntil: item?.validUntil * 1000 ?? 0,
+    collectionName: item?.token?.collection?.name ?? '',
+    collectionSlug: getSearchFriendlyString(item?.token?.collection?.name ?? ''),
+    image,
+    price: item?.price?.amount?.native ?? 0,
+    address: item.token?.contract,
+    tokenId: item?.token?.tokenId ?? '',
+    cartType: CartType.OfferAccept,
+    source: { ...item.source },
+    criteria: { ...item.criteria }
+  };
+
+  return result;
+};
 
 export const resvOrdersToCardData = (tokens: AggregatedOrder[]): ERC721TokenCartItem[] => {
   let result: ERC721TokenCartItem[] = (tokens || []).map((item: AggregatedOrder) => {
