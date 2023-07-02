@@ -1,20 +1,15 @@
-import { JsonRpcSigner } from '@ethersproject/providers';
-import { ChainId, SupportedCollection } from '@infinityxyz/lib-frontend/types/core';
+import { SupportedCollection } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { useProfileOrderFetcher } from 'src/hooks/api/useOrderFetcher';
-import { extractErrorMsg } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { SelectedCollectionType, useProfileContext } from 'src/utils/context/ProfileContext';
-import { fetchOrderNonce } from 'src/utils/orderbook-utils';
-import { cancelAllOrders } from 'src/utils/orders';
 import { ERC721OrderCartItem, TokensFilter } from 'src/utils/types';
 import { borderColor, hoverColorBrandText, primaryBtnBgColorText, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { useAccount, useNetwork, useSigner } from 'wagmi';
 import { AOutlineButton } from '../astra/astra-button';
-import { BouncingLogo, CenteredContent, EZImage, EthSymbol, ScrollLoader, toastError, toastSuccess } from '../common';
+import { BouncingLogo, CenteredContent, EZImage, EthSymbol, ScrollLoader } from '../common';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
 import { StatusIcon } from '../common/status-icon';
 import { ProfileManualOrderListItem } from './profile-manual-order-list-item';
@@ -29,17 +24,11 @@ interface Props {
 
 const DEFAULT_ORDER_TYPE_FILTER = 'bids-placed';
 
-export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props) => {
+export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
   const { selectedCollection, setSelectedCollection } = useProfileContext();
-  const { data: signer } = useSigner();
-  const { chain } = useNetwork();
-  const { selectedChain, selectedProfileTab } = useAppContext();
-  const chainId = String(chain?.id ?? selectedChain);
-  const { address: user } = useAccount();
-  const { setTxnHash } = useAppContext();
+  const { selectedProfileTab } = useAppContext();
   const { setCartType } = useCartContext();
 
-  const [isCancellingAll, setIsCancellingAll] = useState(false);
   const [selectedOrderType, setSelectedOrderType] = useState<
     'listings' | 'bids-placed' | 'intents-placed' | 'offers-received' | ''
   >(DEFAULT_ORDER_TYPE_FILTER);
@@ -136,7 +125,7 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
                 Bids
               </AOutlineButton>
 
-              <AOutlineButton
+              {/* <AOutlineButton
                 className={twMerge(
                   'font-medium text-sm px-4',
                   selectedOrderType === 'intents-placed'
@@ -148,7 +137,7 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
                 }}
               >
                 Intents
-              </AOutlineButton>
+              </AOutlineButton> */}
 
               <AOutlineButton
                 className={twMerge(
@@ -178,7 +167,7 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
                 Offers
               </AOutlineButton>
 
-              <AOutlineButton
+              {/* <AOutlineButton
                 className={twMerge(
                   'font-medium text-sm',
                   secondaryTextColor,
@@ -204,7 +193,7 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
                 }}
               >
                 Cancel all bids and listings
-              </AOutlineButton>
+              </AOutlineButton> */}
             </div>
           </div>
 

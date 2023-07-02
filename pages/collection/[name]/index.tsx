@@ -77,9 +77,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const tabs = [
     CollectionPageTabs.Buy.toString(),
     CollectionPageTabs.Bid.toString(),
-    CollectionPageTabs.Intent.toString(),
     CollectionPageTabs.LiveBids.toString(),
-    CollectionPageTabs.LiveIntents.toString(),
     CollectionPageTabs.Analytics.toString()
   ];
 
