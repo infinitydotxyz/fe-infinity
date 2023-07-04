@@ -145,7 +145,7 @@ export const AppContextProvider = ({ children }: Props) => {
   const [showCart, setShowCart] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [selectedProfileTab, setSelectedProfileTab] = useState(ProfileTabs.Items.toString());
-  const [selectedCollectionTab, setSelectedCollectionTab] = useState(CollectionPageTabs.Intent.toString());
+  const [selectedCollectionTab, setSelectedCollectionTab] = useState(CollectionPageTabs.Buy.toString());
 
   const [listMode, setListMode] = useState(false);
   const [txnHash, setTxnHash] = useState<string>('');
