@@ -20,11 +20,11 @@ export const getReservoirClient = (chainId: string): ReservoirClient => {
       {
         id: Number(chainId),
         baseApiUrl: 'https://api.reservoir.tools', // future-todo: change to other chain urls
-        active: true,
-        apiKey: process.env.NEXT_PUBLIC_RESERVOIR_API_KEY
+        active: true
       }
     ],
-    source: 'pixelpack.io'
+    source: 'pixelpack.io',
+    normalizeRoyalties: false
   });
   return reservoirClient;
 };
