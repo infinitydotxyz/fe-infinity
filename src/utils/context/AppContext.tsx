@@ -458,7 +458,7 @@ export const AppContextProvider = ({ children }: Props) => {
       } else {
         const isBuyCart = cartType === CartType.TokenBuy;
         const isTokenBidIntentCart = cartType === CartType.TokenBidIntent;
-        const isSellCart = cartType === CartType.TokenList;
+        const isListCart = cartType === CartType.TokenList;
         const isBidCart = cartType === CartType.TokenBid;
         const isCancelCart = cartType === CartType.Cancel;
         const isAcceptOfferCart = cartType === CartType.AcceptOffer;
@@ -474,48 +474,40 @@ export const AppContextProvider = ({ children }: Props) => {
             }
             tokenSet.push({ token: `${collection}:${tokenId}` });
           }
-          await client.actions
-            .acceptOffer({
-              items: tokenSet,
-              wallet: adaptEthersSigner(signer),
-              chainId: Number(chainId),
-              onProgress: (steps: Execute['steps']) => {
-                setCheckoutBtnStatus(steps[steps.length - 1].action);
-              },
-              options: {
-                normalizeRoyalties: false,
-                partial: false,
-                allowInactiveOrderIds: false
+          await client.actions.acceptOffer({
+            items: tokenSet,
+            wallet: adaptEthersSigner(signer),
+            chainId: Number(chainId),
+            onProgress: (steps: Execute['steps']) => {
+              for (const step of steps) {
+                setCheckoutBtnStatus(step.action);
               }
-            })
-            .then(() => {
-              return true;
-            })
-            .catch((err) => {
-              console.error(err);
-              return false;
-            });
+            },
+            options: {
+              normalizeRoyalties: false,
+              partial: false,
+              allowInactiveOrderIds: false
+            }
+          });
+          toastSuccess('Sale Complete');
+          return true;
         }
 
         if (isCancelCart) {
           const client = getReservoirClient(chainId);
           const orderIds = tokens.map((token) => token.id);
-          await client.actions
-            .cancelOrder({
-              ids: orderIds,
-              wallet: adaptEthersSigner(signer),
-              chainId: Number(chainId),
-              onProgress: (steps: Execute['steps']) => {
-                setCheckoutBtnStatus(steps[steps.length - 1].action);
+          await client.actions.cancelOrder({
+            ids: orderIds,
+            wallet: adaptEthersSigner(signer),
+            chainId: Number(chainId),
+            onProgress: (steps: Execute['steps']) => {
+              for (const step of steps) {
+                setCheckoutBtnStatus(step.action);
               }
-            })
-            .then(() => {
-              return true;
-            })
-            .catch((err) => {
-              console.error(err);
-              return false;
-            });
+            }
+          });
+          toastSuccess('Order(s) Cancelled');
+          return true;
         }
 
         if (isBuyCart) {
@@ -530,22 +522,18 @@ export const AppContextProvider = ({ children }: Props) => {
             tokenSet.push({ token: `${collection}:${tokenId}` });
           }
 
-          client.actions
-            .buyToken({
-              items: tokenSet,
-              wallet: adaptEthersSigner(signer),
-              chainId: Number(chainId),
-              onProgress: (steps: Execute['steps']) => {
-                setCheckoutBtnStatus(steps[steps.length - 1].action);
+          await client.actions.buyToken({
+            items: tokenSet,
+            wallet: adaptEthersSigner(signer),
+            chainId: Number(chainId),
+            onProgress: (steps: Execute['steps']) => {
+              for (const step of steps) {
+                setCheckoutBtnStatus(step.action);
               }
-            })
-            .then(() => {
-              return true;
-            })
-            .catch((err) => {
-              console.error(err);
-              return false;
-            });
+            }
+          });
+          toastSuccess('Buy Complete');
+          return true;
         } else if (isTokenBidIntentCart) {
           // prepare orders
           const preSignedOrders: OBOrder[] = [];
@@ -576,7 +564,7 @@ export const AppContextProvider = ({ children }: Props) => {
             toastSuccess('Order(s) now live');
           }
           return true;
-        } else if (isSellCart) {
+        } else if (isListCart) {
           // prepare orders
           const client = getReservoirClient(chainId);
           const tokenSet = [];
@@ -628,23 +616,18 @@ export const AppContextProvider = ({ children }: Props) => {
           }
 
           // list
-          client.actions
-            .listToken({
-              chainId: Number(chainId),
-              listings: tokenSet,
-              wallet: adaptEthersSigner(signer),
-              onProgress: (steps: Execute['steps']) => {
-                console.log(steps);
-                setCheckoutBtnStatus(steps[steps.length - 1].action);
+          await client.actions.listToken({
+            chainId: Number(chainId),
+            listings: tokenSet,
+            wallet: adaptEthersSigner(signer),
+            onProgress: (steps: Execute['steps']) => {
+              for (const step of steps) {
+                setCheckoutBtnStatus(step.action);
               }
-            })
-            .then(() => {
-              return true;
-            })
-            .catch((err) => {
-              console.error(err);
-              return false;
-            });
+            }
+          });
+          toastSuccess('Listing Complete');
+          return true;
         } else if (isBidCart) {
           const client = getReservoirClient(chainId);
           const tokenSet = [];
@@ -684,23 +667,18 @@ export const AppContextProvider = ({ children }: Props) => {
           }
 
           // bid
-          client.actions
-            .placeBid({
-              chainId: Number(chainId),
-              bids: tokenSet,
-              wallet: adaptEthersSigner(signer),
-              onProgress: (steps: Execute['steps']) => {
-                console.log(steps);
-                setCheckoutBtnStatus(steps[steps.length - 1].action);
+          await client.actions.placeBid({
+            chainId: Number(chainId),
+            bids: tokenSet,
+            wallet: adaptEthersSigner(signer),
+            onProgress: (steps: Execute['steps']) => {
+              for (const step of steps) {
+                setCheckoutBtnStatus(step.action);
               }
-            })
-            .then(() => {
-              return true;
-            })
-            .catch((err) => {
-              console.error(err);
-              return false;
-            });
+            }
+          });
+          toastSuccess('Bidding Complete');
+          return true;
         }
       }
     } catch (ex) {
@@ -725,22 +703,18 @@ export const AppContextProvider = ({ children }: Props) => {
           const orderIds = collections.map((collection) => collection.id ?? '');
           // remove empty ids
           const orderIdsNonEmpty = orderIds.filter((id) => id !== '');
-          await client.actions
-            .cancelOrder({
-              ids: orderIdsNonEmpty,
-              wallet: adaptEthersSigner(signer),
-              chainId: Number(chainId),
-              onProgress: (steps: Execute['steps']) => {
-                setCheckoutBtnStatus(steps[steps.length - 1].action);
+          await client.actions.cancelOrder({
+            ids: orderIdsNonEmpty,
+            wallet: adaptEthersSigner(signer),
+            chainId: Number(chainId),
+            onProgress: (steps: Execute['steps']) => {
+              for (const step of steps) {
+                setCheckoutBtnStatus(step.action);
               }
-            })
-            .then(() => {
-              return true;
-            })
-            .catch((err) => {
-              console.error(err);
-              return false;
-            });
+            }
+          });
+          toastSuccess('Cancel Complete');
+          return true;
         }
 
         if (isCollBidCart) {
@@ -780,23 +754,18 @@ export const AppContextProvider = ({ children }: Props) => {
           }
 
           // bid
-          client.actions
-            .placeBid({
-              chainId: Number(chainId),
-              bids: collectionSet,
-              wallet: adaptEthersSigner(signer),
-              onProgress: (steps: Execute['steps']) => {
-                console.log(steps);
-                setCheckoutBtnStatus(steps[steps.length - 1].action);
+          await client.actions.placeBid({
+            chainId: Number(chainId),
+            bids: collectionSet,
+            wallet: adaptEthersSigner(signer),
+            onProgress: (steps: Execute['steps']) => {
+              for (const step of steps) {
+                setCheckoutBtnStatus(step.action);
               }
-            })
-            .then(() => {
-              return true;
-            })
-            .catch((err) => {
-              console.error(err);
-              return false;
-            });
+            }
+          });
+          toastSuccess('Bidding Complete');
+          return true;
         }
 
         if (isCollBidIntentCart) {
@@ -841,7 +810,6 @@ export const AppContextProvider = ({ children }: Props) => {
   };
 
   const handleOrdersCancel = async (ordersToCancel: ERC721OrderCartItem[]): Promise<boolean> => {
-    console.log('handleOrdersCancel', ordersToCancel);
     try {
       if (signer) {
         setCheckoutBtnStatus('Mapping nonces');

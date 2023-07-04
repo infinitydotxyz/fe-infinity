@@ -38,6 +38,7 @@ export interface ERC721CollectionCartItem extends Erc721Collection {
   offerExpiry?: ORDER_EXPIRY_TIME;
   cartType: CartType.CollectionBid;
   image?: string;
+  title?: string;
   source?: {
     id: string;
     domain: string;

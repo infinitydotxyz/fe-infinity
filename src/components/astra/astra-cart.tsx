@@ -327,11 +327,11 @@ export const AstraCart = ({
 
     // render cart title and checkout button text
     if (cartType === CartType.TokenList) {
-      setCartTitle('Sell');
+      setCartTitle('List');
       if (cartItems.length > 1) {
-        setCheckoutBtnText('Bulk Sell');
+        setCheckoutBtnText('Bulk List');
       } else {
-        setCheckoutBtnText('Sell');
+        setCheckoutBtnText('List');
       }
     } else if (cartType === CartType.CollectionBid) {
       if (cartItems.length > 1) {
@@ -380,11 +380,11 @@ export const AstraCart = ({
         setCheckoutBtnText('Cancel Order');
       }
     } else if (cartType === CartType.AcceptOffer) {
-      setCartTitle('Offers');
+      setCartTitle('Sell');
       if (cartItems.length > 1) {
-        setCheckoutBtnText('Accept Offers');
+        setCheckoutBtnText('Bulk Sell');
       } else {
-        setCheckoutBtnText('Accept Offer');
+        setCheckoutBtnText('Sell');
       }
     }
 
@@ -687,6 +687,19 @@ const AstraCancelCartItem = ({ order, onTokenRemove, onCollectionRemove }: Props
 
       <div className="ml-3 flex flex-col w-full text-sm font-bold font-heading">
         <div>{ellipsisString(tokenId)}</div>
+        <PriceAndExpiry
+          token={isCollBid ? undefined : (order as ERC721TokenCartItem)}
+          collection={isCollBid ? (order as ERC721CollectionCartItem) : undefined}
+          className=""
+          editing={false}
+          useSpacer
+          currentPrice={
+            isCollBid
+              ? (order as ERC721CollectionCartItem).offerPriceEth?.toString()
+              : (order as ERC721TokenCartItem).price?.toString()
+          }
+          hideExpiry={true}
+        ></PriceAndExpiry>
       </div>
     </div>
   );
