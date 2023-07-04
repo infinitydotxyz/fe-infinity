@@ -249,9 +249,9 @@ export const AstraCart = ({
         for (const t of ordArray) {
           divList.push(
             isCollBid ? (
-              <AstraCancelCartItem key={orderId} order={t} onCollectionRemove={onCollRemove} />
+              <AstraCancelCartItem key={t.id} order={t} onCollectionRemove={onCollRemove} />
             ) : (
-              <AstraCancelCartItem key={orderId} order={t} onTokenRemove={onTokenRemove} />
+              <AstraCancelCartItem key={t.id} order={t} onTokenRemove={onTokenRemove} />
             )
           );
         }
@@ -318,9 +318,9 @@ export const AstraCart = ({
       orderMap.clear();
       for (const item of cartItems) {
         const order = item as ERC721TokenCartItem;
-        const orders = orderMap.get(order.id ?? '') ?? [];
+        const orders = orderMap.get(order.address ?? '') ?? [];
         orders.push(order);
-        orderMap.set(order.id ?? '', orders);
+        orderMap.set(order.address ?? '', orders);
       }
       setOrderMap(orderMap);
     }
@@ -419,6 +419,8 @@ export const AstraCart = ({
                     onCollsClear();
                   } else if (cartType === CartType.Cancel) {
                     onOrdersClear();
+                    onTokensClear();
+                    onCollsClear();
                   }
                 }}
               >

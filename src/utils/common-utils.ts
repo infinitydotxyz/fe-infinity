@@ -1,20 +1,20 @@
 import { getAddress } from '@ethersproject/address';
+import { BigNumber } from '@ethersproject/bignumber/lib/bignumber';
 import { Provider } from '@ethersproject/providers';
 import { BaseToken, ChainId, OrdersSnippet, OwnerInfo, TokenStandard } from '@infinityxyz/lib-frontend/types/core';
-import { BaseCollection, CreationFlow } from '@infinityxyz/lib-frontend/types/core/Collection';
+import { CreationFlow } from '@infinityxyz/lib-frontend/types/core/Collection';
 import {
-  Env,
   ETHEREUM_CHAIN_SCANNER_BASE,
+  Env,
   GOERLI_CHAIN_SCANNER_BASE,
   POLYGON_CHAIN_SCANNER_BASE,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
+import { formatUnits, parseUnits } from 'ethers/lib/utils.js';
 import { normalize } from 'path';
 import { ReactNode } from 'react';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
 import { CartType } from './context/CartContext';
-import { BigNumber } from '@ethersproject/bignumber/lib/bignumber';
-import { formatUnits, parseUnits } from 'ethers/lib/utils.js';
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
 
@@ -123,12 +123,12 @@ export const getCartType = (path: string, selectedProfileTab: string, selectedCo
   return CartType.None;
 };
 
-export const getCollectionKeyId = (coll: BaseCollection) => {
-  return trimLowerCase(`${coll?.chainId}:${coll?.address}`);
+export const getCollectionKeyId = (coll: ERC721CollectionCartItem) => {
+  return trimLowerCase(`${coll?.chainId}:${coll?.address}:${coll?.id}`);
 };
 
 export const getTokenCartItemKey = (data: ERC721TokenCartItem) => {
-  return trimLowerCase(`${data?.chainId}:${data?.address}:${data?.tokenId}`);
+  return trimLowerCase(`${data?.chainId}:${data?.address}:${data?.tokenId}:${data?.id}`);
 };
 
 // use ellipsisString for non-address numbers, this gets the checksum address
