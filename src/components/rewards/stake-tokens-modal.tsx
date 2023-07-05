@@ -82,17 +82,21 @@ export const StakeTokensModal = ({ onClose }: Props) => {
     >
       <div>
         <div className="mt-2">
-          <div className="text-sm">
+          <div className="text-sm space-y-1">
             <div>
-              Reward boost when {nFormatter(minStakeAmountForBoost)} ${FLOW_TOKEN.symbol} are staked:{' '}
+              Reward boost when {nFormatter(minStakeAmountForBoost)} ${FLOW_TOKEN.symbol} staked:{' '}
               <span className="font-extrabold ml-1">2x</span>
             </div>
-            <div className={twMerge('mt-1 text-xs', secondaryTextColor)}>
+            <div>
+              Platform fees and royalties when {nFormatter(minStakeAmountForBoost)} ${FLOW_TOKEN.symbol} staked:{' '}
+              <span className="font-extrabold ml-1">0</span>
+            </div>
+            <div className={twMerge('text-xs', secondaryTextColor)}>
               Staked tokens are locked until the end of each reward season.
             </div>
           </div>
 
-          <div className="mt-8">
+          <div className="mt-6">
             <TextInputBox
               label=""
               value={value}
