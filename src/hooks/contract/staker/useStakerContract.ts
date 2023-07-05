@@ -1,14 +1,12 @@
 import { XFLStakerABI } from '@infinityxyz/lib-frontend/abi/xflStaker';
 import { getXFLStakerAddress } from '@infinityxyz/lib-frontend/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { useAccount, useNetwork } from 'wagmi';
 import { useContract } from '../useContract';
 import { utils } from 'ethers';
 
 export function useStakerContract() {
   const { chain } = useNetwork();
-  const { selectedChain } = useAppContext();
-  const chainId = String(chain?.id ?? selectedChain);
+  const chainId = String(chain?.id ?? '1');
   const { address } = useAccount();
 
   const stakerAddress = getXFLStakerAddress(chainId);

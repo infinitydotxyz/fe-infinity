@@ -64,13 +64,13 @@ export const fetchOrderNonce = async (user: string, chainId: ChainId): Promise<n
   }
 };
 
-export const fetchMinXflBalanceForZeroFee = async (
+export const fetchMinXflStakeForZeroFees = async (
   chainId?: string,
   collection?: string,
   user?: string
 ): Promise<number> => {
   try {
-    const response = await apiGet(`/v2/orders/minxflbalanceforzerofees`, {
+    const response = await apiGet(`/v2/orders/minxflstakeforzerofees`, {
       requiresAuth: false,
       query: {
         chainId,
@@ -83,7 +83,7 @@ export const fetchMinXflBalanceForZeroFee = async (
     }
     return response.result;
   } catch (err) {
-    console.error('Failed fetching min xfl balance for zero fee');
+    console.error('Failed fetching min xfl stake for zero fees');
     throw err;
   }
 };

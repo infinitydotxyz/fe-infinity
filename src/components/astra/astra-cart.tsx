@@ -8,7 +8,11 @@ import { FiEdit3 } from 'react-icons/fi';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
 import { EZImage, EthSymbol, Spacer, TextInputBox, ToggleTab } from 'src/components/common';
+import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 import {
+  FEE_BPS,
+  FLOW_TOKEN,
+  ROYALTY_BPS,
   ellipsisString,
   getCartType,
   getCollectionKeyId,
@@ -18,6 +22,7 @@ import {
 } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartItem, CartType, useCartContext } from 'src/utils/context/CartContext';
+import { fetchMinXflStakeForZeroFees } from 'src/utils/orderbook-utils';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
 import {
   borderColor,
@@ -34,6 +39,7 @@ import {
 import { twMerge } from 'tailwind-merge';
 import { useAccount, useBalance, useNetwork, useProvider } from 'wagmi';
 import { UniswapModal } from '../common/uniswap-model';
+import { StakeTokensModal } from '../rewards/stake-tokens-modal';
 import { ADropdown } from './astra-dropdown';
 
 interface Props {
@@ -86,6 +92,7 @@ export const AstraCart = ({
   const [checkoutBtnText, setCheckoutBtnText] = useState('Checkout');
   const [sendToAddress, setSendToAddress] = useState('');
   const [showBuyTokensModal, setShowBuyTokensModal] = useState(false);
+  const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
 
   const provider = useProvider();
   const { address: user } = useAccount();
@@ -96,18 +103,55 @@ export const AstraCart = ({
   const { cartType, setCartType, getCurrentCartItems, cartItems } = useCartContext();
   const [currentCartItems, setCurrentCartItems] = useState<CartItem[]>([]);
   const [cartTotal, setCartTotal] = useState(0);
-  const [cartTabOptions] = useState(['Totals']);
-  const [selectedTab, setSelectedTab] = useState(cartTabOptions[0]);
+  const [fees, setFees] = useState(0);
+  const [royalties, setRoyalties] = useState(0);
+  const [netProceeds, setNetProceeds] = useState(0);
 
-  // enum ExecutionMode {
-  //   Fast = 'Fast',
-  //   Batched = 'Batched'
-  // }
-  // const [executionMode, setExecutionMode] = useState(ExecutionMode.Fast);
+  const { stakeBalance } = useStakerContract();
+  const [minStakeAmountForFeeWaiverAndBoost, setMinStakeAmountForFeeWaiverAndBoost] = useState(0);
+  const [xflStaked, setXflStaked] = useState(0);
+  const [xflStakeBoost, setXflStakeBoost] = useState('0x');
+  const [areFeesWaived, setAreFeesWaived] = useState(false);
 
   const [tokenMap, setTokenMap] = useState<Map<string, ERC721TokenCartItem[]>>(new Map());
   const [collMap, setCollMap] = useState<Map<string, ERC721CollectionCartItem[]>>(new Map());
   const [orderMap, setOrderMap] = useState<Map<string, ERC721TokenCartItem[]>>(new Map());
+
+  const [cartTabOptions] = useState(['Totals']);
+  const [selectedTab, setSelectedTab] = useState(cartTabOptions[0]);
+
+  useEffect(() => {
+    const feeBps = areFeesWaived ? 0 : FEE_BPS;
+    const royaltyBps = areFeesWaived ? 0 : ROYALTY_BPS;
+    const newFees = (cartTotal * feeBps) / 10_000;
+    const newRoyalties = (cartTotal * royaltyBps) / 10_000;
+    const newNetProceeds = cartTotal - newFees - newRoyalties;
+
+    setFees(newFees);
+    setRoyalties(newRoyalties);
+    setNetProceeds(newNetProceeds);
+  }, [cartTotal]);
+
+  useEffect(() => {
+    getStakeInfo();
+  });
+
+  const getStakeInfo = async () => {
+    const minStakeAmount =
+      minStakeAmountForFeeWaiverAndBoost === 0
+        ? await fetchMinXflStakeForZeroFees()
+        : minStakeAmountForFeeWaiverAndBoost;
+    setMinStakeAmountForFeeWaiverAndBoost(minStakeAmount);
+
+    const xflStaked = parseFloat((await stakeBalance()) ?? '0');
+    setXflStaked(xflStaked);
+
+    const boost = xflStaked >= minStakeAmount ? 2 : 0;
+    setXflStakeBoost(boost + 'x');
+
+    const feesWaived = xflStaked >= minStakeAmount;
+    setAreFeesWaived(feesWaived);
+  };
 
   // future-todo change when supporting more chains
   const WETH_ADDRESS =
@@ -412,7 +456,8 @@ export const AstraCart = ({
                     cartType === CartType.TokenList ||
                     cartType === CartType.TokenBid ||
                     cartType === CartType.TokenBidIntent ||
-                    cartType === CartType.TokenBuy
+                    cartType === CartType.TokenBuy ||
+                    cartType === CartType.AcceptOffer
                   ) {
                     onTokensClear();
                   } else if (cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent) {
@@ -444,62 +489,136 @@ export const AstraCart = ({
 
       {cartContent}
 
-      <div className={twMerge('m-4 flex flex-col text-sm space-y-2 rounded-lg p-3', secondaryBgColor)}>
-        <ToggleTab
-          className="font-heading mb-2"
-          options={cartTabOptions}
-          defaultOption={cartTabOptions[0]}
-          onChange={onCartTabOptionsChange}
-        />
+      {cartType !== CartType.Send && cartType !== CartType.Cancel && (
+        <div className={twMerge('m-4 flex flex-col text-sm space-y-2 rounded-lg p-3', secondaryBgColor)}>
+          <ToggleTab
+            className="font-heading mb-2"
+            options={cartTabOptions}
+            defaultOption={cartTabOptions[0]}
+            onChange={onCartTabOptionsChange}
+          />
 
-        {selectedTab === 'Totals' && (
-          <div className="space-y-3 px-1">
-            <div className="flex justify-between">
-              <div className={twMerge(secondaryTextColor, 'font-medium')}>Cart total: </div>
-              <div className="font-heading">
-                {nFormatter(Number(cartTotal))} {EthSymbol}
-              </div>
-            </div>
-            {user && (
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className={twMerge(secondaryTextColor, 'font-medium')}>ETH Balance: </span>
-                  {isEthBalanceLoading ? (
-                    <span>Loading...</span>
-                  ) : (
-                    <span className="font-heading">
-                      {nFormatter(Number(ethBalance?.formatted))} {EthSymbol}
-                    </span>
-                  )}
-                </div>
-
-                <div className="flex justify-between">
-                  <span className={twMerge(secondaryTextColor, 'font-medium')}>WETH Balance: </span>
-
-                  <div>
-                    {isLoading ? (
-                      <span>Loading...</span>
-                    ) : (
-                      <span className="font-heading">
-                        {nFormatter(Number(wethBalance?.formatted))} {EthSymbol}
-                      </span>
-                    )}
-                    <AButton
-                      className={twMerge('rounded-md text-xs ml-2', secondaryBtnBgColorText)}
-                      onClick={() => {
-                        setShowBuyTokensModal(true);
-                      }}
-                    >
-                      Wrap ETH
-                    </AButton>
+          {selectedTab === 'Totals' && (
+            <div className="space-y-3 px-1">
+              <div className={twMerge('border-b-[1px] pb-2 space-y-2', borderColor)}>
+                <div className={twMerge('flex justify-between')}>
+                  <div className={twMerge(secondaryTextColor, 'font-medium')}>Cart total: </div>
+                  <div className="font-heading">
+                    {nFormatter(Number(cartTotal))} {EthSymbol}
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
-        )}
 
-        {/* {selectedTab === 'Options' && (
+                {user && cartType === CartType.TokenList && (
+                  <div className="text-xs">
+                    <div className={twMerge('flex justify-between')}>
+                      <div className={twMerge(secondaryTextColor)}>Fees: </div>
+                      <div className="font-heading">
+                        {nFormatter(Number(fees))} {EthSymbol}
+                      </div>
+                    </div>
+
+                    <div className={twMerge('flex justify-between')}>
+                      <div className={twMerge(secondaryTextColor)}>Royalties: </div>
+                      <div className="font-heading">
+                        {nFormatter(Number(royalties))} {EthSymbol}
+                      </div>
+                    </div>
+
+                    <div className={twMerge('flex justify-between text-sm mt-2')}>
+                      <div className={twMerge(secondaryTextColor, 'font-medium')}>Net proceeds: </div>
+                      <div className="font-heading">
+                        {nFormatter(Number(netProceeds))} {EthSymbol}
+                      </div>
+                    </div>
+
+                    <div className={twMerge('mt-4 rounded-md space-y-1 text-xs')}>
+                      <div className={twMerge('flex justify-between')}>
+                        <div className={twMerge(secondaryTextColor, 'font-medium')}>Staked ${FLOW_TOKEN.symbol}: </div>
+                        <div className="font-heading">{nFormatter(Number(xflStaked))}</div>
+                      </div>
+
+                      <div className={twMerge('flex justify-between')}>
+                        <div className={twMerge(secondaryTextColor, 'font-medium')}>Reward boost: </div>
+                        <div className="font-heading">{xflStakeBoost}</div>
+                      </div>
+
+                      <div className={twMerge('flex')}>
+                        {areFeesWaived ? (
+                          <div className={twMerge(secondaryTextColor, 'mt-2')}>
+                            You are maximizing your net proceeds and will earn {xflStakeBoost} rewards. Buyer of your
+                            listing will save upto 40% on gas fees.
+                          </div>
+                        ) : (
+                          <div className="flex mt-2">
+                            <div className={twMerge(secondaryTextColor)}>
+                              Pay zero fees, royalties and earn 2x rewards when you stake{' '}
+                              {nFormatter(minStakeAmountForFeeWaiverAndBoost)} or more ${FLOW_TOKEN.symbol}. Buyer of
+                              your {currentCartItems.length > 1 ? 'listings ' : 'listing '}
+                              will also benefit by saving upto 40% on gas fees when you stake ${FLOW_TOKEN.symbol} and
+                              hence {currentCartItems.length > 1 ? 'they ' : 'it '}
+                              will be shown first.
+                              <span
+                                className={twMerge('underline cursor-pointer ml-[2px]', brandTextColor)}
+                                onClick={() => {
+                                  setShowStakeTokensModal(true);
+                                }}
+                              >
+                                Stake
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {user &&
+                (cartType === CartType.TokenBid ||
+                  cartType === CartType.CollectionBid ||
+                  cartType === CartType.TokenBuy) && (
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className={twMerge(secondaryTextColor, 'font-medium')}>ETH Balance: </span>
+                      {isEthBalanceLoading ? (
+                        <span>Loading...</span>
+                      ) : (
+                        <span className="font-heading">
+                          {nFormatter(Number(ethBalance?.formatted))} {EthSymbol}
+                        </span>
+                      )}
+                    </div>
+
+                    {(cartType === CartType.TokenBid || cartType === CartType.CollectionBid) && (
+                      <div className="flex justify-between">
+                        <span className={twMerge(secondaryTextColor, 'font-medium')}>WETH Balance: </span>
+
+                        <div>
+                          {isLoading ? (
+                            <span>Loading...</span>
+                          ) : (
+                            <span className="font-heading">
+                              {nFormatter(Number(wethBalance?.formatted))} {EthSymbol}
+                            </span>
+                          )}
+                          <AButton
+                            className={twMerge('rounded-md text-xs ml-2', secondaryBtnBgColorText)}
+                            onClick={() => {
+                              setShowBuyTokensModal(true);
+                            }}
+                          >
+                            Wrap ETH
+                          </AButton>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+            </div>
+          )}
+
+          {/* {selectedTab === 'Options' && (
           <div className="h-60 overflow-y-scroll">
             <div className="space-y-3 px-1">
               <RadioGroup value={executionMode} onChange={setExecutionMode} className="space-y-2">
@@ -518,7 +637,8 @@ export const AstraCart = ({
             </div>
           </div>
         )} */}
-      </div>
+        </div>
+      )}
 
       <div className="m-6 flex flex-col">
         <AButton
@@ -539,6 +659,14 @@ export const AstraCart = ({
           {isCheckingOut ? <div className="animate-pulse">{checkoutBtnStatus}</div> : checkoutBtnText}
         </AButton>
       </div>
+
+      {showStakeTokensModal && (
+        <StakeTokensModal
+          onClose={() => {
+            setShowStakeTokensModal(false);
+          }}
+        />
+      )}
 
       {showBuyTokensModal && (
         <UniswapModal

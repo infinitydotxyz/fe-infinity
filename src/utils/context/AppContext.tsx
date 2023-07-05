@@ -43,7 +43,7 @@ import {
   signSingleOrder
 } from 'src/utils/orders';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem } from 'src/utils/types';
-import { useAccount, useBalance, useNetwork, useProvider, useSigner } from 'wagmi';
+import { useAccount, useNetwork, useProvider, useSigner } from 'wagmi';
 import { getReservoirClient } from '../astra-utils';
 import {
   extractErrorMsg,
@@ -51,9 +51,10 @@ import {
   getEstimatedGasPrice,
   getOrderExpiryTimeInMsFromEnum
 } from '../common-utils';
-import { DEFAULT_MAX_GAS_PRICE_WEI, FEE_BPS, FEE_WALLET_ADDRESS, FLOW_TOKEN, ZERO_ADDRESS } from '../constants';
-import { fetchMinXflBalanceForZeroFee, fetchOrderNonce, postOrdersV2 } from '../orderbook-utils';
+import { DEFAULT_MAX_GAS_PRICE_WEI, FEE_BPS, FEE_WALLET_ADDRESS, ROYALTY_BPS, ZERO_ADDRESS } from '../constants';
+import { fetchMinXflStakeForZeroFees, fetchOrderNonce, postOrdersV2 } from '../orderbook-utils';
 import { CartType, useCartContext } from './CartContext';
+import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 
 type ReservoirOrderbookType =
   | 'reservoir'
@@ -158,14 +159,7 @@ export const AppContextProvider = ({ children }: Props) => {
   const chainId = String(chain?.id);
   const { address: user } = useAccount();
   const { cartType } = useCartContext();
-
-  const xflBalanceObj = useBalance({
-    address: user,
-    token: FLOW_TOKEN.address as `0x${string}`,
-    watch: false,
-    cacheTime: 5_000
-  });
-  const xflBalance = parseFloat(xflBalanceObj?.data?.formatted ?? '0');
+  const { stakeBalance } = useStakerContract();
 
   useEffect(() => {
     switch (chain?.id) {
@@ -574,9 +568,10 @@ export const AppContextProvider = ({ children }: Props) => {
           // calculate fees
           let automatedRoyalties = true;
           let fees = [`${FEE_WALLET_ADDRESS}:${FEE_BPS}`];
-          const minXflBalanceForZeroFee = await fetchMinXflBalanceForZeroFee();
-          if (minXflBalanceForZeroFee) {
-            if (xflBalance && xflBalance >= minXflBalanceForZeroFee) {
+          const minXflStakeForZeroFees = await fetchMinXflStakeForZeroFees();
+          if (minXflStakeForZeroFees) {
+            const xflStaked = parseFloat((await stakeBalance()) ?? '0');
+            if (xflStaked >= minXflStakeForZeroFees) {
               automatedRoyalties = false;
               fees = [];
             }
@@ -605,6 +600,7 @@ export const AppContextProvider = ({ children }: Props) => {
               orderbook: 'reservoir' as ReservoirOrderbookType,
               orderKind: 'seaport-v1.5' as ReservoirOrderKindType,
               automatedRoyalties,
+              royaltyBps: ROYALTY_BPS,
               fees,
               currency: ZERO_ADDRESS, // default ETH for listings and mainnet NFTs
               options: {
@@ -657,7 +653,8 @@ export const AppContextProvider = ({ children }: Props) => {
               orderbook: 'reservoir' as ReservoirOrderbookType,
               orderKind: 'seaport-v1.5' as ReservoirOrderKindType,
               automatedRoyalties: false,
-              currency: ETHEREUM_WETH_ADDRESS, // default WETH for bids and ETH mainnet NFTs
+              fees: [],
+              currency: ETHEREUM_WETH_ADDRESS, // default WETH for bids and ETH mainnet NFTs; future-todo - support other currencies for other chains
               options: {
                 'seaport-v1.5': {
                   useOffChainCancellation: true

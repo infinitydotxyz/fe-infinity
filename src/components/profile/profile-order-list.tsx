@@ -54,13 +54,16 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
 
   const onClickOrderType = (newType: 'listings' | 'bids-placed' | 'intents-placed' | 'offers-received' | '') => {
     setSelectedOrderType(newType);
-    if (newType === 'listings' || newType === 'offers-received') {
+    if (newType === 'listings') {
       setCartType(CartType.TokenList);
     } else if (newType === 'bids-placed') {
       setCartType(CartType.TokenBid);
     } else if (newType === 'intents-placed') {
       setCartType(CartType.TokenBidIntent);
+    } else if (newType === 'offers-received') {
+      setCartType(CartType.AcceptOffer);
     }
+
     const newFilter = {
       ...filter,
       orderType: newType

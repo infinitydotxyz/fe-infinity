@@ -11,7 +11,8 @@ export const DISCORD_BOT_INVITE_URL =
 export const ETHERSCAN_BASE_URL = 'https://etherscan.io';
 
 export const FEE_BPS = 250;
-export const FEE_WALLET_ADDRESS = '0x4054Cd9059043F8A452E6eC24b454ee41e634F77';
+export const ROYALTY_BPS = 500;
+export const FEE_WALLET_ADDRESS = '0xbFFc957B7537295B138dB43FB1843FeFF1782a20';
 
 export const DEFAULT_LIMIT = 30;
 export const SMALL_LIMIT = 10;
