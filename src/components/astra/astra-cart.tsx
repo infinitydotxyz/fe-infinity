@@ -249,14 +249,11 @@ export const AstraCart = ({
     } else if ((cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent) && collMap.size > 0) {
       const divList: ReactNode[] = [];
       collMap.forEach((collArray) => {
-        const first = collArray[0];
-        const collId = getCollectionKeyId(first);
-
         for (const t of collArray) {
           newCartTotal += t.offerPriceEth ?? 0;
           divList.push(
             <AstraCollectionCartItem
-              key={collId}
+              key={getCollectionKeyId(t)}
               collection={t}
               onRemove={onCollRemove}
               updateCartTotal={(newVal: string, oldVal: string) => {

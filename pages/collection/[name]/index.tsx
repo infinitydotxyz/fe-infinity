@@ -6,6 +6,7 @@ import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { FaDiscord } from 'react-icons/fa';
 import { GiBroom } from 'react-icons/gi';
 import { HiOutlineLightBulb } from 'react-icons/hi';
+import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
 import { APriceFilter } from 'src/components/astra/astra-price-filter';
 import { ASortButton } from 'src/components/astra/astra-sort-button';
@@ -29,6 +30,7 @@ import {
   borderColor,
   brandTextColor,
   hoverColor,
+  hoverColorBrandText,
   iconButtonStyle,
   secondaryTextColor,
   selectedColor
@@ -546,6 +548,22 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     className={twMerge('flex items-center rounded-lg border p-2 text-sm font-medium', borderColor)}
                   >
                     {trait}
+                    <div className="ml-2">
+                      <MdClose
+                        className={twMerge('h-4 w-4 cursor-pointer', hoverColorBrandText)}
+                        onClick={() => {
+                          setSelectedTraits(selectedTraits.filter((t) => t !== trait));
+                          // update filter
+                          const newFilter = { ...filter };
+                          const traitType = trait.split(':')[0];
+                          const traitValue = trait.split(':')[1].trim();
+                          // remove from filter
+                          newFilter.traitTypes = newFilter.traitTypes?.filter((t) => t !== traitType);
+                          newFilter.traitValues = newFilter.traitValues?.filter((t) => t !== traitValue);
+                          setFilter(newFilter);
+                        }}
+                      />
+                    </div>
                   </div>
                 );
               })}
@@ -632,6 +650,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               collectionAddress={collection.address}
               collectionChainId={chainId}
               collectionImage={collection.metadata.profileImage}
+              collectionName={collection.metadata.name}
             />
           )}
         </div>

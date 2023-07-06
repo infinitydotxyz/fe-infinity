@@ -23,6 +23,8 @@ export const ProfileManualOrderListItem = ({ order, orderType }: Props) => {
   const { isNFTSelectable, isNFTSelected, toggleNFTSelection, isCollSelectable, isCollSelected, toggleCollSelection } =
     useAppContext();
 
+  const isTokenBid = orderType === 'bids-placed' && order.criteria?.kind === 'token';
+
   let editableCartItem: ERC721CollectionCartItem | ERC721TokenCartItem;
   const isCollBid = orderType === 'bids-placed' && order.criteria?.kind === 'collection';
   if (isCollBid) {
@@ -63,7 +65,7 @@ export const ProfileManualOrderListItem = ({ order, orderType }: Props) => {
         <div className="w-1/3">
           <ManualOrderbookItem
             isCollBid={isCollBid}
-            canShowAssetModal={!isCollBid}
+            canShowAssetModal={isTokenBid}
             key={`${order.id} ${order.chainId}`}
             order={editableCartItem}
           />

@@ -16,13 +16,15 @@ export type CollectionChartsProps = {
   collectionAddress: string;
   collectionChainId: ChainId;
   collectionImage: string;
+  collectionName?: string;
 };
 
 export const CollectionCharts = ({
   className = '',
   collectionAddress,
   collectionChainId,
-  collectionImage
+  collectionImage,
+  collectionName
 }: CollectionChartsProps) => {
   const [salesChartData, setSalesChartData] = useState<SalesChartData[]>([]);
   const [listingsData, setListingsData] = useState<CollectionOrder[]>([]);
@@ -177,6 +179,7 @@ export const CollectionCharts = ({
               setIndex={setSelectedListingIndex}
               collectionAddress={collectionAddress}
               collectionImage={collectionImage}
+              collectionName={collectionName}
             />
           )}
         </div>
@@ -199,6 +202,7 @@ export const CollectionCharts = ({
               setIndex={setSelectedBidIndex}
               collectionAddress={collectionAddress}
               collectionImage={collectionImage}
+              collectionName={collectionName}
             />
           )}
         </div>

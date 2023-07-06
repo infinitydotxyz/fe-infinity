@@ -21,7 +21,7 @@ import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
 import { TokenCardModal } from '../astra/token-grid/token-card-modal';
 import { Checkbox, EthSymbol, EZImage, HelpToolTip, Spacer } from '../common';
-import { MatchAndExecutionOrderStatus, StatusIcon } from '../common/status-icon';
+import { StatusIcon } from '../common/status-icon';
 
 interface Props {
   data: CollectionSaleAndOrder[];
@@ -31,7 +31,7 @@ interface Props {
 export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) => {
   const [salesSelected, setSalesSelected] = useState(true);
   const [listingsSelected, setListingsSelected] = useState(true);
-  const [offersSelected, setOffersSelected] = useState(true);
+  const [bidsSelected, setBidsSelected] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<CollectionSaleAndOrder | null>(null);
   const router = useRouter();
@@ -57,7 +57,7 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
       return true;
     } else if (item.dataType === 'Listing' && listingsSelected) {
       return true;
-    } else if (item.dataType === 'Offer' && offersSelected) {
+    } else if (item.dataType === 'Offer' && bidsSelected) {
       return true;
     }
     return false;
@@ -86,11 +86,12 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
   });
 
   return (
-    <div className={twMerge('w-full flex flex-col mt-2 p-3 border rounded-lg text-sm space-y-3', borderColor)}>
+    <div className={twMerge('w-full flex flex-col p-3 border rounded-lg text-sm space-y-3', borderColor)}>
       <div className={twMerge('flex space-x-4 px-3')}>
-        <StatusIcon status="pending-indefinite" label="Live" />
-
+        <div className={twMerge('flex text-lg font-medium font-heading')}>Sales, Listings & Bids</div>
         <Spacer />
+
+        <StatusIcon status="pending-indefinite" label="Live" />
 
         <Checkbox
           label="Sales"
@@ -107,16 +108,17 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
           }}
         />
         <Checkbox
-          label="Offers"
-          checked={offersSelected}
+          label="Bids"
+          checked={bidsSelected}
           onChange={() => {
-            setOffersSelected(!offersSelected);
+            setBidsSelected(!bidsSelected);
           }}
         />
       </div>
 
       <div className={twMerge('divide-y', divideColor)}>
         {dataToShow.map((item) => {
+          const isNonTokenBid = item.tokenId === 'Collection Bid' || item.tokenId === 'Trait Bid';
           return (
             <div
               key={item.id}
@@ -148,7 +150,7 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
                   <div className="text-xs">{timeAgo(new Date(item.timestamp))}</div>
                 </div>
                 <div
-                  className="flex space-x-3 items-center cursor-pointer ml-4"
+                  className={twMerge('flex space-x-3 items-center ml-4', !isNonTokenBid ? 'cursor-pointer' : '')}
                   onMouseMove={(event) => {
                     const coords = event.currentTarget.getBoundingClientRect();
                     showTooltip({
@@ -161,6 +163,9 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
                     hideTooltip();
                   }}
                   onClick={() => {
+                    if (isNonTokenBid) {
+                      return;
+                    }
                     setSelectedItem(item);
                     const { pathname, query } = router;
                     query['tokenId'] = item.tokenId;
@@ -171,14 +176,6 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
                   <EZImage src={item.tokenImage} className="w-6 h-6 rounded" />
                   <div className="flex-col">
                     <span className="">{ellipsisString(item.tokenId)}</span>
-                    <div className={twMerge(secondaryTextColor, 'text-xs font-medium flex space-x-3 items-center')}>
-                      {item.dataType !== 'Sale' && (
-                        <MatchAndExecutionOrderStatus
-                          executionStatus={item.executionStatus}
-                          isSellOrder={item.dataType === 'Listing'}
-                        />
-                      )}
-                    </div>
                   </div>
                 </div>
               </div>

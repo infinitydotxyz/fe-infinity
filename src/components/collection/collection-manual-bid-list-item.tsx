@@ -12,7 +12,7 @@ import { ManualOrderbookItem } from '../orderbook/manual-orderbook-item';
 
 interface Props {
   order: ERC721TokenCartItem;
-  orderType: 'Collection Bid' | 'Token Bid' | 'Attribute Bid';
+  orderType: 'Collection Bid' | 'Token Bid' | 'Trait Bid';
 }
 
 export const CollectionManualBidListItem = ({ order, orderType }: Props) => {
@@ -22,6 +22,7 @@ export const CollectionManualBidListItem = ({ order, orderType }: Props) => {
   const { isCollSelectable, isCollSelected, isNFTSelectable, isNFTSelected, toggleCollSelection, toggleNFTSelection } =
     useAppContext();
 
+  const isTokenBid = orderType === 'Token Bid';
   const isCollBid = orderType === 'Collection Bid';
   let editableCartItem: ERC721CollectionCartItem | ERC721TokenCartItem = order;
   if (isCollBid) {
@@ -34,7 +35,7 @@ export const CollectionManualBidListItem = ({ order, orderType }: Props) => {
       : isNFTSelected(editableCartItem as ERC721TokenCartItem)
   );
 
-  const isActionable = orderType !== 'Attribute Bid';
+  const isActionable = orderType !== 'Trait Bid';
 
   useEffect(() => {
     setAddedToCart(
@@ -48,7 +49,7 @@ export const CollectionManualBidListItem = ({ order, orderType }: Props) => {
     <div className={twMerge(standardBorderCard, 'flex mx-4 text-sm')}>
       <div className="flex justify-between items-center w-full">
         <div className="w-1/3">
-          <ManualOrderbookItem canShowAssetModal={!isCollBid} order={editableCartItem} isCollBid={isCollBid} />
+          <ManualOrderbookItem canShowAssetModal={isTokenBid} order={editableCartItem} isCollBid={isCollBid} />
         </div>
 
         <div className="w-1/6">

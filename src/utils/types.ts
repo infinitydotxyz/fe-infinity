@@ -391,3 +391,7 @@ export interface ReservoirOrderData {
     url: string;
   };
 }
+
+export interface ReservoirOrderDepth {
+  depth: { price: number; quantity: number }[];
+}

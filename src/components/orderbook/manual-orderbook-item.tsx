@@ -17,7 +17,7 @@ type Props1 = {
   canShowAssetModal?: boolean;
 };
 
-export const ManualOrderbookItem = ({ isCollBid, content, order, canShowAssetModal }: Props1): JSX.Element => {
+export const ManualOrderbookItem = ({ isCollBid, order, canShowAssetModal }: Props1): JSX.Element => {
   const image = isCollBid
     ? (order as ERC721CollectionCartItem).metadata.profileImage
     : (order as ERC721TokenCartItem).image;
@@ -34,13 +34,6 @@ export const ManualOrderbookItem = ({ isCollBid, content, order, canShowAssetMod
       title={title ?? ''}
       order={order}
     />
-  );
-
-  return (
-    <div className="flex flex-col min-w-0">
-      <div className={twMerge(secondaryTextColor, 'font-medium')}>{title}</div>
-      <div className="">{content}</div>
-    </div>
   );
 };
 
@@ -104,7 +97,7 @@ const SingleCollectionCell = ({ order, image, title, canShowAssetModal, isCollBi
           className={twMerge('h-14 w-14 rounded-lg overflow-clip', canShowAssetModal ? 'cursor-pointer' : '')}
           src={image}
           onClick={() => {
-            if (basicTokenInfo) {
+            if (basicTokenInfo && canShowAssetModal) {
               const { pathname, query } = router;
               query['tokenId'] = basicTokenInfo.tokenId;
               query['collectionAddress'] = basicTokenInfo.collectionAddress;

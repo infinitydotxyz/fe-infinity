@@ -66,7 +66,7 @@ export const CollectionManualBidList = ({ collectionAddress, collectionChainId, 
 
           {orders?.map((order) => {
             const orderKind = order.criteria?.kind;
-            let orderType = 'Collection Bid' as 'Collection Bid' | 'Token Bid' | 'Attribute Bid';
+            let orderType = 'Collection Bid' as 'Collection Bid' | 'Token Bid' | 'Trait Bid';
             if (orderKind === 'collection') {
               order.cartType = CartType.CollectionBid;
             } else if (orderKind === 'token') {
@@ -74,7 +74,7 @@ export const CollectionManualBidList = ({ collectionAddress, collectionChainId, 
               order.cartType = CartType.TokenBid;
             } else if (orderKind === 'attribute') {
               // future-todo support in the future
-              orderType = 'Attribute Bid';
+              orderType = 'Trait Bid';
               order.cartType = CartType.None;
             }
             return <CollectionManualBidListItem key={order.id} order={order} orderType={orderType} />;

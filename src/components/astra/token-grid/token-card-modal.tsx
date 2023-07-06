@@ -14,7 +14,7 @@ import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { useAccount } from 'wagmi';
-import { BlueCheck, ClipboardButton, EthSymbol, EZImage, Modal, NextLink, ShortAddress, Spacer } from '../../common';
+import { BlueCheck, ClipboardButton, EZImage, EthSymbol, Modal, NextLink, ShortAddress, Spacer } from '../../common';
 import { AButton } from '../astra-button';
 import { ATraitList } from '../astra-trait-list';
 import { ErrorOrLoading } from '../error-or-loading';
@@ -137,7 +137,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
     ? Number(offerPrice) - Number(floorPrice)
     : 0;
   const floorPricePercentDiff =
-    floorPrice && Number(floorPrice) > 0 ? `${nFormatter((floorPriceDiff / Number(floorPrice)) * 100)}%` : 0;
+    floorPrice && Number(floorPrice) > 0 ? `${nFormatter((floorPriceDiff / Number(floorPrice)) * 100)}` : 0;
 
   const markupPrice = listingPrice || offerPrice;
   const markupPriceDiff =
@@ -150,11 +150,41 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
 
   const isOwner = user && trimLowerCase(user) === trimLowerCase(token.owner?.toString());
   const isUserCollectionCreator = user && collectionCreator && trimLowerCase(user) === trimLowerCase(collectionCreator);
+
   const cartToken = nftToCardDataWithOrderFields(token as Erc721Token);
 
-  const newCartType = isOwner ? CartType.TokenList : listingPrice ? CartType.TokenBuy : CartType.TokenBid;
+  let newCartType = CartType.TokenBuy;
+  if (isOwner) {
+    if (offerPrice) {
+      newCartType = CartType.AcceptOffer;
+    } else {
+      newCartType = CartType.TokenList;
+    }
+  } else {
+    if (listingPrice) {
+      newCartType = CartType.TokenBuy;
+    } else {
+      newCartType = CartType.TokenBid;
+    }
+  }
   cartToken.cartType = newCartType;
   setCartType(newCartType);
+
+  let cartTokenPrice = cartToken.price;
+  if (isOwner) {
+    if (offerPrice) {
+      cartTokenPrice = Number(offerPrice);
+    } else if (listingPrice) {
+      cartTokenPrice = Number(listingPrice);
+    }
+  } else {
+    if (listingPrice) {
+      cartTokenPrice = Number(listingPrice);
+    } else if (offerPrice) {
+      cartTokenPrice = Number(offerPrice);
+    }
+  }
+  cartToken.price = cartTokenPrice;
 
   const removeViewParams = () => {
     const { pathname, query } = router;
@@ -175,12 +205,14 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
           }
         }}
       >
+        {listingPrice && offerPrice && isOwner && <span>{addedToCart ? 'Remove from Cart' : 'Sell Now'}</span>}
+        {listingPrice && offerPrice && !isOwner && <span>{addedToCart ? 'Remove from Cart' : 'Add to Cart'}</span>}
         {listingPrice && !offerPrice && !isOwner && <span>{addedToCart ? 'Remove from Cart' : 'Add to Cart'}</span>}
-        {listingPrice && isOwner && !offerPrice && <span>{addedToCart ? 'Remove from Cart' : 'Edit in Cart'}</span>}
+        {listingPrice && !offerPrice && isOwner && <span>{addedToCart ? 'Remove from Cart' : 'Edit in Cart'}</span>}
+        {!listingPrice && offerPrice && isOwner && <span>{addedToCart ? 'Added to Cart' : 'Sell Now'}</span>}
         {!listingPrice && !offerPrice && isOwner && <span>{addedToCart ? 'Remove from Cart' : 'Sell'}</span>}
-        {offerPrice && isOwner && <span>{addedToCart ? 'Added to Cart' : 'Sell Now'}</span>}
-        {offerPrice && !isOwner && <span>{addedToCart ? 'Added to Cart' : 'Bid higher'}</span>}
-        {!isOwner && !listingPrice && !offerPrice ? <span>{addedToCart ? 'Added to Cart' : 'Add to Cart'}</span> : null}
+        {!listingPrice && offerPrice && !isOwner && <span>{addedToCart ? 'Added to Cart' : 'Bid higher'}</span>}
+        {!listingPrice && !offerPrice && !isOwner ? <span>{addedToCart ? 'Added to Cart' : 'Add to Cart'}</span> : null}
       </AButton>
     );
   };
@@ -329,7 +361,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                       <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>
                         Floor difference
                       </div>
-                      <div>{Number(floorPricePercentDiff) > 0 ? 'floorPricePercentDiff' : '-'}</div>
+                      <div>{Number(floorPricePercentDiff) > 0 ? floorPricePercentDiff + '%' : '-'}</div>
                     </div>
 
                     <div className="space-y-1 mr-1.5">
