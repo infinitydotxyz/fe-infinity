@@ -211,7 +211,7 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
             {isCollSelected(collection as ERC721CollectionCartItem) ? (
               <AiOutlineCheckCircle className={iconButtonStyle} />
             ) : (
-              'Buy'
+              'Bid'
             )}
           </AButton>
         </div>
