@@ -15,10 +15,10 @@ interface Props {
   className?: string;
 }
 
-const DEFAULT_ORDER_TYPE_FILTER = 'offers-made';
+const DEFAULT_ORDER_TYPE_FILTER = 'intents-placed';
 
 export const CollectionOrderList = ({ collectionAddress, collectionChainId, className }: Props) => {
-  const [selectedOrderType] = useState<'listings' | 'offers-made'>(DEFAULT_ORDER_TYPE_FILTER);
+  const [selectedOrderType] = useState<'listings' | 'intents-placed'>(DEFAULT_ORDER_TYPE_FILTER);
   const [filter, setFilter] = useState<TokensFilter>({
     orderType: DEFAULT_ORDER_TYPE_FILTER,
     sort: SORT_FILTERS.highestPrice
@@ -66,8 +66,8 @@ export const CollectionOrderList = ({ collectionAddress, collectionChainId, clas
                 No{' '}
                 {selectedOrderType === 'listings'
                   ? 'Listings'
-                  : selectedOrderType === 'offers-made'
-                  ? 'Bids'
+                  : selectedOrderType === 'intents-placed'
+                  ? 'Intents'
                   : 'Orders'}
               </div>
             </CenteredContent>
@@ -79,9 +79,10 @@ export const CollectionOrderList = ({ collectionAddress, collectionChainId, clas
               filter.orderType === 'listings'
                 ? 'Listing'
                 : order.nfts[0].tokens.length === 0
-                ? 'Collection Bid'
-                : 'Token Bid';
-            orderCartItem.cartType = orderType === 'Collection Bid' ? CartType.CollectionBid : CartType.TokenBid;
+                ? 'Collection Bid Intent'
+                : 'Token Bid Intent';
+            orderCartItem.cartType =
+              orderType === 'Collection Bid Intent' ? CartType.CollectionBidIntent : CartType.TokenBidIntent;
             return <CollectionOrderListItem key={order.id} order={orderCartItem} orderType={orderType} />;
           })}
 

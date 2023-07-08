@@ -1,10 +1,10 @@
-import { CollectionOrder } from '@infinityxyz/lib-frontend/types/core';
+import { CollectionOrder, CreationFlow, TokenStandard } from '@infinityxyz/lib-frontend/types/core';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { AButton } from 'src/components/astra/astra-button';
 import { ButtonProps, toastError } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
-import { ERC721TokenCartItem } from 'src/utils/types';
+import { ERC721CollectionCartItem, ERC721TokenCartItem } from 'src/utils/types';
 import { useAccount, useNetwork } from 'wagmi';
 
 type OrderButtonProps = Omit<ButtonProps, 'children'>;
@@ -13,37 +13,92 @@ type Props = {
   order: CollectionOrder;
   outlineButtons?: boolean;
   collectionAddress?: string;
+  collectionName?: string;
 };
 
-export const OrderbookRowButton = ({ order, outlineButtons = false, collectionAddress }: Props) => {
+export const OrderbookRowButton = ({ order, outlineButtons = false, collectionAddress, collectionName }: Props) => {
   const { address: user, isConnected } = useAccount();
   const { chain } = useNetwork();
   const { selectedChain } = useAppContext();
   const chainId = String(chain?.id ?? selectedChain);
-  const { isNFTSelected, toggleNFTSelection } = useAppContext();
+  const { isNFTSelected, toggleNFTSelection, toggleCollSelection, isCollSelected } = useAppContext();
   const { setCartType } = useCartContext();
 
-  const cartType = CartType.TokenBid;
+  const cartType = order.isSellOrder
+    ? CartType.TokenBuy
+    : order.tokenId === 'Collection Bid'
+    ? CartType.CollectionBid
+    : CartType.TokenBid;
 
   const token: ERC721TokenCartItem = {
     tokenId: order.tokenId,
     address: collectionAddress ?? '',
     chainId: chainId,
     cartType,
-    id: '',
+    id: order.id,
     title: '',
     image: order.tokenImage,
-    price: order.priceEth
+    price: order.priceEth,
+    collectionName
+  };
+
+  const collection: ERC721CollectionCartItem = {
+    address: collectionAddress ?? '',
+    chainId: chainId,
+    cartType: CartType.CollectionBid,
+    id: order.id,
+    title: '',
+    image: order.tokenImage,
+    offerPriceEth: order.priceEth,
+    tokenStandard: TokenStandard.ERC721,
+    hasBlueCheck: false,
+    deployer: '',
+    deployedAt: 0,
+    deployedAtBlock: 0,
+    owner: '',
+    numOwnersUpdatedAt: 0,
+    metadata: {
+      name: collectionName ?? '',
+      description: '',
+      symbol: '',
+      profileImage: order.tokenImage,
+      bannerImage: '',
+      links: {
+        timestamp: 0
+      }
+    },
+    slug: '',
+    numNfts: 0,
+    numTraitTypes: 0,
+    indexInitiator: '',
+    state: {
+      version: 0,
+      create: {
+        step: CreationFlow.Complete,
+        updatedAt: 0,
+        error: undefined,
+        progress: 0,
+        zoraCursor: undefined,
+        reservoirCursor: undefined
+      },
+      export: {
+        done: false
+      }
+    }
   };
 
   const onClickEdit = (order: CollectionOrder) => {
     console.log('onClickEdit', order);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onClickBidHigher = (order: CollectionOrder) => {
-    console.log('onClickBidHigher', order);
-    // addCartItem needs to know whether order is a single collection single nft order
-    // or single collection multi nft order or a multi-collection order for proper image display
+    setCartType(cartType);
+    if (cartType === CartType.CollectionBid) {
+      toggleCollSelection(collection);
+    } else {
+      toggleNFTSelection(token);
+    }
   };
 
   const onClickBuySell = () => {
@@ -81,7 +136,7 @@ export const OrderbookRowButton = ({ order, outlineButtons = false, collectionAd
     } else if (!order.isSellOrder && !isOwner) {
       return (
         <AButton {...buttonProps} primary onClick={() => onClickBidHigher(order)}>
-          Bid Higher
+          {isCollSelected(collection) ? 'Remove' : 'Bid Higher'}
         </AButton>
       );
     } else {

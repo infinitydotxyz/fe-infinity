@@ -10,9 +10,9 @@ export const Header = ({ title = 'Home' }: Props) => {
     <>
       <Head>
         <link rel="shortcut icon" href="/favicon.ico" />
-        <meta name="description" content="Flow" />
+        <meta name="description" content="Pixelpack" />
 
-        <title>{title ? `${title} | Flow` : 'Flow'}</title>
+        <title>{title ? `${title} | Pixelpack` : 'Pixelpack'}</title>
       </Head>
     </>
   );

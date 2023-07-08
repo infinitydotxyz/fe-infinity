@@ -16,13 +16,15 @@ export type CollectionChartsProps = {
   collectionAddress: string;
   collectionChainId: ChainId;
   collectionImage: string;
+  collectionName?: string;
 };
 
 export const CollectionCharts = ({
   className = '',
   collectionAddress,
   collectionChainId,
-  collectionImage
+  collectionImage,
+  collectionName
 }: CollectionChartsProps) => {
   const [salesChartData, setSalesChartData] = useState<SalesChartData[]>([]);
   const [listingsData, setListingsData] = useState<CollectionOrder[]>([]);
@@ -177,6 +179,7 @@ export const CollectionCharts = ({
               setIndex={setSelectedListingIndex}
               collectionAddress={collectionAddress}
               collectionImage={collectionImage}
+              collectionName={collectionName}
             />
           )}
         </div>
@@ -199,14 +202,15 @@ export const CollectionCharts = ({
               setIndex={setSelectedBidIndex}
               collectionAddress={collectionAddress}
               collectionImage={collectionImage}
+              collectionName={collectionName}
             />
           )}
         </div>
       </div>
 
       <div className={twMerge('w-full p-2 flex space-x-5 text-xs mt-6 z-50', secondaryTextColor)}>
-        <ExternalLink href="https://flow.so/terms">Terms</ExternalLink>
-        <ExternalLink href="https://flow.so/privacy-policy">Privacy Policy</ExternalLink>
+        <ExternalLink href="https://pixelpack.io/terms">Terms</ExternalLink>
+        <ExternalLink href="https://pixelpack.io/privacy-policy">Privacy Policy</ExternalLink>
       </div>
     </div>
   );

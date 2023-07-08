@@ -1,11 +1,16 @@
 import { ChainId, CollectionHistoricalSale, CollectionSaleAndOrder } from '@infinityxyz/lib-frontend/types/core';
+import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils';
+import { ReservoirOrderDepth } from 'src/utils/types';
 import { twMerge } from 'tailwind-merge';
-import { CollectionRecentSalesOrders } from './collection-recent-sales-orders';
 import { ResponsiveSalesChart, SalesChartData } from '../charts/sales-chart';
-import { BouncingLogo } from '../common';
 import { ScatterChartType } from '../charts/types';
+import { BouncingLogo } from '../common';
+import { CollectionRecentSalesOrders } from './collection-recent-sales-orders';
+
+// eslint-disable-next-line node/no-unsupported-features/es-syntax
+const OrderDepthChart = dynamic(() => import('../charts/order-depth-chart'), { ssr: false });
 
 export type Props = {
   className?: string;
@@ -21,8 +26,10 @@ export const CollectionItemsPageSidebar = ({
   collectionImage
 }: Props) => {
   const [salesChartData, setSalesChartData] = useState<SalesChartData[]>([]);
+  const [depthChartData, setDepthChartData] = useState<{ buy: ReservoirOrderDepth; sell: ReservoirOrderDepth }>();
   const [recentSalesOrdersData, setRecentSalesOrdersData] = useState<CollectionSaleAndOrder[]>([]);
   const [isSalesChartLoading, setIsSalesChartLoading] = useState(true);
+  const [isDepthChartLoading, setIsDepthChartLoading] = useState(true);
 
   const fetchSalesChartData = async () => {
     setIsSalesChartLoading(true);
@@ -78,19 +85,42 @@ export const CollectionItemsPageSidebar = ({
     );
   };
 
+  const fetchOrderDepth = async () => {
+    setIsDepthChartLoading(true);
+    const { result, error } = await apiGet(`/collections/${collectionChainId}:${collectionAddress}/orderdepth`);
+
+    if (error) {
+      console.error(error);
+      setIsDepthChartLoading(false);
+      return;
+    }
+
+    setDepthChartData(result);
+    setIsDepthChartLoading(false);
+  };
+
   useEffect(() => {
     fetchSalesChartData();
     fetchRecentSalesAndOrders();
+    fetchOrderDepth();
 
     const interval = setInterval(() => {
       fetchRecentSalesAndOrders();
+      fetchOrderDepth();
     }, 30 * 1000);
 
     return () => clearInterval(interval);
   }, [collectionAddress, collectionChainId]);
 
   return (
-    <div className={twMerge('flex flex-col py-[0.87rem] w-full pr-4', className)}>
+    <div className={twMerge('flex flex-col py-[0.87rem] w-full pr-4 space-y-2', className)}>
+      <div>
+        {/* {depthChartData && <ResponsiveSalesChart graphType={ScatterChartType.Sales} data={salesChartData} />} */}
+        {depthChartData && <OrderDepthChart data={depthChartData} />}
+
+        {isDepthChartLoading && <BouncingLogo />}
+      </div>
+
       <div>
         {salesChartData.length > 0 && <ResponsiveSalesChart graphType={ScatterChartType.Sales} data={salesChartData} />}
 

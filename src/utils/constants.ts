@@ -3,15 +3,18 @@ import { getToken } from '@infinityxyz/lib-frontend/utils';
 import missingImage from 'src/images/missing-image.png';
 import newsImage from 'src/images/news.png';
 
-export const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://sv.flow.so';
-export const SITE_HOST = process.env.NEXT_PUBLIC_SITE_HOST || 'https://flow.so';
+export const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://sv.pixelpack.io';
+export const SITE_HOST = process.env.NEXT_PUBLIC_SITE_HOST || 'https://pixelpack.io';
 export const DISCORD_BOT_INVITE_URL =
   'https://discord.com/api/oauth2/authorize?client_id=956292440778743838&permissions=1024&scope=bot%20applications.commands';
 
 export const ETHERSCAN_BASE_URL = 'https://etherscan.io';
 
-export const FLOW_FEE_PCT = 2;
-export const FLOW_ROYALTY_PCT = 0;
+export const SEASON_2_UNLOCK_BLOCK = 18490808;
+
+export const FEE_BPS = 250;
+export const ROYALTY_BPS = 500;
+export const FEE_WALLET_ADDRESS = '0xbFFc957B7537295B138dB43FB1843FeFF1782a20';
 
 export const DEFAULT_LIMIT = 30;
 export const SMALL_LIMIT = 10;

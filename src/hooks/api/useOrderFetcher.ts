@@ -9,9 +9,10 @@ import {
 } from '@infinityxyz/lib-frontend/types/core';
 import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
 import { useEffect, useState } from 'react';
-import { apiGet, DEFAULT_LIMIT } from 'src/utils';
+import { DEFAULT_LIMIT, apiGet } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { TokensFilter, SORT_FILTERS } from 'src/utils/types';
+import { ERC721TokenCartItem, SORT_FILTERS, TokensFilter } from 'src/utils/types';
+import { resvOrdersToCardData, resvUserTopOffersToCardData } from './useTokenFetcher';
 
 interface BaseProps {
   kind?: 'collection' | 'token' | 'profile';
@@ -55,7 +56,10 @@ const parseFiltersToApiQueryParams = (filter: TokensFilter): GetOrderItemsQuery 
         if (filter.orderType === 'listings') {
           parsedFilters.isSellOrder = true;
         }
-        if (filter.orderType === 'offers-made') {
+        if (filter.orderType === 'intents-placed') {
+          parsedFilters.isSellOrder = false;
+        }
+        if (filter.orderType === 'bids-placed') {
           parsedFilters.isSellOrder = false;
         }
         if (filter.orderType === 'offers-received') {
@@ -111,7 +115,9 @@ export const useCollectionOrderFetcher = (
 
 export const useProfileOrderFetcher = (limit: number, filter: TokensFilter, userAddress: string) => {
   const side =
-    filter.orderType === 'listings' || filter.orderType === 'offers-made' ? Queries.Side.Maker : Queries.Side.Taker;
+    filter.orderType === 'listings' || filter.orderType === 'intents-placed' || filter.orderType === 'bids-placed'
+      ? Queries.Side.Maker
+      : Queries.Side.Taker;
   const props: ProfileProps = {
     kind: 'profile',
     limit,
@@ -153,6 +159,9 @@ export const useTokenOrderFetcher = (
 
 const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, chainId: ChainId, props: FetcherProps) => {
   const [orders, setOrders] = useState<(SignedOBOrder & { executionStatus: ExecutionStatus | null })[]>([]);
+  const [profileOrders, setProfileOrders] = useState<ERC721TokenCartItem[]>([]);
+  const [totalOffersValue, setTotalOffersValue] = useState<number>(0);
+  const [numTokensWithOffers, setNumTokensWithOffers] = useState<number>(0);
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [cursor, setCursor] = useState('');
@@ -237,6 +246,10 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, chainId: C
             query.collection = collection;
           }
 
+          if (filter.orderType === 'intents-placed') {
+            query.isIntent = true;
+          }
+
           options = {
             endpoint: `/v2/users/${props.context.userAddress}/orders`,
             query
@@ -290,74 +303,94 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, chainId: C
           newData = [...response.result.data];
         }
 
-        setOrders(
-          newData.map((order: Order & { executionStatus: ExecutionStatus | null }) => {
-            const orderItems = order.kind === 'single-collection' ? [order.item] : order.items;
-            const nfts = orderItems.map((item) => {
-              let tokens: OrderItemToken[];
-              switch (item.kind) {
-                case 'collection-wide':
-                  tokens = [];
-                  break;
-                case 'single-token':
-                  tokens = [item.token];
-                  break;
-                case 'token-list':
-                  tokens = item.tokens;
-                  break;
-              }
+        if (props.kind === 'profile') {
+          if (props.context?.side === Queries.Side.Maker) {
+            if (filter.orderType !== 'intents-placed') {
+              setProfileOrders(resvOrdersToCardData(newData));
+            }
+          } else {
+            setNumTokensWithOffers(response.result.totalTokensWithBids);
+            setTotalOffersValue(response.result.totalAmount);
+            setProfileOrders(resvUserTopOffersToCardData(newData));
+          }
+        }
 
-              const chainTokens = tokens.map((item) => {
+        if (
+          props.kind === 'token' ||
+          props.kind === 'collection' ||
+          (props.kind === 'profile' &&
+            props.context?.side === Queries.Side.Maker &&
+            filter.orderType === 'intents-placed')
+        ) {
+          setOrders(
+            newData.map((order: Order & { executionStatus: ExecutionStatus | null }) => {
+              const orderItems = order.kind === 'single-collection' ? [order.item] : order.items;
+              const nfts = orderItems.map((item) => {
+                let tokens: OrderItemToken[];
+                switch (item.kind) {
+                  case 'collection-wide':
+                    tokens = [];
+                    break;
+                  case 'single-token':
+                    tokens = [item.token];
+                    break;
+                  case 'token-list':
+                    tokens = item.tokens;
+                    break;
+                }
+
+                const chainTokens = tokens.map((item) => {
+                  return {
+                    tokenId: item.tokenId,
+                    tokenName: item.name,
+                    tokenImage: item.image,
+                    takerUsername: item.owner?.username,
+                    takerAddress: item.owner?.address,
+                    numTokens: item.quantity,
+                    attributes: []
+                  };
+                });
                 return {
-                  tokenId: item.tokenId,
-                  tokenName: item.name,
-                  tokenImage: item.image,
-                  takerUsername: item.owner?.username,
-                  takerAddress: item.owner?.address,
-                  numTokens: item.quantity,
-                  attributes: []
+                  chainId: order.chainId,
+                  collectionAddress: item.address,
+                  collectionName: item.name,
+                  collectionImage: item.profileImage,
+                  collectionSlug: item.slug,
+                  hasBlueCheck: item.hasBlueCheck,
+                  tokens: chainTokens
                 };
               });
-              return {
+
+              const signedObOrder: SignedOBOrder & { executionStatus: ExecutionStatus | null } = {
+                id: order.id,
                 chainId: order.chainId,
-                collectionAddress: item.address,
-                collectionName: item.name,
-                collectionImage: item.profileImage,
-                collectionSlug: item.slug,
-                hasBlueCheck: item.hasBlueCheck,
-                tokens: chainTokens
+                isSellOrder: order.isSellOrder,
+                numItems: order.numItems,
+                makerUsername: order.maker?.username,
+                makerAddress: order.maker?.address,
+                startPriceEth: order.startPriceEth,
+                endPriceEth: order.endPriceEth,
+                startTimeMs: order.startTimeMs,
+                endTimeMs: order.endTimeMs,
+                maxGasPriceWei: '0',
+                nonce: parseInt(order.nonce, 10),
+                nfts: nfts,
+                execParams: {
+                  complicationAddress: '',
+                  currencyAddress: order.currency
+                },
+                extraParams: {
+                  buyer: order.isPrivate ? order.taker.address : ''
+                },
+                signedOrder: {} as unknown as ChainOBOrder,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                executionStatus: (order as any)?.executionStatus ?? null
               };
-            });
 
-            const signedObOrder: SignedOBOrder & { executionStatus: ExecutionStatus | null } = {
-              id: order.id,
-              chainId: order.chainId,
-              isSellOrder: order.isSellOrder,
-              numItems: order.numItems,
-              makerUsername: order.maker?.username,
-              makerAddress: order.maker?.address,
-              startPriceEth: order.startPriceEth,
-              endPriceEth: order.endPriceEth,
-              startTimeMs: order.startTimeMs,
-              endTimeMs: order.endTimeMs,
-              maxGasPriceWei: '0',
-              nonce: parseInt(order.nonce, 10),
-              nfts: nfts,
-              execParams: {
-                complicationAddress: '',
-                currencyAddress: order.currency
-              },
-              extraParams: {
-                buyer: order.isPrivate ? order.taker.address : ''
-              },
-              signedOrder: {} as unknown as ChainOBOrder,
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              executionStatus: (order as any)?.executionStatus ?? null
-            };
-
-            return signedObOrder;
-          })
-        );
+              return signedObOrder;
+            })
+          );
+        }
 
         setHasNextPage(response.result.hasNextPage);
         setCursor(response.result.cursor);
@@ -368,5 +401,5 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, chainId: C
     setIsLoading(false);
   };
 
-  return { orders, isLoading, hasNextPage, fetch, error };
+  return { orders, profileOrders, totalOffersValue, numTokensWithOffers, isLoading, hasNextPage, fetch, error };
 };

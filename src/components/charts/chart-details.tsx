@@ -23,9 +23,17 @@ interface Props {
   valueClassName?: string;
   collectionAddress: string;
   collectionImage: string;
+  collectionName?: string;
 }
 
-export const OrdersChartDetails = ({ orders, index, setIndex, collectionAddress, collectionImage }: Props) => {
+export const OrdersChartDetails = ({
+  orders,
+  index,
+  setIndex,
+  collectionAddress,
+  collectionImage,
+  collectionName
+}: Props) => {
   if (orders.length > 0) {
     const order = orders[clamp(index, 0, orders.length - 1)];
 
@@ -36,6 +44,7 @@ export const OrdersChartDetails = ({ orders, index, setIndex, collectionAddress,
           scroll={true}
           collectionAddress={collectionAddress}
           collectionImage={collectionImage}
+          collectionName={collectionName}
         />
 
         <div className={twMerge('flex items-center justify-center my-4')}>
@@ -62,9 +71,10 @@ interface Props2 {
   scroll?: boolean;
   collectionImage?: string;
   collectionAddress: string;
+  collectionName?: string;
 }
 
-const OrderDetailViewer = ({ order, collectionAddress }: Props2) => {
+const OrderDetailViewer = ({ order, collectionAddress, collectionName }: Props2) => {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const { chain } = useNetwork();
@@ -107,7 +117,12 @@ const OrderDetailViewer = ({ order, collectionAddress }: Props2) => {
               {order.priceEth} {EthSymbol}
             </div>
           </div>
-          <OrderbookRowButton order={order} outlineButtons={false} />
+          <OrderbookRowButton
+            order={order}
+            outlineButtons={false}
+            collectionName={collectionName}
+            collectionAddress={collectionAddress}
+          />
         </div>
       </div>
       {modalOpen && <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} />}

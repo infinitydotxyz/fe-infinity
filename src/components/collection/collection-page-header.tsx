@@ -2,8 +2,7 @@ import { BaseCollection, ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { HiOutlineExternalLink } from 'react-icons/hi';
-import { BlueCheck, ClipboardButton, EthSymbol, EZImage, ReadMoreText, Spacer } from 'src/components/common';
-import { useMatchingEngineCollection } from 'src/hooks/api/useMatchingEngineCollection';
+import { BlueCheck, ClipboardButton, EZImage, EthSymbol, ReadMoreText, Spacer } from 'src/components/common';
 import etherscanLogo from 'src/images/etherscan-logo.png';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
 import {
@@ -17,7 +16,6 @@ import {
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AOutlineButton } from '../astra/astra-button';
-import { MatchingEngineStatusIcon, StatusIcon } from '../common/status-icon';
 
 export interface CollectionPageHeaderProps {
   expanded: boolean;
@@ -58,10 +56,10 @@ export const CollectionPageHeader = ({
 
   const chainId = (collection?.chainId ?? '1') as ChainId;
 
-  const { result: matchingEngineStatus, isInitialLoadComplete } = useMatchingEngineCollection(
-    collection?.address ?? '',
-    chainId
-  );
+  // const { result: matchingEngineStatus, isInitialLoadComplete } = useMatchingEngineCollection(
+  //   collection?.address ?? '',
+  //   chainId
+  // );
 
   return (
     <div className={twMerge(borderColor, secondaryBgColor, 'border-b px-6')}>
@@ -157,7 +155,7 @@ export const CollectionPageHeader = ({
         </div>
       )}
 
-      <div className="flex mt-4">
+      {/* <div className="flex mt-4">
         <div className="flex text-sm items-center">
           <div className="flex pr-4 gap-2 whitespace-nowrap font-medium">
             <span className={secondaryTextColor}>Matching Engine </span>
@@ -190,7 +188,7 @@ export const CollectionPageHeader = ({
             </span>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="flex mt-4 text-sm">
         <div className="flex space-x-5">
@@ -218,12 +216,14 @@ export const CollectionPageHeader = ({
         <Spacer />
 
         <div className="flex text-sm divide-x divide-light-border dark:divide-dark-border items-center">
-          <div className="flex pr-4 gap-2 whitespace-nowrap font-medium">
-            <span className={secondaryTextColor}>Floor </span>
-            <span className="">
-              {floorPrice ?? '-'} {EthSymbol}
-            </span>
-          </div>
+          {Number(floorPrice) > 0 && (
+            <div className="flex pr-4 gap-2 whitespace-nowrap font-medium">
+              <span className={secondaryTextColor}>Floor </span>
+              <span className="">
+                {floorPrice ?? '-'} {EthSymbol}
+              </span>
+            </div>
+          )}
           <div className="flex px-4 gap-2 whitespace-nowrap font-medium">
             <span className={secondaryTextColor}>Total Vol </span>
             <span className="">

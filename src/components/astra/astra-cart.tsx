@@ -1,14 +1,17 @@
 import { getAddress } from '@ethersproject/address';
-import { RadioGroup } from '@headlessui/react';
 import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { ETHEREUM_WETH_ADDRESS, GOERLI_WETH_ADDRESS, PROTOCOL_FEE_BPS } from '@infinityxyz/lib-frontend/utils';
+import { formatEther, parseEther } from 'ethers/lib/utils.js';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 import { FiEdit3 } from 'react-icons/fi';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
-import { EthSymbol, EZImage, Spacer, TextInputBox, ToggleTab } from 'src/components/common';
+import { EZImage, EthSymbol, Spacer, TextInputBox, ToggleTab } from 'src/components/common';
+import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 import {
+  FLOW_TOKEN,
+  ROYALTY_BPS,
   ellipsisString,
   getCartType,
   getCollectionKeyId,
@@ -18,6 +21,7 @@ import {
 } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartItem, CartType, useCartContext } from 'src/utils/context/CartContext';
+import { fetchMinXflStakeForZeroFees } from 'src/utils/orderbook-utils';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
 import {
   borderColor,
@@ -33,10 +37,9 @@ import {
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useAccount, useBalance, useNetwork, useProvider } from 'wagmi';
-import { RadioButtonCard } from '../common/radio-button-card';
 import { UniswapModal } from '../common/uniswap-model';
+import { StakeTokensModal } from '../rewards/stake-tokens-modal';
 import { ADropdown } from './astra-dropdown';
-import { formatEther, parseEther } from 'ethers/lib/utils.js';
 
 interface Props {
   onTokensClear: () => void;
@@ -78,7 +81,6 @@ export const AstraCart = ({
   onOrdersClear,
   onTokenRemove,
   onCollRemove,
-  onOrderRemove,
   onCheckout,
   onTokenSend
 }: Props) => {
@@ -89,6 +91,7 @@ export const AstraCart = ({
   const [checkoutBtnText, setCheckoutBtnText] = useState('Checkout');
   const [sendToAddress, setSendToAddress] = useState('');
   const [showBuyTokensModal, setShowBuyTokensModal] = useState(false);
+  const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
 
   const provider = useProvider();
   const { address: user } = useAccount();
@@ -99,18 +102,57 @@ export const AstraCart = ({
   const { cartType, setCartType, getCurrentCartItems, cartItems } = useCartContext();
   const [currentCartItems, setCurrentCartItems] = useState<CartItem[]>([]);
   const [cartTotal, setCartTotal] = useState(0);
-  const [cartTabOptions, setCartTabOptions] = useState(['Totals', 'Options']);
-  const [selectedTab, setSelectedTab] = useState(cartTabOptions[0]);
+  const [fees, setFees] = useState(0);
+  const [royalties, setRoyalties] = useState(0);
+  const [netProceeds, setNetProceeds] = useState(0);
 
-  enum ExecutionMode {
-    Fast = 'Fast',
-    Batched = 'Batched'
-  }
-  const [executionMode, setExecutionMode] = useState(ExecutionMode.Fast);
+  const { stakeBalance } = useStakerContract();
+  const [minStakeAmountForFeeWaiverAndBoost, setMinStakeAmountForFeeWaiverAndBoost] = useState(0);
+  const [xflStaked, setXflStaked] = useState(0);
+  // const [xflStakeBoost, setXflStakeBoost] = useState('0x');
+  const [areFeesWaived, setAreFeesWaived] = useState(false);
 
   const [tokenMap, setTokenMap] = useState<Map<string, ERC721TokenCartItem[]>>(new Map());
   const [collMap, setCollMap] = useState<Map<string, ERC721CollectionCartItem[]>>(new Map());
-  const [orderMap, setOrderMap] = useState<Map<string, ERC721OrderCartItem[]>>(new Map());
+  const [orderMap, setOrderMap] = useState<Map<string, ERC721TokenCartItem[]>>(new Map());
+
+  const [cartTabOptions] = useState(['Totals']);
+  const [selectedTab, setSelectedTab] = useState(cartTabOptions[0]);
+
+  useEffect(() => {
+    // const feeBps = areFeesWaived ? 0 : FEE_BPS;
+    const royaltyBps = areFeesWaived ? 0 : ROYALTY_BPS;
+    // const newFees = (cartTotal * feeBps) / 10_000;
+    const newFees = 0;
+    const newRoyalties = (cartTotal * royaltyBps) / 10_000;
+    const newNetProceeds = cartTotal - newFees - newRoyalties;
+
+    // setFees(newFees);
+    setFees(0);
+    setRoyalties(newRoyalties);
+    setNetProceeds(newNetProceeds);
+  }, [cartTotal]);
+
+  useEffect(() => {
+    getStakeInfo();
+  });
+
+  const getStakeInfo = async () => {
+    const minStakeAmount =
+      minStakeAmountForFeeWaiverAndBoost === 0
+        ? await fetchMinXflStakeForZeroFees()
+        : minStakeAmountForFeeWaiverAndBoost;
+    setMinStakeAmountForFeeWaiverAndBoost(minStakeAmount);
+
+    const xflStaked = parseFloat((await stakeBalance()) ?? '0');
+    setXflStaked(xflStaked);
+
+    // const boost = xflStaked >= minStakeAmount ? 2 : 0;
+    // setXflStakeBoost(boost + 'x');
+
+    const feesWaived = xflStaked >= minStakeAmount;
+    setAreFeesWaived(feesWaived);
+  };
 
   // future-todo change when supporting more chains
   const WETH_ADDRESS =
@@ -129,14 +171,6 @@ export const AstraCart = ({
 
   let cartItemList: ReactNode;
   const [cartContent, setCartContent] = useState<ReactNode>(cartItemList);
-
-  useEffect(() => {
-    if (cartType === CartType.Send || cartType === CartType.Cancel || cartType === CartType.TokenBuy) {
-      setCartTabOptions(['Totals']);
-    } else {
-      setCartTabOptions(['Totals', 'Options']);
-    }
-  }, [cartType]);
 
   const onCartTabOptionsChange = (value: string) => {
     switch (value) {
@@ -165,7 +199,9 @@ export const AstraCart = ({
     if (
       (cartType === CartType.TokenList ||
         cartType === CartType.TokenBid ||
+        cartType === CartType.TokenBidIntent ||
         cartType === CartType.TokenBuy ||
+        cartType === CartType.AcceptOffer ||
         cartType === CartType.Send) &&
       tokenMap.size > 0
     ) {
@@ -211,17 +247,14 @@ export const AstraCart = ({
           {divList}
         </div>
       );
-    } else if (cartType === CartType.CollectionBid && collMap.size > 0) {
+    } else if ((cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent) && collMap.size > 0) {
       const divList: ReactNode[] = [];
       collMap.forEach((collArray) => {
-        const first = collArray[0];
-        const collId = getCollectionKeyId(first);
-
         for (const t of collArray) {
           newCartTotal += t.offerPriceEth ?? 0;
           divList.push(
             <AstraCollectionCartItem
-              key={collId}
+              key={getCollectionKeyId(t)}
               collection={t}
               onRemove={onCollRemove}
               updateCartTotal={(newVal: string, oldVal: string) => {
@@ -246,15 +279,23 @@ export const AstraCart = ({
       orderMap.forEach((ordArray) => {
         const first = ordArray[0];
         const orderId = first.id;
+        const isCollBid = first.criteria?.kind === 'collection';
+        const firstCollName = isCollBid ? first.criteria?.data?.collection?.name : first.collectionName;
 
         divList.push(
           <div className="w-full rounded-md truncate font-bold font-heading min-h-[25px]" key={`header-${orderId}`}>
-            {first.nfts.length > 1 ? 'Multiple Collections' : first.nfts[0].collectionName}
+            {firstCollName}
           </div>
         );
 
         for (const t of ordArray) {
-          divList.push(<AstraCancelCartItem key={orderId} order={t} onRemove={onOrderRemove} />);
+          divList.push(
+            isCollBid ? (
+              <AstraCancelCartItem key={t.id} order={t} onCollectionRemove={onCollRemove} />
+            ) : (
+              <AstraCancelCartItem key={t.id} order={t} onTokenRemove={onTokenRemove} />
+            )
+          );
         }
 
         divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
@@ -289,7 +330,9 @@ export const AstraCart = ({
     if (
       cartType === CartType.TokenList ||
       cartType === CartType.TokenBid ||
+      cartType === CartType.TokenBidIntent ||
       cartType === CartType.TokenBuy ||
+      cartType === CartType.AcceptOffer ||
       cartType === CartType.Send
     ) {
       tokenMap.clear();
@@ -302,7 +345,7 @@ export const AstraCart = ({
       setTokenMap(tokenMap);
     }
 
-    if (cartType === CartType.CollectionBid) {
+    if (cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent) {
       collMap.clear();
       for (const item of cartItems) {
         const coll = item as ERC721CollectionCartItem;
@@ -316,21 +359,21 @@ export const AstraCart = ({
     if (cartType === CartType.Cancel) {
       orderMap.clear();
       for (const item of cartItems) {
-        const order = item as ERC721OrderCartItem;
-        const orders = orderMap.get(order.id ?? '') ?? [];
+        const order = item as ERC721TokenCartItem;
+        const orders = orderMap.get(order.address ?? '') ?? [];
         orders.push(order);
-        orderMap.set(order.id ?? '', orders);
+        orderMap.set(order.address ?? '', orders);
       }
       setOrderMap(orderMap);
     }
 
     // render cart title and checkout button text
     if (cartType === CartType.TokenList) {
-      setCartTitle('Sell');
+      setCartTitle('List');
       if (cartItems.length > 1) {
-        setCheckoutBtnText('Bulk Sell');
+        setCheckoutBtnText('Bulk List');
       } else {
-        setCheckoutBtnText('Sell');
+        setCheckoutBtnText('List');
       }
     } else if (cartType === CartType.CollectionBid) {
       if (cartItems.length > 1) {
@@ -340,12 +383,26 @@ export const AstraCart = ({
         setCartTitle('Collection Bid');
         setCheckoutBtnText('Bid');
       }
+    } else if (cartType === CartType.CollectionBidIntent) {
+      setCartTitle('Collection Bid Intent');
+      if (cartItems.length > 1) {
+        setCheckoutBtnText('Express Intents');
+      } else {
+        setCheckoutBtnText('Express Intent');
+      }
     } else if (cartType === CartType.TokenBid) {
       setCartTitle('Bid');
       if (cartItems.length > 1) {
         setCheckoutBtnText('Bulk Bid');
       } else {
         setCheckoutBtnText('Bid');
+      }
+    } else if (cartType === CartType.TokenBidIntent) {
+      setCartTitle('Token Bid Intent');
+      if (cartItems.length > 1) {
+        setCheckoutBtnText('Express Intents');
+      } else {
+        setCheckoutBtnText('Express Intent');
       }
     } else if (cartType === CartType.TokenBuy) {
       setCartTitle('Buy');
@@ -363,6 +420,13 @@ export const AstraCart = ({
         setCheckoutBtnText('Cancel Orders');
       } else {
         setCheckoutBtnText('Cancel Order');
+      }
+    } else if (cartType === CartType.AcceptOffer) {
+      setCartTitle('Sell');
+      if (cartItems.length > 1) {
+        setCheckoutBtnText('Bulk Sell');
+      } else {
+        setCheckoutBtnText('Sell');
       }
     }
 
@@ -389,13 +453,17 @@ export const AstraCart = ({
                     cartType === CartType.Send ||
                     cartType === CartType.TokenList ||
                     cartType === CartType.TokenBid ||
-                    cartType === CartType.TokenBuy
+                    cartType === CartType.TokenBidIntent ||
+                    cartType === CartType.TokenBuy ||
+                    cartType === CartType.AcceptOffer
                   ) {
                     onTokensClear();
-                  } else if (cartType === CartType.CollectionBid) {
+                  } else if (cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent) {
                     onCollsClear();
                   } else if (cartType === CartType.Cancel) {
                     onOrdersClear();
+                    onTokensClear();
+                    onCollsClear();
                   }
                 }}
               >
@@ -419,62 +487,155 @@ export const AstraCart = ({
 
       {cartContent}
 
-      <div className={twMerge('m-4 flex flex-col text-sm space-y-2 rounded-lg p-3', secondaryBgColor)}>
-        <ToggleTab
-          className="font-heading mb-2"
-          options={cartTabOptions}
-          defaultOption={cartTabOptions[0]}
-          onChange={onCartTabOptionsChange}
-        />
+      {cartType !== CartType.Send && cartType !== CartType.Cancel && (
+        <div className={twMerge('m-4 flex flex-col text-sm space-y-2 rounded-lg p-3', secondaryBgColor)}>
+          <ToggleTab
+            className="font-heading mb-2"
+            options={cartTabOptions}
+            defaultOption={cartTabOptions[0]}
+            onChange={onCartTabOptionsChange}
+          />
 
-        {selectedTab === 'Totals' && (
-          <div className="space-y-3 px-1">
-            <div className="flex justify-between">
-              <div className={twMerge(secondaryTextColor, 'font-medium')}>Cart total: </div>
-              <div className="font-heading">
-                {nFormatter(Number(cartTotal))} {EthSymbol}
-              </div>
-            </div>
-            {user && (
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className={twMerge(secondaryTextColor, 'font-medium')}>WETH Balance: </span>
-
-                  <div>
-                    {isLoading ? (
-                      <span>Loading...</span>
-                    ) : (
-                      <span className="font-heading">
-                        {nFormatter(Number(wethBalance?.formatted))} {EthSymbol}
-                      </span>
-                    )}
-                    <AButton
-                      className={twMerge('rounded-md text-xs ml-2', secondaryBtnBgColorText)}
-                      onClick={() => {
-                        setShowBuyTokensModal(true);
-                      }}
-                    >
-                      Wrap ETH
-                    </AButton>
+          {selectedTab === 'Totals' && (
+            <div className="space-y-3 px-1">
+              <div className={twMerge('border-b-[1px] pb-2 space-y-2', borderColor)}>
+                <div className={twMerge('flex justify-between')}>
+                  <div className={twMerge(secondaryTextColor, 'font-medium')}>Cart total: </div>
+                  <div className="font-heading">
+                    {nFormatter(Number(cartTotal))} {EthSymbol}
                   </div>
                 </div>
 
-                <div className="flex justify-between">
-                  <span className={twMerge(secondaryTextColor, 'font-medium')}>ETH Balance: </span>
-                  {isEthBalanceLoading ? (
-                    <span>Loading...</span>
-                  ) : (
-                    <span className="font-heading">
-                      {nFormatter(Number(ethBalance?.formatted))} {EthSymbol}
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
+                {user && cartType === CartType.TokenList && (
+                  <div className="text-xs">
+                    <div className={twMerge('flex justify-between')}>
+                      <div className={twMerge(secondaryTextColor)}>Platform fees: </div>
+                      <div className="font-heading">
+                        {nFormatter(Number(fees))} {EthSymbol}
+                      </div>
+                    </div>
 
-        {selectedTab === 'Options' && (
+                    <div className={twMerge('flex justify-between')}>
+                      <div className={twMerge(secondaryTextColor)}>Royalties: </div>
+                      <div className="font-heading">
+                        {nFormatter(Number(royalties))} {EthSymbol}
+                      </div>
+                    </div>
+
+                    <div className={twMerge('flex justify-between text-sm mt-2')}>
+                      <div className={twMerge(secondaryTextColor, 'font-medium')}>Net proceeds: </div>
+                      <div className="font-heading">
+                        {nFormatter(Number(netProceeds))} {EthSymbol}
+                      </div>
+                    </div>
+
+                    <div className={twMerge('mt-4 rounded-md space-y-1 text-xs')}>
+                      <div className={twMerge('flex justify-between')}>
+                        <div className={twMerge(secondaryTextColor, 'font-medium')}>Staked ${FLOW_TOKEN.symbol}: </div>
+                        <div className="font-heading">{nFormatter(Number(xflStaked))}</div>
+                      </div>
+
+                      {/* <div className={twMerge('flex justify-between')}>
+                        <div className={twMerge(secondaryTextColor, 'font-medium')}>Reward boost: </div>
+                        <div className="font-heading">{xflStakeBoost}</div>
+                      </div> */}
+
+                      <div className={twMerge('flex')}>
+                        {areFeesWaived ? (
+                          // <div className={twMerge(secondaryTextColor, 'mt-2')}>
+                          //   You are maximizing your net proceeds and will earn {xflStakeBoost} rewards. Buyer of your
+                          //   listing will save upto 40% on gas fees.
+                          // </div>
+                          <div className={twMerge(secondaryTextColor, 'mt-2')}>
+                            You are maximizing your net proceeds. Buyer of your listing will save upto 40% on gas fees.
+                          </div>
+                        ) : (
+                          <div className="flex mt-2">
+                            {/* <div className={twMerge(secondaryTextColor)}>
+                              Pay zero royalties and earn 2x rewards when you stake{' '}
+                              {nFormatter(minStakeAmountForFeeWaiverAndBoost)} or more ${FLOW_TOKEN.symbol}. Buyer of
+                              your {currentCartItems.length > 1 ? 'listings ' : 'listing '}
+                              will also benefit by saving upto 40% on gas fees when you stake ${FLOW_TOKEN.symbol} and
+                              {currentCartItems.length > 1 ? 'they ' : 'it '}
+                              will be shown first, before other similarly priced listings.
+                              <span
+                                className={twMerge('underline cursor-pointer ml-[2px]', brandTextColor)}
+                                onClick={() => {
+                                  setShowStakeTokensModal(true);
+                                }}
+                              >
+                                Stake
+                              </span>
+                            </div> */}
+                            <div className={twMerge(secondaryTextColor)}>
+                              Pay zero royalties when you stake {nFormatter(minStakeAmountForFeeWaiverAndBoost)} or more
+                              ${FLOW_TOKEN.symbol}. Buyer of your{' '}
+                              {currentCartItems.length > 1 ? 'listings ' : 'listing '}
+                              will also benefit by saving upto 40% on gas fees when you stake ${FLOW_TOKEN.symbol} and
+                              {currentCartItems.length > 1 ? ' they ' : ' it '} will be shown first, before other
+                              similarly priced listings.
+                              <span
+                                className={twMerge('underline cursor-pointer ml-[2px]', brandTextColor)}
+                                onClick={() => {
+                                  setShowStakeTokensModal(true);
+                                }}
+                              >
+                                Stake
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {user &&
+                (cartType === CartType.TokenBid ||
+                  cartType === CartType.CollectionBid ||
+                  cartType === CartType.TokenBuy) && (
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className={twMerge(secondaryTextColor, 'font-medium')}>ETH Balance: </span>
+                      {isEthBalanceLoading ? (
+                        <span>Loading...</span>
+                      ) : (
+                        <span className="font-heading">
+                          {nFormatter(Number(ethBalance?.formatted))} {EthSymbol}
+                        </span>
+                      )}
+                    </div>
+
+                    {(cartType === CartType.TokenBid || cartType === CartType.CollectionBid) && (
+                      <div className="flex justify-between">
+                        <span className={twMerge(secondaryTextColor, 'font-medium')}>WETH Balance: </span>
+
+                        <div>
+                          {isLoading ? (
+                            <span>Loading...</span>
+                          ) : (
+                            <span className="font-heading">
+                              {nFormatter(Number(wethBalance?.formatted))} {EthSymbol}
+                            </span>
+                          )}
+                          <AButton
+                            className={twMerge('rounded-md text-xs ml-2', secondaryBtnBgColorText)}
+                            onClick={() => {
+                              setShowBuyTokensModal(true);
+                            }}
+                          >
+                            Wrap ETH
+                          </AButton>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+            </div>
+          )}
+
+          {/* {selectedTab === 'Options' && (
           <div className="h-60 overflow-y-scroll">
             <div className="space-y-3 px-1">
               <RadioGroup value={executionMode} onChange={setExecutionMode} className="space-y-2">
@@ -492,8 +653,9 @@ export const AstraCart = ({
               </RadioGroup>
             </div>
           </div>
-        )}
-      </div>
+        )} */}
+        </div>
+      )}
 
       <div className="m-6 flex flex-col">
         <AButton
@@ -514,6 +676,14 @@ export const AstraCart = ({
           {isCheckingOut ? <div className="animate-pulse">{checkoutBtnStatus}</div> : checkoutBtnText}
         </AButton>
       </div>
+
+      {showStakeTokensModal && (
+        <StakeTokensModal
+          onClose={() => {
+            setShowStakeTokensModal(false);
+          }}
+        />
+      )}
 
       {showBuyTokensModal && (
         <UniswapModal
@@ -576,9 +746,10 @@ const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
             }}
             useSpacer
             currentPrice={editedPrice}
+            hideExpiry={cartType === CartType.TokenBuy || cartType === CartType.AcceptOffer}
           ></PriceAndExpiry>
         )}
-        {!editing && cartType !== CartType.Send && (
+        {!editing && cartType !== CartType.Send && cartType !== CartType.TokenBuy && (
           <FiEdit3 className={twMerge(smallIconButtonStyle, 'cursor-pointer')} onClick={() => setEditing(true)} />
         )}
       </div>
@@ -636,38 +807,46 @@ const AstraCollectionCartItem = ({ collection, onRemove, updateCartTotal }: Prop
 };
 
 interface Props4 {
-  order: ERC721OrderCartItem;
-  onRemove: (order: ERC721OrderCartItem) => void;
+  order: ERC721TokenCartItem | ERC721CollectionCartItem;
+  onTokenRemove?: (order: ERC721TokenCartItem) => void;
+  onCollectionRemove?: (order: ERC721CollectionCartItem) => void;
 }
 
-const AstraCancelCartItem = ({ order, onRemove }: Props4) => {
+const AstraCancelCartItem = ({ order, onTokenRemove, onCollectionRemove }: Props4) => {
+  const isCollBid = order.criteria?.kind === 'collection';
+  const image = isCollBid ? order.criteria?.data?.collection?.image : order.image;
+  const tokenId = isCollBid ? '' : (order as ERC721TokenCartItem).tokenId;
   return (
     <div key={order.id} className="flex items-center w-full">
       <div className="relative">
-        <EZImage
-          className={twMerge('h-12 w-12 rounded-lg overflow-clip')}
-          src={order.nfts[0]?.tokens[0]?.tokenImage ?? order.nfts[0].collectionImage}
-        />
+        <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={image} />
         <div className={twMerge('absolute top-[-5px] right-[-5px] rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
           <MdClose
             className={twMerge(extraSmallIconButtonStyle, inverseTextColor)}
             onClick={() => {
-              onRemove(order);
+              isCollBid
+                ? onCollectionRemove?.(order as ERC721CollectionCartItem)
+                : onTokenRemove?.(order as ERC721TokenCartItem);
             }}
           />
         </div>
       </div>
 
       <div className="ml-3 flex flex-col w-full text-sm font-bold font-heading">
-        <div>
-          {order.nfts.length > 1
-            ? 'Multiple tokens'
-            : order.nfts[0].tokens.length > 1
-            ? 'Multiple tokens'
-            : order.nfts[0].tokens.length === 1
-            ? ellipsisString(order.nfts[0]?.tokens[0]?.tokenId)
-            : ''}
-        </div>
+        <div>{ellipsisString(tokenId)}</div>
+        <PriceAndExpiry
+          token={isCollBid ? undefined : (order as ERC721TokenCartItem)}
+          collection={isCollBid ? (order as ERC721CollectionCartItem) : undefined}
+          className=""
+          editing={false}
+          useSpacer
+          currentPrice={
+            isCollBid
+              ? (order as ERC721CollectionCartItem).offerPriceEth?.toString()
+              : (order as ERC721TokenCartItem).price?.toString()
+          }
+          hideExpiry={true}
+        ></PriceAndExpiry>
       </div>
     </div>
   );
@@ -681,9 +860,19 @@ interface Props5 {
   onEditComplete?: (price: string) => void;
   useSpacer?: boolean;
   currentPrice?: string;
+  hideExpiry?: boolean;
 }
 
-const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete, useSpacer, currentPrice }: Props5) => {
+const PriceAndExpiry = ({
+  token,
+  collection,
+  className,
+  editing,
+  onEditComplete,
+  useSpacer,
+  currentPrice,
+  hideExpiry
+}: Props5) => {
   const [price, setPrice] = useState(nFormatter(parseFloat(currentPrice ?? '0'), 2)?.toString() ?? '');
   const [expiry, setExpiry] = useState(getDefaultOrderExpiryTime());
 
@@ -695,93 +884,95 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
         <div className="flex w-full space-x-2">
           {useSpacer && <Spacer />}
 
-          <ADropdown
-            hasBorder={true}
-            alignMenuRight={true}
-            label={expiry}
-            innerClassName="w-24"
-            items={[
-              {
-                label: ORDER_EXPIRY_TIME.HOUR,
-                onClick: () => {
-                  onEditComplete?.(price);
-                  setExpiry(ORDER_EXPIRY_TIME.HOUR);
-                  if (token) {
-                    token.orderExpiry = ORDER_EXPIRY_TIME.HOUR;
-                  } else if (collection) {
-                    collection.offerExpiry = ORDER_EXPIRY_TIME.HOUR;
+          {!hideExpiry && (
+            <ADropdown
+              hasBorder={true}
+              alignMenuRight={true}
+              label={expiry}
+              innerClassName="w-24"
+              items={[
+                {
+                  label: ORDER_EXPIRY_TIME.HOUR,
+                  onClick: () => {
+                    onEditComplete?.(price);
+                    setExpiry(ORDER_EXPIRY_TIME.HOUR);
+                    if (token) {
+                      token.orderExpiry = ORDER_EXPIRY_TIME.HOUR;
+                    } else if (collection) {
+                      collection.offerExpiry = ORDER_EXPIRY_TIME.HOUR;
+                    }
+                  }
+                },
+                {
+                  label: ORDER_EXPIRY_TIME.DAY,
+                  onClick: () => {
+                    onEditComplete?.(price);
+                    setExpiry(ORDER_EXPIRY_TIME.DAY);
+                    if (token) {
+                      token.orderExpiry = ORDER_EXPIRY_TIME.DAY;
+                    } else if (collection) {
+                      collection.offerExpiry = ORDER_EXPIRY_TIME.DAY;
+                    }
+                  }
+                },
+                {
+                  label: ORDER_EXPIRY_TIME.WEEK,
+                  onClick: () => {
+                    onEditComplete?.(price);
+                    setExpiry(ORDER_EXPIRY_TIME.WEEK);
+                    if (token) {
+                      token.orderExpiry = ORDER_EXPIRY_TIME.WEEK;
+                    } else if (collection) {
+                      collection.offerExpiry = ORDER_EXPIRY_TIME.WEEK;
+                    }
+                  }
+                },
+                {
+                  label: ORDER_EXPIRY_TIME.MONTH,
+                  onClick: () => {
+                    onEditComplete?.(price);
+                    setExpiry(ORDER_EXPIRY_TIME.MONTH);
+                    if (token) {
+                      token.orderExpiry = ORDER_EXPIRY_TIME.MONTH;
+                    } else if (collection) {
+                      collection.offerExpiry = ORDER_EXPIRY_TIME.MONTH;
+                    }
+                  }
+                },
+                {
+                  label: ORDER_EXPIRY_TIME.SIX_MONTHS,
+                  onClick: () => {
+                    onEditComplete?.(price);
+                    setExpiry(ORDER_EXPIRY_TIME.SIX_MONTHS);
+                    if (token) {
+                      token.orderExpiry = ORDER_EXPIRY_TIME.SIX_MONTHS;
+                    } else if (collection) {
+                      collection.offerExpiry = ORDER_EXPIRY_TIME.SIX_MONTHS;
+                    }
+                  }
+                },
+                {
+                  label: ORDER_EXPIRY_TIME.YEAR,
+                  onClick: () => {
+                    onEditComplete?.(price);
+                    setExpiry(ORDER_EXPIRY_TIME.YEAR);
+                    if (token) {
+                      token.orderExpiry = ORDER_EXPIRY_TIME.YEAR;
+                    } else if (collection) {
+                      collection.offerExpiry = ORDER_EXPIRY_TIME.YEAR;
+                    }
                   }
                 }
-              },
-              {
-                label: ORDER_EXPIRY_TIME.DAY,
-                onClick: () => {
-                  onEditComplete?.(price);
-                  setExpiry(ORDER_EXPIRY_TIME.DAY);
-                  if (token) {
-                    token.orderExpiry = ORDER_EXPIRY_TIME.DAY;
-                  } else if (collection) {
-                    collection.offerExpiry = ORDER_EXPIRY_TIME.DAY;
-                  }
-                }
-              },
-              {
-                label: ORDER_EXPIRY_TIME.WEEK,
-                onClick: () => {
-                  onEditComplete?.(price);
-                  setExpiry(ORDER_EXPIRY_TIME.WEEK);
-                  if (token) {
-                    token.orderExpiry = ORDER_EXPIRY_TIME.WEEK;
-                  } else if (collection) {
-                    collection.offerExpiry = ORDER_EXPIRY_TIME.WEEK;
-                  }
-                }
-              },
-              {
-                label: ORDER_EXPIRY_TIME.MONTH,
-                onClick: () => {
-                  onEditComplete?.(price);
-                  setExpiry(ORDER_EXPIRY_TIME.MONTH);
-                  if (token) {
-                    token.orderExpiry = ORDER_EXPIRY_TIME.MONTH;
-                  } else if (collection) {
-                    collection.offerExpiry = ORDER_EXPIRY_TIME.MONTH;
-                  }
-                }
-              },
-              {
-                label: ORDER_EXPIRY_TIME.SIX_MONTHS,
-                onClick: () => {
-                  onEditComplete?.(price);
-                  setExpiry(ORDER_EXPIRY_TIME.SIX_MONTHS);
-                  if (token) {
-                    token.orderExpiry = ORDER_EXPIRY_TIME.SIX_MONTHS;
-                  } else if (collection) {
-                    collection.offerExpiry = ORDER_EXPIRY_TIME.SIX_MONTHS;
-                  }
-                }
-              },
-              {
-                label: ORDER_EXPIRY_TIME.YEAR,
-                onClick: () => {
-                  onEditComplete?.(price);
-                  setExpiry(ORDER_EXPIRY_TIME.YEAR);
-                  if (token) {
-                    token.orderExpiry = ORDER_EXPIRY_TIME.YEAR;
-                  } else if (collection) {
-                    collection.offerExpiry = ORDER_EXPIRY_TIME.YEAR;
-                  }
-                }
-              }
-            ]}
-          />
+              ]}
+            />
+          )}
 
           <div className={twMerge('flex flex-col items-end')}>
             <div className="flex flex-row">
               <div className={twMerge('font-bold font-heading')}>{nFormatter(Number(price), 2)}</div>
               <div className={twMerge('font-bold font-heading ml-1')}>{EthSymbol}</div>
             </div>
-            <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>{expiry}</div>
+            {!hideExpiry && <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>{expiry}</div>}
           </div>
         </div>
       ) : (

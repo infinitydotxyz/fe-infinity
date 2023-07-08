@@ -3,10 +3,10 @@ import { useResizeDetector } from 'react-resize-detector';
 import { AstraCart } from 'src/components/astra/astra-cart';
 import { Grid } from 'src/components/astra/grid';
 import { useAppContext } from 'src/utils/context/AppContext';
+import Dock from 'src/utils/context/Dock';
 import { toastError } from '../common';
 import { ANavbar } from './astra-navbar';
 import NonSsrWrapper from './non-ssr-wrapper';
-import Dock from 'src/utils/context/Dock';
 
 interface Props {
   children: ReactNode;

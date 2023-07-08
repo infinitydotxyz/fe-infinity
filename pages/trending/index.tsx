@@ -7,14 +7,14 @@ import {
   BlueCheckInline,
   BouncingLogo,
   CenterFixed,
-  EthPrice,
   EZImage,
+  EthPrice,
   NextLink,
   ToggleTab
 } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
-import { apiGet, formatNumber, getCollectionKeyId, nFormatter } from 'src/utils';
+import { apiGet, formatNumber, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { ERC721CollectionCartItem } from 'src/utils/types';
 import { borderColor, iconButtonStyle } from 'src/utils/ui-constants';
@@ -94,7 +94,7 @@ const TrendingPage = () => {
           {data.map((coll, index) => {
             return (
               <TrendingPageCard
-                key={getCollectionKeyId(coll)}
+                key={`${coll?.chainId}:${coll?.address}`}
                 collection={coll}
                 isCollSelectable={isCollSelectable}
                 isCollSelected={isCollSelected}
@@ -211,7 +211,7 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
             {isCollSelected(collection as ERC721CollectionCartItem) ? (
               <AiOutlineCheckCircle className={iconButtonStyle} />
             ) : (
-              'Buy'
+              'Bid'
             )}
           </AButton>
         </div>

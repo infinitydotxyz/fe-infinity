@@ -1,14 +1,17 @@
 import { MaxUint256 } from '@ethersproject/constants';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
 import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
-import { FLOW_TOKEN, nFormatter } from 'src/utils';
+import { FLOW_TOKEN, SEASON_2_UNLOCK_BLOCK, nFormatter } from 'src/utils';
+import { fetchMinXflStakeForZeroFees } from 'src/utils/orderbook-utils';
 import { useAccount, useBalance } from 'wagmi';
 import { BouncingLogo, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
+import { twMerge } from 'tailwind-merge';
+import { secondaryTextColor } from 'src/utils/ui-constants';
 
 interface Props {
   onClose: () => void;
@@ -21,6 +24,16 @@ export const StakeTokensModal = ({ onClose }: Props) => {
   const { approve } = useTokenApprove();
   const { allowance } = useTokenAllowance();
   const { address } = useAccount();
+  const [minStakeAmountForBoost, setMinStakeAmountForBoost] = useState(0);
+
+  useEffect(() => {
+    const fetchMinStakeAmountForBoost = async () => {
+      const minStakeAmount =
+        minStakeAmountForBoost === 0 ? await fetchMinXflStakeForZeroFees() : minStakeAmountForBoost;
+      setMinStakeAmountForBoost(minStakeAmount);
+    };
+    fetchMinStakeAmountForBoost();
+  });
 
   const xflBalanceObj = useBalance({
     address,
@@ -69,26 +82,25 @@ export const StakeTokensModal = ({ onClose }: Props) => {
     >
       <div>
         <div className="mt-2">
-          <div className="text-sm text-gray-400">Reward boost levels</div>
-          <div className="mt-4 flex flex-row gap-4">
-            <div className="flex flex-col items-center">
-              <div className="text-2xl font-bold">1.5x</div>
-              <div className="text-xs text-gray-400">10k ${FLOW_TOKEN.symbol}</div>
+          <div className="text-sm space-y-1">
+            {/* <div>
+              Reward boost when {nFormatter(minStakeAmountForBoost)} ${FLOW_TOKEN.symbol} staked:{' '}
+              <span className="font-extrabold ml-1">2x</span>
+            </div> */}
+            <div>
+              Royalties are waived when {nFormatter(minStakeAmountForBoost)} ${FLOW_TOKEN.symbol} tokens are staked.
             </div>
-            <div className="flex flex-col items-center">
-              <div className="text-2xl font-bold">2x</div>
-              <div className="text-xs text-gray-400">50k ${FLOW_TOKEN.symbol}</div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="text-2xl font-bold">2.5x</div>
-              <div className="text-xs text-gray-400">100k ${FLOW_TOKEN.symbol}</div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="text-2xl font-bold">3x</div>
-              <div className="text-xs text-gray-400">200k ${FLOW_TOKEN.symbol}</div>
+            {/* <div>
+              Platform fees and royalties when {nFormatter(minStakeAmountForBoost)} ${FLOW_TOKEN.symbol} staked:{' '}
+              <span className="font-extrabold ml-1">0</span>
+            </div> */}
+            <div className={twMerge('text-xs', secondaryTextColor)}>
+              Staked tokens are locked until the end of each reward season to prevent abuse. Current season ends at
+              block {SEASON_2_UNLOCK_BLOCK}, approximately on Nov 3 2023.
             </div>
           </div>
-          <div className="mt-8">
+
+          <div className="mt-6">
             <TextInputBox
               label=""
               value={value}
