@@ -50,7 +50,7 @@ const MyRewards = () => {
   const { stakeBalance } = useStakerContract();
   const [minStakeAmountForFeeWaiverAndBoost, setMinStakeAmountForFeeWaiverAndBoost] = useState(0);
   const [xflStaked, setXflStaked] = useState(0);
-  const [xflStakeBoost, setXflStakeBoost] = useState('0x');
+  // const [xflStakeBoost, setXflStakeBoost] = useState('0x');
 
   const xflBalanceObj = useBalance({
     address,
@@ -74,8 +74,8 @@ const MyRewards = () => {
     const xflStaked = parseFloat((await stakeBalance()) ?? '0');
     setXflStaked(xflStaked);
 
-    const boost = xflStaked >= minStakeAmount ? 2 : 0;
-    setXflStakeBoost(boost + 'x');
+    // const boost = xflStaked >= minStakeAmount ? 2 : 0;
+    // setXflStakeBoost(boost + 'x');
   };
 
   // const { claim } = useClaim();
@@ -110,7 +110,7 @@ const MyRewards = () => {
     <div className="space-y-10 mt-6 pb-6 mb-16">
       <RewardsSection
         title="Token Balance"
-        subTitle={`Stake $${FLOW_TOKEN.symbol} to boost platform rewards, pay no fees and royalties, priority support from core team and early/gated access to cool stuff.`}
+        subTitle={`Stake $${FLOW_TOKEN.symbol} for royalty waivers, priority support from core team and early/gated access to cool stuff. Staked tokens are locked until the end of each reward season to prevent abuse.`}
         sideInfo={
           <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
             <div>${FLOW_TOKEN.symbol}</div>
@@ -125,11 +125,11 @@ const MyRewards = () => {
                 <div className="text-sm mt-1">Staked</div>
               </div>
               <Spacer />
-              <div className="lg:w-1/4 sm:w-full">
+              {/* <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">{xflStakeBoost}</div>
                 <div className="text-sm mt-1">Rewards boost</div>
               </div>
-              <Spacer />
+              <Spacer /> */}
               <div className="lg:w-1/4 sm:w-full"></div>
               <Spacer />
             </div>
@@ -142,12 +142,12 @@ const MyRewards = () => {
                 Stake
               </Button>
 
-              <Button size="large" variant="outline" onClick={() => setShowUnstakeTokensModal(true)}>
+              <Button disabled size="large" variant="outline" onClick={() => setShowUnstakeTokensModal(true)}>
                 Unstake
               </Button>
-              {/* <div className={twMerge(secondaryTextColor, 'ml-2 text-xs')}>
-                Unstake available on Aug 3rd 2023 00:00 UTC)
-              </div> */}
+              <div className={twMerge(secondaryTextColor, 'ml-2 text-xs')}>
+                Unstake available on Nov 3rd 2023 00:00 UTC)
+              </div>
             </div>
           </div>
         }
@@ -181,6 +181,8 @@ const MyRewards = () => {
           }
         ></RewardsSection>
       )}
+
+      <CenteredContent>More rewards dropping soon.</CenteredContent>
 
       {showBuyTokensModal && (
         <UniswapModal
