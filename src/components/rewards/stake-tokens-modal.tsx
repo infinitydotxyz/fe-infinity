@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
 import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
-import { FLOW_TOKEN, nFormatter } from 'src/utils';
+import { FLOW_TOKEN, SEASON_2_UNLOCK_BLOCK, nFormatter } from 'src/utils';
 import { fetchMinXflStakeForZeroFees } from 'src/utils/orderbook-utils';
 import { useAccount, useBalance } from 'wagmi';
 import { BouncingLogo, toastError, toastSuccess } from '../common';
@@ -83,16 +83,20 @@ export const StakeTokensModal = ({ onClose }: Props) => {
       <div>
         <div className="mt-2">
           <div className="text-sm space-y-1">
-            <div>
+            {/* <div>
               Reward boost when {nFormatter(minStakeAmountForBoost)} ${FLOW_TOKEN.symbol} staked:{' '}
               <span className="font-extrabold ml-1">2x</span>
-            </div>
+            </div> */}
             <div>
+              Royalties are waived when {nFormatter(minStakeAmountForBoost)} ${FLOW_TOKEN.symbol} tokens are staked.
+            </div>
+            {/* <div>
               Platform fees and royalties when {nFormatter(minStakeAmountForBoost)} ${FLOW_TOKEN.symbol} staked:{' '}
               <span className="font-extrabold ml-1">0</span>
-            </div>
+            </div> */}
             <div className={twMerge('text-xs', secondaryTextColor)}>
-              Staked tokens are locked until the end of each reward season.
+              Staked tokens are locked until the end of each reward season to prevent abuse. Current season ends at
+              block {SEASON_2_UNLOCK_BLOCK}, approximately on Nov 3 2023.
             </div>
           </div>
 

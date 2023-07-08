@@ -10,7 +10,6 @@ import { AButton } from 'src/components/astra/astra-button';
 import { EZImage, EthSymbol, Spacer, TextInputBox, ToggleTab } from 'src/components/common';
 import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 import {
-  FEE_BPS,
   FLOW_TOKEN,
   ROYALTY_BPS,
   ellipsisString,
@@ -110,7 +109,7 @@ export const AstraCart = ({
   const { stakeBalance } = useStakerContract();
   const [minStakeAmountForFeeWaiverAndBoost, setMinStakeAmountForFeeWaiverAndBoost] = useState(0);
   const [xflStaked, setXflStaked] = useState(0);
-  const [xflStakeBoost, setXflStakeBoost] = useState('0x');
+  // const [xflStakeBoost, setXflStakeBoost] = useState('0x');
   const [areFeesWaived, setAreFeesWaived] = useState(false);
 
   const [tokenMap, setTokenMap] = useState<Map<string, ERC721TokenCartItem[]>>(new Map());
@@ -121,13 +120,15 @@ export const AstraCart = ({
   const [selectedTab, setSelectedTab] = useState(cartTabOptions[0]);
 
   useEffect(() => {
-    const feeBps = areFeesWaived ? 0 : FEE_BPS;
+    // const feeBps = areFeesWaived ? 0 : FEE_BPS;
     const royaltyBps = areFeesWaived ? 0 : ROYALTY_BPS;
-    const newFees = (cartTotal * feeBps) / 10_000;
+    // const newFees = (cartTotal * feeBps) / 10_000;
+    const newFees = 0;
     const newRoyalties = (cartTotal * royaltyBps) / 10_000;
     const newNetProceeds = cartTotal - newFees - newRoyalties;
 
-    setFees(newFees);
+    // setFees(newFees);
+    setFees(0);
     setRoyalties(newRoyalties);
     setNetProceeds(newNetProceeds);
   }, [cartTotal]);
@@ -146,8 +147,8 @@ export const AstraCart = ({
     const xflStaked = parseFloat((await stakeBalance()) ?? '0');
     setXflStaked(xflStaked);
 
-    const boost = xflStaked >= minStakeAmount ? 2 : 0;
-    setXflStakeBoost(boost + 'x');
+    // const boost = xflStaked >= minStakeAmount ? 2 : 0;
+    // setXflStakeBoost(boost + 'x');
 
     const feesWaived = xflStaked >= minStakeAmount;
     setAreFeesWaived(feesWaived);
@@ -508,7 +509,7 @@ export const AstraCart = ({
                 {user && cartType === CartType.TokenList && (
                   <div className="text-xs">
                     <div className={twMerge('flex justify-between')}>
-                      <div className={twMerge(secondaryTextColor)}>Fees: </div>
+                      <div className={twMerge(secondaryTextColor)}>Platform fees: </div>
                       <div className="font-heading">
                         {nFormatter(Number(fees))} {EthSymbol}
                       </div>
@@ -534,26 +535,45 @@ export const AstraCart = ({
                         <div className="font-heading">{nFormatter(Number(xflStaked))}</div>
                       </div>
 
-                      <div className={twMerge('flex justify-between')}>
+                      {/* <div className={twMerge('flex justify-between')}>
                         <div className={twMerge(secondaryTextColor, 'font-medium')}>Reward boost: </div>
                         <div className="font-heading">{xflStakeBoost}</div>
-                      </div>
+                      </div> */}
 
                       <div className={twMerge('flex')}>
                         {areFeesWaived ? (
+                          // <div className={twMerge(secondaryTextColor, 'mt-2')}>
+                          //   You are maximizing your net proceeds and will earn {xflStakeBoost} rewards. Buyer of your
+                          //   listing will save upto 40% on gas fees.
+                          // </div>
                           <div className={twMerge(secondaryTextColor, 'mt-2')}>
-                            You are maximizing your net proceeds and will earn {xflStakeBoost} rewards. Buyer of your
-                            listing will save upto 40% on gas fees.
+                            You are maximizing your net proceeds. Buyer of your listing will save upto 40% on gas fees.
                           </div>
                         ) : (
                           <div className="flex mt-2">
-                            <div className={twMerge(secondaryTextColor)}>
-                              Pay zero fees, royalties and earn 2x rewards when you stake{' '}
+                            {/* <div className={twMerge(secondaryTextColor)}>
+                              Pay zero royalties and earn 2x rewards when you stake{' '}
                               {nFormatter(minStakeAmountForFeeWaiverAndBoost)} or more ${FLOW_TOKEN.symbol}. Buyer of
                               your {currentCartItems.length > 1 ? 'listings ' : 'listing '}
                               will also benefit by saving upto 40% on gas fees when you stake ${FLOW_TOKEN.symbol} and
-                              hence {currentCartItems.length > 1 ? 'they ' : 'it '}
-                              will be shown first.
+                              {currentCartItems.length > 1 ? 'they ' : 'it '}
+                              will be shown first, before other similarly priced listings.
+                              <span
+                                className={twMerge('underline cursor-pointer ml-[2px]', brandTextColor)}
+                                onClick={() => {
+                                  setShowStakeTokensModal(true);
+                                }}
+                              >
+                                Stake
+                              </span>
+                            </div> */}
+                            <div className={twMerge(secondaryTextColor)}>
+                              Pay zero royalties when you stake {nFormatter(minStakeAmountForFeeWaiverAndBoost)} or more
+                              ${FLOW_TOKEN.symbol}. Buyer of your{' '}
+                              {currentCartItems.length > 1 ? 'listings ' : 'listing '}
+                              will also benefit by saving upto 40% on gas fees when you stake ${FLOW_TOKEN.symbol} and
+                              {currentCartItems.length > 1 ? ' they ' : ' it '} will be shown first, before other
+                              similarly priced listings.
                               <span
                                 className={twMerge('underline cursor-pointer ml-[2px]', brandTextColor)}
                                 onClick={() => {

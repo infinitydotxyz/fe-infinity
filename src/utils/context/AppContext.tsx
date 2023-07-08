@@ -27,6 +27,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { toastError, toastSuccess, toastWarning } from 'src/components/common';
 import { WaitingForTxModal } from 'src/components/common/waiting-for-tx-modal';
+import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 import { useChain } from 'src/hooks/useChain';
 import { useCollectionSelection } from 'src/hooks/useCollectionSelection';
 import { useNFTSelection } from 'src/hooks/useNFTSelection';
@@ -51,10 +52,9 @@ import {
   getEstimatedGasPrice,
   getOrderExpiryTimeInMsFromEnum
 } from '../common-utils';
-import { DEFAULT_MAX_GAS_PRICE_WEI, FEE_BPS, FEE_WALLET_ADDRESS, ROYALTY_BPS, ZERO_ADDRESS } from '../constants';
+import { DEFAULT_MAX_GAS_PRICE_WEI, ROYALTY_BPS, ZERO_ADDRESS } from '../constants';
 import { fetchMinXflStakeForZeroFees, fetchOrderNonce, postOrdersV2 } from '../orderbook-utils';
 import { CartType, useCartContext } from './CartContext';
-import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 
 type ReservoirOrderbookType =
   | 'reservoir'
@@ -567,13 +567,13 @@ export const AppContextProvider = ({ children }: Props) => {
 
           // calculate fees
           let automatedRoyalties = true;
-          let fees = [`${FEE_WALLET_ADDRESS}:${FEE_BPS}`];
+          // let fees = [`${FEE_WALLET_ADDRESS}:${FEE_BPS}`];
+          const fees: string[] = [];
           const minXflStakeForZeroFees = await fetchMinXflStakeForZeroFees();
           if (minXflStakeForZeroFees) {
             const xflStaked = parseFloat((await stakeBalance()) ?? '0');
             if (xflStaked >= minXflStakeForZeroFees) {
               automatedRoyalties = false;
-              fees = [];
             }
           }
 

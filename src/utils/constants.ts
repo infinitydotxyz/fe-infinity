@@ -10,6 +10,8 @@ export const DISCORD_BOT_INVITE_URL =
 
 export const ETHERSCAN_BASE_URL = 'https://etherscan.io';
 
+export const SEASON_2_UNLOCK_BLOCK = 18490808;
+
 export const FEE_BPS = 250;
 export const ROYALTY_BPS = 500;
 export const FEE_WALLET_ADDRESS = '0xbFFc957B7537295B138dB43FB1843FeFF1782a20';
