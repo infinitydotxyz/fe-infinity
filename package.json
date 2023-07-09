@@ -21,7 +21,7 @@
   "dependencies": {
     "@amcharts/amcharts5": "^5.4.0",
     "@headlessui/react": "^1.7.8",
-    "@infinityxyz/lib-frontend": "^1.349.12",
+    "@infinityxyz/lib-frontend": "^1.349.13",
     "@next/bundle-analyzer": "^13.1.6",
     "@reservoir0x/ethers-wallet-adapter": "^0.0.1",
     "@reservoir0x/reservoir-sdk": "^1.1.10",

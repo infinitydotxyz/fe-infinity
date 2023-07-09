@@ -93,6 +93,12 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const MAX_NUM_SWEEP_ITEMS = 50;
 
   useEffect(() => {
+    if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
+      fetchListings(false);
+    }
+  }, [collection.address]);
+
+  useEffect(() => {
     if (
       selectedCollectionTab === CollectionPageTabs.Intent.toString() ||
       selectedCollectionTab === CollectionPageTabs.Bid.toString()
@@ -185,6 +191,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     toggleNFTSelection(token);
   };
 
+  const collectionAddress = collection.address;
   const isCollSupported = collection?.isSupported ?? false;
 
   if (!isCollSupported) {
@@ -576,7 +583,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
             <div className="flex flex-row">
               <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
                 <TokenGrid
-                  key={selectedCollectionTab}
+                  key={collectionAddress}
                   collectionCreator={collectionCreator}
                   collectionFloorPrice={floorPrice}
                   listMode={listMode}
@@ -623,6 +630,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
               <div className={`${showCart ? 'w-0' : 'flex w-1/3'} transition-width duration-100`}>
                 <CollectionItemsPageSidebar
+                  key={collectionAddress}
                   collectionChainId={collection.chainId as ChainId}
                   collectionAddress={collection.address}
                   collectionImage={collection.metadata.profileImage}
@@ -633,6 +641,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
           {selectedCollectionTab === CollectionPageTabs.LiveBids && (
             <CollectionManualBidList
+              key={collectionAddress}
               collectionAddress={collection.address}
               collectionChainId={collection.chainId as ChainId}
             />
@@ -640,6 +649,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
           {selectedCollectionTab === CollectionPageTabs.LiveIntents && (
             <CollectionOrderList
+              key={collectionAddress}
               collectionAddress={collection.address}
               collectionChainId={collection.chainId as ChainId}
             />
@@ -647,6 +657,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
           {selectedCollectionTab === CollectionPageTabs.Analytics && (
             <CollectionCharts
+              key={collectionAddress}
               collectionAddress={collection.address}
               collectionChainId={chainId}
               collectionImage={collection.metadata.profileImage}
