@@ -2,12 +2,9 @@ import * as am5 from '@amcharts/amcharts5';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import * as am5xy from '@amcharts/amcharts5/xy';
 import { useTheme } from 'next-themes';
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect } from 'react';
 import { ReservoirOrderDepth } from 'src/utils/types';
-import { secondaryTextColor } from 'src/utils/ui-constants';
-import { twMerge } from 'tailwind-merge';
 import tailwindConfig from '../../settings/tailwind/elements/foundations';
-import { ASwitchButton } from '../astra/astra-button';
 import { ChartBox } from './chart-box';
 
 type Props = {
@@ -15,7 +12,7 @@ type Props = {
 };
 
 const OrderDepthChart = ({ data }: Props) => {
-  const [showOutliers, setShowOutliers] = useState(false);
+  const showOutliers = true;
 
   return (
     <ChartBox className="h-full">
@@ -26,14 +23,14 @@ const OrderDepthChart = ({ data }: Props) => {
 
         <div className="items-center flex space-x-6">
           <div className="flex items-center space-x-2">
-            <ASwitchButton
+            {/* <ASwitchButton
               checked={showOutliers}
               onChange={() => {
                 setShowOutliers(!showOutliers);
               }}
-            ></ASwitchButton>
+            ></ASwitchButton> */}
 
-            <span className={twMerge('text-sm font-medium', secondaryTextColor)}>Outliers</span>
+            {/* <span className={twMerge('text-sm font-medium', secondaryTextColor)}>Outliers</span> */}
           </div>
         </div>
       </div>
