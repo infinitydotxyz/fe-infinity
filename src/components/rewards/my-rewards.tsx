@@ -4,7 +4,6 @@ import { Button, CenteredContent, ConnectButton, Spacer } from 'src/components/c
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens-modal';
 import { useUserRewards } from 'src/hooks/api/useUserRewards';
-import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 import { nFormatter } from 'src/utils';
 import { FLOW_TOKEN } from 'src/utils/constants';
 import { fetchMinXflStakeForZeroFees } from 'src/utils/orderbook-utils';
@@ -12,6 +11,7 @@ import { bgColor, secondaryBgColor, secondaryTextColor } from 'src/utils/ui-cons
 import { twMerge } from 'tailwind-merge';
 import { useAccount, useBalance, useNetwork } from 'wagmi';
 import { UniswapModal } from '../common/uniswap-model';
+import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 
 interface RewardsSectionProps {
   title: string;
@@ -110,7 +110,8 @@ const MyRewards = () => {
     <div className="space-y-10 mt-6 pb-6 mb-16">
       <RewardsSection
         title="Token Balance"
-        subTitle={`Stake $${FLOW_TOKEN.symbol} for royalty waivers, priority support from core team and early/gated access to cool stuff. Staked tokens are locked until the end of each reward season to prevent abuse.`}
+        subTitle={`Token balances.`}
+        // subTitle={`Stake $${FLOW_TOKEN.symbol} for royalty waivers, priority support from core team and early/gated access to cool stuff. Staked tokens are locked until the end of each reward season to prevent abuse.`}
         sideInfo={
           <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
             <div>${FLOW_TOKEN.symbol}</div>
@@ -120,11 +121,15 @@ const MyRewards = () => {
                 <div className="text-sm mt-1">Wallet</div>
               </div>
               <Spacer />
-              <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{nFormatter(xflStaked, 2)}</div>
-                <div className="text-sm mt-1">Staked</div>
-              </div>
-              <Spacer />
+              {xflStaked > 0 && (
+                <>
+                  <div className="lg:w-1/4 sm:w-full">
+                    <div className="text-2xl font-heading font-bold">{nFormatter(xflStaked, 2)}</div>
+                    <div className="text-sm mt-1">Staked</div>
+                  </div>
+                  <Spacer />
+                </>
+              )}
               {/* <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">{xflStakeBoost}</div>
                 <div className="text-sm mt-1">Rewards boost</div>
@@ -134,20 +139,22 @@ const MyRewards = () => {
               <Spacer />
             </div>
             <div className="w-full flex mt-4 items-center flex-wrap space-x-3">
-              <Button size="large" variant="outline" onClick={() => setShowBuyTokensModal(true)}>
+              {/* <Button size="large" variant="outline" onClick={() => setShowBuyTokensModal(true)}>
                 Buy ${FLOW_TOKEN.symbol}
-              </Button>
+              </Button> */}
 
-              <Button size="large" variant="outline" onClick={() => setShowStakeTokensModal(true)}>
+              {/* <Button size="large" variant="outline" onClick={() => setShowStakeTokensModal(true)}>
                 Stake
-              </Button>
+              </Button>*/}
 
-              <Button disabled size="large" variant="outline" onClick={() => setShowUnstakeTokensModal(true)}>
-                Unstake
-              </Button>
-              <div className={twMerge(secondaryTextColor, 'ml-2 text-xs')}>
+              {xflStaked > 0 && (
+                <Button size="large" variant="outline" onClick={() => setShowUnstakeTokensModal(true)}>
+                  Unstake
+                </Button>
+              )}
+              {/* <div className={twMerge(secondaryTextColor, 'ml-2 text-xs')}>
                 Unstake available on Nov 3rd 2023 00:00 UTC)
-              </div>
+              </div> */}
             </div>
           </div>
         }
