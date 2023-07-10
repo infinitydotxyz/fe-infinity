@@ -8,10 +8,7 @@ import { FiEdit3 } from 'react-icons/fi';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
 import { EZImage, EthSymbol, Spacer, TextInputBox, ToggleTab } from 'src/components/common';
-import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 import {
-  FLOW_TOKEN,
-  ROYALTY_BPS,
   ellipsisString,
   getCartType,
   getCollectionKeyId,
@@ -21,7 +18,6 @@ import {
 } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartItem, CartType, useCartContext } from 'src/utils/context/CartContext';
-import { fetchMinXflStakeForZeroFees } from 'src/utils/orderbook-utils';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
 import {
   borderColor,
@@ -106,11 +102,11 @@ export const AstraCart = ({
   const [royalties, setRoyalties] = useState(0);
   const [netProceeds, setNetProceeds] = useState(0);
 
-  const { stakeBalance } = useStakerContract();
-  const [minStakeAmountForFeeWaiverAndBoost, setMinStakeAmountForFeeWaiverAndBoost] = useState(0);
-  const [xflStaked, setXflStaked] = useState(0);
+  // const { stakeBalance } = useStakerContract();
+  // const [minStakeAmountForFeeWaiverAndBoost, setMinStakeAmountForFeeWaiverAndBoost] = useState(0);
+  // const [xflStaked, setXflStaked] = useState(0);
   // const [xflStakeBoost, setXflStakeBoost] = useState('0x');
-  const [areFeesWaived, setAreFeesWaived] = useState(false);
+  // const [areFeesWaived, setAreFeesWaived] = useState(false);
 
   const [tokenMap, setTokenMap] = useState<Map<string, ERC721TokenCartItem[]>>(new Map());
   const [collMap, setCollMap] = useState<Map<string, ERC721CollectionCartItem[]>>(new Map());
@@ -121,10 +117,11 @@ export const AstraCart = ({
 
   useEffect(() => {
     // const feeBps = areFeesWaived ? 0 : FEE_BPS;
-    const royaltyBps = areFeesWaived ? 0 : ROYALTY_BPS;
+    // const royaltyBps = areFeesWaived ? 0 : ROYALTY_BPS;
     // const newFees = (cartTotal * feeBps) / 10_000;
     const newFees = 0;
-    const newRoyalties = (cartTotal * royaltyBps) / 10_000;
+    // const newRoyalties = (cartTotal * royaltyBps) / 10_000;
+    const newRoyalties = 0;
     const newNetProceeds = cartTotal - newFees - newRoyalties;
 
     // setFees(newFees);
@@ -133,26 +130,26 @@ export const AstraCart = ({
     setNetProceeds(newNetProceeds);
   }, [cartTotal]);
 
-  useEffect(() => {
-    getStakeInfo();
-  });
+  // useEffect(() => {
+  //   getStakeInfo();
+  // });
 
-  const getStakeInfo = async () => {
-    const minStakeAmount =
-      minStakeAmountForFeeWaiverAndBoost === 0
-        ? await fetchMinXflStakeForZeroFees()
-        : minStakeAmountForFeeWaiverAndBoost;
-    setMinStakeAmountForFeeWaiverAndBoost(minStakeAmount);
+  // const getStakeInfo = async () => {
+  //   const minStakeAmount =
+  //     minStakeAmountForFeeWaiverAndBoost === 0
+  //       ? await fetchMinXflStakeForZeroFees()
+  //       : minStakeAmountForFeeWaiverAndBoost;
+  //   setMinStakeAmountForFeeWaiverAndBoost(minStakeAmount);
 
-    const xflStaked = parseFloat((await stakeBalance()) ?? '0');
-    setXflStaked(xflStaked);
+  //   const xflStaked = parseFloat((await stakeBalance()) ?? '0');
+  //   setXflStaked(xflStaked);
 
-    // const boost = xflStaked >= minStakeAmount ? 2 : 0;
-    // setXflStakeBoost(boost + 'x');
+  //   // const boost = xflStaked >= minStakeAmount ? 2 : 0;
+  //   // setXflStakeBoost(boost + 'x');
 
-    const feesWaived = xflStaked >= minStakeAmount;
-    setAreFeesWaived(feesWaived);
-  };
+  //   const feesWaived = xflStaked >= minStakeAmount;
+  //   setAreFeesWaived(feesWaived);
+  // };
 
   // future-todo change when supporting more chains
   const WETH_ADDRESS =
@@ -530,17 +527,17 @@ export const AstraCart = ({
                     </div>
 
                     <div className={twMerge('mt-4 rounded-md space-y-1 text-xs')}>
-                      <div className={twMerge('flex justify-between')}>
+                      {/* <div className={twMerge('flex justify-between')}>
                         <div className={twMerge(secondaryTextColor, 'font-medium')}>Staked ${FLOW_TOKEN.symbol}: </div>
                         <div className="font-heading">{nFormatter(Number(xflStaked))}</div>
-                      </div>
+                      </div> */}
 
                       {/* <div className={twMerge('flex justify-between')}>
                         <div className={twMerge(secondaryTextColor, 'font-medium')}>Reward boost: </div>
                         <div className="font-heading">{xflStakeBoost}</div>
                       </div> */}
 
-                      <div className={twMerge('flex')}>
+                      {/* <div className={twMerge('flex')}>
                         {areFeesWaived ? (
                           // <div className={twMerge(secondaryTextColor, 'mt-2')}>
                           //   You are maximizing your net proceeds and will earn {xflStakeBoost} rewards. Buyer of your
@@ -566,7 +563,7 @@ export const AstraCart = ({
                               >
                                 Stake
                               </span>
-                            </div> */}
+                            </div>
                             <div className={twMerge(secondaryTextColor)}>
                               Pay zero royalties when you stake {nFormatter(minStakeAmountForFeeWaiverAndBoost)} or more
                               ${FLOW_TOKEN.symbol}. Buyer of your{' '}
@@ -585,7 +582,7 @@ export const AstraCart = ({
                             </div>
                           </div>
                         )}
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 )}
