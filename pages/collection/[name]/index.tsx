@@ -1,9 +1,8 @@
-import { BaseCollection, ChainId, CollectionAttributes, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, Collection, CollectionAttributes, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
-import { FaDiscord } from 'react-icons/fa';
 import { GiBroom } from 'react-icons/gi';
 import { HiOutlineLightBulb } from 'react-icons/hi';
 import { MdClose } from 'react-icons/md';
@@ -17,7 +16,7 @@ import { CollectionItemsPageSidebar } from 'src/components/collection/collection
 import { CollectionManualBidList } from 'src/components/collection/collection-manual-bid-list';
 import { CollectionOrderList } from 'src/components/collection/collection-orders-list';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
-import { CenteredContent, EZImage, ExternalLink, TextInputBox } from 'src/components/common';
+import { TextInputBox } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
 import { useCollectionListingsFetcher } from 'src/hooks/api/useTokenFetcher';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
@@ -37,7 +36,7 @@ import {
 import { twMerge } from 'tailwind-merge';
 
 interface CollectionDashboardProps {
-  collection: BaseCollection;
+  collection: Collection & Partial<CollectionStats>;
   collectionAllTimeStats?: CollectionStats;
   collectionAttributes?: CollectionAttributes;
   error?: Error;
@@ -197,53 +196,44 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   };
 
   const collectionAddress = collection.address;
-  const isCollSupported = collection?.isSupported ?? false;
 
-  if (!isCollSupported) {
-    return (
-      <CenteredContent>
-        <div className="flex flex-col items-center space-y-2">
-          {collection?.metadata?.profileImage ? (
-            <EZImage src={collection.metadata.profileImage} className="h-40 w-40 rounded-lg overflow-clip" />
-          ) : null}
-          <div className="text-3xl font-heading font-medium">
-            {collection?.metadata?.name ?? 'This collection'} is not supported on Pixelpack
-          </div>
-          <div className="flex flex-col text-md">
-            <span>Common reasons a collection is not supported:</span>
-            <ul className="list-disc list-inside mt-2 mb-2">
-              <li>Pixelpack offers a trusted and curated selection of NFTs</li>
-              <li>Collection is not ERC-721</li>
-              <li>Collection has low volumes</li>
-              <li>Creator(s) rugged the project</li>
-            </ul>
-            <div className="flex items-center space-x-2">
-              <div>If this is a mistake, let us know on</div>
-              <ExternalLink href="https://discord.gg/pixelpackio">
-                <FaDiscord className={twMerge('text-brand-discord cursor-pointer mt-1', iconButtonStyle)} />
-              </ExternalLink>
-            </div>
-          </div>
-        </div>
-      </CenteredContent>
-    );
-  }
+  // const isCollSupported = collection?.isSupported ?? false;
+  // if (!isCollSupported) {
+  //   return (
+  //     <CenteredContent>
+  //       <div className="flex flex-col items-center space-y-2">
+  //         {collection?.metadata?.profileImage ? (
+  //           <EZImage src={collection.metadata.profileImage} className="h-40 w-40 rounded-lg overflow-clip" />
+  //         ) : null}
+  //         <div className="text-3xl font-heading font-medium">
+  //           {collection?.metadata?.name ?? 'This collection'} is not supported on Pixelpack
+  //         </div>
+  //         <div className="flex flex-col text-md">
+  //           <span>Common reasons a collection is not supported:</span>
+  //           <ul className="list-disc list-inside mt-2 mb-2">
+  //             <li>Pixelpack offers a trusted and curated selection of NFTs</li>
+  //             <li>Collection is not ERC-721</li>
+  //             <li>Collection has low volumes</li>
+  //             <li>Creator(s) rugged the project</li>
+  //           </ul>
+  //           <div className="flex items-center space-x-2">
+  //             <div>If this is a mistake, let us know on</div>
+  //             <ExternalLink href="https://discord.gg/pixelpackio">
+  //               <FaDiscord className={twMerge('text-brand-discord cursor-pointer mt-1', iconButtonStyle)} />
+  //             </ExternalLink>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     </CenteredContent>
+  //   );
+  // }
 
   const collectionCreator = collection.owner;
 
-  const firstAllTimeStats = props.collectionAllTimeStats;
-
-  const twitterFollowers = nFormatter(firstAllTimeStats?.twitterFollowers);
-  const discordFollowers = nFormatter(
-    isNaN(firstAllTimeStats?.discordFollowers ?? 0)
-      ? firstAllTimeStats?.prevDiscordFollowers
-      : firstAllTimeStats?.discordFollowers
-  );
-
-  const totalVol = nFormatter(firstAllTimeStats?.volume ? firstAllTimeStats.volume : 0);
-  const floorPrice = nFormatter(firstAllTimeStats?.floorPrice ? firstAllTimeStats.floorPrice : 0);
-  const numOwners = nFormatter(firstAllTimeStats?.numOwners ? firstAllTimeStats.numOwners : 0);
-  const numNfts = nFormatter(firstAllTimeStats?.numNfts ? firstAllTimeStats.numNfts : 0);
+  const totalVol = nFormatter(collection?.volume ?? 0);
+  const floorPrice = nFormatter(collection?.floorPrice ?? 0);
+  const numOwners = nFormatter(collection?.numOwners ?? 0);
+  const numNfts = nFormatter(collection?.numNfts ?? 0);
 
   const headerProps: CollectionPageHeaderProps = {
     expanded: true,
@@ -257,8 +247,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     floorPrice,
     numOwners,
     numNfts,
-    twitterFollowers,
-    discordFollowers,
+    twitterFollowers: 0,
+    discordFollowers: 0,
     tabs,
     onTabChange
   };
@@ -655,27 +645,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   context.res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=300');
 
   const id = context.query.name as string;
-  const collBaseDataPromise = apiGet(`/collections/${id}`);
-  const collAllTimeStatsPromise = apiGet(`/collections/${id}/stats`, {
-    query: {
-      period: 'all'
-    }
-  });
-
-  const attributesPromise = apiGet(`/collections/${id}/attributes`);
-
-  const [collBaseData, { result: allTimeStatsResult }, { result: collectionAttributes }] = await Promise.all([
-    collBaseDataPromise,
-    collAllTimeStatsPromise,
-    attributesPromise
-  ]);
+  const collDataPromise = apiGet(`/collections/${id}`);
+  const [collData] = await Promise.all([collDataPromise]);
 
   return {
     props: {
-      collection: collBaseData.result ?? null,
-      collectionAllTimeStats: allTimeStatsResult ?? null,
-      collectionAttributes: collectionAttributes ?? null,
-      error: collBaseData.error ?? null
+      collection: collData.result ?? null,
+      error: collData.error ?? null
     }
   };
 }

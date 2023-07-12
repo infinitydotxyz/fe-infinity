@@ -1,11 +1,19 @@
-import { CollectionAttributes, Erc721Token, NftSaleAndOrder, Token } from '@infinityxyz/lib-frontend/types/core';
+import { NftSaleAndOrder } from '@infinityxyz/lib-frontend/types/core';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { ResponsiveSalesAndOrdersChart } from 'src/components/charts/sales-and-orders-chart';
 import { ScatterChartType } from 'src/components/charts/types';
 import { nftToCardDataWithOrderFields } from 'src/hooks/api/useTokenFetcher';
-import { apiGet, ellipsisAddress, ellipsisString, getChainScannerBase, nFormatter, useFetch } from 'src/utils';
+import {
+  apiGet,
+  ellipsisAddress,
+  ellipsisString,
+  getChainScannerBase,
+  nFormatter,
+  reservoirTokenToERC721Token,
+  useFetch
+} from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { BasicTokenInfo, ReservoirTokenV6 } from 'src/utils/types';
@@ -14,7 +22,7 @@ import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { useAccount } from 'wagmi';
-import { BlueCheck, ClipboardButton, EZImage, EthSymbol, Modal, NextLink, ShortAddress, Spacer } from '../../common';
+import { ClipboardButton, EZImage, EthSymbol, Modal, NextLink, ShortAddress, Spacer } from '../../common';
 import { AButton } from '../astra-button';
 import { ATraitList } from '../astra-trait-list';
 import { ErrorOrLoading } from '../error-or-loading';
@@ -28,60 +36,42 @@ interface Props {
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const { mutate } = useSWRConfig();
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
-  const COLLECTION_ATTRIBUTES_API_ENDPOINT = `/collections/${chainId}:${collection}/attributes`;
-  const tokenResponse = useFetch<Token>(NFT_API_ENDPOINT);
-  const collectionAttributes = useFetch<CollectionAttributes>(COLLECTION_ATTRIBUTES_API_ENDPOINT);
+  const data = useFetch<ReservoirTokenV6>(NFT_API_ENDPOINT);
 
   return {
-    isLoading: tokenResponse.isLoading,
-    error: tokenResponse.error,
-    token: tokenResponse.result,
-    collectionAttributes: collectionAttributes.result,
-    refreshAssetInfo: () => {
-      mutate(NFT_API_ENDPOINT);
-      mutate(COLLECTION_ATTRIBUTES_API_ENDPOINT);
-    }
-  };
-};
-
-const useCollectionInfo = (chainId: string, collection: string) => {
-  const COLLECTION_FLOOR_CREATOR_API_ENDPOINT = `/collections/${chainId}:${collection}/floorandcreator`;
-  const collectionFloorAndCreator = useFetch<{ floorPrice: number; creator: string }>(
-    COLLECTION_FLOOR_CREATOR_API_ENDPOINT
-  );
-
-  return {
-    floorPrice: collectionFloorAndCreator.result?.floorPrice,
-    creator: collectionFloorAndCreator.result?.creator
-  };
-};
-
-const useBestBidAskInfo = (chainId: string, collection: string, tokenId: string) => {
-  const endpoint = `/v2/orders/token/bestbidask`;
-  const data = useFetch<ReservoirTokenV6>(endpoint, { query: { chainId, collection, tokenId } });
-
-  return {
+    isLoading: data.isLoading,
+    error: data.error,
+    token: data.result,
     bestAsk: data.result?.market?.floorAsk?.price?.amount?.native,
     askValidFrom: (data.result?.market?.floorAsk?.validFrom ?? 0) * 1000,
     askValidUntil: (data.result?.market?.floorAsk?.validUntil ?? 0) * 1000,
     bestBid: data.result?.market?.topBid?.price?.amount?.native,
     bidValidFrom: (data.result?.market?.topBid?.validFrom ?? 0) * 1000,
-    bidValidUntil: (data.result?.market?.topBid?.validUntil ?? 0) * 1000
+    bidValidUntil: (data.result?.market?.topBid?.validUntil ?? 0) * 1000,
+    refreshAssetInfo: () => {
+      mutate(NFT_API_ENDPOINT);
+    }
+  };
+};
+
+const useCollectionInfo = (chainId: string, collection: string) => {
+  const COLLECTION_FLOOR_CREATOR_API_ENDPOINT = `/collections/${chainId}:${collection}/floorandtokencount`;
+  const collectionFloor = useFetch<{ floorPrice: number; tokenCount: number }>(COLLECTION_FLOOR_CREATOR_API_ENDPOINT);
+
+  return {
+    floorPrice: collectionFloor.result?.floorPrice,
+    tokenCount: collectionFloor.result?.tokenCount
   };
 };
 
 export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.Element | null => {
-  const { token, error, collectionAttributes } = useFetchAssetInfo(data.chainId, data.collectionAddress, data.tokenId);
-  const { bestAsk, bestBid, askValidFrom, askValidUntil, bidValidFrom, bidValidUntil } = useBestBidAskInfo(
-    data.chainId,
-    data.collectionAddress,
-    data.tokenId
-  );
+  const { token, error, bestAsk, bestBid, askValidFrom, askValidUntil, bidValidFrom, bidValidUntil } =
+    useFetchAssetInfo(data.chainId, data.collectionAddress, data.tokenId);
 
-  let collectionFloorAndCreator: { floorPrice?: number; creator?: string } = {};
-  if (!data.collectionFloorPrice || !data.collectionCreator) {
-    collectionFloorAndCreator = useCollectionInfo(data.chainId, data.collectionAddress);
-  }
+  const collectionFloorAndTokenCount: { floorPrice?: number; tokenCount?: number } = useCollectionInfo(
+    data.chainId,
+    data.collectionAddress
+  );
 
   const [salesAndOrdersChartData, setSalesAndOrdersChartData] = useState<NftSaleAndOrder[]>([]);
   const { address: user } = useAccount();
@@ -128,9 +118,9 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
   const offerTime = bidValidFrom;
   const offerTimeStr = offerTime ? format(offerTime) : '-';
 
-  const collectionCreator = data.collectionCreator ?? collectionFloorAndCreator.creator;
+  const collectionCreator = data.collectionCreator ?? '';
 
-  const floorPrice = data.collectionFloorPrice ?? collectionFloorAndCreator.floorPrice;
+  const floorPrice = data.collectionFloorPrice ?? collectionFloorAndTokenCount.floorPrice;
   const floorPriceDiff = listingPrice
     ? Number(listingPrice) - Number(floorPrice)
     : offerPrice
@@ -148,10 +138,11 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
       : 0;
   const markupPricePercentDiff = markupPrice ? `${nFormatter((markupPriceDiff / Number(markupPrice)) * 100)}%` : 0;
 
-  const isOwner = user && trimLowerCase(user) === trimLowerCase(token.owner?.toString());
+  const isOwner = user && trimLowerCase(user) === trimLowerCase(token?.token?.owner?.toString());
   const isUserCollectionCreator = user && collectionCreator && trimLowerCase(user) === trimLowerCase(collectionCreator);
 
-  const cartToken = nftToCardDataWithOrderFields(token as Erc721Token);
+  const preCartToken = reservoirTokenToERC721Token(token);
+  const cartToken = nftToCardDataWithOrderFields(preCartToken);
 
   let newCartType = CartType.TokenBuy;
   if (isOwner) {
@@ -236,23 +227,22 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
             <div className="md:flex-1 space-y-4">
               <div className="flex items-center mb-2">
                 <NextLink
-                  href={`/collection/${token.collectionSlug || `${token.chainId}:${token.collectionAddress}`}`}
+                  href={`/collection/${token.token.chainId}:${token.token.contract}`}
                   className="font-heading tracking-tight mr-2"
                 >
-                  <div>{token.collectionName || ellipsisAddress(token.collectionAddress) || 'Collection'}</div>
+                  <div>{token.token.collection.name || ellipsisAddress(token.token.contract) || 'Collection'}</div>
                 </NextLink>
-                {token.hasBlueCheck && <BlueCheck />}
                 <ShortAddress
                   className="ml-2"
-                  address={token.collectionAddress ?? ''}
-                  href={`${getChainScannerBase(chainId)}/address/${token.collectionAddress}`}
-                  tooltip={token.collectionAddress ?? ''}
+                  address={token.token.contract ?? ''}
+                  href={`${getChainScannerBase(chainId)}/address/${token.token.contract}`}
+                  tooltip={token.token.contract ?? ''}
                 />
               </div>
 
               <div className="flex space-x-2">
-                <h3 className="font-body text-2xl font-bold mb-2">{ellipsisString(token.tokenId)}</h3>
-                <ClipboardButton textToCopy={token.tokenId} className={'h-4 w-4 mt-2.5'} />
+                <h3 className="font-body text-2xl font-bold mb-2">{ellipsisString(token.token.tokenId)}</h3>
+                <ClipboardButton textToCopy={token.token.tokenId} className={'h-4 w-4 mt-2.5'} />
               </div>
 
               <div className="flex justify-between">
@@ -270,15 +260,15 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                   </div>
                 ) : null}
 
-                {token?.owner ? (
+                {token?.token?.owner ? (
                   <div>
                     <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Owner</div>
                     <div>
                       <ShortAddress
-                        address={isOwner ? 'You' : token?.owner?.toString() || ''}
-                        textToCopy={token?.owner?.toString() || ''}
-                        href={`https://pixelpack.io/profile/${token?.owner?.toString() || ''}`}
-                        tooltip={token.owner?.toString() || ''}
+                        address={isOwner ? 'You' : token?.token?.owner?.toString() || ''}
+                        textToCopy={token?.token?.owner?.toString() || ''}
+                        href={`https://pixelpack.io/profile/${token?.token?.owner?.toString() || ''}`}
+                        tooltip={token.token?.owner?.toString() || ''}
                       />
                     </div>
                   </div>
@@ -391,13 +381,10 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
         </div>
 
         <div className="flex flex-col">
-          <EZImage
-            src={token?.image?.url ?? token.alchemyCachedImage ?? token.image?.originalUrl ?? ''}
-            className="h-80 w-80 rounded-lg"
-          />
+          <EZImage src={token?.token?.image ?? ''} className="h-80 w-80 rounded-lg" />
           <ATraitList
-            traits={(token as Erc721Token).metadata?.attributes ?? []}
-            collectionTraits={collectionAttributes ?? {}}
+            traits={token.token?.attributes ?? []}
+            totalTokenCount={collectionFloorAndTokenCount.tokenCount}
           />
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { BaseCollection, ChainId } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, Collection, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { HiOutlineExternalLink } from 'react-icons/hi';
@@ -25,7 +25,7 @@ export interface CollectionPageHeaderProps {
   description?: string;
   hasBlueCheck?: boolean;
   children?: React.ReactNode;
-  collection?: BaseCollection;
+  collection?: Collection & Partial<CollectionStats>;
   totalVol: string | number | null | undefined;
   floorPrice: string | number | null | undefined;
   numOwners: string | number | null | undefined;

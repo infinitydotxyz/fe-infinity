@@ -357,6 +357,9 @@ export interface ReservoirTokenV6 {
     image: string;
     kind: string;
     owner: string;
+    rarity: number;
+    rarityRank: number;
+    attributes: ReservoirTokenAttributeV6[];
     collection: {
       id: string;
       name: string;
@@ -368,6 +371,16 @@ export interface ReservoirTokenV6 {
     floorAsk: ReservoirOrderData;
     topBid: ReservoirOrderData;
   };
+}
+
+export interface ReservoirTokenAttributeV6 {
+  key: string;
+  value: string;
+  kind: string;
+  tokenCount: number;
+  onSaleCount: number;
+  floorAskPrice: number;
+  topBidValue: number;
 }
 
 export interface ReservoirOrderData {
