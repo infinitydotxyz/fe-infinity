@@ -11,7 +11,6 @@ import { AButton } from 'src/components/astra/astra-button';
 import { APriceFilter } from 'src/components/astra/astra-price-filter';
 import { ASortButton } from 'src/components/astra/astra-sort-button';
 import { AStatusFilterButton } from 'src/components/astra/astra-status-button';
-import { ATraitFilter } from 'src/components/astra/astra-trait-filter';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { CollectionCharts } from 'src/components/collection/collection-charts';
 import { CollectionItemsPageSidebar } from 'src/components/collection/collection-items-page-sidebar';
@@ -20,7 +19,7 @@ import { CollectionOrderList } from 'src/components/collection/collection-orders
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
 import { CenteredContent, EZImage, ExternalLink, TextInputBox } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
-import { useCollectionListingsFetcher, useCollectionTokenFetcher } from 'src/hooks/api/useTokenFetcher';
+import { useCollectionListingsFetcher } from 'src/hooks/api/useTokenFetcher';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
 import { CollectionPageTabs, apiGet, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -65,7 +64,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const chainId = collection.chainId as ChainId;
   const { setRef } = useScrollInfo();
 
-  const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, chainId, filter);
+  // const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, chainId, filter);
+
   const {
     data: listings,
     error: listingsError,
@@ -78,7 +78,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
   const tabs = [
     CollectionPageTabs.Buy.toString(),
-    CollectionPageTabs.Bid.toString(),
     CollectionPageTabs.LiveBids.toString(),
     CollectionPageTabs.Analytics.toString()
   ];
@@ -98,16 +97,22 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     }
   }, [collection.address]);
 
+  // useEffect(() => {
+  //   if (
+  //     selectedCollectionTab === CollectionPageTabs.Intent.toString() ||
+  //     selectedCollectionTab === CollectionPageTabs.Bid.toString()
+  //   ) {
+  //     setMutatedData(data);
+  //   } else if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
+  //     setMutatedData(listings);
+  //   }
+  // }, [data, listings]);
+
   useEffect(() => {
-    if (
-      selectedCollectionTab === CollectionPageTabs.Intent.toString() ||
-      selectedCollectionTab === CollectionPageTabs.Bid.toString()
-    ) {
-      setMutatedData(data);
-    } else if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
+    if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
       setMutatedData(listings);
     }
-  }, [data, listings]);
+  }, [listings]);
 
   useEffect(() => {
     if (selectedCollectionTab === CollectionPageTabs.Intent.toString()) {
@@ -126,24 +131,24 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     }
   }, [selectedCollectionTab]);
 
-  useEffect(() => {
-    if (filter.traitTypes?.length) {
-      const traits = [];
-      for (let i = 0; i < filter.traitTypes.length; i++) {
-        const traitType = filter.traitTypes?.[i];
-        const traitValues = filter.traitValues?.[i]?.split('|') ?? [];
-        for (const traitValue of traitValues) {
-          traits.push(`${traitType}: ${traitValue}`);
-        }
-      }
-      setSelectedTraits(traits);
-    } else {
-      setSelectedTraits([]);
-    }
+  // useEffect(() => {
+  //   if (filter.traitTypes?.length) {
+  //     const traits = [];
+  //     for (let i = 0; i < filter.traitTypes.length; i++) {
+  //       const traitType = filter.traitTypes?.[i];
+  //       const traitValues = filter.traitValues?.[i]?.split('|') ?? [];
+  //       for (const traitValue of traitValues) {
+  //         traits.push(`${traitType}: ${traitValue}`);
+  //       }
+  //     }
+  //     setSelectedTraits(traits);
+  //   } else {
+  //     setSelectedTraits([]);
+  //   }
 
-    // refetch data
-    fetch(false);
-  }, [filter, collection.address]);
+  //   // refetch data
+  //   fetch(false);
+  // }, [filter, collection.address]);
 
   useEffect(() => {
     if (collSelection.length > 0) {
@@ -166,22 +171,22 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     toggleMultipleNFTSelection(tokens);
   }, [numSweep]);
 
-  useEffect(() => {
-    const bidBelowPctNum = parseFloat(bidBelowPct);
-    const mutatedTokens = [];
-    for (const token of data) {
-      const tokenOrigPrice = token?.orderSnippet?.listing?.orderItem?.startPriceEth
-        ? token?.orderSnippet?.listing?.orderItem?.startPriceEth
-        : 0;
+  // useEffect(() => {
+  //   const bidBelowPctNum = parseFloat(bidBelowPct);
+  //   const mutatedTokens = [];
+  //   for (const token of data) {
+  //     const tokenOrigPrice = token?.orderSnippet?.listing?.orderItem?.startPriceEth
+  //       ? token?.orderSnippet?.listing?.orderItem?.startPriceEth
+  //       : 0;
 
-      const bidPrice = tokenOrigPrice * (1 - bidBelowPctNum / 100);
+  //     const bidPrice = tokenOrigPrice * (1 - bidBelowPctNum / 100);
 
-      const mutatedToken = token;
-      mutatedToken.price = bidPrice;
-      mutatedTokens.push(mutatedToken);
-    }
-    setMutatedData(mutatedTokens);
-  }, [bidBelowPct]);
+  //     const mutatedToken = token;
+  //     mutatedToken.price = bidPrice;
+  //     mutatedTokens.push(mutatedToken);
+  //   }
+  //   setMutatedData(mutatedTokens);
+  // }, [bidBelowPct]);
 
   const onTabChange = (tab: string) => {
     setSelectedCollectionTab(tab);
@@ -422,16 +427,16 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                       <ASortButton filter={filter} setFilter={setFilter} />
                       <AStatusFilterButton filter={filter} setFilter={setFilter} />
                       <APriceFilter filter={filter} setFilter={setFilter} />
-                      <ATraitFilter
+                      {/* <ATraitFilter
                         collectionAddress={collection.address}
                         filter={filter}
                         setFilter={setFilter}
                         collectionAttributes={props.collectionAttributes}
-                      />
+                      /> */}
                     </div>
                   )}
 
-                  {selectedCollectionTab === CollectionPageTabs.Bid && (
+                  {/* {selectedCollectionTab === CollectionPageTabs.Bid && (
                     <div
                       className={twMerge(
                         'flex space-x-1',
@@ -447,7 +452,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                         collectionAttributes={props.collectionAttributes}
                       />
                     </div>
-                  )}
+                  )} */}
                 </div>
               </div>
 
@@ -597,34 +602,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   isSelectable={isNFTSelectable}
                   isSelected={isNFTSelected}
                   data={mutatedData}
-                  hasNextPage={
-                    selectedCollectionTab === CollectionPageTabs.Intent.toString()
-                      ? hasNextPage
-                      : selectedCollectionTab === CollectionPageTabs.Bid.toString()
-                      ? hasNextPage
-                      : listingsHasNextPage
-                  }
-                  onFetchMore={() =>
-                    selectedCollectionTab === CollectionPageTabs.Intent.toString()
-                      ? fetch(true)
-                      : selectedCollectionTab === CollectionPageTabs.Bid.toString()
-                      ? fetch(true)
-                      : fetchListings(true)
-                  }
-                  isError={
-                    selectedCollectionTab === CollectionPageTabs.Intent.toString()
-                      ? !!error
-                      : selectedCollectionTab === CollectionPageTabs.Bid.toString()
-                      ? !!error
-                      : !!listingsError
-                  }
-                  isLoading={
-                    selectedCollectionTab === CollectionPageTabs.Intent.toString()
-                      ? !!isLoading
-                      : selectedCollectionTab === CollectionPageTabs.Bid.toString()
-                      ? !!isLoading
-                      : !!listingsIsLoading
-                  }
+                  hasNextPage={listingsHasNextPage}
+                  onFetchMore={() => fetchListings(true)}
+                  isError={!!listingsError}
+                  isLoading={!!listingsIsLoading}
                 />
               </div>
 

@@ -47,8 +47,6 @@ export const CollectionPageHeader = ({
   floorPrice,
   numOwners,
   numNfts,
-  twitterFollowers,
-  discordFollowers,
   tabs,
   onTabChange
 }: CollectionPageHeaderProps) => {
@@ -114,10 +112,10 @@ export const CollectionPageHeader = ({
                   onClick={() => window.open(collection?.metadata?.links?.twitter)}
                 >
                   <span className="flex items-center text-sm">
-                    <div className="pr-2">
-                      <FaTwitter className="text-brand-twitter" />
+                    <div className="">
+                      <FaTwitter className="text-brand-twitter h-5 w-5" />
                     </div>
-                    {twitterFollowers ?? ''}
+                    {/* {twitterFollowers ?? ''} */}
                   </span>
                 </AOutlineButton>
               ) : null}
@@ -128,10 +126,10 @@ export const CollectionPageHeader = ({
                   onClick={() => window.open(collection?.metadata?.links?.discord)}
                 >
                   <span className="flex items-center text-sm">
-                    <div className="pr-2">
-                      <FaDiscord className="text-brand-discord" />
+                    <div className="">
+                      <FaDiscord className="text-brand-discord h-5 w-5" />
                     </div>
-                    {discordFollowers ?? ''}
+                    {/* {discordFollowers ?? ''} */}
                   </span>
                 </AOutlineButton>
               ) : null}
