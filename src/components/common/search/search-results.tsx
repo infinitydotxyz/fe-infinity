@@ -1,6 +1,5 @@
-import { NftDisplayData } from '@infinityxyz/lib-frontend/types/core';
 import { ellipsisString, nFormatter } from 'src/utils';
-import { CollectionSearchResultData } from 'src/utils/types';
+import { CollectionSearchResultData, NftSearchResultData } from 'src/utils/types';
 import { BlueCheck } from '../blue-check';
 import { EthSymbol } from '../eth-price';
 import { EZImage } from '../ez-image';
@@ -32,7 +31,7 @@ const CollectionSearchResult = ({ item }: { item: CollectionSearchResultData }) 
   );
 };
 
-const NftSearchResult = ({ item }: { item: NftDisplayData }) => {
+const NftSearchResult = ({ item }: { item: NftSearchResultData }) => {
   return (
     <div className="flex items-center space-x-4 truncate py-1">
       <EZImage className="w-8 h-8 rounded-lg overflow-hidden" src={item.image} />
@@ -45,7 +44,7 @@ export const getSearchResultKey = (item: SearchResult) => {
   if ('address' in item) {
     return `${item.address}`;
   } else if ('tokenId' in item) {
-    return `${item.collectionDisplayData?.address}:${item.tokenId}`;
+    return `${item.collectionAddress}:${item.tokenId}`;
   }
 };
 

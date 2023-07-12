@@ -1,4 +1,5 @@
-import { CollectionDisplayData, NftDisplayData } from '@infinityxyz/lib-frontend/types/core';
+import { CollectionDisplayData } from '@infinityxyz/lib-frontend/types/core';
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
+import { NftSearchResultData } from 'src/utils/types';
 
-export type SearchResult = CollectionSearchDto | CollectionDisplayData | NftDisplayData;
+export type SearchResult = CollectionSearchDto | CollectionDisplayData | NftSearchResultData;

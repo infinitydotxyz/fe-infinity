@@ -294,7 +294,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   )}
                 >
                   <CollectionNftSearchInput
-                    slug={collection.slug}
+                    collectionAddress={collection.address}
                     expanded
                     collectionFloorPrice={floorPrice}
                     chainId={chainId}

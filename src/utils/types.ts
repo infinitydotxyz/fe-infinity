@@ -128,6 +128,22 @@ export interface CollectionSearchResultData {
   floorPrice?: number;
 }
 
+export interface NftSearchResultData {
+  chainId: string;
+  collectionAddress: string;
+  tokenId: string;
+  name: string;
+  numTraitTypes: number;
+  image: string;
+  tokenStandard: string;
+}
+
+export interface SearchResponse {
+  data: CollectionSearchResultData[] | NftSearchResultData[];
+  cursor: string;
+  hasNextPage: boolean;
+}
+
 export interface BasicTokenInfo {
   chainId: string;
   collectionAddress: string;
