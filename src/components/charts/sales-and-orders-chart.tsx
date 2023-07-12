@@ -58,8 +58,9 @@ export const ResponsiveSalesAndOrdersChart = ({ data, graphType }: ResponsiveSal
 
   return (
     <ChartBox className="h-full">
-      <div className="flex justify-between mb-4">
+      <div className="flex items-center mb-4 space-x-2">
         <div className={twMerge('font-medium')}>{graphType}</div>
+        <div className={twMerge('text-xs', secondaryTextColor)}>(Not all bids are shown to reduce noise)</div>
       </div>
 
       <ParentSize debounceTime={10} style={{ height: '95%' }}>

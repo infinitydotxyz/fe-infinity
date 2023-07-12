@@ -145,7 +145,7 @@ export const GridCard = ({
               className="flex items-center space-x-1 cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
-                router.push(`/collection/${data?.collectionSlug}`);
+                router.push(`/collection/${data?.chainId}:${data?.address}`);
               }}
             >
               <div className={twMerge('truncate text-xs', hoverColorBrandText)}>{title}</div>

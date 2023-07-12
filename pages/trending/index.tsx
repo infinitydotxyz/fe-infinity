@@ -147,8 +147,8 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
     periodStat = collection?.stats?.all;
   }
   const floorPrice = periodStat?.floorPrice ?? 0;
-  const floorPriceChange = Number(nFormatter(periodStat?.floorPriceChange));
-  const salesVolumeChange = Number(nFormatter(periodStat?.salesVolumeChange));
+  const floorPriceChange = Number(nFormatter(periodStat?.floorPriceChange ?? 0));
+  const salesVolumeChange = Number(nFormatter(periodStat?.salesVolumeChange ?? 0));
 
   return (
     <div className={twMerge(borderColor, 'border-b py-4 flex items-center')}>
@@ -159,11 +159,14 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
         <div className="flex items-center font-bold font-heading">
           <div className="text-lg mr-8 text-right">{index + 1}</div>
 
-          <NextLink href={`/collection/${collection?.slug}`}>
+          <NextLink href={`/collection/${collection?.chainId}:${collection?.address}`}>
             <EZImage className="w-14 h-14 rounded-lg overflow-clip" src={collection?.metadata?.profileImage} />
           </NextLink>
 
-          <NextLink href={`/collection/${collection?.slug}`} className="ml-2 whitespace-normal">
+          <NextLink
+            href={`/collection/${collection?.chainId}:${collection?.address}`}
+            className="ml-2 whitespace-normal"
+          >
             {collection?.metadata?.name}
             {collection?.hasBlueCheck && <BlueCheckInline />}
           </NextLink>
@@ -176,9 +179,13 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
 
         <div className="space-y-1">
           <div className="text-sm font-bold flex items-center">Vol Change</div>
-          <div className={twMerge('ml-2 text-xs', salesVolumeChange >= 0 ? 'text-green-600' : 'text-red-600')}>
-            {salesVolumeChange} %
-          </div>
+          {Number.isNaN(salesVolumeChange) ? (
+            '-'
+          ) : (
+            <div className={twMerge(salesVolumeChange >= 0 ? 'text-green-600' : 'text-red-600')}>
+              {salesVolumeChange} %
+            </div>
+          )}
         </div>
 
         <div className="space-y-1">
@@ -188,7 +195,13 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
 
         <div className="space-y-1 text-sm">
           <div className="font-bold flex items-center">Floor Change</div>
-          <div className={twMerge(floorPriceChange >= 0 ? 'text-green-600' : 'text-red-600')}>{floorPriceChange} %</div>
+          {Number.isNaN(floorPriceChange) ? (
+            '-'
+          ) : (
+            <div className={twMerge(floorPriceChange >= 0 ? 'text-green-600' : 'text-red-600')}>
+              {floorPriceChange} %
+            </div>
+          )}
         </div>
 
         {isDesktop ? (

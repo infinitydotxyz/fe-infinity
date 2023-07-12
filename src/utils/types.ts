@@ -116,6 +116,34 @@ export interface ERC721OrderCartItem extends SignedOBOrder {
   executionStatus: ExecutionStatus | null;
 }
 
+export interface CollectionSearchResultData {
+  chainId: string;
+  address: string;
+  hasBlueCheck: boolean;
+  slug: string;
+  name: string;
+  profileImage: string;
+  bannerImage: string;
+  allTimeVolume?: number;
+  floorPrice?: number;
+}
+
+export interface NftSearchResultData {
+  chainId: string;
+  collectionAddress: string;
+  tokenId: string;
+  name: string;
+  numTraitTypes: number;
+  image: string;
+  tokenStandard: string;
+}
+
+export interface SearchResponse {
+  data: CollectionSearchResultData[] | NftSearchResultData[];
+  cursor: string;
+  hasNextPage: boolean;
+}
+
 export interface BasicTokenInfo {
   chainId: string;
   collectionAddress: string;
@@ -345,6 +373,9 @@ export interface ReservoirTokenV6 {
     image: string;
     kind: string;
     owner: string;
+    rarity: number;
+    rarityRank: number;
+    attributes: ReservoirTokenAttributeV6[];
     collection: {
       id: string;
       name: string;
@@ -356,6 +387,16 @@ export interface ReservoirTokenV6 {
     floorAsk: ReservoirOrderData;
     topBid: ReservoirOrderData;
   };
+}
+
+export interface ReservoirTokenAttributeV6 {
+  key: string;
+  value: string;
+  kind: string;
+  tokenCount: number;
+  onSaleCount: number;
+  floorAskPrice: number;
+  topBidValue: number;
 }
 
 export interface ReservoirOrderData {

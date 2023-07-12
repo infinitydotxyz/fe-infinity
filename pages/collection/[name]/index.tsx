@@ -1,9 +1,8 @@
-import { BaseCollection, ChainId, CollectionAttributes, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, Collection, CollectionAttributes, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
-import { FaDiscord } from 'react-icons/fa';
 import { GiBroom } from 'react-icons/gi';
 import { HiOutlineLightBulb } from 'react-icons/hi';
 import { MdClose } from 'react-icons/md';
@@ -11,16 +10,15 @@ import { AButton } from 'src/components/astra/astra-button';
 import { APriceFilter } from 'src/components/astra/astra-price-filter';
 import { ASortButton } from 'src/components/astra/astra-sort-button';
 import { AStatusFilterButton } from 'src/components/astra/astra-status-button';
-import { ATraitFilter } from 'src/components/astra/astra-trait-filter';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { CollectionCharts } from 'src/components/collection/collection-charts';
 import { CollectionItemsPageSidebar } from 'src/components/collection/collection-items-page-sidebar';
 import { CollectionManualBidList } from 'src/components/collection/collection-manual-bid-list';
 import { CollectionOrderList } from 'src/components/collection/collection-orders-list';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
-import { CenteredContent, EZImage, ExternalLink, TextInputBox } from 'src/components/common';
+import { TextInputBox } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
-import { useCollectionListingsFetcher, useCollectionTokenFetcher } from 'src/hooks/api/useTokenFetcher';
+import { useCollectionListingsFetcher } from 'src/hooks/api/useTokenFetcher';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
 import { CollectionPageTabs, apiGet, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -38,7 +36,7 @@ import {
 import { twMerge } from 'tailwind-merge';
 
 interface CollectionDashboardProps {
-  collection: BaseCollection;
+  collection: Collection & Partial<CollectionStats>;
   collectionAllTimeStats?: CollectionStats;
   collectionAttributes?: CollectionAttributes;
   error?: Error;
@@ -65,7 +63,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const chainId = collection.chainId as ChainId;
   const { setRef } = useScrollInfo();
 
-  const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, chainId, filter);
+  // const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, chainId, filter);
+
   const {
     data: listings,
     error: listingsError,
@@ -78,7 +77,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
   const tabs = [
     CollectionPageTabs.Buy.toString(),
-    CollectionPageTabs.Bid.toString(),
     CollectionPageTabs.LiveBids.toString(),
     CollectionPageTabs.Analytics.toString()
   ];
@@ -98,16 +96,22 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     }
   }, [collection.address]);
 
+  // useEffect(() => {
+  //   if (
+  //     selectedCollectionTab === CollectionPageTabs.Intent.toString() ||
+  //     selectedCollectionTab === CollectionPageTabs.Bid.toString()
+  //   ) {
+  //     setMutatedData(data);
+  //   } else if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
+  //     setMutatedData(listings);
+  //   }
+  // }, [data, listings]);
+
   useEffect(() => {
-    if (
-      selectedCollectionTab === CollectionPageTabs.Intent.toString() ||
-      selectedCollectionTab === CollectionPageTabs.Bid.toString()
-    ) {
-      setMutatedData(data);
-    } else if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
+    if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
       setMutatedData(listings);
     }
-  }, [data, listings]);
+  }, [listings]);
 
   useEffect(() => {
     if (selectedCollectionTab === CollectionPageTabs.Intent.toString()) {
@@ -126,24 +130,24 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     }
   }, [selectedCollectionTab]);
 
-  useEffect(() => {
-    if (filter.traitTypes?.length) {
-      const traits = [];
-      for (let i = 0; i < filter.traitTypes.length; i++) {
-        const traitType = filter.traitTypes?.[i];
-        const traitValues = filter.traitValues?.[i]?.split('|') ?? [];
-        for (const traitValue of traitValues) {
-          traits.push(`${traitType}: ${traitValue}`);
-        }
-      }
-      setSelectedTraits(traits);
-    } else {
-      setSelectedTraits([]);
-    }
+  // useEffect(() => {
+  //   if (filter.traitTypes?.length) {
+  //     const traits = [];
+  //     for (let i = 0; i < filter.traitTypes.length; i++) {
+  //       const traitType = filter.traitTypes?.[i];
+  //       const traitValues = filter.traitValues?.[i]?.split('|') ?? [];
+  //       for (const traitValue of traitValues) {
+  //         traits.push(`${traitType}: ${traitValue}`);
+  //       }
+  //     }
+  //     setSelectedTraits(traits);
+  //   } else {
+  //     setSelectedTraits([]);
+  //   }
 
-    // refetch data
-    fetch(false);
-  }, [filter, collection.address]);
+  //   // refetch data
+  //   fetch(false);
+  // }, [filter, collection.address]);
 
   useEffect(() => {
     if (collSelection.length > 0) {
@@ -166,22 +170,22 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     toggleMultipleNFTSelection(tokens);
   }, [numSweep]);
 
-  useEffect(() => {
-    const bidBelowPctNum = parseFloat(bidBelowPct);
-    const mutatedTokens = [];
-    for (const token of data) {
-      const tokenOrigPrice = token?.orderSnippet?.listing?.orderItem?.startPriceEth
-        ? token?.orderSnippet?.listing?.orderItem?.startPriceEth
-        : 0;
+  // useEffect(() => {
+  //   const bidBelowPctNum = parseFloat(bidBelowPct);
+  //   const mutatedTokens = [];
+  //   for (const token of data) {
+  //     const tokenOrigPrice = token?.orderSnippet?.listing?.orderItem?.startPriceEth
+  //       ? token?.orderSnippet?.listing?.orderItem?.startPriceEth
+  //       : 0;
 
-      const bidPrice = tokenOrigPrice * (1 - bidBelowPctNum / 100);
+  //     const bidPrice = tokenOrigPrice * (1 - bidBelowPctNum / 100);
 
-      const mutatedToken = token;
-      mutatedToken.price = bidPrice;
-      mutatedTokens.push(mutatedToken);
-    }
-    setMutatedData(mutatedTokens);
-  }, [bidBelowPct]);
+  //     const mutatedToken = token;
+  //     mutatedToken.price = bidPrice;
+  //     mutatedTokens.push(mutatedToken);
+  //   }
+  //   setMutatedData(mutatedTokens);
+  // }, [bidBelowPct]);
 
   const onTabChange = (tab: string) => {
     setSelectedCollectionTab(tab);
@@ -192,53 +196,44 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   };
 
   const collectionAddress = collection.address;
-  const isCollSupported = collection?.isSupported ?? false;
 
-  if (!isCollSupported) {
-    return (
-      <CenteredContent>
-        <div className="flex flex-col items-center space-y-2">
-          {collection?.metadata?.profileImage ? (
-            <EZImage src={collection.metadata.profileImage} className="h-40 w-40 rounded-lg overflow-clip" />
-          ) : null}
-          <div className="text-3xl font-heading font-medium">
-            {collection?.metadata?.name ?? 'This collection'} is not supported on Pixelpack
-          </div>
-          <div className="flex flex-col text-md">
-            <span>Common reasons a collection is not supported:</span>
-            <ul className="list-disc list-inside mt-2 mb-2">
-              <li>Pixelpack offers a trusted and curated selection of NFTs</li>
-              <li>Collection is not ERC-721</li>
-              <li>Collection has low volumes</li>
-              <li>Creator(s) rugged the project</li>
-            </ul>
-            <div className="flex items-center space-x-2">
-              <div>If this is a mistake, let us know on</div>
-              <ExternalLink href="https://discord.gg/pixelpackio">
-                <FaDiscord className={twMerge('text-brand-discord cursor-pointer mt-1', iconButtonStyle)} />
-              </ExternalLink>
-            </div>
-          </div>
-        </div>
-      </CenteredContent>
-    );
-  }
+  // const isCollSupported = collection?.isSupported ?? false;
+  // if (!isCollSupported) {
+  //   return (
+  //     <CenteredContent>
+  //       <div className="flex flex-col items-center space-y-2">
+  //         {collection?.metadata?.profileImage ? (
+  //           <EZImage src={collection.metadata.profileImage} className="h-40 w-40 rounded-lg overflow-clip" />
+  //         ) : null}
+  //         <div className="text-3xl font-heading font-medium">
+  //           {collection?.metadata?.name ?? 'This collection'} is not supported on Pixelpack
+  //         </div>
+  //         <div className="flex flex-col text-md">
+  //           <span>Common reasons a collection is not supported:</span>
+  //           <ul className="list-disc list-inside mt-2 mb-2">
+  //             <li>Pixelpack offers a trusted and curated selection of NFTs</li>
+  //             <li>Collection is not ERC-721</li>
+  //             <li>Collection has low volumes</li>
+  //             <li>Creator(s) rugged the project</li>
+  //           </ul>
+  //           <div className="flex items-center space-x-2">
+  //             <div>If this is a mistake, let us know on</div>
+  //             <ExternalLink href="https://discord.gg/pixelpackio">
+  //               <FaDiscord className={twMerge('text-brand-discord cursor-pointer mt-1', iconButtonStyle)} />
+  //             </ExternalLink>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     </CenteredContent>
+  //   );
+  // }
 
   const collectionCreator = collection.owner;
 
-  const firstAllTimeStats = props.collectionAllTimeStats;
-
-  const twitterFollowers = nFormatter(firstAllTimeStats?.twitterFollowers);
-  const discordFollowers = nFormatter(
-    isNaN(firstAllTimeStats?.discordFollowers ?? 0)
-      ? firstAllTimeStats?.prevDiscordFollowers
-      : firstAllTimeStats?.discordFollowers
-  );
-
-  const totalVol = nFormatter(firstAllTimeStats?.volume ? firstAllTimeStats.volume : 0);
-  const floorPrice = nFormatter(firstAllTimeStats?.floorPrice ? firstAllTimeStats.floorPrice : 0);
-  const numOwners = nFormatter(firstAllTimeStats?.numOwners ? firstAllTimeStats.numOwners : 0);
-  const numNfts = nFormatter(firstAllTimeStats?.numNfts ? firstAllTimeStats.numNfts : 0);
+  const totalVol = nFormatter(collection?.volume ?? 0);
+  const floorPrice = nFormatter(collection?.floorPrice ?? 0);
+  const numOwners = nFormatter(collection?.numOwners ?? 0);
+  const numNfts = nFormatter(collection?.numNfts ?? 0);
 
   const headerProps: CollectionPageHeaderProps = {
     expanded: true,
@@ -252,8 +247,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     floorPrice,
     numOwners,
     numNfts,
-    twitterFollowers,
-    discordFollowers,
+    twitterFollowers: 0,
+    discordFollowers: 0,
     tabs,
     onTabChange
   };
@@ -299,7 +294,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   )}
                 >
                   <CollectionNftSearchInput
-                    slug={collection.slug}
+                    collectionAddress={collection.address}
                     expanded
                     collectionFloorPrice={floorPrice}
                     chainId={chainId}
@@ -422,16 +417,16 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                       <ASortButton filter={filter} setFilter={setFilter} />
                       <AStatusFilterButton filter={filter} setFilter={setFilter} />
                       <APriceFilter filter={filter} setFilter={setFilter} />
-                      <ATraitFilter
+                      {/* <ATraitFilter
                         collectionAddress={collection.address}
                         filter={filter}
                         setFilter={setFilter}
                         collectionAttributes={props.collectionAttributes}
-                      />
+                      /> */}
                     </div>
                   )}
 
-                  {selectedCollectionTab === CollectionPageTabs.Bid && (
+                  {/* {selectedCollectionTab === CollectionPageTabs.Bid && (
                     <div
                       className={twMerge(
                         'flex space-x-1',
@@ -447,7 +442,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                         collectionAttributes={props.collectionAttributes}
                       />
                     </div>
-                  )}
+                  )} */}
                 </div>
               </div>
 
@@ -597,34 +592,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   isSelectable={isNFTSelectable}
                   isSelected={isNFTSelected}
                   data={mutatedData}
-                  hasNextPage={
-                    selectedCollectionTab === CollectionPageTabs.Intent.toString()
-                      ? hasNextPage
-                      : selectedCollectionTab === CollectionPageTabs.Bid.toString()
-                      ? hasNextPage
-                      : listingsHasNextPage
-                  }
-                  onFetchMore={() =>
-                    selectedCollectionTab === CollectionPageTabs.Intent.toString()
-                      ? fetch(true)
-                      : selectedCollectionTab === CollectionPageTabs.Bid.toString()
-                      ? fetch(true)
-                      : fetchListings(true)
-                  }
-                  isError={
-                    selectedCollectionTab === CollectionPageTabs.Intent.toString()
-                      ? !!error
-                      : selectedCollectionTab === CollectionPageTabs.Bid.toString()
-                      ? !!error
-                      : !!listingsError
-                  }
-                  isLoading={
-                    selectedCollectionTab === CollectionPageTabs.Intent.toString()
-                      ? !!isLoading
-                      : selectedCollectionTab === CollectionPageTabs.Bid.toString()
-                      ? !!isLoading
-                      : !!listingsIsLoading
-                  }
+                  hasNextPage={listingsHasNextPage}
+                  onFetchMore={() => fetchListings(true)}
+                  isError={!!listingsError}
+                  isLoading={!!listingsIsLoading}
                 />
               </div>
 
@@ -674,27 +645,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   context.res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=300');
 
   const id = context.query.name as string;
-  const collBaseDataPromise = apiGet(`/collections/${id}`);
-  const collAllTimeStatsPromise = apiGet(`/collections/${id}/stats`, {
-    query: {
-      period: 'all'
-    }
-  });
-
-  const attributesPromise = apiGet(`/collections/${id}/attributes`);
-
-  const [collBaseData, { result: allTimeStatsResult }, { result: collectionAttributes }] = await Promise.all([
-    collBaseDataPromise,
-    collAllTimeStatsPromise,
-    attributesPromise
-  ]);
+  const collDataPromise = apiGet(`/collections/${id}`);
+  const [collData] = await Promise.all([collDataPromise]);
 
   return {
     props: {
-      collection: collBaseData.result ?? null,
-      collectionAllTimeStats: allTimeStatsResult ?? null,
-      collectionAttributes: collectionAttributes ?? null,
-      error: collBaseData.error ?? null
+      collection: collData.result ?? null,
+      error: collData.error ?? null
     }
   };
 }

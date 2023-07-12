@@ -1,7 +1,14 @@
 import { getAddress } from '@ethersproject/address';
 import { BigNumber } from '@ethersproject/bignumber/lib/bignumber';
 import { Provider } from '@ethersproject/providers';
-import { BaseToken, ChainId, OrdersSnippet, OwnerInfo, TokenStandard } from '@infinityxyz/lib-frontend/types/core';
+import {
+  BaseToken,
+  ChainId,
+  Erc721Token,
+  OrdersSnippet,
+  OwnerInfo,
+  TokenStandard
+} from '@infinityxyz/lib-frontend/types/core';
 import { CreationFlow } from '@infinityxyz/lib-frontend/types/core/Collection';
 import {
   ETHEREUM_CHAIN_SCANNER_BASE,
@@ -13,7 +20,13 @@ import {
 import { formatUnits, parseUnits } from 'ethers/lib/utils.js';
 import { normalize } from 'path';
 import { ReactNode } from 'react';
-import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
+import {
+  ERC721CollectionCartItem,
+  ERC721OrderCartItem,
+  ERC721TokenCartItem,
+  ORDER_EXPIRY_TIME,
+  ReservoirTokenV6
+} from 'src/utils/types';
 import { CartType } from './context/CartContext';
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
@@ -595,6 +608,38 @@ export const erc721TokenCartItemToCollectionCartItem = (order: ERC721TokenCartIt
     }
   };
 
+  return result;
+};
+
+export const reservoirTokenToERC721Token = (resvToken: ReservoirTokenV6): Erc721Token => {
+  // do the mapping and return
+  const token = resvToken.token;
+  const result: Erc721Token = {
+    chainId: token.chainId,
+    collectionAddress: token.contract,
+    collectionName: token.collection.name,
+    collectionSlug: token.collection.slug,
+    tokenId: token.tokenId,
+    tokenStandard: TokenStandard.ERC721,
+    tokenIdNumeric: Number(token.tokenId),
+    rarityRank: token.rarityRank,
+    rarityScore: token.rarity,
+    image: {
+      url: token.image,
+      updatedAt: 0
+    },
+    metadata: {
+      name: token.name,
+      title: token.name,
+      description: token.description,
+      attributes: token.attributes.map((attr) => {
+        return {
+          traitType: attr.key,
+          value: attr.value
+        };
+      })
+    }
+  };
   return result;
 };
 

@@ -1,10 +1,9 @@
 import { Combobox } from '@headlessui/react';
-import { NftDisplayData } from '@infinityxyz/lib-frontend/types/core';
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
-import { BasicTokenInfo } from 'src/utils/types';
+import { BasicTokenInfo, NftSearchResultData } from 'src/utils/types';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { borderColor, secondaryBgColor, hoverColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -63,13 +62,15 @@ export function SearchInput({
       setSelectedCollection && setSelectedCollection(selected as CollectionSearchDto);
     } else if (selected && tokenSearch) {
       const basicTokenInfo: BasicTokenInfo = {
-        tokenId: (selected as NftDisplayData).tokenId,
-        collectionAddress: (selected as NftDisplayData).collectionDisplayData?.address,
-        chainId: (selected as NftDisplayData).collectionDisplayData?.chainId
+        tokenId: (selected as NftSearchResultData).tokenId,
+        collectionAddress: (selected as NftSearchResultData).collectionAddress,
+        chainId: (selected as NftSearchResultData).chainId
       };
       setSelectedToken?.(basicTokenInfo);
     } else if (selected) {
-      const pathname = `/collection/${(selected as CollectionSearchDto).slug}`;
+      const pathname = `/collection/${(selected as CollectionSearchDto).chainId}:${
+        (selected as CollectionSearchDto).address
+      }`;
       router.push(
         {
           pathname

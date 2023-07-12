@@ -10,16 +10,16 @@ import { useAppContext } from 'src/utils/context/AppContext';
 
 interface Props {
   expanded?: boolean;
-  slug: string;
+  collectionAddress: string;
   collectionFloorPrice?: string | number | null | undefined;
   chainId: ChainId;
 }
 
-export const CollectionNftSearchInput = ({ expanded, slug, collectionFloorPrice, chainId }: Props) => {
-  const { search, setSubTypeQuery, setQuery } = useSearchState<SearchType.Collection, 'slug', 'nft'>({
+export const CollectionNftSearchInput = ({ expanded, collectionAddress, collectionFloorPrice, chainId }: Props) => {
+  const { search, setSubTypeQuery, setQuery } = useSearchState<SearchType.Collection, 'address', 'nft'>({
     type: SearchType.Collection,
-    query: slug,
-    searchBy: 'slug',
+    query: collectionAddress,
+    searchBy: 'address',
     limit: 10,
     subType: 'nft',
     subTypeQuery: '',
@@ -50,8 +50,8 @@ export const CollectionNftSearchInput = ({ expanded, slug, collectionFloorPrice,
   }, [router.query, basicTokenInfo]);
 
   useEffect(() => {
-    setQuery(slug);
-  }, [slug]);
+    setQuery(collectionAddress);
+  }, [collectionAddress]);
 
   return (
     <>
