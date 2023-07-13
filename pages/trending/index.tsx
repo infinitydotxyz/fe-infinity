@@ -88,6 +88,7 @@ const TrendingPage = () => {
           options={options}
           defaultOption={DEFAULT_TAB}
           onChange={onChangeToggleTab}
+          border={true}
         />
 
         <div className="space-y-3 mt-8 pb-20">
