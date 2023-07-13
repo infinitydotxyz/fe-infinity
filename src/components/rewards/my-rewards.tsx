@@ -4,14 +4,14 @@ import { Button, CenteredContent, ConnectButton, Spacer } from 'src/components/c
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens-modal';
 import { useUserRewards } from 'src/hooks/api/useUserRewards';
+import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 import { nFormatter } from 'src/utils';
 import { FLOW_TOKEN } from 'src/utils/constants';
 import { fetchMinXflStakeForZeroFees } from 'src/utils/orderbook-utils';
-import { bgColor, secondaryBgColor, secondaryTextColor } from 'src/utils/ui-constants';
+import { buttonBorderColor, primaryShadow, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useAccount, useBalance, useNetwork } from 'wagmi';
 import { UniswapModal } from '../common/uniswap-model';
-import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 
 interface RewardsSectionProps {
   title: string;
@@ -22,7 +22,7 @@ interface RewardsSectionProps {
 
 const RewardsSection = (props: RewardsSectionProps) => {
   return (
-    <div className={twMerge(secondaryBgColor, 'flex-col px-10 py-4 rounded-lg w-full')}>
+    <div className={twMerge(buttonBorderColor, 'border flex-col px-10 py-4 w-full shadow-brand-primaryFade shadow-md')}>
       <div className="flex w-full">
         <div className="w-1/2">
           <div className="text-2xl font-medium underline">{props.title}</div>
@@ -107,13 +107,13 @@ const MyRewards = () => {
   }
 
   return (
-    <div className="space-y-10 mt-6 pb-6 mb-16">
+    <div className="space-y-10 mt-6 pb-6 mb-16 mr-4">
       <RewardsSection
         title="Token Balance"
         subTitle={`Token balances.`}
         // subTitle={`Stake $${FLOW_TOKEN.symbol} for royalty waivers, priority support from core team and early/gated access to cool stuff. Staked tokens are locked until the end of each reward season to prevent abuse.`}
         sideInfo={
-          <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
+          <div className={twMerge(buttonBorderColor, primaryShadow, 'border py-4 px-6')}>
             <div>${FLOW_TOKEN.symbol}</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
@@ -165,7 +165,7 @@ const MyRewards = () => {
           title="Earned Rewards"
           subTitle={`Earned $${FLOW_TOKEN.symbol} rewards.`}
           sideInfo={
-            <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
+            <div className={twMerge(buttonBorderColor, primaryShadow, 'border py-4 px-6')}>
               <div>${FLOW_TOKEN.symbol}</div>
               <div className="flex flex-wrap mt-4">
                 <div className="lg:w-1/4 sm:w-full">
