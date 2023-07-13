@@ -214,7 +214,7 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
         <div className="flex gap-2">
           <AButton
             primary
-            className="px-9 py-3 rounded-lg"
+            className="px-9 py-3"
             onClick={() => {
               if (isCollSelectable(collection as ERC721CollectionCartItem)) {
                 onClickBuy(collection as ERC721CollectionCartItem);

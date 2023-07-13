@@ -4,11 +4,11 @@ import { BsGrid, BsList } from 'react-icons/bs';
 import { useAppContext } from 'src/utils/context/AppContext';
 import {
   activeColor,
+  buttonBorderColor,
+  brandBorderColor,
   hoverColor,
-  borderColor,
   primaryBtnWithBgColorTextTransition,
-  textColor,
-  brandBorderColor
+  textColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
@@ -44,7 +44,6 @@ export const AButton = ({
       tooltip={tooltip}
       className={twMerge(
         small ? 'text-sm px-2 py-0.5' : 'px-2.5 py-[5px]',
-        'rounded-lg',
         primary ? primaryBtnWithBgColorTextTransition : '',
         className
       )}
@@ -155,7 +154,7 @@ export const ARoundOutlineButton = ({
       tooltip={tooltip}
       disabled={disabled}
       highlighted={highlighted}
-      className={twMerge(borderColor, 'border rounded-full', className)}
+      className={twMerge(buttonBorderColor, 'border rounded-full', className)}
       onClick={onClick}
     >
       {children}
@@ -178,7 +177,7 @@ export const AOutlineButton = ({
       small={small}
       tooltip={tooltip}
       disabled={disabled}
-      className={twMerge(borderColor, 'border rounded-lg', className)}
+      className={twMerge(buttonBorderColor, 'border', className)}
       onClick={onClick}
     >
       {children}
@@ -200,7 +199,7 @@ export const ATextButton = ({
     <ButtonBase
       disabled={disabled}
       tooltip={tooltip}
-      className={twMerge(small ? 'text-sm px-3 py-0.5' : 'px-4 py-1', 'rounded-lg hover:text-brand-primary', className)}
+      className={twMerge(small ? 'text-sm px-3 py-0.5' : 'px-4 py-1', ' hover:text-brand-primary', className)}
       onClick={onClick}
     >
       {children}

@@ -151,8 +151,8 @@ module.exports = {
       border: '#e6e8ec'
     },
     brand: {
-      primary: '#3662D8', //303DD1, 404dde, 5C89E8
-      primaryFade: '#3662D890',
+      primary: '#edc100',
+      primaryFade: '#edc10090',
       twitter: '#1C9BEF',
       discord: '#5765F2'
     },
