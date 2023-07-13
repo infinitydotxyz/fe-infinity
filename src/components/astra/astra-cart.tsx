@@ -746,9 +746,12 @@ const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
             hideExpiry={cartType === CartType.TokenBuy || cartType === CartType.AcceptOffer}
           ></PriceAndExpiry>
         )}
-        {!editing && cartType !== CartType.Send && cartType !== CartType.TokenBuy && (
-          <FiEdit3 className={twMerge(smallIconButtonStyle, 'cursor-pointer')} onClick={() => setEditing(true)} />
-        )}
+        {!editing &&
+          cartType !== CartType.Send &&
+          cartType !== CartType.TokenBuy &&
+          cartType !== CartType.AcceptOffer && (
+            <FiEdit3 className={twMerge(smallIconButtonStyle, 'cursor-pointer')} onClick={() => setEditing(true)} />
+          )}
       </div>
     </div>
   );
