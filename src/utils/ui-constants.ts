@@ -36,6 +36,7 @@ export const inverseBgColor = 'dark:bg-light-bg bg-dark-bg';
 export const secondaryBgColor = 'dark:bg-dark-card bg-light-card';
 export const secondaryBgColorDarker = 'dark:bg-dark-card bg-gray-200 bg-opacity-60';
 export const brandBorderColor = 'border-brand-primary';
+export const brandBorderColorFade = 'border-brand-primaryFade';
 export const borderColor = 'dark:border-dark-border border-light-border';
 export const buttonBorderColor = 'border-black dark:border-white';
 export const divideColor = 'dark:divide-dark-border divide-light-border';
