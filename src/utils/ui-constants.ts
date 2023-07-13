@@ -28,7 +28,7 @@ export const thirtyDaySeconds = secondsPerDay * 30;
 export const saleDataPointColor = '#FA8147';
 export const hoveredDataPointColor = '#66d981';
 export const listingDataPointColor = '#4899f1';
-export const bidDataPointColor = '#66d981';
+export const bidDataPointColor = '#f731bf';
 
 // these include both dark and light
 export const bgColor = 'dark:bg-dark-bg bg-light-bg';
@@ -49,7 +49,8 @@ export const inverseTextColor = 'dark:text-light-body text-dark-body';
 // export const primaryBtnBgColorText = `bg-brand-primary text-gray-100 dark:text-gray-200`;
 // export const primaryBtnWithBgColorTextTransition = `${primaryBtnBgColorText} font-medium`;
 export const primaryBrandColorRgba = 'rgba(237,193,0)';
-export const primaryBtnBgColorText = `border ${buttonBorderColor} ${textColor} shadow-[3px_3px_0px_0px_${primaryBrandColorRgba}] dark:shadow-[2px_2px_0px_0px_${primaryBrandColorRgba}]`;
+export const primaryShadow = `shadow-[3px_3px_0px_0px_${primaryBrandColorRgba}] dark:shadow-[2px_2px_0px_0px_${primaryBrandColorRgba}]`;
+export const primaryBtnBgColorText = `border ${buttonBorderColor} ${textColor} ${primaryShadow}}`;
 export const primaryBtnWithBgColorTextTransition = `${primaryBtnBgColorText} font-medium`;
 export const secondaryBtnBgColorText = `dark:bg-gray-400 dark:bg-opacity-10 bg-gray-200 bg-opacity-60 ${brandTextColor}`;
 export const hoverColorBrandText = 'hover:text-brand-primary dark:hover:text-brand-primary';
