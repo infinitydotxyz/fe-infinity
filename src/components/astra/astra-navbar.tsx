@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AstraCartButton } from 'src/components/astra/astra-cart-button';
 import { ConnectButton, EZImage, ExternalLink, NextLink, Spacer } from 'src/components/common';
-import flowLogoMark from 'src/images/flow-logo-mark.png';
+import logoMark from 'src/images/logo-mark.svg';
 import { chainIdToName } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { borderColor } from 'src/utils/ui-constants';
@@ -13,7 +13,7 @@ export const ANavbar = () => {
   const { selectedChain, isWalletNetworkSupported } = useAppContext();
   const [, setLabelVal] = useState(chainIdToName(selectedChain));
   // const { theme } = useTheme();
-  const logo = <EZImage src={flowLogoMark.src} className="w-9 h-9" />;
+  const logo = <EZImage src={logoMark.src} className="w-9 h-9" />;
 
   useEffect(() => {
     setLabelVal(chainIdToName(selectedChain));
