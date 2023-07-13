@@ -13,7 +13,7 @@ export const ANavbar = () => {
   const { selectedChain, isWalletNetworkSupported } = useAppContext();
   const [, setLabelVal] = useState(chainIdToName(selectedChain));
   // const { theme } = useTheme();
-  const logo = <EZImage src={logoMark.src} className="w-9 h-9" />;
+  const logo = <EZImage src={logoMark.src} className="w-9 h-11" />;
 
   useEffect(() => {
     setLabelVal(chainIdToName(selectedChain));

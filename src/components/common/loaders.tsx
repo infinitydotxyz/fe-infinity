@@ -6,7 +6,7 @@ import { EZImage } from './ez-image';
 export const BouncingLogo = () => {
   return (
     <CenteredContent>
-      <EZImage src={logo.src} className="w-9 h-9 animate-bounce" />
+      <EZImage src={logo.src} className="w-9 h-11 animate-bounce" />
     </CenteredContent>
   );
 };
