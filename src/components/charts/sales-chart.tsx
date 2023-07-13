@@ -28,6 +28,7 @@ import { ChartDimensions } from './chart-utils';
 import { ScatterChartType } from './types';
 
 export interface SalesChartData {
+  id: string;
   timestamp: number;
   collectionAddress: string;
   collectionName: string;
@@ -180,6 +181,7 @@ function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
     tooltipLeft: 0,
     tooltipTop: 0,
     tooltipData: {
+      id: '',
       timestamp: 0,
       collectionAddress: '',
       collectionName: '',
@@ -293,9 +295,9 @@ function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
 
   const dots = useMemo(
     () =>
-      dataToRender.map((d) => (
+      dataToRender.map((d: SalesChartData) => (
         <Circle
-          key={`${d.timestamp}:${d.tokenId}:${d.salePrice}`}
+          key={d.id}
           fill={saleDataPointColor}
           cx={xScale(xAccessor(d))}
           cy={yScale(yAccessor(d))}
