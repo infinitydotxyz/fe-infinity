@@ -7,7 +7,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { FiEdit3 } from 'react-icons/fi';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
-import { EZImage, EthSymbol, Spacer, TextInputBox, ToggleTab } from 'src/components/common';
+import { EZImage, EthSymbol, TextInputBox, ToggleTab } from 'src/components/common';
 import {
   ellipsisString,
   getCartType,
@@ -881,9 +881,7 @@ const PriceAndExpiry = ({
   return (
     <div className={twMerge('flex flex-row space-x-4 w-full', className)}>
       {!priceEditable ? (
-        <div className="flex w-full space-x-2">
-          {useSpacer && <Spacer />}
-
+        <div className="flex w-full space-x-6">
           {!hideExpiry && (
             <ADropdown
               hasBorder={true}
