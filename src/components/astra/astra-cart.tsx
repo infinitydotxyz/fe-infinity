@@ -730,7 +730,7 @@ const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
       </div>
 
       <div className="ml-3 flex w-full space-x-2 items-center">
-        <div className="font-bold font-heading w-1/3 text-sm">{ellipsisString(token.tokenId)}</div>
+        <div className="w-1/3 text-sm">{ellipsisString(token.tokenId)}</div>
         {cartType !== CartType.Send && (
           <PriceAndExpiry
             token={token}
@@ -969,15 +969,15 @@ const PriceAndExpiry = ({
 
           <div className={twMerge('flex flex-col items-end')}>
             <div className="flex flex-row">
-              <div className={twMerge('font-bold font-heading')}>{nFormatter(Number(price), 2)}</div>
-              <div className={twMerge('font-bold font-heading ml-1')}>{EthSymbol}</div>
+              <div className={twMerge('')}>{nFormatter(Number(price), 2)}</div>
+              <div className={twMerge('ml-1')}>{EthSymbol}</div>
             </div>
             {!hideExpiry && <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>{expiry}</div>}
           </div>
         </div>
       ) : (
         <TextInputBox
-          inputClassName="font-heading text-sm text-right mr-2"
+          inputClassName="text-sm text-right mr-2"
           className="p-[6.5px]"
           autoFocus={true}
           addEthSymbol={true}
