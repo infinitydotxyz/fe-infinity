@@ -136,7 +136,7 @@ export const TextInputBox = ({
           }}
           onMouseLeave={onMouseLeave}
           className={twMerge(
-            `p-0 bg-transparent border-none focus:ring-0 block w-full font-heading outline-none ring-transparent shadow-none ${inputClassName}`
+            `p-0 bg-transparent border-none focus:ring-0 block w-full outline-none ring-transparent shadow-none ${inputClassName}`
           )}
           placeholder={placeholder}
           onKeyDown={(e) => {

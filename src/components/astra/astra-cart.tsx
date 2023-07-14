@@ -974,7 +974,7 @@ const PriceAndExpiry = ({
         </div>
       ) : (
         <TextInputBox
-          inputClassName="text-sm text-right mr-2"
+          inputClassName="text-sm text-right mr-2 font-body"
           className="p-[6.5px]"
           autoFocus={true}
           addEthSymbol={true}

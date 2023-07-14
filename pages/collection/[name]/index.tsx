@@ -257,8 +257,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 </div>
 
                 <div className="flex space-x-2 text-sm">
-                  {(selectedCollectionTab === CollectionPageTabs.Buy.toString() ||
-                    selectedCollectionTab === CollectionPageTabs.Bid.toString()) && (
+                  {selectedCollectionTab === CollectionPageTabs.Bid.toString() && (
                     <AButton
                       primary
                       className="px-5 py-1 text-sm"
