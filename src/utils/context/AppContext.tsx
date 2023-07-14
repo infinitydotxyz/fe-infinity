@@ -55,6 +55,7 @@ import {
 import { DEFAULT_MAX_GAS_PRICE_WEI, ROYALTY_BPS, ZERO_ADDRESS } from '../constants';
 import { fetchMinXflStakeForZeroFees, fetchOrderNonce, postOrdersV2 } from '../orderbook-utils';
 import { CartType, useCartContext } from './CartContext';
+import { useTheme } from 'next-themes';
 
 type ReservoirOrderbookType =
   | 'reservoir'
@@ -160,6 +161,9 @@ export const AppContextProvider = ({ children }: Props) => {
   const { address: user } = useAccount();
   const { cartType } = useCartContext();
   const { stakeBalance } = useStakerContract();
+
+  const { theme } = useTheme();
+  const darkMode = theme === 'dark';
 
   useEffect(() => {
     switch (chain?.id) {
@@ -436,10 +440,10 @@ export const AppContextProvider = ({ children }: Props) => {
           console.error('Signer is null');
         }
       } else {
-        toastError('Send to address is blank');
+        toastError('Send to address is blank', darkMode);
       }
     } catch (err) {
-      toastError(extractErrorMsg(err));
+      toastError(extractErrorMsg(err), darkMode);
     }
 
     return false;
@@ -448,7 +452,7 @@ export const AppContextProvider = ({ children }: Props) => {
   const handleTokenCheckout = async (tokens: ERC721TokenCartItem[]): Promise<boolean> => {
     try {
       if (!user || !signer) {
-        toastError('No logged in user');
+        toastError('No logged in user', darkMode);
       } else {
         const isBuyCart = cartType === CartType.TokenBuy;
         const isTokenBidIntentCart = cartType === CartType.TokenBidIntent;
@@ -483,7 +487,7 @@ export const AppContextProvider = ({ children }: Props) => {
               allowInactiveOrderIds: false
             }
           });
-          toastSuccess('Sale Complete');
+          toastSuccess('Sale Complete', darkMode);
           return true;
         }
 
@@ -500,7 +504,7 @@ export const AppContextProvider = ({ children }: Props) => {
               }
             }
           });
-          toastSuccess('Order(s) Cancelled');
+          toastSuccess('Order(s) Cancelled', darkMode);
           return true;
         }
 
@@ -526,7 +530,7 @@ export const AppContextProvider = ({ children }: Props) => {
               }
             }
           });
-          toastSuccess('Buy Complete');
+          toastSuccess('Buy Complete', darkMode);
           return true;
         } else if (isTokenBidIntentCart) {
           // prepare orders
@@ -555,7 +559,7 @@ export const AppContextProvider = ({ children }: Props) => {
           if (signedOrders) {
             setCheckoutBtnStatus('Sending orders');
             await postOrdersV2(chainId as ChainId, signedOrders);
-            toastSuccess('Order(s) now live');
+            toastSuccess('Order(s) now live', darkMode);
           }
           return true;
         } else if (isListCart) {
@@ -622,7 +626,7 @@ export const AppContextProvider = ({ children }: Props) => {
               }
             }
           });
-          toastSuccess('Listing Complete');
+          toastSuccess('Listing Complete', darkMode);
           return true;
         } else if (isBidCart) {
           const client = getReservoirClient(chainId);
@@ -674,13 +678,13 @@ export const AppContextProvider = ({ children }: Props) => {
               }
             }
           });
-          toastSuccess('Bidding Complete');
+          toastSuccess('Bidding Complete', darkMode);
           return true;
         }
       }
     } catch (ex) {
       console.error(ex);
-      toastError(`${ex}`);
+      toastError(`${ex}`, darkMode);
     }
 
     return false;
@@ -689,7 +693,7 @@ export const AppContextProvider = ({ children }: Props) => {
   const handleCollCheckout = async (collections: ERC721CollectionCartItem[]): Promise<boolean> => {
     try {
       if (!user || !signer) {
-        toastError('No logged in user');
+        toastError('No logged in user', darkMode);
       } else {
         const isCollBidCart = cartType === CartType.CollectionBid;
         const isCollBidIntentCart = cartType === CartType.CollectionBidIntent;
@@ -710,7 +714,7 @@ export const AppContextProvider = ({ children }: Props) => {
               }
             }
           });
-          toastSuccess('Cancel Complete');
+          toastSuccess('Cancel Complete', darkMode);
           return true;
         }
 
@@ -761,7 +765,7 @@ export const AppContextProvider = ({ children }: Props) => {
               }
             }
           });
-          toastSuccess('Bidding Complete');
+          toastSuccess('Bidding Complete', darkMode);
           return true;
         }
 
@@ -792,7 +796,7 @@ export const AppContextProvider = ({ children }: Props) => {
           if (signedOrders) {
             setCheckoutBtnStatus('Sending orders');
             await postOrdersV2(chainId as ChainId, signedOrders);
-            toastSuccess('Order(s) now live');
+            toastSuccess('Order(s) now live', darkMode);
           }
 
           return true;
@@ -800,7 +804,7 @@ export const AppContextProvider = ({ children }: Props) => {
       }
     } catch (ex) {
       console.error(ex);
-      toastError(`${ex}`);
+      toastError(`${ex}`, darkMode);
     }
 
     return false;
@@ -813,14 +817,14 @@ export const AppContextProvider = ({ children }: Props) => {
         const nonces = ordersToCancel.map((order) => order.nonce);
         setCheckoutBtnStatus('Awaiting wallet confirmation');
         const { hash } = await cancelMultipleOrders(signer as JsonRpcSigner, chainId, nonces);
-        toastSuccess('Sent txn to chain for execution');
+        toastSuccess('Sent txn to chain for execution', darkMode);
         setTxnHash(hash);
         return true;
       } else {
         throw 'Signer is null';
       }
     } catch (err) {
-      toastError(extractErrorMsg(err));
+      toastError(extractErrorMsg(err), darkMode);
     }
 
     return false;
