@@ -4,17 +4,12 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { GiBroom } from 'react-icons/gi';
-import { HiOutlineLightBulb } from 'react-icons/hi';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
-import { APriceFilter } from 'src/components/astra/astra-price-filter';
-import { ASortButton } from 'src/components/astra/astra-sort-button';
-import { AStatusFilterButton } from 'src/components/astra/astra-status-button';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { CollectionCharts } from 'src/components/collection/collection-charts';
 import { CollectionItemsPageSidebar } from 'src/components/collection/collection-items-page-sidebar';
 import { CollectionManualBidList } from 'src/components/collection/collection-manual-bid-list';
-import { CollectionOrderList } from 'src/components/collection/collection-orders-list';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
 import { Spacer, TextInputBox } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
@@ -31,7 +26,6 @@ import {
   hoverColor,
   hoverColorBrandText,
   iconButtonStyle,
-  secondaryTextColor,
   selectedColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -85,7 +79,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const { cartType, setCartType } = useCartContext();
   const [numSweep, setNumSweep] = useState('');
   const [customSweep, setCustomSweep] = useState('');
-  const [bidBelowPct, setBidBelowPct] = useState('');
   const { showCart } = useAppContext();
   const [selectedTraits, setSelectedTraits] = useState<string[]>([]);
 
@@ -105,7 +98,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
   // useEffect(() => {
   //   if (
-  //     selectedCollectionTab === CollectionPageTabs.Intent.toString() ||
   //     selectedCollectionTab === CollectionPageTabs.Bid.toString()
   //   ) {
   //     setMutatedData(data);
@@ -121,14 +113,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   }, [listings]);
 
   useEffect(() => {
-    if (selectedCollectionTab === CollectionPageTabs.Intent.toString()) {
-      delete filter.orderType;
-      delete filter.source;
-      filter.sort = 'lowestPrice';
-      setFilter({
-        ...filter
-      });
-    } else if (selectedCollectionTab === CollectionPageTabs.Bid.toString()) {
+    if (selectedCollectionTab === CollectionPageTabs.Bid.toString()) {
       const newFilter = { ...filter };
       newFilter.sort = 'tokenIdNumeric';
       setFilter(newFilter);
@@ -159,8 +144,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   useEffect(() => {
     if (collSelection.length > 0) {
       setCartType(CartType.CollectionBid);
-    } else if (selectedCollectionTab === CollectionPageTabs.Intent.toString()) {
-      setCartType(CartType.TokenBidIntent);
     } else if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
       setCartType(CartType.TokenBuy);
     } else if (selectedCollectionTab === CollectionPageTabs.Bid.toString()) {
@@ -289,8 +272,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
         <CollectionPageHeader {...headerProps} />
 
         <div ref={setRef} className="overflow-y-auto scrollbar-hide">
-          {(selectedCollectionTab === CollectionPageTabs.Intent.toString() ||
-            selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
+          {(selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
             selectedCollectionTab === CollectionPageTabs.Buy.toString()) && (
             <div className={twMerge('mt-2 px-4')}>
               <div className={twMerge('flex text-sm')}>
@@ -412,27 +394,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     </div>
                   </div>
 
-                  {selectedCollectionTab === CollectionPageTabs.Intent && (
-                    <div
-                      className={twMerge(
-                        'flex space-x-1',
-                        cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent
-                          ? 'opacity-30 duration-300 pointer-events-none'
-                          : 'duration-300'
-                      )}
-                    >
-                      <ASortButton filter={filter} setFilter={setFilter} />
-                      <AStatusFilterButton filter={filter} setFilter={setFilter} />
-                      <APriceFilter filter={filter} setFilter={setFilter} />
-                      {/* <ATraitFilter
-                        collectionAddress={collection.address}
-                        filter={filter}
-                        setFilter={setFilter}
-                        collectionAttributes={props.collectionAttributes}
-                      /> */}
-                    </div>
-                  )}
-
                   {/* {selectedCollectionTab === CollectionPageTabs.Bid && (
                     <div
                       className={twMerge(
@@ -442,111 +403,12 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                           : 'duration-300'
                       )}
                     >
-                      <ATraitFilter
-                        collectionAddress={collection.address}
-                        filter={filter}
-                        setFilter={setFilter}
-                        collectionAttributes={props.collectionAttributes}
-                      />
                     </div>
                   )} */}
                   <Spacer />
                   <StatusIcon status="pending-indefinite" label="Live" />
                 </div>
               </div>
-
-              {selectedCollectionTab === CollectionPageTabs.Intent.toString() && (
-                <div className="flex mt-2 text-sm">
-                  <div
-                    className={twMerge(
-                      'flex flex-row rounded-lg border cursor-pointer',
-                      borderColor,
-                      cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent
-                        ? 'opacity-30 duration-300 pointer-events-none'
-                        : 'duration-300'
-                    )}
-                  >
-                    <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>
-                      Bid below price:
-                    </div>
-                    <div
-                      className={twMerge(
-                        'px-4 h-full flex items-center border-r-[1px]',
-                        borderColor,
-                        hoverColor,
-                        bidBelowPct === '1' && selectedColor
-                      )}
-                      onClick={() => {
-                        bidBelowPct === '1' ? setBidBelowPct('') : setBidBelowPct('1');
-                      }}
-                    >
-                      1%
-                    </div>
-                    <div
-                      className={twMerge(
-                        'px-4 h-full flex items-center border-r-[1px]',
-                        borderColor,
-                        hoverColor,
-                        bidBelowPct === '2' && selectedColor
-                      )}
-                      onClick={() => {
-                        bidBelowPct === '2' ? setBidBelowPct('') : setBidBelowPct('2');
-                      }}
-                    >
-                      2%
-                    </div>
-                    <div
-                      className={twMerge(
-                        'px-4 h-full flex items-center border-r-[1px]',
-                        borderColor,
-                        hoverColor,
-                        bidBelowPct === '5' && selectedColor
-                      )}
-                      onClick={() => {
-                        bidBelowPct === '5' ? setBidBelowPct('') : setBidBelowPct('5');
-                      }}
-                    >
-                      5%
-                    </div>
-                    <div
-                      className={twMerge(
-                        'px-4 h-full flex items-center border-r-[1px]',
-                        borderColor,
-                        hoverColor,
-                        bidBelowPct === '10' && selectedColor
-                      )}
-                      onClick={() => {
-                        bidBelowPct === '10' ? setBidBelowPct('') : setBidBelowPct('10');
-                      }}
-                    >
-                      10%
-                    </div>
-                    <div className="p-3 h-full flex items-center">
-                      <TextInputBox
-                        addPctSymbol={true}
-                        autoFocus={false}
-                        inputClassName="text-sm font-body"
-                        className="border-0 w-20 p-0 text-sm"
-                        type="number"
-                        placeholder="Custom"
-                        value={String(bidBelowPct)}
-                        onChange={(value) => {
-                          let valueNum = parseFloat(value);
-                          if (valueNum > 100) {
-                            valueNum = 100;
-                          }
-                          setBidBelowPct(valueNum.toString());
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className={twMerge('flex ml-2 items-center space-x-1', secondaryTextColor)}>
-                    <HiOutlineLightBulb className="w-6 h-6" />
-                    <div className="mt-1">Matched bids are automatically sniped on your behalf.</div>
-                  </div>
-                </div>
-              )}
             </div>
           )}
 
@@ -581,8 +443,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
             </div>
           )}
 
-          {(selectedCollectionTab === CollectionPageTabs.Intent.toString() ||
-            selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
+          {(selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
             selectedCollectionTab === CollectionPageTabs.Buy.toString()) && (
             <div className="flex flex-row">
               <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
@@ -621,14 +482,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
           {selectedCollectionTab === CollectionPageTabs.LiveBids && (
             <CollectionManualBidList
-              key={collectionAddress}
-              collectionAddress={collection.address}
-              collectionChainId={collection.chainId as ChainId}
-            />
-          )}
-
-          {selectedCollectionTab === CollectionPageTabs.LiveIntents && (
-            <CollectionOrderList
               key={collectionAddress}
               collectionAddress={collection.address}
               collectionChainId={collection.chainId as ChainId}
