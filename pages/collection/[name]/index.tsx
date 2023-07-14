@@ -313,7 +313,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     selectedCollectionTab === CollectionPageTabs.Bid.toString()) && (
                     <AButton
                       primary
-                      className="px-5 py-1 rounded-lg text-sm"
+                      className="px-5 py-1 text-sm"
                       onClick={() => {
                         setCartType(CartType.CollectionBid);
                         if (isCollSelectable(collection as ERC721CollectionCartItem)) {
