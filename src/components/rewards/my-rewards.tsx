@@ -25,7 +25,7 @@ const RewardsSection = (props: RewardsSectionProps) => {
     <div
       className={twMerge(
         buttonBorderColor,
-        'border flex-col px-10 py-4 w-full shadow-brand-primaryFade dark:shadow-brand-darkPrimaryFade shadow-md'
+        'border flex-col px-10 py-4 w-full shadow-brand-primaryFade dark:shadow-brand-darkPrimaryFade shadow-sm'
       )}
     >
       <div className="flex w-full">
