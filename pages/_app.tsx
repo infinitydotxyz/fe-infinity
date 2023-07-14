@@ -53,7 +53,7 @@ const App = (props: AppProps) => {
 
   return (
     <StrictMode>
-      <ThemeProvider attribute="class">
+      <ThemeProvider attribute="class" defaultTheme="dark">
         <WagmiConfig client={client}>
           <ConnectKitProvider
             options={{ initialChainId: 1 }}
