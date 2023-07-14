@@ -6,30 +6,37 @@
 }
 
 @font-face {
-  font-family: DM Sans;
-  font-weight: 500;
-  font-display: auto;
-  src: url(/fonts/DMSans-500.woff2) format('woff2');
-}
-
-@font-face {
-  font-family: DM Sans;
-  font-weight: 700;
-  font-display: auto;
-  src: url(/fonts/DMSans-700.woff2) format('woff2');
-}
-
-@font-face {
-  font-family: Kollektif;
+  font-family: Kollektif-Regular;
   font-weight: normal;
   font-display: auto;
   src: url(/fonts/Kollektif-Regular.woff) format('woff');
 }
 
 @font-face {
-  font-family: Kollektif;
+  font-family: Kollektif-Bold;
   font-weight: bold;
   font-display: auto;
   src: url(/fonts/Kollektif-Bold.woff) format('woff');
+}
+
+@font-face {
+  font-family: Triplicate;
+  font-weight: normal;
+  font-display: auto;
+  src: url(/fonts/Triplicate.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: Monument-Regular;
+  font-weight: normal;
+  font-display: auto;
+  src: url(/fonts/Monument-Regular.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: Monument-Bold;
+  font-weight: bold;
+  font-display: auto;
+  src: url(/fonts/Monument-Bold.woff2) format('woff2');
 }
 

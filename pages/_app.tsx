@@ -57,7 +57,7 @@ const App = (props: AppProps) => {
         <ConnectKitProvider
           options={{ initialChainId: 1 }}
           customTheme={{
-            '--ck-font-family': '"DM Sans"'
+            '--ck-font-family': '"Triplicate"'
           }}
         >
           <CartContextProvider>
