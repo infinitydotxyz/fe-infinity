@@ -194,7 +194,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
         {!listingPrice && offerPrice && isOwner && <span>{addedToCart ? 'Added to Cart' : 'Sell Now'}</span>}
         {!listingPrice && !offerPrice && isOwner && <span>{addedToCart ? 'Remove from Cart' : 'Sell'}</span>}
         {!listingPrice && offerPrice && !isOwner && <span>{addedToCart ? 'Added to Cart' : 'Bid higher'}</span>}
-        {!listingPrice && !offerPrice && !isOwner ? <span>{addedToCart ? 'Added to Cart' : 'Add to Cart'}</span> : null}
+        {!listingPrice && !offerPrice && !isOwner && <span>{addedToCart ? 'Added to Cart' : 'Add to Cart'}</span>}
       </AButton>
     );
   };
@@ -292,8 +292,6 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                   </div>
                 ) : null}
               </div>
-
-              {!(listingPrice || offerPrice) ? addToCartBtn() : null}
 
               {listingPrice || offerPrice ? (
                 <div className={twMerge(secondaryBgColor, borderColor, 'rounded-xl p-[30px] border')}>
