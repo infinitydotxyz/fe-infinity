@@ -107,7 +107,7 @@ module.exports = {
     'blur-100': 'blur(100px)'
   },
   fontFamily: {
-    body: 'DM Sans,SF UI Text,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol',
+    body: 'PPNeueMachinaInktrap,DM Sans,SF UI Text,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol',
     heading:
       'Monument-Bold,SF UI Display,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol',
     headingRegular:

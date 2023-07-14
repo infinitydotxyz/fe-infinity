@@ -33,7 +33,7 @@ export default function UniswapWidget({
   const themeToUse = tailwindConfig.colors[darkMode ? 'dark' : 'light'];
   const widgetTheme: Theme = {
     borderRadius: 1,
-    fontFamily: 'Triplicate',
+    fontFamily: 'PPNeueMachinaInktrap',
     accent: tailwindConfig.colors.brand.primary,
     interactive: tailwindConfig.colors.brand.primaryFade,
     container: themeToUse.bg,
