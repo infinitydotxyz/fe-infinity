@@ -1,6 +1,9 @@
+import { useTheme } from 'next-themes';
 import { ReactNode } from 'react';
 import { toast as reactToast, TypeOptions } from 'react-toastify';
 import { ellipsisString, getCustomExceptionMsg } from 'src/utils';
+import { toastBoxShadowDarkPrimary, toastBoxShadowPrimary } from 'src/utils/ui-constants';
+import tailwindConfig from '../../settings/tailwind/elements/foundations';
 
 export const toastInfo = (message: ReactNode) => {
   _showToast(message, 'info');
@@ -37,6 +40,17 @@ export const toastWarning = (message: ReactNode) => {
 };
 
 const _showToast = (message: ReactNode, type: TypeOptions | undefined) => {
+  const { theme } = useTheme();
+
+  const darkMode = theme === 'dark';
+  const themeToUse = tailwindConfig.colors[darkMode ? 'dark' : 'light'];
+
+  const bgColor = themeToUse.bg;
+  const textColor = themeToUse.body;
+  const boxShadow = darkMode ? toastBoxShadowDarkPrimary : toastBoxShadowPrimary;
+  const borderColor = darkMode ? '#fff' : '#000';
+  const border = `1px solid ${borderColor}`;
+
   let msg = message;
 
   // some toasts show a failed transaction which can be long
@@ -46,5 +60,23 @@ const _showToast = (message: ReactNode, type: TypeOptions | undefined) => {
     }
   }
 
-  reactToast(msg, { type: type });
+  reactToast(msg, {
+    type: type,
+    hideProgressBar: true,
+    closeButton: false,
+    style: {
+      position: 'absolute',
+      top: '10px',
+      right: '10px',
+      width: '400px',
+      padding: '15px',
+      wordBreak: 'break-word',
+      backgroundColor: bgColor,
+      color: textColor,
+      borderRadius: 0,
+      border,
+      boxShadow,
+      fontFamily: 'inherit'
+    }
+  });
 };

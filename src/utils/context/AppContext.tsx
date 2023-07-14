@@ -25,7 +25,7 @@ import { defaultAbiCoder, parseEther } from 'ethers/lib/utils.js';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
-import { toastError, toastSuccess, toastWarning } from 'src/components/common';
+import { toastError, toastSuccess } from 'src/components/common';
 import { WaitingForTxModal } from 'src/components/common/waiting-for-tx-modal';
 import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 import { useChain } from 'src/hooks/useChain';
@@ -436,7 +436,7 @@ export const AppContextProvider = ({ children }: Props) => {
           console.error('Signer is null');
         }
       } else {
-        toastWarning('Send to address is blank');
+        toastError('Send to address is blank');
       }
     } catch (err) {
       toastError(extractErrorMsg(err));
