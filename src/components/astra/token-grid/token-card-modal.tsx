@@ -337,7 +337,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                       <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>
                         Floor difference
                       </div>
-                      <div>{Number(floorPricePercentDiff) > 0 ? floorPricePercentDiff + '%' : '-'}</div>
+                      <div>{!isNaN(Number(floorPricePercentDiff)) ? floorPricePercentDiff + '%' : '-'}</div>
                     </div>
 
                     <div className="space-y-1 mr-1.5">

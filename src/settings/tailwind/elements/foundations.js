@@ -153,6 +153,8 @@ module.exports = {
     brand: {
       primary: '#edc100',
       primaryFade: '#edc10090',
+      darkPrimary: '#c8f751',
+      darkPrimaryFade: '#c8f75190',
       twitter: '#1C9BEF',
       discord: '#5765F2'
     },

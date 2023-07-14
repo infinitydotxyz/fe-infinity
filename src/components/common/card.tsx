@@ -1,7 +1,10 @@
+import { PROTOCOL_FEE_BPS } from '@infinityxyz/lib-frontend/utils';
+import { formatEther, parseEther } from 'ethers/lib/utils.js';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { HiCheckCircle, HiOutlineLightBulb, HiPlusCircle } from 'react-icons/hi';
-import { ellipsisString, nFormatter, CollectionPageTabs } from 'src/utils';
+import { CollectionPageTabs, ellipsisString, nFormatter } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { BasicTokenInfo, ERC721TokenCartItem } from 'src/utils/types';
 import {
   borderColor,
@@ -17,9 +20,6 @@ import { twMerge } from 'tailwind-merge';
 import { AButton } from '../astra/astra-button';
 import { TokenCardModal } from '../astra/token-grid/token-card-modal';
 import { BlueCheck, EZImage, EthSymbol } from '../common';
-import { formatEther, parseEther } from 'ethers/lib/utils.js';
-import { PROTOCOL_FEE_BPS } from '@infinityxyz/lib-frontend/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
 
 interface Props {
   data: ERC721TokenCartItem;
@@ -127,12 +127,12 @@ export const GridCard = ({
           <div className="absolute top-0 bottom-0 left-0 right-0 rounded-t-lg overflow-clip">
             <EZImage src={data?.image} className="hover:scale-110 transition-all" />
             {showPlusIcon && !selected && (
-              <div className={twMerge('absolute top-2 right-2 rounded-full bg-gray-100')}>
+              <div className={twMerge('absolute top-2 right-2 rounded-full bg-gray-900')}>
                 <HiPlusCircle className={twMerge(iconButtonStyle, brandTextColor)} />
               </div>
             )}
             {selected && (
-              <div className={twMerge('absolute top-2 right-2 rounded-full bg-gray-100')}>
+              <div className={twMerge('absolute top-2 right-2 rounded-full bg-gray-900')}>
                 <HiCheckCircle className={twMerge(iconButtonStyle, brandTextColor)} />
               </div>
             )}

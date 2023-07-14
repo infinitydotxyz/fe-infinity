@@ -38,7 +38,8 @@ export const Checkbox = ({
         disabled={disabled}
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="rounded h-5 w-5 cursor-pointer checked:bg-brand-primary hover:bg-brand-primary dark:hover:bg-brand-primary
+        className="rounded h-5 w-5 cursor-pointer checked:bg-brand-primary dark:checked:bg-brand-darkPrimaryFade
+       hover:bg-brand-primary dark:hover:bg-brand-darkPrimaryFade
          focus:shadow-none dark:focus:shadow-none hover:shadow-none dark:hover:shadow-none
          focus:outline-none dark:focus:outline-none hover:outline-none dark:hover:outline-none
          focus:ring-0 dark:focus:ring-0 hover:ring-0 dark:hover:ring-0

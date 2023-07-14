@@ -22,7 +22,12 @@ interface RewardsSectionProps {
 
 const RewardsSection = (props: RewardsSectionProps) => {
   return (
-    <div className={twMerge(buttonBorderColor, 'border flex-col px-10 py-4 w-full shadow-brand-primaryFade shadow-md')}>
+    <div
+      className={twMerge(
+        buttonBorderColor,
+        'border flex-col px-10 py-4 w-full shadow-brand-primaryFade dark:shadow-brand-darkPrimaryFade shadow-md'
+      )}
+    >
       <div className="flex w-full">
         <div className="w-1/2">
           <div className="text-2xl font-medium underline">{props.title}</div>

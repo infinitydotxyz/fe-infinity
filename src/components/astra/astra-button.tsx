@@ -8,7 +8,9 @@ import {
   brandBorderColor,
   hoverColor,
   primaryBtnWithBgColorTextTransition,
-  textColor
+  textColor,
+  brandTextColor,
+  brandBgColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
@@ -86,7 +88,7 @@ const ButtonBase = ({
       // otherwise a disabled buttons click will go to the parent, onClick isn't called
       // disabled={disabled}
       className={twMerge(
-        highlighted ? 'text-brand-primary' : primary ? 'text-light-body' : textColor,
+        highlighted ? brandTextColor : primary ? 'text-light-body' : textColor,
         activeColor,
         hoverColor,
         'select-none transition ease-in-out duration-300',
@@ -199,7 +201,11 @@ export const ATextButton = ({
     <ButtonBase
       disabled={disabled}
       tooltip={tooltip}
-      className={twMerge(small ? 'text-sm px-3 py-0.5' : 'px-4 py-1', ' hover:text-brand-primary', className)}
+      className={twMerge(
+        small ? 'text-sm px-3 py-0.5' : 'px-4 py-1',
+        'hover:text-brand-primary dark:hover:text-brand-darkPrimary',
+        className
+      )}
       onClick={onClick}
     >
       {children}
@@ -241,14 +247,14 @@ export const ASwitchButton = ({ checked, onChange }: Props5) => {
         'border-[1px] relative inline-flex h-[24px] w-[50px] shrink-0 cursor-pointer rounded-full \
              transition-colors duration-100 ease-in-out',
         brandBorderColor,
-        checked ? 'bg-brand-primary' : ''
+        checked ? brandBgColor : ''
       )}
     >
       <span className="sr-only">Use setting</span>
       <span
         className={twMerge(
           'dark:bg-gray-200 bg-gray-300',
-          checked ? 'translate-x-[25px] bg-white' : 'translate-x-1',
+          checked ? 'translate-x-[25px] bg-white dark:bg-black' : 'translate-x-1',
           'mt-[1px] h-[20px] w-[20px] rounded-full'
         )}
       />
