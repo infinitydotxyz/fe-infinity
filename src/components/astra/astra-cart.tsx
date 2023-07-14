@@ -869,7 +869,6 @@ const PriceAndExpiry = ({
   className,
   editing,
   onEditComplete,
-  useSpacer,
   currentPrice,
   hideExpiry
 }: Props5) => {
