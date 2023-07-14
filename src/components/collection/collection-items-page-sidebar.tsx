@@ -107,7 +107,6 @@ export const CollectionItemsPageSidebar = ({
 
     const interval = setInterval(() => {
       fetchRecentSalesAndOrders();
-      fetchOrderDepth();
     }, 30 * 1000);
 
     return () => clearInterval(interval);

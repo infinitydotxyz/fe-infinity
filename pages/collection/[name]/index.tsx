@@ -16,8 +16,9 @@ import { CollectionItemsPageSidebar } from 'src/components/collection/collection
 import { CollectionManualBidList } from 'src/components/collection/collection-manual-bid-list';
 import { CollectionOrderList } from 'src/components/collection/collection-orders-list';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
-import { TextInputBox } from 'src/components/common';
+import { Spacer, TextInputBox } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
+import { StatusIcon } from 'src/components/common/status-icon';
 import { useCollectionListingsFetcher } from 'src/hooks/api/useTokenFetcher';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
 import { CollectionPageTabs, apiGet, nFormatter } from 'src/utils';
@@ -93,6 +94,12 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   useEffect(() => {
     if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
       fetchListings(false);
+
+      const interval = setInterval(() => {
+        fetchListings(false);
+      }, 30 * 1000);
+
+      return () => clearInterval(interval);
     }
   }, [collection.address]);
 
@@ -286,7 +293,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
             selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
             selectedCollectionTab === CollectionPageTabs.Buy.toString()) && (
             <div className={twMerge('mt-2 px-4')}>
-              <div className={twMerge('flex')}>
+              <div className={twMerge('flex text-sm')}>
                 <div
                   className={twMerge(
                     'flex mr-1',
@@ -302,7 +309,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 </div>
 
                 <div className="flex space-x-2 text-sm">
-                  {(selectedCollectionTab === CollectionPageTabs.Intent ||
+                  {(selectedCollectionTab === CollectionPageTabs.Buy ||
                     selectedCollectionTab === CollectionPageTabs.Bid.toString()) && (
                     <AButton
                       primary
@@ -443,6 +450,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                       />
                     </div>
                   )} */}
+                  <Spacer />
+                  <StatusIcon status="pending-indefinite" label="Live" />
                 </div>
               </div>
 
