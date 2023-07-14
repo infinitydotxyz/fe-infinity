@@ -399,7 +399,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     <div className="px-4 h-full flex items-center">
                       <TextInputBox
                         autoFocus={true}
-                        inputClassName="text-sm"
+                        inputClassName="text-sm font-body"
                         className="border-0 w-14 p-0 text-sm"
                         type="number"
                         placeholder="Custom"
@@ -525,7 +525,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                       <TextInputBox
                         addPctSymbol={true}
                         autoFocus={false}
-                        inputClassName="text-sm"
+                        inputClassName="text-sm font-body"
                         className="border-0 w-20 p-0 text-sm"
                         type="number"
                         placeholder="Custom"
