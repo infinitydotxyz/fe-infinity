@@ -464,9 +464,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   listMode={listMode}
                   className={twMerge(
                     'px-4 py-4 min-h-[600px]',
-                    cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent
-                      ? 'opacity-30 duration-300 pointer-events-none'
-                      : 'duration-300'
+                    cartType === CartType.CollectionBid ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300'
                   )} // this min-height is to prevent the grid from collapsing when there are no items so filter menus can still render
                   onClick={onClickNFT}
                   isSelectable={isNFTSelectable}

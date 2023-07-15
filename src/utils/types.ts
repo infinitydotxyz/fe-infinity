@@ -106,13 +106,7 @@ export interface ERC721TokenCartItem extends ERC721CardData {
 }
 
 export interface ERC721OrderCartItem extends SignedOBOrder {
-  cartType:
-    | CartType.Cancel
-    | CartType.CollectionBid
-    | CartType.TokenBid
-    | CartType.CollectionBidIntent
-    | CartType.TokenBidIntent
-    | CartType.TokenList;
+  cartType: CartType.Cancel | CartType.CollectionBid | CartType.TokenBid | CartType.TokenList;
   executionStatus: ExecutionStatus | null;
 }
 

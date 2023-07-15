@@ -196,7 +196,6 @@ export const AstraCart = ({
     if (
       (cartType === CartType.TokenList ||
         cartType === CartType.TokenBid ||
-        cartType === CartType.TokenBidIntent ||
         cartType === CartType.TokenBuy ||
         cartType === CartType.AcceptOffer ||
         cartType === CartType.Send) &&
@@ -244,7 +243,7 @@ export const AstraCart = ({
           {divList}
         </div>
       );
-    } else if ((cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent) && collMap.size > 0) {
+    } else if (cartType === CartType.CollectionBid && collMap.size > 0) {
       const divList: ReactNode[] = [];
       collMap.forEach((collArray) => {
         for (const t of collArray) {
@@ -435,12 +434,11 @@ export const AstraCart = ({
                     cartType === CartType.Send ||
                     cartType === CartType.TokenList ||
                     cartType === CartType.TokenBid ||
-                    cartType === CartType.TokenBidIntent ||
                     cartType === CartType.TokenBuy ||
                     cartType === CartType.AcceptOffer
                   ) {
                     onTokensClear();
-                  } else if (cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent) {
+                  } else if (cartType === CartType.CollectionBid) {
                     onCollsClear();
                   } else if (cartType === CartType.Cancel) {
                     onOrdersClear();
