@@ -156,7 +156,7 @@ export interface BasicTokenInfo {
 
 export type TokensFilter = {
   sort?: string;
-  orderType?: 'listings' | 'bids-placed' | 'intents-placed' | 'offers-received' | 'listing' | 'offer' | '';
+  orderType?: 'listings' | 'bids-placed' | 'offers-received' | 'listing' | 'offer' | '';
   collections?: string[];
   minPrice?: string;
   maxPrice?: string;
