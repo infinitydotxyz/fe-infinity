@@ -66,7 +66,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
       await stake(valueAsNumber());
 
       onClose();
-      toastSuccess('Stake successful.', darkMode);
+      toastSuccess('Stake successful', darkMode);
     } catch (err) {
       console.error(err);
     } finally {

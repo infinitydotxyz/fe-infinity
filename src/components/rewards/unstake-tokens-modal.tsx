@@ -19,7 +19,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
 
   const onUnstake = async () => {
     if (value <= 0) {
-      toastError('Nothing to unstake.', darkMode);
+      toastError('Nothing to unstake', darkMode);
       return;
     }
 
@@ -29,7 +29,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
       await unstake(value);
       setIsUnstaking(false);
       onClose();
-      toastSuccess('Unstake successful, change in tokens will reflect shortly.', darkMode);
+      toastSuccess('Unstake successful, change in tokens will reflect shortly', darkMode);
     } catch (err) {
       console.error(err);
       setIsUnstaking(false);
@@ -50,7 +50,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
 
   //   try {
   //     await rageQuit();
-  //     toastSuccess('Unstake successful, change in tokens will reflect shortly.');
+  //     toastSuccess('Unstake successful, change in tokens will reflect shortly');
   //     setIsRageQuitting(false);
   //   } catch (err) {
   //     console.error(err);
