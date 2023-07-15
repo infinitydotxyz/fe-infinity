@@ -12,11 +12,12 @@ import { useAccount } from 'wagmi';
 import { ManualOrderbookItem } from '../orderbook/manual-orderbook-item';
 
 interface Props {
+  isOwner: boolean;
   order: ERC721TokenCartItem;
   orderType: TokensFilter['orderType'];
 }
 
-export const ProfileManualOrderListItem = ({ order, orderType }: Props) => {
+export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props) => {
   const [startPriceEth] = useState(order.price);
   const { isConnected } = useAccount();
   const { cartType, cartItems, setCartType } = useCartContext();
@@ -44,7 +45,7 @@ export const ProfileManualOrderListItem = ({ order, orderType }: Props) => {
       : isNFTSelected(editableCartItem as ERC721TokenCartItem)
   );
 
-  const isActionable = true;
+  const isActionable = isOwner;
 
   useEffect(() => {
     setAddedToEditCart(

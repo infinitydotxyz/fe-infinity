@@ -24,7 +24,7 @@ interface Props {
 
 const DEFAULT_ORDER_TYPE_FILTER = 'bids-placed';
 
-export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
+export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props) => {
   const { selectedCollection, setSelectedCollection } = useProfileContext();
   const { selectedProfileTab } = useAppContext();
   const { setCartType } = useCartContext();
@@ -277,7 +277,14 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
               selectedOrderType === 'offers-received'
                 ? (orderCartItem.cartType = CartType.AcceptOffer)
                 : (orderCartItem.cartType = CartType.Cancel);
-              return <ProfileManualOrderListItem key={order.id} order={orderCartItem} orderType={filter.orderType} />;
+              return (
+                <ProfileManualOrderListItem
+                  key={order.id}
+                  order={orderCartItem}
+                  orderType={filter.orderType}
+                  isOwner={isOwner}
+                />
+              );
             })}
 
           {hasNextPage === true ? (
