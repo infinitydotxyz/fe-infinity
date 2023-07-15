@@ -121,7 +121,7 @@ export const AppContextProvider = ({ children }: Props) => {
   const [listMode, setListMode] = useState(false);
   const [txnHash, setTxnHash] = useState<string>('');
   const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const [checkoutBtnStatus, setCheckoutBtnStatus] = useState('');
+  const [checkoutBtnStatus, setCheckoutBtnStatus] = useState('Working');
 
   const { data: signer } = useSigner();
   const provider = useProvider();
@@ -294,7 +294,7 @@ export const AppContextProvider = ({ children }: Props) => {
             chainId: Number(chainId),
             onProgress: (steps: Execute['steps']) => {
               for (const step of steps) {
-                setCheckoutBtnStatus(step.action);
+                setCheckoutBtnStatus(step.action || 'Working');
               }
             },
             options: {
@@ -316,7 +316,7 @@ export const AppContextProvider = ({ children }: Props) => {
             chainId: Number(chainId),
             onProgress: (steps: Execute['steps']) => {
               for (const step of steps) {
-                setCheckoutBtnStatus(step.action);
+                setCheckoutBtnStatus(step.action || 'Working');
               }
             }
           });
@@ -342,7 +342,7 @@ export const AppContextProvider = ({ children }: Props) => {
             chainId: Number(chainId),
             onProgress: (steps: Execute['steps']) => {
               for (const step of steps) {
-                setCheckoutBtnStatus(step.action);
+                setCheckoutBtnStatus(step.action || 'Working');
               }
             }
           });
@@ -408,7 +408,7 @@ export const AppContextProvider = ({ children }: Props) => {
             wallet: adaptEthersSigner(signer),
             onProgress: (steps: Execute['steps']) => {
               for (const step of steps) {
-                setCheckoutBtnStatus(step.action);
+                setCheckoutBtnStatus(step.action || 'Working');
               }
             }
           });
@@ -460,7 +460,7 @@ export const AppContextProvider = ({ children }: Props) => {
             wallet: adaptEthersSigner(signer),
             onProgress: (steps: Execute['steps']) => {
               for (const step of steps) {
-                setCheckoutBtnStatus(step.action);
+                setCheckoutBtnStatus(step.action || 'Working');
               }
             }
           });
@@ -468,9 +468,10 @@ export const AppContextProvider = ({ children }: Props) => {
           return true;
         }
       }
-    } catch (ex) {
-      console.error(ex);
-      toastError(`${ex}`, darkMode);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (ex: any) {
+      const errorMsg = ex.response?.data?.message ?? ex.message;
+      toastError(errorMsg, darkMode);
     }
 
     return false;
@@ -495,7 +496,7 @@ export const AppContextProvider = ({ children }: Props) => {
             chainId: Number(chainId),
             onProgress: (steps: Execute['steps']) => {
               for (const step of steps) {
-                setCheckoutBtnStatus(step.action);
+                setCheckoutBtnStatus(step.action || 'Working');
               }
             }
           });
@@ -546,7 +547,7 @@ export const AppContextProvider = ({ children }: Props) => {
             wallet: adaptEthersSigner(signer),
             onProgress: (steps: Execute['steps']) => {
               for (const step of steps) {
-                setCheckoutBtnStatus(step.action);
+                setCheckoutBtnStatus(step.action || 'Working');
               }
             }
           });
@@ -554,9 +555,11 @@ export const AppContextProvider = ({ children }: Props) => {
           return true;
         }
       }
-    } catch (ex) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (ex: any) {
       console.error(ex);
-      toastError(`${ex}`, darkMode);
+      const errorMsg = ex.response?.data?.message ?? ex.message;
+      toastError(errorMsg, darkMode);
     }
 
     return false;
