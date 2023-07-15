@@ -52,14 +52,12 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
     setSelectedCollection(undefined);
   };
 
-  const onClickOrderType = (newType: 'listings' | 'bids-placed' | 'intents-placed' | 'offers-received' | '') => {
+  const onClickOrderType = (newType: 'listings' | 'bids-placed' | 'offers-received' | '') => {
     setSelectedOrderType(newType);
     if (newType === 'listings') {
       setCartType(CartType.TokenList);
     } else if (newType === 'bids-placed') {
       setCartType(CartType.TokenBid);
-    } else if (newType === 'intents-placed') {
-      setCartType(CartType.TokenBidIntent);
     } else if (newType === 'offers-received') {
       setCartType(CartType.AcceptOffer);
     }

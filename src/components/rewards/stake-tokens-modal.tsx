@@ -12,6 +12,7 @@ import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
 import { twMerge } from 'tailwind-merge';
 import { secondaryTextColor } from 'src/utils/ui-constants';
+import { useTheme } from 'next-themes';
 
 interface Props {
   onClose: () => void;
@@ -25,6 +26,8 @@ export const StakeTokensModal = ({ onClose }: Props) => {
   const { allowance } = useTokenAllowance();
   const { address } = useAccount();
   const [minStakeAmountForBoost, setMinStakeAmountForBoost] = useState(0);
+  const { theme } = useTheme();
+  const darkMode = theme === 'dark';
 
   useEffect(() => {
     const fetchMinStakeAmountForBoost = async () => {
@@ -49,7 +52,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
 
   const onStake = async () => {
     if (valueAsNumber() <= 0) {
-      toastError('Please enter a stake amount');
+      toastError('Please enter a stake amount', darkMode);
       return;
     }
 
@@ -63,7 +66,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
       await stake(valueAsNumber());
 
       onClose();
-      toastSuccess('Stake successful.');
+      toastSuccess('Stake successful.', darkMode);
     } catch (err) {
       console.error(err);
     } finally {

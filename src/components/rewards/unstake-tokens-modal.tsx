@@ -4,6 +4,7 @@ import { nFormatter } from 'src/utils';
 import { BouncingLogo, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { Modal } from '../common/modal';
+import { useTheme } from 'next-themes';
 
 interface Props {
   onClose: () => void;
@@ -13,10 +14,12 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
   const [value, setValue] = useState(0);
   const [isUnstaking, setIsUnstaking] = useState(false);
   const { unstake, stakeBalance } = useStakerContract();
+  const { theme } = useTheme();
+  const darkMode = theme === 'dark';
 
   const onUnstake = async () => {
     if (value <= 0) {
-      toastError('Nothing to unstake.');
+      toastError('Nothing to unstake.', darkMode);
       return;
     }
 
@@ -26,7 +29,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
       await unstake(value);
       setIsUnstaking(false);
       onClose();
-      toastSuccess('Unstake successful, change in tokens will reflect shortly.');
+      toastSuccess('Unstake successful, change in tokens will reflect shortly.', darkMode);
     } catch (err) {
       console.error(err);
       setIsUnstaking(false);

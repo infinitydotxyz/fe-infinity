@@ -7,7 +7,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #3662D8;
+  background-color: #edc100;
   border-radius: 3px;
 }
 
@@ -69,21 +69,4 @@ input[type='range']::-webkit-slider-thumb {
   background: #000;
   cursor: pointer;
   box-shadow: 0 0 2px 0 #555;
-}
-
-// .Toastify__toast - https://fkhadra.github.io/react-toastify/how-to-style/
-.Toastify__toast {
-  background-color: #f4f4f4 !important;
-  border-radius: 10px !important;
-  border: solid 1px #ddd !important;
-  color: #000 !important;
-  font-family: DM Sans !important;
-}
-.Toastify__toast-body {
-  padding: 15px !important;
-  word-break: break-word !important;
-}
-
-.Toastify__toast-container {
-  width: 400px !important;
 }

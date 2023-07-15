@@ -99,10 +99,7 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
           <div className="w-1/8 flex justify-end">
             <Button
               variant={
-                addedToEditCart &&
-                (cartType === CartType.TokenList ||
-                  cartType === CartType.TokenBid ||
-                  cartType === CartType.CollectionBidIntent)
+                addedToEditCart && (cartType === CartType.TokenList || cartType === CartType.TokenBid)
                   ? 'primary'
                   : 'outline'
               }
@@ -117,10 +114,8 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
                     ? CartType.TokenList
                     : orderType === 'bids-placed'
                     ? CartType.TokenBid
-                    : orderType === 'intents-placed'
-                    ? CartType.TokenBidIntent
                     : isCollBid
-                    ? CartType.CollectionBidIntent
+                    ? CartType.CollectionBid
                     : CartType.TokenBid;
                 editableCartItem.cartType = newCartType;
                 if (!isCollBid && isNFTSelectable(editableCartItem as ERC721TokenCartItem)) {

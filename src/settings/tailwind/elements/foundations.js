@@ -107,9 +107,9 @@ module.exports = {
     'blur-100': 'blur(100px)'
   },
   fontFamily: {
-    body: 'DM Sans,SF UI Text,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol',
+    body: 'PPNeueMachinaInktrap,DM Sans,SF UI Text,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol',
     heading:
-      'Kollektif,SF UI Display,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol',
+      'Monument-Bold,SF UI Display,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol',
     monospace: 'SF Mono,Monaco,Inconsolata,Fira Mono,Droid Sans Mono,Source Code Pro,monospace'
   },
   boxShadow: {
@@ -151,8 +151,10 @@ module.exports = {
       border: '#e6e8ec'
     },
     brand: {
-      primary: '#3662D8', //303DD1, 404dde, 5C89E8
-      primaryFade: '#3662D890',
+      primary: '#edc100',
+      primaryFade: '#edc10090',
+      darkPrimary: '#c8f751',
+      darkPrimaryFade: '#c8f75190',
       twitter: '#1C9BEF',
       discord: '#5765F2'
     },

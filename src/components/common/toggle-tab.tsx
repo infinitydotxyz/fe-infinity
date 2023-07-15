@@ -8,14 +8,21 @@ interface Props {
   options: string[];
   onChange: (option: string) => void;
   small?: boolean;
+  border?: boolean;
 }
 
-export const ToggleTab = ({ options, onChange, defaultOption, className = '', small = false }: Props) => {
+export const ToggleTab = ({ options, onChange, defaultOption, className = '', small = false, border }: Props) => {
   const [selected, setSelected] = useState(defaultOption);
 
   return (
     <div className={`flex ${className}`}>
-      <div className={twMerge('cursor-pointer flex gap-1 rounded-lg items-center p-1 border-[1px]', borderColor)}>
+      <div
+        className={twMerge(
+          'cursor-pointer flex gap-1 rounded-lg items-center p-1',
+          borderColor,
+          border ? 'border-[1px]' : ''
+        )}
+      >
         {options.map((option: string) => {
           return (
             <div

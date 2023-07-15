@@ -3,8 +3,6 @@ import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem } fr
 
 export enum CartType {
   CollectionBid,
-  CollectionBidIntent,
-  TokenBidIntent,
   TokenBid,
   TokenList,
   AcceptOffer,

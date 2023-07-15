@@ -1,4 +1,4 @@
-import { ChainId, CollectionHistoricalSale, CollectionOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, CollectionOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { BouncingLogo, ExternalLink } from 'src/components/common';
 import { apiGet } from 'src/utils';
@@ -8,6 +8,7 @@ import { ResponsiveBarChart } from '../charts/bar-chart';
 import { OrdersChartDetails, SalesChartDetails } from '../charts/chart-details';
 import { ResponsiveSalesChart, SalesChartData } from '../charts/sales-chart';
 import { BarChartType, ScatterChartType } from '../charts/types';
+import { CollectionHistoricalSale } from 'src/utils/types';
 
 const infoBoxStyle = 'flex items-center justify-center opacity-60 font-bold text-lg h-full';
 
@@ -79,6 +80,7 @@ export const CollectionCharts = ({
 
     const chartData = result.map((sale: CollectionHistoricalSale) => {
       return {
+        id: sale.id,
         salePrice: sale.salePriceEth,
         tokenImage: sale.tokenImage,
         collectionAddress,

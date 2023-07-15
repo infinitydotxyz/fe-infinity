@@ -3,7 +3,7 @@ import { twMerge } from 'tailwind-merge';
 import {
   activeColor,
   hoverColor,
-  borderColor,
+  buttonBorderColor,
   primaryBtnWithBgColorTextTransition,
   textColor
 } from '../../utils/ui-constants';
@@ -27,18 +27,15 @@ const classes = {
   variant: {
     plain: '',
     ghost: 'rounded-lg', // hover fill needs to be rounded
-    primary: twMerge(primaryBtnWithBgColorTextTransition, 'rounded-lg'),
+    primary: twMerge(primaryBtnWithBgColorTextTransition),
     gray: twMerge(hoverColor, 'border-none rounded-lg bg-gray-100'),
-    outline: twMerge(borderColor, hoverColor, textColor, 'border rounded-lg'),
-    outlineWhite: twMerge(borderColor, hoverColor, 'border rounded-lg'),
+    outline: twMerge(buttonBorderColor, hoverColor, textColor, 'border'),
+    outlineWhite: twMerge(buttonBorderColor, hoverColor, 'border'),
     round: 'rounded-full',
-    roundBorder: twMerge(borderColor, hoverColor, textColor, 'border rounded-full'),
-    danger: twMerge(
-      textColor,
-      'rounded-lg bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
-    ),
+    roundBorder: twMerge(buttonBorderColor, hoverColor, textColor, 'border rounded-full'),
+    danger: twMerge(textColor, 'bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'),
     outlineDanger:
-      'rounded-lg border rounded-full text-gray-900 bg-gray-100 hover:bg-gray-200 border-red-500 hover:border-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
+      'border rounded-full text-gray-900 bg-gray-100 hover:bg-gray-200 border-red-500 hover:border-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
   }
 };
 

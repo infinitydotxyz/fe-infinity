@@ -196,7 +196,6 @@ export const AstraCart = ({
     if (
       (cartType === CartType.TokenList ||
         cartType === CartType.TokenBid ||
-        cartType === CartType.TokenBidIntent ||
         cartType === CartType.TokenBuy ||
         cartType === CartType.AcceptOffer ||
         cartType === CartType.Send) &&
@@ -244,7 +243,7 @@ export const AstraCart = ({
           {divList}
         </div>
       );
-    } else if ((cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent) && collMap.size > 0) {
+    } else if (cartType === CartType.CollectionBid && collMap.size > 0) {
       const divList: ReactNode[] = [];
       collMap.forEach((collArray) => {
         for (const t of collArray) {
@@ -327,7 +326,6 @@ export const AstraCart = ({
     if (
       cartType === CartType.TokenList ||
       cartType === CartType.TokenBid ||
-      cartType === CartType.TokenBidIntent ||
       cartType === CartType.TokenBuy ||
       cartType === CartType.AcceptOffer ||
       cartType === CartType.Send
@@ -342,7 +340,7 @@ export const AstraCart = ({
       setTokenMap(tokenMap);
     }
 
-    if (cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent) {
+    if (cartType === CartType.CollectionBid) {
       collMap.clear();
       for (const item of cartItems) {
         const coll = item as ERC721CollectionCartItem;
@@ -380,26 +378,12 @@ export const AstraCart = ({
         setCartTitle('Collection Bid');
         setCheckoutBtnText('Bid');
       }
-    } else if (cartType === CartType.CollectionBidIntent) {
-      setCartTitle('Collection Bid Intent');
-      if (cartItems.length > 1) {
-        setCheckoutBtnText('Express Intents');
-      } else {
-        setCheckoutBtnText('Express Intent');
-      }
     } else if (cartType === CartType.TokenBid) {
       setCartTitle('Bid');
       if (cartItems.length > 1) {
         setCheckoutBtnText('Bulk Bid');
       } else {
         setCheckoutBtnText('Bid');
-      }
-    } else if (cartType === CartType.TokenBidIntent) {
-      setCartTitle('Token Bid Intent');
-      if (cartItems.length > 1) {
-        setCheckoutBtnText('Express Intents');
-      } else {
-        setCheckoutBtnText('Express Intent');
       }
     } else if (cartType === CartType.TokenBuy) {
       setCartTitle('Buy');
@@ -450,12 +434,11 @@ export const AstraCart = ({
                     cartType === CartType.Send ||
                     cartType === CartType.TokenList ||
                     cartType === CartType.TokenBid ||
-                    cartType === CartType.TokenBidIntent ||
                     cartType === CartType.TokenBuy ||
                     cartType === CartType.AcceptOffer
                   ) {
                     onTokensClear();
-                  } else if (cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent) {
+                  } else if (cartType === CartType.CollectionBid) {
                     onCollsClear();
                   } else if (cartType === CartType.Cancel) {
                     onOrdersClear();
@@ -730,7 +713,7 @@ const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
       </div>
 
       <div className="ml-3 flex w-full space-x-2 items-center">
-        <div className="font-bold font-heading w-1/3 text-sm">{ellipsisString(token.tokenId)}</div>
+        <div className="w-1/3 text-sm">{ellipsisString(token.tokenId)}</div>
         {cartType !== CartType.Send && (
           <PriceAndExpiry
             token={token}
@@ -869,7 +852,6 @@ const PriceAndExpiry = ({
   className,
   editing,
   onEditComplete,
-  useSpacer,
   currentPrice,
   hideExpiry
 }: Props5) => {
@@ -881,9 +863,8 @@ const PriceAndExpiry = ({
   return (
     <div className={twMerge('flex flex-row space-x-4 w-full', className)}>
       {!priceEditable ? (
-        <div className="flex w-full space-x-2">
-          {useSpacer && <Spacer />}
-
+        <div className="flex w-full space-x-6">
+          {hideExpiry && <Spacer />}
           {!hideExpiry && (
             <ADropdown
               hasBorder={true}
@@ -969,15 +950,15 @@ const PriceAndExpiry = ({
 
           <div className={twMerge('flex flex-col items-end')}>
             <div className="flex flex-row">
-              <div className={twMerge('font-bold font-heading')}>{nFormatter(Number(price), 2)}</div>
-              <div className={twMerge('font-bold font-heading ml-1')}>{EthSymbol}</div>
+              <div className={twMerge('')}>{nFormatter(Number(price), 2)}</div>
+              <div className={twMerge('ml-1')}>{EthSymbol}</div>
             </div>
             {!hideExpiry && <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>{expiry}</div>}
           </div>
         </div>
       ) : (
         <TextInputBox
-          inputClassName="font-heading text-sm text-right mr-2"
+          inputClassName="text-sm text-right mr-2 font-body"
           className="p-[6.5px]"
           autoFocus={true}
           addEthSymbol={true}

@@ -53,22 +53,24 @@ const App = (props: AppProps) => {
 
   return (
     <StrictMode>
-      <WagmiConfig client={client}>
-        <ConnectKitProvider
-          options={{ initialChainId: 1 }}
-          customTheme={{
-            '--ck-font-family': '"DM Sans"'
-          }}
-        >
-          <CartContextProvider>
-            <AppContextProvider>
-              <ProfileContextProvider>
-                <AppBody {...props} />
-              </ProfileContextProvider>
-            </AppContextProvider>
-          </CartContextProvider>
-        </ConnectKitProvider>
-      </WagmiConfig>
+      <ThemeProvider attribute="class" defaultTheme="dark">
+        <WagmiConfig client={client}>
+          <ConnectKitProvider
+            options={{ initialChainId: 1 }}
+            customTheme={{
+              '--ck-font-family': '"PPNeueMachinaInktrap"'
+            }}
+          >
+            <CartContextProvider>
+              <AppContextProvider>
+                <ProfileContextProvider>
+                  <AppBody {...props} />
+                </ProfileContextProvider>
+              </AppContextProvider>
+            </CartContextProvider>
+          </ConnectKitProvider>
+        </WagmiConfig>
+      </ThemeProvider>
     </StrictMode>
   );
 };
@@ -86,11 +88,7 @@ const Page = ({ Component, pageProps }: AppProps) => {
 const Memoized = memo(Page, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
 
 const AppBody = (props: AppProps) => {
-  return (
-    <ThemeProvider attribute="class">
-      <Memoized {...props} />
-    </ThemeProvider>
-  );
+  return <Memoized {...props} />;
 };
 
 export default App;

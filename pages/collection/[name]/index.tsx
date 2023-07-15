@@ -4,7 +4,6 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { GiBroom } from 'react-icons/gi';
-import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { CollectionCharts } from 'src/components/collection/collection-charts';
@@ -19,15 +18,8 @@ import { useScrollInfo } from 'src/hooks/useScrollHook';
 import { CollectionPageTabs, apiGet, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
-import { ERC721CollectionCartItem, ERC721TokenCartItem, TokensFilter } from 'src/utils/types';
-import {
-  borderColor,
-  brandTextColor,
-  hoverColor,
-  hoverColorBrandText,
-  iconButtonStyle,
-  selectedColor
-} from 'src/utils/ui-constants';
+import { ERC721CollectionCartItem, ERC721TokenCartItem } from 'src/utils/types';
+import { borderColor, brandTextColor, hoverColor, iconButtonStyle, selectedColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface CollectionDashboardProps {
@@ -54,11 +46,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     collSelection
   } = useAppContext();
 
-  const [filter, setFilter] = useState<TokensFilter>({});
   const chainId = collection.chainId as ChainId;
   const { setRef } = useScrollInfo();
-
-  // const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, chainId, filter);
 
   const {
     data: listings,
@@ -68,24 +57,30 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     fetch: fetchListings
   } = useCollectionListingsFetcher(collection.address, chainId);
 
+  // deep copy original listings to a new array
+  const originalData = listings.map((x) => Object.assign({}, x));
   const [mutatedData, setMutatedData] = useState<ERC721TokenCartItem[]>(listings);
 
   const tabs = [
     CollectionPageTabs.Buy.toString(),
+    CollectionPageTabs.Bid.toString(),
     CollectionPageTabs.LiveBids.toString(),
     CollectionPageTabs.Analytics.toString()
   ];
 
   const { cartType, setCartType } = useCartContext();
   const [numSweep, setNumSweep] = useState('');
+  const [bidBelowPct, setBidBelowPct] = useState('');
   const [customSweep, setCustomSweep] = useState('');
   const { showCart } = useAppContext();
-  const [selectedTraits, setSelectedTraits] = useState<string[]>([]);
 
   const MAX_NUM_SWEEP_ITEMS = 50;
 
   useEffect(() => {
-    if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
+    if (
+      selectedCollectionTab === CollectionPageTabs.Buy.toString() ||
+      selectedCollectionTab === CollectionPageTabs.Bid.toString()
+    ) {
       fetchListings(false);
 
       const interval = setInterval(() => {
@@ -96,50 +91,23 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     }
   }, [collection.address]);
 
-  // useEffect(() => {
-  //   if (
-  //     selectedCollectionTab === CollectionPageTabs.Bid.toString()
-  //   ) {
-  //     setMutatedData(data);
-  //   } else if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
-  //     setMutatedData(listings);
-  //   }
-  // }, [data, listings]);
-
   useEffect(() => {
-    if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
+    if (
+      selectedCollectionTab === CollectionPageTabs.Buy.toString() ||
+      selectedCollectionTab === CollectionPageTabs.Bid.toString()
+    ) {
       setMutatedData(listings);
     }
   }, [listings]);
 
   useEffect(() => {
-    if (selectedCollectionTab === CollectionPageTabs.Bid.toString()) {
-      const newFilter = { ...filter };
-      newFilter.sort = 'tokenIdNumeric';
-      setFilter(newFilter);
-    } else if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
+    if (
+      selectedCollectionTab === CollectionPageTabs.Buy.toString() ||
+      selectedCollectionTab === CollectionPageTabs.Bid.toString()
+    ) {
       fetchListings(false);
     }
   }, [selectedCollectionTab]);
-
-  // useEffect(() => {
-  //   if (filter.traitTypes?.length) {
-  //     const traits = [];
-  //     for (let i = 0; i < filter.traitTypes.length; i++) {
-  //       const traitType = filter.traitTypes?.[i];
-  //       const traitValues = filter.traitValues?.[i]?.split('|') ?? [];
-  //       for (const traitValue of traitValues) {
-  //         traits.push(`${traitType}: ${traitValue}`);
-  //       }
-  //     }
-  //     setSelectedTraits(traits);
-  //   } else {
-  //     setSelectedTraits([]);
-  //   }
-
-  //   // refetch data
-  //   fetch(false);
-  // }, [filter, collection.address]);
 
   useEffect(() => {
     if (collSelection.length > 0) {
@@ -160,22 +128,21 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     toggleMultipleNFTSelection(tokens);
   }, [numSweep]);
 
-  // useEffect(() => {
-  //   const bidBelowPctNum = parseFloat(bidBelowPct);
-  //   const mutatedTokens = [];
-  //   for (const token of data) {
-  //     const tokenOrigPrice = token?.orderSnippet?.listing?.orderItem?.startPriceEth
-  //       ? token?.orderSnippet?.listing?.orderItem?.startPriceEth
-  //       : 0;
-
-  //     const bidPrice = tokenOrigPrice * (1 - bidBelowPctNum / 100);
-
-  //     const mutatedToken = token;
-  //     mutatedToken.price = bidPrice;
-  //     mutatedTokens.push(mutatedToken);
-  //   }
-  //   setMutatedData(mutatedTokens);
-  // }, [bidBelowPct]);
+  useEffect(() => {
+    let bidBelowPctNum = parseFloat(bidBelowPct);
+    if (isNaN(bidBelowPctNum)) {
+      bidBelowPctNum = 0;
+    }
+    const mutatedTokens = [];
+    for (const token of originalData) {
+      const tokenOrigPrice = token?.price ?? 0;
+      const bidPrice = tokenOrigPrice * (1 - bidBelowPctNum / 100);
+      const mutatedToken = token;
+      mutatedToken.price = bidPrice;
+      mutatedTokens.push(mutatedToken);
+    }
+    setMutatedData(mutatedTokens);
+  }, [bidBelowPct]);
 
   const onTabChange = (tab: string) => {
     setSelectedCollectionTab(tab);
@@ -186,6 +153,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   };
 
   const collectionAddress = collection.address;
+  const collectionCreator = collection.owner;
 
   // const isCollSupported = collection?.isSupported ?? false;
   // if (!isCollSupported) {
@@ -217,8 +185,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   //     </CenteredContent>
   //   );
   // }
-
-  const collectionCreator = collection.owner;
 
   const totalVol = nFormatter(collection?.volume ?? 0);
   const floorPrice = nFormatter(collection?.floorPrice ?? 0);
@@ -291,11 +257,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 </div>
 
                 <div className="flex space-x-2 text-sm">
-                  {(selectedCollectionTab === CollectionPageTabs.Buy ||
-                    selectedCollectionTab === CollectionPageTabs.Bid.toString()) && (
+                  {selectedCollectionTab === CollectionPageTabs.Bid.toString() && (
                     <AButton
                       primary
-                      className="px-5 py-1 rounded-lg text-sm"
+                      className="px-5 py-1 text-sm"
                       onClick={() => {
                         setCartType(CartType.CollectionBid);
                         if (isCollSelectable(collection as ERC721CollectionCartItem)) {
@@ -306,10 +271,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                       {isCollSelected(collection as ERC721CollectionCartItem) ? (
                         <div className="flex items-center space-x-1">
                           <AiOutlineCheckCircle className={'h-4 w-4'} />
-                          <div>Collection Bid</div>
+                          <div className="flex mt-1">Collection Bid</div>
                         </div>
                       ) : (
-                        'Collection Bid'
+                        <div className="flex mt-1">Collection Bid</div>
                       )}
                     </AButton>
                   )}
@@ -318,7 +283,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     className={twMerge(
                       'flex flex-row rounded-lg border cursor-pointer',
                       borderColor,
-                      cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent
+                      cartType === CartType.CollectionBid
                         ? 'opacity-30 duration-300 pointer-events-none'
                         : 'duration-300'
                     )}
@@ -381,7 +346,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     <div className="px-4 h-full flex items-center">
                       <TextInputBox
                         autoFocus={true}
-                        inputClassName="text-sm"
+                        inputClassName="text-sm font-body"
                         className="border-0 w-14 p-0 text-sm"
                         type="number"
                         placeholder="Custom"
@@ -393,53 +358,98 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                       />
                     </div>
                   </div>
-
-                  {/* {selectedCollectionTab === CollectionPageTabs.Bid && (
-                    <div
-                      className={twMerge(
-                        'flex space-x-1',
-                        cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent
-                          ? 'opacity-30 duration-300 pointer-events-none'
-                          : 'duration-300'
-                      )}
-                    >
-                    </div>
-                  )} */}
                   <Spacer />
                   <StatusIcon status="pending-indefinite" label="Live" />
                 </div>
               </div>
-            </div>
-          )}
 
-          {selectedTraits.length > 0 && (
-            <div className="flex px-4 mt-2 space-x-2">
-              {selectedTraits.map((trait) => {
-                return (
+              {selectedCollectionTab === CollectionPageTabs.Bid.toString() && (
+                <div className="flex mt-2 text-sm">
                   <div
-                    key={trait}
-                    className={twMerge('flex items-center rounded-lg border p-2 text-sm font-medium', borderColor)}
+                    className={twMerge(
+                      'flex flex-row rounded-lg border cursor-pointer',
+                      borderColor,
+                      cartType === CartType.CollectionBid
+                        ? 'opacity-30 duration-300 pointer-events-none'
+                        : 'duration-300'
+                    )}
                   >
-                    {trait}
-                    <div className="ml-2">
-                      <MdClose
-                        className={twMerge('h-4 w-4 cursor-pointer', hoverColorBrandText)}
-                        onClick={() => {
-                          setSelectedTraits(selectedTraits.filter((t) => t !== trait));
-                          // update filter
-                          const newFilter = { ...filter };
-                          const traitType = trait.split(':')[0];
-                          const traitValue = trait.split(':')[1].trim();
-                          // remove from filter
-                          newFilter.traitTypes = newFilter.traitTypes?.filter((t) => t !== traitType);
-                          newFilter.traitValues = newFilter.traitValues?.filter((t) => t !== traitValue);
-                          setFilter(newFilter);
+                    <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>
+                      Bid below price:
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        bidBelowPct === '1' && selectedColor
+                      )}
+                      onClick={() => {
+                        bidBelowPct === '1' ? setBidBelowPct('') : setBidBelowPct('1');
+                      }}
+                    >
+                      1%
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        bidBelowPct === '2' && selectedColor
+                      )}
+                      onClick={() => {
+                        bidBelowPct === '2' ? setBidBelowPct('') : setBidBelowPct('2');
+                      }}
+                    >
+                      2%
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        bidBelowPct === '5' && selectedColor
+                      )}
+                      onClick={() => {
+                        bidBelowPct === '5' ? setBidBelowPct('') : setBidBelowPct('5');
+                      }}
+                    >
+                      5%
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        bidBelowPct === '10' && selectedColor
+                      )}
+                      onClick={() => {
+                        bidBelowPct === '10' ? setBidBelowPct('') : setBidBelowPct('10');
+                      }}
+                    >
+                      10%
+                    </div>
+                    <div className="p-3 h-full flex items-center">
+                      <TextInputBox
+                        addPctSymbol={true}
+                        autoFocus={false}
+                        inputClassName="text-sm font-body"
+                        className="border-0 w-20 p-0 text-sm"
+                        type="number"
+                        placeholder="Custom"
+                        value={String(bidBelowPct)}
+                        onChange={(value) => {
+                          let valueNum = parseFloat(value);
+                          if (valueNum > 100) {
+                            valueNum = 100;
+                          }
+                          setBidBelowPct(valueNum.toString());
                         }}
                       />
                     </div>
                   </div>
-                );
-              })}
+                </div>
+              )}
             </div>
           )}
 
@@ -454,9 +464,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   listMode={listMode}
                   className={twMerge(
                     'px-4 py-4 min-h-[600px]',
-                    cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent
-                      ? 'opacity-30 duration-300 pointer-events-none'
-                      : 'duration-300'
+                    cartType === CartType.CollectionBid ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300'
                   )} // this min-height is to prevent the grid from collapsing when there are no items so filter menus can still render
                   onClick={onClickNFT}
                   isSelectable={isNFTSelectable}

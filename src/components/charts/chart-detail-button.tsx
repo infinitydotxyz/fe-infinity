@@ -1,5 +1,6 @@
 import { CollectionOrder, CreationFlow, TokenStandard } from '@infinityxyz/lib-frontend/types/core';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { useTheme } from 'next-themes';
 import { AButton } from 'src/components/astra/astra-button';
 import { ButtonProps, toastError } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -23,6 +24,9 @@ export const OrderbookRowButton = ({ order, outlineButtons = false, collectionAd
   const chainId = String(chain?.id ?? selectedChain);
   const { isNFTSelected, toggleNFTSelection, toggleCollSelection, isCollSelected } = useAppContext();
   const { setCartType } = useCartContext();
+
+  const { theme } = useTheme();
+  const darkMode = theme === 'dark';
 
   const cartType = order.isSellOrder
     ? CartType.TokenBuy
@@ -103,7 +107,7 @@ export const OrderbookRowButton = ({ order, outlineButtons = false, collectionAd
 
   const onClickBuySell = () => {
     if (!isConnected) {
-      toastError('Please connect your wallet');
+      toastError('Please connect your wallet', darkMode);
       return;
     }
 

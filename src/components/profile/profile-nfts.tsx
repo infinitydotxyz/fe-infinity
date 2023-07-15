@@ -134,7 +134,7 @@ export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
         <div className="px-4 h-full flex items-center">
           <TextInputBox
             autoFocus={true}
-            inputClassName="text-sm"
+            inputClassName="text-sm font-body"
             className="border-0 w-14 p-0 text-sm"
             type="number"
             placeholder="Custom"
