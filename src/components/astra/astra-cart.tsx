@@ -7,7 +7,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { FiEdit3 } from 'react-icons/fi';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
-import { EZImage, EthSymbol, TextInputBox, ToggleTab } from 'src/components/common';
+import { EZImage, EthSymbol, Spacer, TextInputBox, ToggleTab } from 'src/components/common';
 import {
   ellipsisString,
   getCartType,
@@ -327,7 +327,6 @@ export const AstraCart = ({
     if (
       cartType === CartType.TokenList ||
       cartType === CartType.TokenBid ||
-      cartType === CartType.TokenBidIntent ||
       cartType === CartType.TokenBuy ||
       cartType === CartType.AcceptOffer ||
       cartType === CartType.Send
@@ -342,7 +341,7 @@ export const AstraCart = ({
       setTokenMap(tokenMap);
     }
 
-    if (cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent) {
+    if (cartType === CartType.CollectionBid) {
       collMap.clear();
       for (const item of cartItems) {
         const coll = item as ERC721CollectionCartItem;
@@ -380,26 +379,12 @@ export const AstraCart = ({
         setCartTitle('Collection Bid');
         setCheckoutBtnText('Bid');
       }
-    } else if (cartType === CartType.CollectionBidIntent) {
-      setCartTitle('Collection Bid Intent');
-      if (cartItems.length > 1) {
-        setCheckoutBtnText('Express Intents');
-      } else {
-        setCheckoutBtnText('Express Intent');
-      }
     } else if (cartType === CartType.TokenBid) {
       setCartTitle('Bid');
       if (cartItems.length > 1) {
         setCheckoutBtnText('Bulk Bid');
       } else {
         setCheckoutBtnText('Bid');
-      }
-    } else if (cartType === CartType.TokenBidIntent) {
-      setCartTitle('Token Bid Intent');
-      if (cartItems.length > 1) {
-        setCheckoutBtnText('Express Intents');
-      } else {
-        setCheckoutBtnText('Express Intent');
       }
     } else if (cartType === CartType.TokenBuy) {
       setCartTitle('Buy');
@@ -881,6 +866,7 @@ const PriceAndExpiry = ({
     <div className={twMerge('flex flex-row space-x-4 w-full', className)}>
       {!priceEditable ? (
         <div className="flex w-full space-x-6">
+          {hideExpiry && <Spacer />}
           {!hideExpiry && (
             <ADropdown
               hasBorder={true}

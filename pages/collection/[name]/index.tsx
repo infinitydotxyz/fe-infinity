@@ -271,10 +271,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                       {isCollSelected(collection as ERC721CollectionCartItem) ? (
                         <div className="flex items-center space-x-1">
                           <AiOutlineCheckCircle className={'h-4 w-4'} />
-                          <div>Collection Bid</div>
+                          <div className="flex mt-1">Collection Bid</div>
                         </div>
                       ) : (
-                        'Collection Bid'
+                        <div className="flex mt-1">Collection Bid</div>
                       )}
                     </AButton>
                   )}
