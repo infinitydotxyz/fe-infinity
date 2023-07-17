@@ -176,7 +176,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   //           </ul>
   //           <div className="flex items-center space-x-2">
   //             <div>If this is a mistake, let us know on</div>
-  //             <ExternalLink href="https://discord.gg/pixelpackio">
+  //             <ExternalLink href="https://discord.gg/pixlso">
   //               <FaDiscord className={twMerge('text-brand-discord cursor-pointer mt-1', iconButtonStyle)} />
   //             </ExternalLink>
   //           </div>
@@ -213,8 +213,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     <Head>
       <meta property="og:title" content={collection.metadata?.name} />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content={`https://pixelpack.io/collection/${collection?.slug}`} />
-      <meta property="og:site_name" content="pixelpack.io" />
+      <meta property="og:url" content={`https://pixl.so/collection/${collection?.slug}`} />
+      <meta property="og:site_name" content="pixl.so" />
       <meta property="og:image" content={collection.metadata?.bannerImage || collection.metadata?.profileImage} />
       <meta property="og:image:alt" content={collection.metadata?.description} />
       <meta property="og:description" content={collection.metadata?.description} />
@@ -222,7 +222,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
       <meta name="theme-color" content="#000000" />
 
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content="@pixelpackio" />
+      <meta name="twitter:site" content="@pixlso" />
       <meta name="twitter:title" content={collection.metadata?.name} />
       <meta name="twitter:description" content={collection.metadata?.description} />
       <meta name="twitter:image" content={collection.metadata?.bannerImage || collection.metadata?.profileImage} />

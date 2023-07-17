@@ -57,7 +57,7 @@ const GlobalRewards = ({ showCount }: Props) => {
           <div>200M ${FLOW_TOKEN.symbol} until supply runs out.</div>
           <div>
             There's a fixed supply of referral rewards. Will be discontinued once the product is made public. See{' '}
-            <ExternalLink href="https://docs.pixelpack.io/referrals" className="underline">
+            <ExternalLink href="https://docs.pixl.so/referrals" className="underline">
               docs
             </ExternalLink>{' '}
             for details.
@@ -80,7 +80,7 @@ const GlobalRewards = ({ showCount }: Props) => {
           <div>100k ${FLOW_TOKEN.symbol} per day</div>
           <div>
             Whitelisted collections (currently less than 5) earn rewards for their creators. Ping us on{' '}
-            <ExternalLink href="https://discord.gg/pixelpackio" className="underline">
+            <ExternalLink href="https://discord.gg/pixlso" className="underline">
               discord
             </ExternalLink>{' '}
             to get whitelisted.

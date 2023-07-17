@@ -191,7 +191,7 @@ const Dock = () => {
                   <a
                     className={itemClassname}
                     aria-label="Discord"
-                    href="https://discord.gg/pixelpackio"
+                    href="https://discord.gg/pixlso"
                     rel="external nofollow noopener noreferrer"
                     target="_blank"
                   >
@@ -205,7 +205,7 @@ const Dock = () => {
                   <a
                     className={itemClassname}
                     aria-label="Twitter"
-                    href="https://twitter.com/pixelpackio"
+                    href="https://twitter.com/pixlso"
                     rel="external nofollow noopener noreferrer"
                     target="_blank"
                   >

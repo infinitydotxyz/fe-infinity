@@ -2,8 +2,8 @@ import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { getToken } from '@infinityxyz/lib-frontend/utils';
 import missingImage from 'src/images/missing-image.png';
 
-export const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://sv.pixelpack.io';
-export const SITE_HOST = process.env.NEXT_PUBLIC_SITE_HOST || 'https://pixelpack.io';
+export const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://sv.pixl.so';
+export const SITE_HOST = process.env.NEXT_PUBLIC_SITE_HOST || 'https://pixl.so';
 export const DISCORD_BOT_INVITE_URL =
   'https://discord.com/api/oauth2/authorize?client_id=956292440778743838&permissions=1024&scope=bot%20applications.commands';
 

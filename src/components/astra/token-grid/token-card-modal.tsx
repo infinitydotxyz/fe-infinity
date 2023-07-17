@@ -244,7 +244,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                       <ShortAddress
                         address={isUserCollectionCreator ? 'You' : collectionCreator || ''}
                         textToCopy={collectionCreator || ''}
-                        href={`https://pixelpack.io/profile/${collectionCreator || ''}`}
+                        href={`https://pixl.so/profile/${collectionCreator || ''}`}
                         tooltip={collectionCreator || ''}
                       />
                     </div>
@@ -258,7 +258,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                       <ShortAddress
                         address={isOwner ? 'You' : token?.token?.owner?.toString() || ''}
                         textToCopy={token?.token?.owner?.toString() || ''}
-                        href={`https://pixelpack.io/profile/${token?.token?.owner?.toString() || ''}`}
+                        href={`https://pixl.so/profile/${token?.token?.owner?.toString() || ''}`}
                         tooltip={token.token?.owner?.toString() || ''}
                       />
                     </div>

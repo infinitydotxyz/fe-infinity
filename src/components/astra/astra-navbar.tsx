@@ -41,7 +41,7 @@ export const ANavbar = () => {
 
         <Spacer />
 
-        <ExternalLink href="https://docs.pixelpack.io" className="text-sm underline">
+        <ExternalLink href="https://docs.pixl.so" className="text-sm underline">
           Docs
         </ExternalLink>
 
