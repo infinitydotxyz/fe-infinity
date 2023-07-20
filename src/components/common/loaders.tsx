@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import logo from 'src/images/logo-mark.svg';
+import logo from 'src/images/dark-logo.png';
 import { CenteredContent } from './centered-content';
 import { EZImage } from './ez-image';
 
 export const BouncingLogo = () => {
   return (
     <CenteredContent>
-      <EZImage src={logo.src} className="w-9 h-11 animate-bounce" />
+      <EZImage src={logo.src} className="w-6 h-6 animate-bounce" />
     </CenteredContent>
   );
 };
