@@ -9,7 +9,7 @@ export const Footer = () => {
     <footer className={twMerge(bgColor, textColor)}>
       <div className={`${pageStyles} p-5 md:p-20`}>
         <p className="font-body w-[346px]">
-          Pixelpack is building the best tools and infrastructure for NFT trading. Join us on discord to find out more.
+          Pixl is building the best tools and infrastructure for NFT trading. Join us on discord to find out more.
         </p>
         <div className="flex flex-col justify-between space-y-2 md:flex-row md:items-center md:space-x-2 mt-20">
           <div className="flex items-center space-x-6">

@@ -34,7 +34,7 @@ export const SnipeModal = ({ modalOpen, setModalOpen }: Props): JSX.Element | nu
         }
         setModalOpen(false);
       }}
-      title="Pixelpack"
+      title="Pixl"
       titleClassName="justify-center text-2xl"
       panelClassName={twMerge('max-w-2xl rounded-lg', dropShadow)}
     >
@@ -52,8 +52,8 @@ export const SnipeModal = ({ modalOpen, setModalOpen }: Props): JSX.Element | nu
             <div className="text-lg">Bid Once. Buy from anywhere.</div>
             <Lottie animationData={buyAnywhere} loop={true} style={{ height: 180 }} />
             <div className="w-3/4 text-center">
-              Automatically snipe NFTs from all marketplaces. Auto-sniping from Pixelpack and Opensea is currently live
-              with more coming soon.
+              Automatically snipe NFTs from all marketplaces. Auto-sniping from Pixl and Opensea is currently live with
+              more coming soon.
             </div>
           </div>
         </SwiperSlide>
@@ -63,8 +63,8 @@ export const SnipeModal = ({ modalOpen, setModalOpen }: Props): JSX.Element | nu
             <div className="text-lg">Readable Bulk signatures</div>
             <Lottie animationData={readableSign} loop={true} style={{ height: 180 }} />
             <div className="w-3/4 text-center">
-              Place multiple bids/listings with a single signature. Pixelpack supports bulk signatures that you can
-              actually read.
+              Place multiple bids/listings with a single signature. Pixl supports bulk signatures that you can actually
+              read.
             </div>
           </div>
         </SwiperSlide>
@@ -74,7 +74,7 @@ export const SnipeModal = ({ modalOpen, setModalOpen }: Props): JSX.Element | nu
             <div className="text-lg">Txn free UX</div>
             <Lottie animationData={txnFreeUX} loop={true} style={{ height: 180 }} />
             <div className="w-3/4 text-center">
-              Pixelpack offers a txn free UX. All orders are automatically executed by our matching engine.
+              Pixl offers a txn free UX. All orders are automatically executed by our matching engine.
             </div>
           </div>
         </SwiperSlide>
@@ -84,8 +84,8 @@ export const SnipeModal = ({ modalOpen, setModalOpen }: Props): JSX.Element | nu
             <div className="text-lg">Matching engine</div>
             <Lottie animationData={matchingEngine} loop={true} style={{ height: 180 }} />
             <div className="w-3/4 text-center">
-              Pixelpack comes loaded with a matching engine that automatically matches your orders. Every collection has
-              it's own matching engine instance, enabling sharded execution.
+              Pixl comes loaded with a matching engine that automatically matches your orders. Every collection has it's
+              own matching engine instance, enabling sharded execution.
             </div>
           </div>
         </SwiperSlide>
@@ -95,8 +95,8 @@ export const SnipeModal = ({ modalOpen, setModalOpen }: Props): JSX.Element | nu
             <div className="text-lg">Millisecond snipes</div>
             <Lottie animationData={fastSnipe} loop={true} style={{ height: 180 }} />
             <div className="w-3/4 text-center">
-              Pixelpack's matching engine finds orders to snipe in mere milliseconds, allowing you to snipe NFTs that
-              are on sale for a bargain before anyone else.
+              Pixl's matching engine finds orders to snipe in mere milliseconds, allowing you to snipe NFTs that are on
+              sale for a bargain before anyone else.
             </div>
           </div>
         </SwiperSlide>
@@ -106,8 +106,8 @@ export const SnipeModal = ({ modalOpen, setModalOpen }: Props): JSX.Element | nu
             <div className="text-lg">Frontrunning protection</div>
             <Lottie animationData={frontRunProtection} loop={true} style={{ height: 180 }} />
             <div className="w-3/4 text-center">
-              Pixelpack uses Flashbots to relay transactions to chain. This enables you to snipe NFTs without worrying
-              about frontrunners.
+              Pixl uses Flashbots to relay transactions to chain. This enables you to snipe NFTs without worrying about
+              frontrunners.
             </div>
           </div>
         </SwiperSlide>
