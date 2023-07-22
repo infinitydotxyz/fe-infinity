@@ -31,7 +31,7 @@ const HomePage = () => {
       position: 'relative'
     },
     contrast: {
-      width: 1382,
+      width: '100%',
       WebkitFilter: 'contrast(50)',
       filter: 'contrast(50)',
       mixBlendMode: 'screen',
@@ -46,30 +46,26 @@ const HomePage = () => {
       fontStyle: 'normal',
       fontFamily: `"RubikMonoOne"`,
       color: themeToUse.body,
-      fontSize: 100,
+      fontSize: 120,
       letterSpacing: '0em',
       lineHeight: 1.2
     },
     subheading: {
-      whiteSpace: 'pre',
+      whiteSpace: 'wrap',
       WebkitFilter: 'blur(1px)',
       filter: 'blur(1px)',
       fontWeight: 400,
       fontStyle: 'normal',
       fontFamily: `"RubikMonoOne"`,
       color: themeToUse.body,
-      fontSize: 50,
+      fontSize: 40,
       letterSpacing: '0em',
       lineHeight: 1.2
     },
     body: {
       whiteSpace: 'wrap',
-      WebkitFilter: 'blur(0px)',
-      filter: 'blur(0px)',
-      fontWeight: 400,
-      fontStyle: 'normal',
       color: themeToUse.body,
-      fontSize: 20,
+      fontSize: 16,
       letterSpacing: '0em',
       lineHeight: 1.2
     },
@@ -109,11 +105,16 @@ const HomePage = () => {
         <div className="flex flex-col w-1/2 space-y-4 pb-60">
           <div style={classes.subheading}>THE LAST AGGREGATOR</div>
           <div style={classes.body}>
-            Pixl is designed with a clear purpose - to enable a broader use of NFTs. We view NFTs as digital artifacts
-            that can be used to store memories, express personality, and foster communities. We're working beyond the
-            scope of typical 'creator'-launched collections to open up new possibilities.
+            <ul className="space-y-2 list-disc">
+              <li>Listings from over 100 NFT marketplaces for instant buys.</li>
+              <li>Aggregated bid liquidity from over 100 marketplaces for instant sells.</li>
+              <li>Zero fees & royalties for all NFT marketplace token holders: $XFL, $BLUR, $LOOKS, $X2Y2, $SUDO.</li>
+              <li>Gas free batch listings, bids & cancellations.</li>
+              <li>Built on battle tested infra & audited contracts.</li>
+              <li>Mega gas optimized.</li>
+            </ul>
           </div>
-          <div className="h-1"></div>
+          <div className="h-0"></div>
           <AButton
             primary
             className={twMerge(`text-md p-4 hover:text-light-body dark:hover:text-dark-body`)}
@@ -122,33 +123,16 @@ const HomePage = () => {
             Explore
           </AButton>
 
-          <div className="h-10"></div>
-          <div style={classes.subheading}>THE LAST AGGREGATOR</div>
+          <div className="h-2"></div>
+          <div style={classes.subheading}>More soon</div>
           <div style={classes.body}>
-            Pixl is designed with a clear purpose - to enable a broader use of NFTs. We view NFTs as digital artifacts
-            that can be used to store memories, express personality, and foster communities. We're working beyond the
-            scope of typical 'creator'-launched collections to open up new possibilities.
-          </div>
-
-          <div style={classes.subheading}>THE LAST AGGREGATOR</div>
-          <div style={classes.body}>
-            Pixl is designed with a clear purpose - to enable a broader use of NFTs. We view NFTs as digital artifacts
-            that can be used to store memories, express personality, and foster communities. We're working beyond the
-            scope of typical 'creator'-launched collections to open up new possibilities.
-          </div>
-
-          <div style={classes.subheading}>THE LAST AGGREGATOR</div>
-          <div style={classes.body}>
-            Pixl is designed with a clear purpose - to enable a broader use of NFTs. We view NFTs as digital artifacts
-            that can be used to store memories, express personality, and foster communities. We're working beyond the
-            scope of typical 'creator'-launched collections to open up new possibilities.
-          </div>
-
-          <div style={classes.subheading}>THE LAST</div>
-          <div style={classes.body}>
-            Pixl is designed with a clear purpose - to enable a broader use of NFTs. We view NFTs as digital artifacts
-            that can be used to store memories, express personality, and foster communities. We're working beyond the
-            scope of typical 'creator'-launched collections to open up new possibilities.
+            <ul className="space-y-2 list-disc">
+              <li>Referrals.</li>
+              <li>Token incentives.</li>
+              <li>Multichain.</li>
+              <li>L2 (rollup) built for NFTs.</li>
+              <li>&lt;redacted&gt;.</li>
+            </ul>
           </div>
         </div>
       </div>
