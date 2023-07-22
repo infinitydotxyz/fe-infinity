@@ -14,7 +14,7 @@ import { ProfileTabs } from 'src/utils';
 import { MouseProvider } from 'src/utils/context/MouseProvider';
 import { twMerge } from 'tailwind-merge';
 import { useAccount } from 'wagmi';
-import { borderColor, hoverColorBrandText, secondaryBgColor } from '../ui-constants';
+import { brandBorderColorFade, hoverColorBrandText, secondaryBgColor } from '../ui-constants';
 import { useAppContext } from './AppContext';
 import DockItem from './DockItem';
 import { DockContextType } from './types';
@@ -61,7 +61,11 @@ const Dock = () => {
         <DockContext.Provider value={{ hovered, width }}>
           <nav
             ref={ref}
-            className={twMerge('flex justify-center items-center rounded-lg p-4 border', borderColor, secondaryBgColor)}
+            className={twMerge(
+              'flex justify-center items-center rounded-lg p-4 border',
+              brandBorderColorFade,
+              secondaryBgColor
+            )}
             onMouseOver={() => {
               setHovered(true);
               setDockHeight('h-10');
@@ -187,7 +191,7 @@ const Dock = () => {
                   <a
                     className={itemClassname}
                     aria-label="Discord"
-                    href="https://discord.gg/pixelpackio"
+                    href="https://discord.gg/pixlso"
                     rel="external nofollow noopener noreferrer"
                     target="_blank"
                   >
@@ -201,7 +205,7 @@ const Dock = () => {
                   <a
                     className={itemClassname}
                     aria-label="Twitter"
-                    href="https://twitter.com/pixelpackio"
+                    href="https://twitter.com/pixlso"
                     rel="external nofollow noopener noreferrer"
                     target="_blank"
                   >

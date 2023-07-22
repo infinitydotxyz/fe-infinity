@@ -4,11 +4,13 @@ import { BsGrid, BsList } from 'react-icons/bs';
 import { useAppContext } from 'src/utils/context/AppContext';
 import {
   activeColor,
+  buttonBorderColor,
+  brandBorderColor,
   hoverColor,
-  borderColor,
   primaryBtnWithBgColorTextTransition,
   textColor,
-  brandBorderColor
+  brandTextColor,
+  brandBgColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
@@ -44,7 +46,6 @@ export const AButton = ({
       tooltip={tooltip}
       className={twMerge(
         small ? 'text-sm px-2 py-0.5' : 'px-2.5 py-[5px]',
-        'rounded-lg',
         primary ? primaryBtnWithBgColorTextTransition : '',
         className
       )}
@@ -87,7 +88,7 @@ const ButtonBase = ({
       // otherwise a disabled buttons click will go to the parent, onClick isn't called
       // disabled={disabled}
       className={twMerge(
-        highlighted ? 'text-brand-primary' : primary ? 'text-light-body' : textColor,
+        highlighted ? brandTextColor : primary ? 'text-light-body' : textColor,
         activeColor,
         hoverColor,
         'select-none transition ease-in-out duration-300',
@@ -155,7 +156,7 @@ export const ARoundOutlineButton = ({
       tooltip={tooltip}
       disabled={disabled}
       highlighted={highlighted}
-      className={twMerge(borderColor, 'border rounded-full', className)}
+      className={twMerge(buttonBorderColor, 'border rounded-full', className)}
       onClick={onClick}
     >
       {children}
@@ -178,7 +179,7 @@ export const AOutlineButton = ({
       small={small}
       tooltip={tooltip}
       disabled={disabled}
-      className={twMerge(borderColor, 'border rounded-lg', className)}
+      className={twMerge(buttonBorderColor, 'border', className)}
       onClick={onClick}
     >
       {children}
@@ -200,7 +201,11 @@ export const ATextButton = ({
     <ButtonBase
       disabled={disabled}
       tooltip={tooltip}
-      className={twMerge(small ? 'text-sm px-3 py-0.5' : 'px-4 py-1', 'rounded-lg hover:text-brand-primary', className)}
+      className={twMerge(
+        small ? 'text-sm px-3 py-0.5' : 'px-4 py-1',
+        'hover:text-brand-primary dark:hover:text-brand-darkPrimary',
+        className
+      )}
       onClick={onClick}
     >
       {children}
@@ -242,14 +247,14 @@ export const ASwitchButton = ({ checked, onChange }: Props5) => {
         'border-[1px] relative inline-flex h-[24px] w-[50px] shrink-0 cursor-pointer rounded-full \
              transition-colors duration-100 ease-in-out',
         brandBorderColor,
-        checked ? 'bg-brand-primary' : ''
+        checked ? brandBgColor : ''
       )}
     >
       <span className="sr-only">Use setting</span>
       <span
         className={twMerge(
           'dark:bg-gray-200 bg-gray-300',
-          checked ? 'translate-x-[25px] bg-white' : 'translate-x-1',
+          checked ? 'translate-x-[25px] bg-white dark:bg-black' : 'translate-x-1',
           'mt-[1px] h-[20px] w-[20px] rounded-full'
         )}
       />

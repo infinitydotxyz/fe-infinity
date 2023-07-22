@@ -4,35 +4,22 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { GiBroom } from 'react-icons/gi';
-import { HiOutlineLightBulb } from 'react-icons/hi';
-import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
-import { APriceFilter } from 'src/components/astra/astra-price-filter';
-import { ASortButton } from 'src/components/astra/astra-sort-button';
-import { AStatusFilterButton } from 'src/components/astra/astra-status-button';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { CollectionCharts } from 'src/components/collection/collection-charts';
 import { CollectionItemsPageSidebar } from 'src/components/collection/collection-items-page-sidebar';
 import { CollectionManualBidList } from 'src/components/collection/collection-manual-bid-list';
-import { CollectionOrderList } from 'src/components/collection/collection-orders-list';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
-import { TextInputBox } from 'src/components/common';
+import { Spacer, TextInputBox } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
+import { StatusIcon } from 'src/components/common/status-icon';
 import { useCollectionListingsFetcher } from 'src/hooks/api/useTokenFetcher';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
 import { CollectionPageTabs, apiGet, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
-import { ERC721CollectionCartItem, ERC721TokenCartItem, TokensFilter } from 'src/utils/types';
-import {
-  borderColor,
-  brandTextColor,
-  hoverColor,
-  hoverColorBrandText,
-  iconButtonStyle,
-  secondaryTextColor,
-  selectedColor
-} from 'src/utils/ui-constants';
+import { ERC721CollectionCartItem, ERC721TokenCartItem } from 'src/utils/types';
+import { borderColor, brandTextColor, hoverColor, iconButtonStyle, selectedColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface CollectionDashboardProps {
@@ -59,11 +46,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     collSelection
   } = useAppContext();
 
-  const [filter, setFilter] = useState<TokensFilter>({});
   const chainId = collection.chainId as ChainId;
   const { setRef } = useScrollInfo();
-
-  // const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, chainId, filter);
 
   const {
     data: listings,
@@ -73,87 +57,61 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     fetch: fetchListings
   } = useCollectionListingsFetcher(collection.address, chainId);
 
+  // deep copy original listings to a new array
+  const originalData = listings.map((x) => Object.assign({}, x));
   const [mutatedData, setMutatedData] = useState<ERC721TokenCartItem[]>(listings);
 
   const tabs = [
     CollectionPageTabs.Buy.toString(),
+    CollectionPageTabs.Bid.toString(),
     CollectionPageTabs.LiveBids.toString(),
     CollectionPageTabs.Analytics.toString()
   ];
 
   const { cartType, setCartType } = useCartContext();
   const [numSweep, setNumSweep] = useState('');
-  const [customSweep, setCustomSweep] = useState('');
   const [bidBelowPct, setBidBelowPct] = useState('');
+  const [customSweep, setCustomSweep] = useState('');
   const { showCart } = useAppContext();
-  const [selectedTraits, setSelectedTraits] = useState<string[]>([]);
 
   const MAX_NUM_SWEEP_ITEMS = 50;
 
   useEffect(() => {
-    if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
+    if (
+      selectedCollectionTab === CollectionPageTabs.Buy.toString() ||
+      selectedCollectionTab === CollectionPageTabs.Bid.toString()
+    ) {
       fetchListings(false);
+
+      const interval = setInterval(() => {
+        fetchListings(false);
+      }, 30 * 1000);
+
+      return () => clearInterval(interval);
     }
   }, [collection.address]);
 
-  // useEffect(() => {
-  //   if (
-  //     selectedCollectionTab === CollectionPageTabs.Intent.toString() ||
-  //     selectedCollectionTab === CollectionPageTabs.Bid.toString()
-  //   ) {
-  //     setMutatedData(data);
-  //   } else if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
-  //     setMutatedData(listings);
-  //   }
-  // }, [data, listings]);
-
   useEffect(() => {
-    if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
+    if (
+      selectedCollectionTab === CollectionPageTabs.Buy.toString() ||
+      selectedCollectionTab === CollectionPageTabs.Bid.toString()
+    ) {
       setMutatedData(listings);
     }
   }, [listings]);
 
   useEffect(() => {
-    if (selectedCollectionTab === CollectionPageTabs.Intent.toString()) {
-      delete filter.orderType;
-      delete filter.source;
-      filter.sort = 'lowestPrice';
-      setFilter({
-        ...filter
-      });
-    } else if (selectedCollectionTab === CollectionPageTabs.Bid.toString()) {
-      const newFilter = { ...filter };
-      newFilter.sort = 'tokenIdNumeric';
-      setFilter(newFilter);
-    } else if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
+    if (
+      selectedCollectionTab === CollectionPageTabs.Buy.toString() ||
+      selectedCollectionTab === CollectionPageTabs.Bid.toString()
+    ) {
       fetchListings(false);
     }
   }, [selectedCollectionTab]);
 
-  // useEffect(() => {
-  //   if (filter.traitTypes?.length) {
-  //     const traits = [];
-  //     for (let i = 0; i < filter.traitTypes.length; i++) {
-  //       const traitType = filter.traitTypes?.[i];
-  //       const traitValues = filter.traitValues?.[i]?.split('|') ?? [];
-  //       for (const traitValue of traitValues) {
-  //         traits.push(`${traitType}: ${traitValue}`);
-  //       }
-  //     }
-  //     setSelectedTraits(traits);
-  //   } else {
-  //     setSelectedTraits([]);
-  //   }
-
-  //   // refetch data
-  //   fetch(false);
-  // }, [filter, collection.address]);
-
   useEffect(() => {
     if (collSelection.length > 0) {
       setCartType(CartType.CollectionBid);
-    } else if (selectedCollectionTab === CollectionPageTabs.Intent.toString()) {
-      setCartType(CartType.TokenBidIntent);
     } else if (selectedCollectionTab === CollectionPageTabs.Buy.toString()) {
       setCartType(CartType.TokenBuy);
     } else if (selectedCollectionTab === CollectionPageTabs.Bid.toString()) {
@@ -170,22 +128,21 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     toggleMultipleNFTSelection(tokens);
   }, [numSweep]);
 
-  // useEffect(() => {
-  //   const bidBelowPctNum = parseFloat(bidBelowPct);
-  //   const mutatedTokens = [];
-  //   for (const token of data) {
-  //     const tokenOrigPrice = token?.orderSnippet?.listing?.orderItem?.startPriceEth
-  //       ? token?.orderSnippet?.listing?.orderItem?.startPriceEth
-  //       : 0;
-
-  //     const bidPrice = tokenOrigPrice * (1 - bidBelowPctNum / 100);
-
-  //     const mutatedToken = token;
-  //     mutatedToken.price = bidPrice;
-  //     mutatedTokens.push(mutatedToken);
-  //   }
-  //   setMutatedData(mutatedTokens);
-  // }, [bidBelowPct]);
+  useEffect(() => {
+    let bidBelowPctNum = parseFloat(bidBelowPct);
+    if (isNaN(bidBelowPctNum)) {
+      bidBelowPctNum = 0;
+    }
+    const mutatedTokens = [];
+    for (const token of originalData) {
+      const tokenOrigPrice = token?.price ?? 0;
+      const bidPrice = tokenOrigPrice * (1 - bidBelowPctNum / 100);
+      const mutatedToken = token;
+      mutatedToken.price = bidPrice;
+      mutatedTokens.push(mutatedToken);
+    }
+    setMutatedData(mutatedTokens);
+  }, [bidBelowPct]);
 
   const onTabChange = (tab: string) => {
     setSelectedCollectionTab(tab);
@@ -196,6 +153,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   };
 
   const collectionAddress = collection.address;
+  const collectionCreator = collection.owner;
 
   // const isCollSupported = collection?.isSupported ?? false;
   // if (!isCollSupported) {
@@ -218,7 +176,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   //           </ul>
   //           <div className="flex items-center space-x-2">
   //             <div>If this is a mistake, let us know on</div>
-  //             <ExternalLink href="https://discord.gg/pixelpackio">
+  //             <ExternalLink href="https://discord.gg/pixlso">
   //               <FaDiscord className={twMerge('text-brand-discord cursor-pointer mt-1', iconButtonStyle)} />
   //             </ExternalLink>
   //           </div>
@@ -227,8 +185,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   //     </CenteredContent>
   //   );
   // }
-
-  const collectionCreator = collection.owner;
 
   const totalVol = nFormatter(collection?.volume ?? 0);
   const floorPrice = nFormatter(collection?.floorPrice ?? 0);
@@ -257,8 +213,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     <Head>
       <meta property="og:title" content={collection.metadata?.name} />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content={`https://pixelpack.io/collection/${collection?.slug}`} />
-      <meta property="og:site_name" content="pixelpack.io" />
+      <meta property="og:url" content={`https://pixl.so/collection/${collection?.slug}`} />
+      <meta property="og:site_name" content="pixl.so" />
       <meta property="og:image" content={collection.metadata?.bannerImage || collection.metadata?.profileImage} />
       <meta property="og:image:alt" content={collection.metadata?.description} />
       <meta property="og:description" content={collection.metadata?.description} />
@@ -266,7 +222,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
       <meta name="theme-color" content="#000000" />
 
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content="@pixelpackio" />
+      <meta name="twitter:site" content="@pixlso" />
       <meta name="twitter:title" content={collection.metadata?.name} />
       <meta name="twitter:description" content={collection.metadata?.description} />
       <meta name="twitter:image" content={collection.metadata?.bannerImage || collection.metadata?.profileImage} />
@@ -282,11 +238,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
         <CollectionPageHeader {...headerProps} />
 
         <div ref={setRef} className="overflow-y-auto scrollbar-hide">
-          {(selectedCollectionTab === CollectionPageTabs.Intent.toString() ||
-            selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
+          {(selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
             selectedCollectionTab === CollectionPageTabs.Buy.toString()) && (
             <div className={twMerge('mt-2 px-4')}>
-              <div className={twMerge('flex')}>
+              <div className={twMerge('flex text-sm')}>
                 <div
                   className={twMerge(
                     'flex mr-1',
@@ -302,11 +257,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 </div>
 
                 <div className="flex space-x-2 text-sm">
-                  {(selectedCollectionTab === CollectionPageTabs.Intent ||
-                    selectedCollectionTab === CollectionPageTabs.Bid.toString()) && (
+                  {selectedCollectionTab === CollectionPageTabs.Bid.toString() && (
                     <AButton
                       primary
-                      className="px-5 py-1 rounded-lg text-sm"
+                      className="px-5 py-1 text-sm"
                       onClick={() => {
                         setCartType(CartType.CollectionBid);
                         if (isCollSelectable(collection as ERC721CollectionCartItem)) {
@@ -317,10 +271,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                       {isCollSelected(collection as ERC721CollectionCartItem) ? (
                         <div className="flex items-center space-x-1">
                           <AiOutlineCheckCircle className={'h-4 w-4'} />
-                          <div>Collection Bid</div>
+                          <div className="flex mt-1">Collection Bid</div>
                         </div>
                       ) : (
-                        'Collection Bid'
+                        <div className="flex mt-1">Collection Bid</div>
                       )}
                     </AButton>
                   )}
@@ -329,7 +283,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     className={twMerge(
                       'flex flex-row rounded-lg border cursor-pointer',
                       borderColor,
-                      cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent
+                      cartType === CartType.CollectionBid
                         ? 'opacity-30 duration-300 pointer-events-none'
                         : 'duration-300'
                     )}
@@ -392,7 +346,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     <div className="px-4 h-full flex items-center">
                       <TextInputBox
                         autoFocus={true}
-                        inputClassName="text-sm"
+                        inputClassName="text-sm font-body"
                         className="border-0 w-14 p-0 text-sm"
                         type="number"
                         placeholder="Custom"
@@ -404,55 +358,18 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                       />
                     </div>
                   </div>
-
-                  {selectedCollectionTab === CollectionPageTabs.Intent && (
-                    <div
-                      className={twMerge(
-                        'flex space-x-1',
-                        cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent
-                          ? 'opacity-30 duration-300 pointer-events-none'
-                          : 'duration-300'
-                      )}
-                    >
-                      <ASortButton filter={filter} setFilter={setFilter} />
-                      <AStatusFilterButton filter={filter} setFilter={setFilter} />
-                      <APriceFilter filter={filter} setFilter={setFilter} />
-                      {/* <ATraitFilter
-                        collectionAddress={collection.address}
-                        filter={filter}
-                        setFilter={setFilter}
-                        collectionAttributes={props.collectionAttributes}
-                      /> */}
-                    </div>
-                  )}
-
-                  {/* {selectedCollectionTab === CollectionPageTabs.Bid && (
-                    <div
-                      className={twMerge(
-                        'flex space-x-1',
-                        cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent
-                          ? 'opacity-30 duration-300 pointer-events-none'
-                          : 'duration-300'
-                      )}
-                    >
-                      <ATraitFilter
-                        collectionAddress={collection.address}
-                        filter={filter}
-                        setFilter={setFilter}
-                        collectionAttributes={props.collectionAttributes}
-                      />
-                    </div>
-                  )} */}
+                  <Spacer />
+                  <StatusIcon status="pending-indefinite" label="Live" />
                 </div>
               </div>
 
-              {selectedCollectionTab === CollectionPageTabs.Intent.toString() && (
+              {selectedCollectionTab === CollectionPageTabs.Bid.toString() && (
                 <div className="flex mt-2 text-sm">
                   <div
                     className={twMerge(
                       'flex flex-row rounded-lg border cursor-pointer',
                       borderColor,
-                      cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent
+                      cartType === CartType.CollectionBid
                         ? 'opacity-30 duration-300 pointer-events-none'
                         : 'duration-300'
                     )}
@@ -516,7 +433,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                       <TextInputBox
                         addPctSymbol={true}
                         autoFocus={false}
-                        inputClassName="text-sm"
+                        inputClassName="text-sm font-body"
                         className="border-0 w-20 p-0 text-sm"
                         type="number"
                         placeholder="Custom"
@@ -531,49 +448,12 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                       />
                     </div>
                   </div>
-
-                  <div className={twMerge('flex ml-2 items-center space-x-1', secondaryTextColor)}>
-                    <HiOutlineLightBulb className="w-6 h-6" />
-                    <div className="mt-1">Matched bids are automatically sniped on your behalf.</div>
-                  </div>
                 </div>
               )}
             </div>
           )}
 
-          {selectedTraits.length > 0 && (
-            <div className="flex px-4 mt-2 space-x-2">
-              {selectedTraits.map((trait) => {
-                return (
-                  <div
-                    key={trait}
-                    className={twMerge('flex items-center rounded-lg border p-2 text-sm font-medium', borderColor)}
-                  >
-                    {trait}
-                    <div className="ml-2">
-                      <MdClose
-                        className={twMerge('h-4 w-4 cursor-pointer', hoverColorBrandText)}
-                        onClick={() => {
-                          setSelectedTraits(selectedTraits.filter((t) => t !== trait));
-                          // update filter
-                          const newFilter = { ...filter };
-                          const traitType = trait.split(':')[0];
-                          const traitValue = trait.split(':')[1].trim();
-                          // remove from filter
-                          newFilter.traitTypes = newFilter.traitTypes?.filter((t) => t !== traitType);
-                          newFilter.traitValues = newFilter.traitValues?.filter((t) => t !== traitValue);
-                          setFilter(newFilter);
-                        }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {(selectedCollectionTab === CollectionPageTabs.Intent.toString() ||
-            selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
+          {(selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
             selectedCollectionTab === CollectionPageTabs.Buy.toString()) && (
             <div className="flex flex-row">
               <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
@@ -584,9 +464,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   listMode={listMode}
                   className={twMerge(
                     'px-4 py-4 min-h-[600px]',
-                    cartType === CartType.CollectionBid || cartType === CartType.CollectionBidIntent
-                      ? 'opacity-30 duration-300 pointer-events-none'
-                      : 'duration-300'
+                    cartType === CartType.CollectionBid ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300'
                   )} // this min-height is to prevent the grid from collapsing when there are no items so filter menus can still render
                   onClick={onClickNFT}
                   isSelectable={isNFTSelectable}
@@ -612,14 +490,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
           {selectedCollectionTab === CollectionPageTabs.LiveBids && (
             <CollectionManualBidList
-              key={collectionAddress}
-              collectionAddress={collection.address}
-              collectionChainId={collection.chainId as ChainId}
-            />
-          )}
-
-          {selectedCollectionTab === CollectionPageTabs.LiveIntents && (
-            <CollectionOrderList
               key={collectionAddress}
               collectionAddress={collection.address}
               collectionChainId={collection.chainId as ChainId}

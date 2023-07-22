@@ -16,6 +16,7 @@ import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { apiGet, formatNumber, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { ERC721CollectionCartItem } from 'src/utils/types';
 import { borderColor, iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -27,6 +28,7 @@ const TrendingPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const isMounted = useIsMounted();
   const { isCollSelected, isCollSelectable, toggleCollSelection } = useAppContext();
+  const { setCartType } = useCartContext();
   const options = ['1 day', '7 days', '30 days', 'All Time'];
   const DEFAULT_TAB = '1 day';
   const { selectedChain } = useAppContext();
@@ -88,6 +90,7 @@ const TrendingPage = () => {
           options={options}
           defaultOption={DEFAULT_TAB}
           onChange={onChangeToggleTab}
+          border={true}
         />
 
         <div className="space-y-3 mt-8 pb-20">
@@ -100,6 +103,7 @@ const TrendingPage = () => {
                 isCollSelected={isCollSelected}
                 onClickBuy={(selectedColl) => {
                   if (toggleCollSelection) {
+                    setCartType(CartType.CollectionBid);
                     return toggleCollSelection(selectedColl);
                   }
                 }}
@@ -214,7 +218,7 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
         <div className="flex gap-2">
           <AButton
             primary
-            className="px-9 py-3 rounded-lg"
+            className="px-9 py-3"
             onClick={() => {
               if (isCollSelectable(collection as ERC721CollectionCartItem)) {
                 onClickBuy(collection as ERC721CollectionCartItem);

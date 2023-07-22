@@ -52,7 +52,7 @@ interface SalesAndOrdersChartProps {
 
 export const ResponsiveSalesAndOrdersChart = ({ data, graphType }: ResponsiveSalesAndOrdersChartProps) => {
   const ordinalColorScale = scaleOrdinal({
-    domain: ['Sale', 'Listing', 'Offer'],
+    domain: ['Sale', 'Listing', 'Bid'],
     range: [saleDataPointColor, listingDataPointColor, bidDataPointColor]
   });
 

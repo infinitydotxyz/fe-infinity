@@ -106,13 +106,7 @@ export interface ERC721TokenCartItem extends ERC721CardData {
 }
 
 export interface ERC721OrderCartItem extends SignedOBOrder {
-  cartType:
-    | CartType.Cancel
-    | CartType.CollectionBid
-    | CartType.TokenBid
-    | CartType.CollectionBidIntent
-    | CartType.TokenBidIntent
-    | CartType.TokenList;
+  cartType: CartType.Cancel | CartType.CollectionBid | CartType.TokenBid | CartType.TokenList;
   executionStatus: ExecutionStatus | null;
 }
 
@@ -162,7 +156,7 @@ export interface BasicTokenInfo {
 
 export type TokensFilter = {
   sort?: string;
-  orderType?: 'listings' | 'bids-placed' | 'intents-placed' | 'offers-received' | 'listing' | 'offer' | '';
+  orderType?: 'listings' | 'bids-placed' | 'offers-received' | 'listing' | 'offer' | '';
   collections?: string[];
   minPrice?: string;
   maxPrice?: string;
@@ -435,4 +429,21 @@ export interface ReservoirOrderData {
 
 export interface ReservoirOrderDepth {
   depth: { price: number; quantity: number }[];
+}
+
+export interface CollectionHistoricalSale {
+  id: string;
+  salePriceEth: number;
+  timestamp: number;
+  tokenImage: string;
+  tokenId: string;
+  collectionAddress: string;
+  collectionName: string;
+  chainId: string;
+  txHash: string;
+  marketplace: string;
+  marketplaceAddress: string;
+  seller: string;
+  buyer: string;
+  quantity: string;
 }

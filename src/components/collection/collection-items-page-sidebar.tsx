@@ -1,8 +1,8 @@
-import { ChainId, CollectionHistoricalSale, CollectionSaleAndOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, CollectionSaleAndOrder } from '@infinityxyz/lib-frontend/types/core';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils';
-import { ReservoirOrderDepth } from 'src/utils/types';
+import { CollectionHistoricalSale, ReservoirOrderDepth } from 'src/utils/types';
 import { twMerge } from 'tailwind-merge';
 import { ResponsiveSalesChart, SalesChartData } from '../charts/sales-chart';
 import { ScatterChartType } from '../charts/types';
@@ -43,6 +43,7 @@ export const CollectionItemsPageSidebar = ({
 
     const chartData = result.map((sale: CollectionHistoricalSale) => {
       return {
+        id: sale.id,
         salePrice: sale.salePriceEth,
         tokenImage: sale.tokenImage,
         collectionAddress,
@@ -106,7 +107,6 @@ export const CollectionItemsPageSidebar = ({
 
     const interval = setInterval(() => {
       fetchRecentSalesAndOrders();
-      fetchOrderDepth();
     }, 30 * 1000);
 
     return () => clearInterval(interval);

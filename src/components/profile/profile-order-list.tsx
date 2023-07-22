@@ -5,7 +5,7 @@ import { useProfileOrderFetcher } from 'src/hooks/api/useOrderFetcher';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { SelectedCollectionType, useProfileContext } from 'src/utils/context/ProfileContext';
-import { ERC721OrderCartItem, TokensFilter } from 'src/utils/types';
+import { TokensFilter } from 'src/utils/types';
 import { borderColor, hoverColorBrandText, primaryBtnBgColorText, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AOutlineButton } from '../astra/astra-button';
@@ -13,7 +13,6 @@ import { BouncingLogo, CenteredContent, EZImage, EthSymbol, ScrollLoader } from 
 import { CollectionSearchInput } from '../common/search/collection-search-input';
 import { StatusIcon } from '../common/status-icon';
 import { ProfileManualOrderListItem } from './profile-manual-order-list-item';
-import { ProfileOrderListItem } from './profile-order-list-item';
 
 interface Props {
   userAddress: string;
@@ -24,18 +23,18 @@ interface Props {
 
 const DEFAULT_ORDER_TYPE_FILTER = 'bids-placed';
 
-export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
+export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props) => {
   const { selectedCollection, setSelectedCollection } = useProfileContext();
   const { selectedProfileTab } = useAppContext();
   const { setCartType } = useCartContext();
 
-  const [selectedOrderType, setSelectedOrderType] = useState<
-    'listings' | 'bids-placed' | 'intents-placed' | 'offers-received' | ''
-  >(DEFAULT_ORDER_TYPE_FILTER);
+  const [selectedOrderType, setSelectedOrderType] = useState<'listings' | 'bids-placed' | 'offers-received' | ''>(
+    DEFAULT_ORDER_TYPE_FILTER
+  );
   const [filter, setFilter] = useState<TokensFilter>({
     orderType: DEFAULT_ORDER_TYPE_FILTER
   });
-  const { orders, profileOrders, totalOffersValue, numTokensWithOffers, isLoading, hasNextPage, fetch } =
+  const { profileOrders, totalOffersValue, numTokensWithOffers, isLoading, hasNextPage, fetch } =
     useProfileOrderFetcher(50, filter, userAddress);
 
   const handleCollectionSearchResult = (result: SelectedCollectionType) => {
@@ -52,14 +51,12 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
     setSelectedCollection(undefined);
   };
 
-  const onClickOrderType = (newType: 'listings' | 'bids-placed' | 'intents-placed' | 'offers-received' | '') => {
+  const onClickOrderType = (newType: 'listings' | 'bids-placed' | 'offers-received' | '') => {
     setSelectedOrderType(newType);
     if (newType === 'listings') {
       setCartType(CartType.TokenList);
     } else if (newType === 'bids-placed') {
       setCartType(CartType.TokenBid);
-    } else if (newType === 'intents-placed') {
-      setCartType(CartType.TokenBidIntent);
     } else if (newType === 'offers-received') {
       setCartType(CartType.AcceptOffer);
     }
@@ -127,20 +124,6 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
               >
                 Bids
               </AOutlineButton>
-
-              {/* <AOutlineButton
-                className={twMerge(
-                  'font-medium text-sm px-4',
-                  selectedOrderType === 'intents-placed'
-                    ? primaryBtnBgColorText
-                    : twMerge(secondaryTextColor, hoverColorBrandText)
-                )}
-                onClick={() => {
-                  onClickOrderType('intents-placed');
-                }}
-              >
-                Intents
-              </AOutlineButton> */}
 
               <AOutlineButton
                 className={twMerge(
@@ -260,27 +243,20 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
             </CenteredContent>
           ) : null}
 
-          {!isLoading && hasNextPage === false && selectedOrderType === 'intents-placed' && orders?.length === 0 ? (
-            <CenteredContent>
-              <div className="font-heading mt-4">No Intents</div>
-            </CenteredContent>
-          ) : null}
-
-          {selectedOrderType === 'intents-placed' &&
-            orders?.map((order) => {
-              const orderCartItem = order as ERC721OrderCartItem;
-              orderCartItem.cartType = CartType.Cancel;
-              return <ProfileOrderListItem key={order.id} order={orderCartItem} orderType={filter.orderType} />;
-            })}
-
-          {selectedOrderType !== 'intents-placed' &&
-            profileOrders?.map((order) => {
-              const orderCartItem = order;
-              selectedOrderType === 'offers-received'
-                ? (orderCartItem.cartType = CartType.AcceptOffer)
-                : (orderCartItem.cartType = CartType.Cancel);
-              return <ProfileManualOrderListItem key={order.id} order={orderCartItem} orderType={filter.orderType} />;
-            })}
+          {profileOrders?.map((order) => {
+            const orderCartItem = order;
+            selectedOrderType === 'offers-received'
+              ? (orderCartItem.cartType = CartType.AcceptOffer)
+              : (orderCartItem.cartType = CartType.Cancel);
+            return (
+              <ProfileManualOrderListItem
+                key={order.id}
+                order={orderCartItem}
+                orderType={filter.orderType}
+                isOwner={isOwner}
+              />
+            );
+          })}
 
           {hasNextPage === true ? (
             <ScrollLoader

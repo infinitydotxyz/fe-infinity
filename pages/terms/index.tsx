@@ -164,7 +164,7 @@ const TermsPage = () => {
               being compromised. You agree to immediately notify us if you discover or otherwise suspect any security
               issues related to the Service or your Account{' '}
             </span>
-            <a href="https://twitter.com/pixelpackio" className="underline">
+            <a href="https://twitter.com/pixlso" className="underline">
               here
             </a>
             <span>.&nbsp;</span>

@@ -467,7 +467,7 @@ const PrivacyPolicyPage = () => {
           <span>
             If you have any questions or concerns or complaints about our Privacy Policy or our data collection or
             processing practices, or if you want to report any security violations to us, please contact us on our
-            discord or email us at hi@pixelpack.io
+            discord or email us at hi@pixl.so
           </span>
         </p>
         <p>

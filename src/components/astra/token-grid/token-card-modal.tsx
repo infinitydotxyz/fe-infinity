@@ -129,15 +129,6 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
   const floorPricePercentDiff =
     floorPrice && Number(floorPrice) > 0 ? `${nFormatter((floorPriceDiff / Number(floorPrice)) * 100)}` : 0;
 
-  const markupPrice = listingPrice || offerPrice;
-  const markupPriceDiff =
-    listingPrice && data.lastSalePriceEth
-      ? Number(listingPrice) - Number(data.lastSalePriceEth)
-      : offerPrice && data.lastSalePriceEth
-      ? Number(offerPrice) - Number(data.lastSalePriceEth)
-      : 0;
-  const markupPricePercentDiff = markupPrice ? `${nFormatter((markupPriceDiff / Number(markupPrice)) * 100)}%` : 0;
-
   const isOwner = user && trimLowerCase(user) === trimLowerCase(token?.token?.owner?.toString());
   const isUserCollectionCreator = user && collectionCreator && trimLowerCase(user) === trimLowerCase(collectionCreator);
 
@@ -203,7 +194,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
         {!listingPrice && offerPrice && isOwner && <span>{addedToCart ? 'Added to Cart' : 'Sell Now'}</span>}
         {!listingPrice && !offerPrice && isOwner && <span>{addedToCart ? 'Remove from Cart' : 'Sell'}</span>}
         {!listingPrice && offerPrice && !isOwner && <span>{addedToCart ? 'Added to Cart' : 'Bid higher'}</span>}
-        {!listingPrice && !offerPrice && !isOwner ? <span>{addedToCart ? 'Added to Cart' : 'Add to Cart'}</span> : null}
+        {!listingPrice && !offerPrice && !isOwner && <span>{addedToCart ? 'Added to Cart' : 'Add to Cart'}</span>}
       </AButton>
     );
   };
@@ -245,7 +236,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                 <ClipboardButton textToCopy={token.token.tokenId} className={'h-4 w-4 mt-2.5'} />
               </div>
 
-              <div className="flex justify-between">
+              <div className="flex space-x-6">
                 {collectionCreator ? (
                   <div>
                     <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Creator</div>
@@ -253,7 +244,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                       <ShortAddress
                         address={isUserCollectionCreator ? 'You' : collectionCreator || ''}
                         textToCopy={collectionCreator || ''}
-                        href={`https://pixelpack.io/profile/${collectionCreator || ''}`}
+                        href={`https://pixl.so/profile/${collectionCreator || ''}`}
                         tooltip={collectionCreator || ''}
                       />
                     </div>
@@ -267,7 +258,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                       <ShortAddress
                         address={isOwner ? 'You' : token?.token?.owner?.toString() || ''}
                         textToCopy={token?.token?.owner?.toString() || ''}
-                        href={`https://pixelpack.io/profile/${token?.token?.owner?.toString() || ''}`}
+                        href={`https://pixl.so/profile/${token?.token?.owner?.toString() || ''}`}
                         tooltip={token.token?.owner?.toString() || ''}
                       />
                     </div>
@@ -301,8 +292,6 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                   </div>
                 ) : null}
               </div>
-
-              {!(listingPrice || offerPrice) ? addToCartBtn() : null}
 
               {listingPrice || offerPrice ? (
                 <div className={twMerge(secondaryBgColor, borderColor, 'rounded-xl p-[30px] border')}>
@@ -343,15 +332,10 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                     </div>
 
                     <div className="space-y-1">
-                      <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>Markup</div>
-                      <div>{markupPricePercentDiff ?? '-'}</div>
-                    </div>
-
-                    <div className="space-y-1">
                       <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>
                         Floor difference
                       </div>
-                      <div>{Number(floorPricePercentDiff) > 0 ? floorPricePercentDiff + '%' : '-'}</div>
+                      <div>{!isNaN(Number(floorPricePercentDiff)) ? floorPricePercentDiff + '%' : '-'}</div>
                     </div>
 
                     <div className="space-y-1 mr-1.5">

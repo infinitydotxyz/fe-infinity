@@ -1,4 +1,5 @@
 import { defaultAbiCoder } from '@ethersproject/abi';
+import { TransactionResponse } from '@ethersproject/abstract-provider';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { hexConcat } from '@ethersproject/bytes';
 import { MaxUint256 } from '@ethersproject/constants';
@@ -6,7 +7,6 @@ import { Contract } from '@ethersproject/contracts';
 import { keccak256 } from '@ethersproject/keccak256';
 import { JsonRpcSigner } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
-import { TransactionResponse } from '@ethersproject/abstract-provider';
 import { ERC20ABI, ERC721ABI, FlowExchangeABI, FlowOBComplicationABI } from '@infinityxyz/lib-frontend/abi';
 import {
   ChainNFTs,
@@ -18,16 +18,15 @@ import {
 } from '@infinityxyz/lib-frontend/types/core';
 import {
   ETHEREUM_WETH_ADDRESS,
+  NULL_ADDRESS,
   getExchangeAddress,
   getOBComplicationAddress,
   getTxnCurrencyAddress,
   nowSeconds,
-  NULL_ADDRESS,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
 import { _TypedDataEncoder } from 'ethers/lib/utils.js';
 import { MerkleTree } from 'merkletreejs';
-import { toastError } from 'src/components/common';
 import { DEFAULT_MAX_GAS_PRICE_WEI, FLOW_ORDER_EIP_712_TYPES, ZERO_ADDRESS, ZERO_HASH } from './constants';
 
 export async function checkERC20Balance(currencyAddress: string, price: BigNumberish, signer: JsonRpcSigner) {
@@ -447,7 +446,6 @@ export async function takeOrders(
   const isCurrencyETH = makerOrders[0].execParams[1] === NULL_ADDRESS;
 
   if (isSellOrder && !isCurrencyETH) {
-    toastError('Listing currency is not ETH. Cannot execute');
     return { hash: '' };
   }
 
@@ -501,7 +499,6 @@ export async function takeMultipleOneOrders(signer: JsonRpcSigner, chainId: stri
   const isCurrencyETH = makerOrders[0].execParams[1] === NULL_ADDRESS;
   const gasLimit = 300_000 * makerOrders.length;
   if (isSellOrder && !isCurrencyETH) {
-    toastError('Listing currency is not ETH. Cannot execute');
     return { hash: '' };
   }
 

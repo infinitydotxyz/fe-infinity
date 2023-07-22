@@ -23,7 +23,7 @@ export const getReservoirClient = (chainId: string): ReservoirClient => {
         active: true
       }
     ],
-    source: 'pixelpack.io',
+    source: 'pixl.so',
     normalizeRoyalties: false
   });
   return reservoirClient;

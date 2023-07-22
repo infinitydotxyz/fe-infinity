@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { HiCheckCircle, HiOutlineLightBulb, HiPlusCircle } from 'react-icons/hi';
-import { ellipsisString, nFormatter, CollectionPageTabs } from 'src/utils';
+import { CollectionPageTabs, ellipsisString, nFormatter } from 'src/utils';
 import { BasicTokenInfo, ERC721TokenCartItem } from 'src/utils/types';
 import {
   borderColor,
@@ -17,8 +17,6 @@ import { twMerge } from 'tailwind-merge';
 import { AButton } from '../astra/astra-button';
 import { TokenCardModal } from '../astra/token-grid/token-card-modal';
 import { BlueCheck, EZImage, EthSymbol } from '../common';
-import { formatEther, parseEther } from 'ethers/lib/utils.js';
-import { PROTOCOL_FEE_BPS } from '@infinityxyz/lib-frontend/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 
 interface Props {
@@ -45,31 +43,8 @@ export const GridCard = ({
   const hasBlueCheck = data?.hasBlueCheck ?? false;
   const { selectedCollectionTab } = useAppContext();
 
-  let price = data?.price
-    ? data.price
-    : data?.orderSnippet?.listing?.orderItem?.startPriceEth
-    ? data?.orderSnippet?.listing?.orderItem?.startPriceEth
-    : 0;
-  const gasCostEth = data?.orderSnippet?.listing?.orderItem?.gasCostEth ?? 0;
-  const feeCostEth = data?.orderSnippet?.listing?.orderItem?.feeCostEth ?? 0;
-
-  const priceWei = parseEther(price.toString());
-  const calcFeesWei = priceWei.mul(PROTOCOL_FEE_BPS).div(10_000);
-  const calcFeeCostEth = parseFloat(formatEther(calcFeesWei));
-  const finalFeeCostEth = Math.min(calcFeeCostEth, feeCostEth);
-
-  const deltaPrice = gasCostEth + finalFeeCostEth;
-  const showDeltaPrice = deltaPrice > 0 && selectedCollectionTab === CollectionPageTabs.Intent.toString();
-  const hidePrice = selectedCollectionTab === CollectionPageTabs.Bid.toString();
-  if (hidePrice) {
-    price = 0;
-    data.price = 0;
-    if (data.orderSnippet?.listing?.orderItem) {
-      data.orderSnippet.listing.orderItem.startPriceEth = 0;
-      data.orderSnippet.listing.orderItem.gasCostEth = 0;
-      data.orderSnippet.listing.orderItem.feeCostEth = 0;
-    }
-  }
+  const price = data?.price ?? 0;
+  const hideIcon = selectedCollectionTab === CollectionPageTabs.Bid.toString();
 
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: data?.tokenId ?? '',
@@ -127,12 +102,12 @@ export const GridCard = ({
           <div className="absolute top-0 bottom-0 left-0 right-0 rounded-t-lg overflow-clip">
             <EZImage src={data?.image} className="hover:scale-110 transition-all" />
             {showPlusIcon && !selected && (
-              <div className={twMerge('absolute top-2 right-2 rounded-full bg-gray-100')}>
+              <div className={twMerge('absolute top-2 right-2 rounded-full bg-gray-900')}>
                 <HiPlusCircle className={twMerge(iconButtonStyle, brandTextColor)} />
               </div>
             )}
             {selected && (
-              <div className={twMerge('absolute top-2 right-2 rounded-full bg-gray-100')}>
+              <div className={twMerge('absolute top-2 right-2 rounded-full bg-gray-900')}>
                 <HiCheckCircle className={twMerge(iconButtonStyle, brandTextColor)} />
               </div>
             )}
@@ -175,13 +150,7 @@ export const GridCard = ({
                   <div className={twMerge('truncate font-medium', borderColor)}>{nFormatter(price, 2)}</div>
                   <div className="text-xs">{EthSymbol}</div>
 
-                  <div className={twMerge('flex items-center space-x-1 rounded-md text-[10px]')}>
-                    {showDeltaPrice && (
-                      <div className={twMerge('truncate font-medium', borderColor)}> + {nFormatter(deltaPrice, 2)}</div>
-                    )}
-                  </div>
-
-                  {data?.source?.icon && (
+                  {data?.source?.icon && !hideIcon && (
                     <div className={twMerge('flex items-center')}>
                       <EZImage src={data?.source?.icon} className="w-4 h-4 rounded-full" />
                     </div>

@@ -1,31 +1,33 @@
 import { useEffect, useState } from 'react';
 import { AstraCartButton } from 'src/components/astra/astra-cart-button';
 import { ConnectButton, EZImage, ExternalLink, NextLink, Spacer } from 'src/components/common';
-import flowLogoMark from 'src/images/flow-logo-mark.png';
+import lightLogo from 'src/images/light-logo.png';
+import darkLogo from 'src/images/dark-logo.png';
 import { chainIdToName } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { borderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { NetworkWarning } from '../common/network-warning';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
+import { useTheme } from 'next-themes';
 
 export const ANavbar = () => {
   const { selectedChain, isWalletNetworkSupported } = useAppContext();
   const [, setLabelVal] = useState(chainIdToName(selectedChain));
-  // const { theme } = useTheme();
-  const logo = <EZImage src={flowLogoMark.src} className="w-9 h-9" />;
+  const { theme } = useTheme();
+  const [logoSrc, setLogoSrc] = useState(darkLogo.src);
 
   useEffect(() => {
     setLabelVal(chainIdToName(selectedChain));
   }, [selectedChain]);
 
-  // useEffect(() => {
-  //   if (theme === 'dark') {
-  //     setLogo(<EZImage src={flowLogoDark.src} className="w-28 h-9" />);
-  //   } else {
-  //     setLogo(<EZImage src={flowLogoLight.src} className="w-28 h-9" />);
-  //   }
-  // }, [theme]);
+  useEffect(() => {
+    if (theme === 'dark') {
+      setLogoSrc(darkLogo.src);
+    } else {
+      setLogoSrc(lightLogo.src);
+    }
+  }, [theme]);
 
   return (
     <div>
@@ -33,7 +35,9 @@ export const ANavbar = () => {
         <NetworkWarning />
       </div>
       <div className={twMerge('flex px-6 py-2 space-x-4 items-center border-b-[1px]', borderColor)}>
-        <NextLink href="/trending">{logo}</NextLink>
+        <NextLink href="/">
+          <EZImage src={logoSrc} className="w-10 h-10" />
+        </NextLink>
 
         <div className="w-1/3">
           <CollectionSearchInput expanded />
@@ -41,7 +45,7 @@ export const ANavbar = () => {
 
         <Spacer />
 
-        <ExternalLink href="https://docs.pixelpack.io" className="text-sm underline">
+        <ExternalLink href="https://docs.pixl.so" className="text-sm underline">
           Docs
         </ExternalLink>
 
