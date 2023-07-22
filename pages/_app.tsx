@@ -34,7 +34,7 @@ const { chains, provider } = configureChains(supportedChains, [publicProvider()]
 
 const client = createClient(
   getDefaultClient({
-    appName: 'Pixelpack',
+    appName: 'Pixl',
     chains: chains,
     provider
   })

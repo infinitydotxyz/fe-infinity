@@ -10,8 +10,8 @@ export const EarningTickets = ({ raffle }: { raffle: UserRaffleDto }) => {
         </p>
         <ul>
           <li>
-            For every <strong>{raffle.config.volume.ticketRateDenominator} USD</strong> of volume traded on Pixelpack,
-            you will receive{' '}
+            For every <strong>{raffle.config.volume.ticketRateDenominator} USD</strong> of volume traded on Pixl, you
+            will receive{' '}
             <strong>
               {raffle.config.volume.ticketRateNumerator} ticket
               {raffle.config.volume.ticketRateNumerator > 1 ? 's' : ''}

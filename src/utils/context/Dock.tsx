@@ -79,7 +79,7 @@ const Dock = () => {
           >
             <ul className={twMerge('flex items-center justify-center space-x-3', dockHeight)}>
               {/* <DockItem className={dockItemClassname}>
-                <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Pixelpack</div>}>
+                <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Pixl</div>}>
                   <div className={itemClassname}>
                     <FiTarget
                       className={twMerge(iconClassname, hoverColorBrandText)}

@@ -164,12 +164,12 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   //           <EZImage src={collection.metadata.profileImage} className="h-40 w-40 rounded-lg overflow-clip" />
   //         ) : null}
   //         <div className="text-3xl font-heading font-medium">
-  //           {collection?.metadata?.name ?? 'This collection'} is not supported on Pixelpack
+  //           {collection?.metadata?.name ?? 'This collection'} is not supported on Pixl
   //         </div>
   //         <div className="flex flex-col text-md">
   //           <span>Common reasons a collection is not supported:</span>
   //           <ul className="list-disc list-inside mt-2 mb-2">
-  //             <li>Pixelpack offers a trusted and curated selection of NFTs</li>
+  //             <li>Pixl offers a trusted and curated selection of NFTs</li>
   //             <li>Collection is not ERC-721</li>
   //             <li>Collection has low volumes</li>
   //             <li>Creator(s) rugged the project</li>

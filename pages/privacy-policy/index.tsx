@@ -4,7 +4,7 @@ const PrivacyPolicyPage = () => {
   return (
     <APageBox title="Privacy Policy" className="overflow-x-clip overflow-y-auto">
       <div className="flex flex-col items-center justify-center space-y-2">
-        <div className="font-bold font-heading text-3xl">Pixelpack</div>
+        <div className="font-bold font-heading text-3xl">Pixl</div>
         <div className="underline">Privacy Policy</div>
       </div>
 
@@ -16,7 +16,7 @@ const PrivacyPolicyPage = () => {
           </span>
         </p>
         <p dir="ltr">
-          <span>Infinity DAO Ltd. d/b/a Pixelpack </span>
+          <span>Infinity DAO Ltd. d/b/a Pixl </span>
           <span>
             (&ldquo;Infinity,&rdquo; &ldquo;we,&rdquo; &ldquo;us&rdquo;, or &ldquo;our&rdquo;), a company owned by the
             Carteblanche Foundation,
@@ -24,7 +24,7 @@ const PrivacyPolicyPage = () => {
           <span>
             {' '}
             is committed to protecting your privacy. We have prepared this Privacy Policy to describe our practices
-            regarding the Personal Data (as defined below) we collect, use, and share in connection with the Pixelpack
+            regarding the Personal Data (as defined below) we collect, use, and share in connection with the Pixl
             website and other software provided on or in connection with our services, as described in our Terms of
             Service (collectively, the &ldquo;Service&rdquo;). &ldquo;NFT&rdquo; in this Privacy Policy means a
             non-fungible token or similar digital item implemented on a blockchain (such as the Ethereum blockchain),
@@ -312,9 +312,9 @@ const PrivacyPolicyPage = () => {
             Regardless of any choices you make regarding your Personal Data (as described below), Infinity may disclose
             Personal Data if it believes in good faith that such disclosure is necessary: (a) in connection with any
             legal investigation; (b) to comply with relevant laws or to respond to subpoenas, warrants, or other legal
-            process served on Infinity; (c) to protect or defend the rights or property of Pixelpack or users of the
-            Service; and/or (d) to investigate or assist in preventing any violation or potential violation of the law,
-            this Privacy Policy, or our Terms of Service.
+            process served on Infinity; (c) to protect or defend the rights or property of Pixl or users of the Service;
+            and/or (d) to investigate or assist in preventing any violation or potential violation of the law, this
+            Privacy Policy, or our Terms of Service.
           </span>
         </p>
         <p dir="ltr" className="font-bold">
