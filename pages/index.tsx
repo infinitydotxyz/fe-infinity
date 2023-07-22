@@ -12,6 +12,7 @@ import pengu from '../src/images/pengu.png';
 import punk from '../src/images/punk.png';
 import remilia from '../src/images/remilia.png';
 import tailwindConfig from '../src/settings/tailwind/elements/foundations';
+import NonSsrWrapper from 'src/components/astra/non-ssr-wrapper';
 
 const HomePage = () => {
   const theme = useTheme();
@@ -81,62 +82,64 @@ const HomePage = () => {
   const images = [azuki, degod, noun, mayc, pengu, punk, remilia];
 
   return (
-    <div style={classes.background} className="scrollbar-hide">
-      <div className="flex flex-col items-center justify-center" style={classes.contrast}>
-        <div style={classes.heading}>PIXL</div>
+    <NonSsrWrapper>
+      <div style={classes.background} className="scrollbar-hide">
+        <div className="flex flex-col items-center justify-center" style={classes.contrast}>
+          <div style={classes.heading}>PIXL</div>
 
-        <div className="w-1/2" style={classes.frame}>
-          <Ticker duration={20} direction={1}>
-            {images.map((image, index) => (
-              <div
-                key={index}
-                style={{
-                  margin: '25px',
-                  height: '250px',
-                  width: '200px'
-                }}
-              >
-                <EZImage src={image.src} />
-              </div>
-            ))}
-          </Ticker>
-        </div>
-
-        <div className="flex flex-col w-1/2 space-y-4 pb-60">
-          <div style={classes.subheading}>THE LAST AGGREGATOR</div>
-          <div style={classes.body}>
-            <ul className="space-y-2 list-disc">
-              <li>Listings from over 100 NFT marketplaces for instant buys.</li>
-              <li>Aggregated bid liquidity from over 100 marketplaces for instant sells.</li>
-              <li>Zero fees & royalties for all NFT marketplace token holders: $XFL, $BLUR, $LOOKS, $X2Y2, $SUDO.</li>
-              <li>Gas free batch listings, bids & cancellations.</li>
-              <li>Built on battle tested infra & audited contracts.</li>
-              <li>Mega gas optimized.</li>
-            </ul>
+          <div className="w-1/2" style={classes.frame}>
+            <Ticker duration={20} direction={1}>
+              {images.map((image, index) => (
+                <div
+                  key={index}
+                  style={{
+                    margin: '25px',
+                    height: '250px',
+                    width: '200px'
+                  }}
+                >
+                  <EZImage src={image.src} />
+                </div>
+              ))}
+            </Ticker>
           </div>
-          <div className="h-0"></div>
-          <AButton
-            primary
-            className={twMerge(`text-md p-4 hover:text-light-body dark:hover:text-dark-body`)}
-            onClick={() => router.push('/trending')}
-          >
-            Explore
-          </AButton>
 
-          <div className="h-2"></div>
-          <div style={classes.subheading}>More soon</div>
-          <div style={classes.body}>
-            <ul className="space-y-2 list-disc">
-              <li>Referrals.</li>
-              <li>Token incentives.</li>
-              <li>Multichain.</li>
-              <li>L2 (rollup) built for NFTs.</li>
-              <li>&lt;redacted&gt;.</li>
-            </ul>
+          <div className="flex flex-col w-1/2 space-y-4 pb-60">
+            <div style={classes.subheading}>THE LAST AGGREGATOR</div>
+            <div style={classes.body}>
+              <ul className="space-y-2 list-disc">
+                <li>Listings from over 100 NFT marketplaces for instant buys.</li>
+                <li>Aggregated bid liquidity from over 100 marketplaces for instant sells.</li>
+                <li>Zero fees & royalties for all NFT marketplace token holders: $XFL, $BLUR, $LOOKS, $X2Y2, $SUDO.</li>
+                <li>Gas free batch listings, bids & cancellations.</li>
+                <li>Built on battle tested infra & audited contracts.</li>
+                <li>Mega gas optimized.</li>
+              </ul>
+            </div>
+            <div className="h-0"></div>
+            <AButton
+              primary
+              className={twMerge(`text-md p-4 hover:text-light-body dark:hover:text-dark-body`)}
+              onClick={() => router.push('/trending')}
+            >
+              Explore
+            </AButton>
+
+            <div className="h-2"></div>
+            <div style={classes.subheading}>More soon</div>
+            <div style={classes.body}>
+              <ul className="space-y-2 list-disc">
+                <li>Referrals.</li>
+                <li>Token incentives.</li>
+                <li>Multichain.</li>
+                <li>L2 (rollup) built for NFTs.</li>
+                <li>&lt;redacted&gt;.</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </NonSsrWrapper>
   );
 };
 
