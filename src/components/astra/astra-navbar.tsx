@@ -36,7 +36,7 @@ export const ANavbar = () => {
       </div>
       <div className={twMerge('flex px-6 py-2 space-x-4 items-center border-b-[1px]', borderColor)}>
         <NextLink href="/">
-          <EZImage src={logoSrc} className="w-10 h-10" />
+          <EZImage src={logoSrc} className="w-12 h-12" />
         </NextLink>
 
         <div className="w-1/3">
