@@ -9,6 +9,9 @@ import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
 import { EZImage, EthSymbol, Spacer, TextInputBox, ToggleTab } from 'src/components/common';
 import {
+  FEE_BPS,
+  FLOW_TOKEN,
+  ROYALTY_BPS,
   ellipsisString,
   getCartType,
   getCollectionKeyId,
@@ -18,6 +21,7 @@ import {
 } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartItem, CartType, useCartContext } from 'src/utils/context/CartContext';
+import { fetchMinXflStakeForZeroFees } from 'src/utils/orderbook-utils';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
 import {
   borderColor,
@@ -34,7 +38,6 @@ import {
 import { twMerge } from 'tailwind-merge';
 import { useAccount, useBalance, useNetwork, useProvider } from 'wagmi';
 import { UniswapModal } from '../common/uniswap-model';
-import { StakeTokensModal } from '../rewards/stake-tokens-modal';
 import { ADropdown } from './astra-dropdown';
 
 interface Props {
@@ -86,8 +89,16 @@ export const AstraCart = ({
   const [cartTitle, setCartTitle] = useState('Cart');
   const [checkoutBtnText, setCheckoutBtnText] = useState('Checkout');
   const [sendToAddress, setSendToAddress] = useState('');
+
+  const [uniswapTokenInfo, setUniswapTokenInfo] = useState({
+    title: `Buy ${FLOW_TOKEN.symbol}`,
+    name: FLOW_TOKEN.name,
+    symbol: FLOW_TOKEN.symbol,
+    address: FLOW_TOKEN.address,
+    decimals: FLOW_TOKEN.decimals,
+    logoURI: 'https://assets.coingecko.com/coins/images/30617/small/flowLogoSquare.png'
+  });
   const [showBuyTokensModal, setShowBuyTokensModal] = useState(false);
-  const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
 
   const provider = useProvider();
   const { address: user } = useAccount();
@@ -102,11 +113,75 @@ export const AstraCart = ({
   const [royalties, setRoyalties] = useState(0);
   const [netProceeds, setNetProceeds] = useState(0);
 
-  // const { stakeBalance } = useStakerContract();
-  // const [minStakeAmountForFeeWaiverAndBoost, setMinStakeAmountForFeeWaiverAndBoost] = useState(0);
-  // const [xflStaked, setXflStaked] = useState(0);
+  const setTokenInfo = (token: string) => {
+    switch (token) {
+      case 'WETH':
+        setUniswapTokenInfo({
+          title: 'Wrap ETH',
+          name: 'WETH',
+          symbol: 'WETH',
+          address: WETH_ADDRESS,
+          decimals: 18,
+          logoURI:
+            'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png'
+        });
+        break;
+      default:
+        setUniswapTokenInfo({
+          title: `Buy ${FLOW_TOKEN.symbol}`,
+          name: FLOW_TOKEN.name,
+          symbol: FLOW_TOKEN.symbol,
+          address: FLOW_TOKEN.address,
+          decimals: FLOW_TOKEN.decimals,
+          logoURI: 'https://assets.coingecko.com/coins/images/30617/small/flowLogoSquare.png'
+        });
+    }
+  };
+
+  const xflBalanceObj = useBalance({
+    address: user,
+    token: FLOW_TOKEN.address as `0x${string}`,
+    watch: false,
+    cacheTime: 5_000
+  });
+  const xflBalance = parseFloat(xflBalanceObj?.data?.formatted ?? '0');
+
+  const blurBalanceObj = useBalance({
+    address: user,
+    token: '0x5283d291dbcf85356a21ba090e6db59121208b44' as `0x${string}`,
+    watch: false,
+    cacheTime: 5_000
+  });
+  const blurBalance = parseFloat(blurBalanceObj?.data?.formatted ?? '0');
+
+  const looksBalanceObj = useBalance({
+    address: user,
+    token: '0xf4d2888d29d722226fafa5d9b24f9164c092421e' as `0x${string}`,
+    watch: false,
+    cacheTime: 5_000
+  });
+  const looksBalance = parseFloat(looksBalanceObj?.data?.formatted ?? '0');
+
+  const x2y2BalanceObj = useBalance({
+    address: user,
+    token: '0x1e4ede388cbc9f4b5c79681b7f94d36a11abebc9' as `0x${string}`,
+    watch: false,
+    cacheTime: 5_000
+  });
+  const x2y2Balance = parseFloat(x2y2BalanceObj?.data?.formatted ?? '0');
+
+  const sudoBalanceObj = useBalance({
+    address: user,
+    token: '0x3446dd70b2d52a6bf4a5a192d9b0a161295ab7f9' as `0x${string}`,
+    watch: false,
+    cacheTime: 5_000
+  });
+  const sudoBalance = parseFloat(sudoBalanceObj?.data?.formatted ?? '0');
+
+  const [minBalForFeeWaiverAndBoost, setMinBalForFeeWaiverAndBoost] = useState(0);
+  const [holderOfToken, setHolderOfToken] = useState('');
   // const [xflStakeBoost, setXflStakeBoost] = useState('0x');
-  // const [areFeesWaived, setAreFeesWaived] = useState(false);
+  const [areFeesWaived, setAreFeesWaived] = useState(false);
 
   const [tokenMap, setTokenMap] = useState<Map<string, ERC721TokenCartItem[]>>(new Map());
   const [collMap, setCollMap] = useState<Map<string, ERC721CollectionCartItem[]>>(new Map());
@@ -116,40 +191,50 @@ export const AstraCart = ({
   const [selectedTab, setSelectedTab] = useState(cartTabOptions[0]);
 
   useEffect(() => {
-    // const feeBps = areFeesWaived ? 0 : FEE_BPS;
-    // const royaltyBps = areFeesWaived ? 0 : ROYALTY_BPS;
-    // const newFees = (cartTotal * feeBps) / 10_000;
-    const newFees = 0;
-    // const newRoyalties = (cartTotal * royaltyBps) / 10_000;
-    const newRoyalties = 0;
+    const feeBps = areFeesWaived ? 0 : FEE_BPS;
+    const royaltyBps = areFeesWaived ? 0 : ROYALTY_BPS;
+    const newFees = (cartTotal * feeBps) / 10_000;
+    const newRoyalties = (cartTotal * royaltyBps) / 10_000;
     const newNetProceeds = cartTotal - newFees - newRoyalties;
 
-    // setFees(newFees);
-    setFees(0);
+    setFees(newFees);
     setRoyalties(newRoyalties);
     setNetProceeds(newNetProceeds);
   }, [cartTotal]);
 
-  // useEffect(() => {
-  //   getStakeInfo();
-  // });
+  useEffect(() => {
+    getMinBalanceInfo();
+  });
 
-  // const getStakeInfo = async () => {
-  //   const minStakeAmount =
-  //     minStakeAmountForFeeWaiverAndBoost === 0
-  //       ? await fetchMinXflStakeForZeroFees()
-  //       : minStakeAmountForFeeWaiverAndBoost;
-  //   setMinStakeAmountForFeeWaiverAndBoost(minStakeAmount);
+  const getMinBalanceInfo = async () => {
+    const minBal = minBalForFeeWaiverAndBoost === 0 ? await fetchMinXflStakeForZeroFees() : minBalForFeeWaiverAndBoost;
+    setMinBalForFeeWaiverAndBoost(minBal);
 
-  //   const xflStaked = parseFloat((await stakeBalance()) ?? '0');
-  //   setXflStaked(xflStaked);
+    // const boost = xflStaked >= minStakeAmount ? 2 : 0;
+    // setXflStakeBoost(boost + 'x');
 
-  //   // const boost = xflStaked >= minStakeAmount ? 2 : 0;
-  //   // setXflStakeBoost(boost + 'x');
+    const feesWaived =
+      xflBalance >= minBal ||
+      blurBalance >= minBal ||
+      looksBalance >= minBal ||
+      x2y2Balance >= minBal ||
+      sudoBalance >= minBal;
+    setAreFeesWaived(feesWaived);
 
-  //   const feesWaived = xflStaked >= minStakeAmount;
-  //   setAreFeesWaived(feesWaived);
-  // };
+    const holder =
+      xflBalance >= minBal
+        ? FLOW_TOKEN.symbol
+        : blurBalance >= minBal
+        ? 'BLUR'
+        : looksBalance >= minBal
+        ? 'LOOKS'
+        : x2y2Balance >= minBal
+        ? 'X2Y2'
+        : sudoBalance >= minBal
+        ? 'SUDO'
+        : '';
+    setHolderOfToken(holder);
+  };
 
   // future-todo change when supporting more chains
   const WETH_ADDRESS =
@@ -520,52 +605,39 @@ export const AstraCart = ({
                         <div className="font-heading">{xflStakeBoost}</div>
                       </div> */}
 
-                      {/* <div className={twMerge('flex')}>
+                      <div className={twMerge('flex')}>
                         {areFeesWaived ? (
                           // <div className={twMerge(secondaryTextColor, 'mt-2')}>
                           //   You are maximizing your net proceeds and will earn {xflStakeBoost} rewards. Buyer of your
                           //   listing will save upto 40% on gas fees.
                           // </div>
                           <div className={twMerge(secondaryTextColor, 'mt-2')}>
-                            You are maximizing your net proceeds. Buyer of your listing will save upto 40% on gas fees.
+                            You are maximizing your net proceeds for holding {nFormatter(minBalForFeeWaiverAndBoost)} $
+                            {holderOfToken} tokens. Buyers of your{' '}
+                            {currentCartItems.length > 1 ? 'listings ' : 'listing '} will save upto 40% on gas fees.
                           </div>
                         ) : (
                           <div className="flex mt-2">
-                            {/* <div className={twMerge(secondaryTextColor)}>
-                              Pay zero royalties and earn 2x rewards when you stake{' '}
-                              {nFormatter(minStakeAmountForFeeWaiverAndBoost)} or more ${FLOW_TOKEN.symbol}. Buyer of
-                              your {currentCartItems.length > 1 ? 'listings ' : 'listing '}
-                              will also benefit by saving upto 40% on gas fees when you stake ${FLOW_TOKEN.symbol} and
-                              {currentCartItems.length > 1 ? 'they ' : 'it '}
-                              will be shown first, before other similarly priced listings.
-                              <span
-                                className={twMerge('underline cursor-pointer ml-[2px]', brandTextColor)}
-                                onClick={() => {
-                                  setShowStakeTokensModal(true);
-                                }}
-                              >
-                                Stake
-                              </span>
-                            </div>
                             <div className={twMerge(secondaryTextColor)}>
-                              Pay zero royalties when you stake {nFormatter(minStakeAmountForFeeWaiverAndBoost)} or more
-                              ${FLOW_TOKEN.symbol}. Buyer of your{' '}
-                              {currentCartItems.length > 1 ? 'listings ' : 'listing '}
-                              will also benefit by saving upto 40% on gas fees when you stake ${FLOW_TOKEN.symbol} and
-                              {currentCartItems.length > 1 ? ' they ' : ' it '} will be shown first, before other
-                              similarly priced listings.
+                              Pay zero fees & royalties when you hold {nFormatter(minBalForFeeWaiverAndBoost)} or more
+                              of any of these tokens: ${FLOW_TOKEN.symbol}, $BLUR, $LOOKS, $X2Y2, $SUDO. If you are a
+                              holder, buyers of your {currentCartItems.length > 1 ? 'listings ' : 'listing '}
+                              will benefit by saving upto 40% on gas fees. Your
+                              {currentCartItems.length > 1 ? ' listings ' : ' listing '} will also be shown first,
+                              before other similarly priced listings.
                               <span
                                 className={twMerge('underline cursor-pointer ml-[2px]', brandTextColor)}
                                 onClick={() => {
-                                  setShowStakeTokensModal(true);
+                                  setTokenInfo(FLOW_TOKEN.symbol);
+                                  setShowBuyTokensModal(true);
                                 }}
                               >
-                                Stake
+                                Buy
                               </span>
                             </div>
                           </div>
                         )}
-                      </div> */}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -602,6 +674,7 @@ export const AstraCart = ({
                           <AButton
                             className={twMerge('rounded-md text-xs ml-2', secondaryBtnBgColorText)}
                             onClick={() => {
+                              setTokenInfo('WETH');
                               setShowBuyTokensModal(true);
                             }}
                           >
@@ -657,24 +730,16 @@ export const AstraCart = ({
         </AButton>
       </div>
 
-      {showStakeTokensModal && (
-        <StakeTokensModal
-          onClose={() => {
-            setShowStakeTokensModal(false);
-          }}
-        />
-      )}
-
       {showBuyTokensModal && (
         <UniswapModal
           onClose={() => setShowBuyTokensModal(false)}
-          title={'Wrap ETH'}
+          title={uniswapTokenInfo.title}
           chainId={Number(chainId)}
-          tokenAddress={WETH_ADDRESS}
-          tokenName="WETH"
-          tokenDecimals={18}
-          tokenSymbol="WETH"
-          tokenLogoURI="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+          tokenAddress={uniswapTokenInfo.address}
+          tokenName={uniswapTokenInfo.name}
+          tokenDecimals={uniswapTokenInfo.decimals}
+          tokenSymbol={uniswapTokenInfo.symbol}
+          tokenLogoURI={uniswapTokenInfo.logoURI}
         />
       )}
     </div>

@@ -1,16 +1,22 @@
+import { DistributionType } from '@infinityxyz/lib-frontend/types/core';
+import { UserCumulativeRewardsDto } from '@infinityxyz/lib-frontend/types/dto';
 import { ethers } from 'ethers';
+import { useTheme } from 'next-themes';
 import React, { useEffect, useState } from 'react';
-import { Button, CenteredContent, ConnectButton, Spacer } from 'src/components/common';
+import { CenteredContent, ConnectButton, Spacer, toastError, toastSuccess } from 'src/components/common';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens-modal';
 import { useUserRewards } from 'src/hooks/api/useUserRewards';
+import { useClaim } from 'src/hooks/contract/cm-distributor/claim';
 import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 import { nFormatter } from 'src/utils';
 import { FLOW_TOKEN } from 'src/utils/constants';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { fetchMinXflStakeForZeroFees } from 'src/utils/orderbook-utils';
 import { buttonBorderColor, primaryShadow, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useAccount, useBalance, useNetwork } from 'wagmi';
+import { AButton } from '../astra/astra-button';
 import { UniswapModal } from '../common/uniswap-model';
 
 interface RewardsSectionProps {
@@ -44,6 +50,16 @@ const MyRewards = () => {
   const { chain } = useNetwork();
   const chainId = String(chain?.id);
 
+  const { theme } = useTheme();
+  const darkMode = theme === 'dark';
+
+  const [uniswapTokenInfo, setUniswapTokenInfo] = useState({
+    name: FLOW_TOKEN.name,
+    symbol: FLOW_TOKEN.symbol,
+    address: FLOW_TOKEN.address,
+    decimals: FLOW_TOKEN.decimals,
+    logoURI: 'https://assets.coingecko.com/coins/images/30617/small/flowLogoSquare.png'
+  });
   const [showBuyTokensModal, setShowBuyTokensModal] = useState(false);
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
@@ -51,6 +67,11 @@ const MyRewards = () => {
   const { result: userRewards } = useUserRewards();
   const cumulativeAmountWei = userRewards?.totals?.totalRewards?.claim?.cumulativeAmount ?? '0';
   const cumulativeAmount = parseFloat(ethers.utils.formatEther(cumulativeAmountWei));
+  const claimableAmountWei = userRewards?.totals?.totalRewards?.claim?.claimableWei ?? '0';
+  const claimableAmount = userRewards?.totals?.totalRewards?.claim?.claimableEth ?? 0;
+  const claimedAmount = userRewards?.totals?.totalRewards?.claim?.claimedEth ?? 0;
+  const merkleRoot = userRewards?.totals?.totalRewards?.claim?.merkleRoot;
+  const merkleProof = userRewards?.totals?.totalRewards?.claim?.merkleProof;
 
   const { stakeBalance } = useStakerContract();
   const [minStakeAmountForFeeWaiverAndBoost, setMinStakeAmountForFeeWaiverAndBoost] = useState(0);
@@ -64,6 +85,38 @@ const MyRewards = () => {
     cacheTime: 5_000
   });
   const xflBalance = parseFloat(xflBalanceObj?.data?.formatted ?? '0');
+
+  const blurBalanceObj = useBalance({
+    address,
+    token: '0x5283d291dbcf85356a21ba090e6db59121208b44' as `0x${string}`,
+    watch: false,
+    cacheTime: 5_000
+  });
+  const blurBalance = parseFloat(blurBalanceObj?.data?.formatted ?? '0');
+
+  const looksBalanceObj = useBalance({
+    address,
+    token: '0xf4d2888d29d722226fafa5d9b24f9164c092421e' as `0x${string}`,
+    watch: false,
+    cacheTime: 5_000
+  });
+  const looksBalance = parseFloat(looksBalanceObj?.data?.formatted ?? '0');
+
+  const x2y2BalanceObj = useBalance({
+    address,
+    token: '0x1e4ede388cbc9f4b5c79681b7f94d36a11abebc9' as `0x${string}`,
+    watch: false,
+    cacheTime: 5_000
+  });
+  const x2y2Balance = parseFloat(x2y2BalanceObj?.data?.formatted ?? '0');
+
+  const sudoBalanceObj = useBalance({
+    address,
+    token: '0x3446dd70b2d52a6bf4a5a192d9b0a161295ab7f9' as `0x${string}`,
+    watch: false,
+    cacheTime: 5_000
+  });
+  const sudoBalance = parseFloat(sudoBalanceObj?.data?.formatted ?? '0');
 
   useEffect(() => {
     getStakeInfo();
@@ -83,25 +136,26 @@ const MyRewards = () => {
     // setXflStakeBoost(boost + 'x');
   };
 
-  // const { claim } = useClaim();
-  // const { setTxnHash } = useAppContext();
+  const { claim } = useClaim();
+  const { setTxnHash } = useAppContext();
 
-  // const onClaim = async (type: DistributionType, props?: UserCumulativeRewardsDto) => {
-  //   if (!props || !props.claimableWei || props.claimableWei === '0') {
-  //     throw new Error('Nothing to claim');
-  //   }
+  const doClaim = async (type: DistributionType, props?: UserCumulativeRewardsDto) => {
+    const claimableWei = props?.claimableWei || claimableAmountWei || '0';
+    if (claimableWei === '0') {
+      toastError('Nothing to claim', darkMode);
+      return;
+    }
 
-  //   const { hash } = await claim({
-  //     type,
-  //     account: props.account,
-  //     cumulativeAmount: props.cumulativeAmount,
-  //     merkleRoot: props.merkleRoot,
-  //     merkleProof: props.merkleProof,
-  //     contractAddress: props.contractAddress
-  //   });
-  //   toastSuccess('Sent txn to chain for execution');
-  //   setTxnHash(hash);
-  // };
+    const { hash } = await claim({
+      type,
+      account: props?.account ?? address ?? '',
+      cumulativeAmount: props?.cumulativeAmount ?? cumulativeAmountWei,
+      merkleRoot: props?.merkleRoot ?? merkleRoot ?? '',
+      merkleProof: props?.merkleProof ?? merkleProof ?? []
+    });
+    toastSuccess('Transaction submitted', darkMode);
+    setTxnHash(hash);
+  };
 
   if (!address) {
     return (
@@ -111,51 +165,173 @@ const MyRewards = () => {
     );
   }
 
+  const setTokenInfo = (token: string) => {
+    switch (token) {
+      case 'XFL':
+        setUniswapTokenInfo({
+          name: FLOW_TOKEN.name,
+          symbol: FLOW_TOKEN.symbol,
+          address: FLOW_TOKEN.address,
+          decimals: FLOW_TOKEN.decimals,
+          logoURI: 'https://assets.coingecko.com/coins/images/30617/small/flowLogoSquare.png'
+        });
+        break;
+      case 'BLUR':
+        setUniswapTokenInfo({
+          name: 'Blur',
+          symbol: 'BLUR',
+          address: '0x5283d291dbcf85356a21ba090e6db59121208b44',
+          decimals: 18,
+          logoURI: 'https://assets.coingecko.com/coins/images/28453/small/blur.png'
+        });
+        break;
+      case 'LOOKS':
+        setUniswapTokenInfo({
+          name: 'Looksrare',
+          symbol: 'LOOKS',
+          address: '0xf4d2888d29d722226fafa5d9b24f9164c092421e',
+          decimals: 18,
+          logoURI: 'https://assets.coingecko.com/coins/images/22173/small/circle-black-256.png'
+        });
+        break;
+      case 'X2Y2':
+        setUniswapTokenInfo({
+          name: 'X2Y2',
+          symbol: 'X2Y2',
+          address: '0x1e4ede388cbc9f4b5c79681b7f94d36a11abebc9',
+          decimals: 18,
+          logoURI: 'https://assets.coingecko.com/coins/images/23633/small/logo-60b81ff87b40b11739105acf5ad1e075.png'
+        });
+        break;
+      case 'SUDO':
+        setUniswapTokenInfo({
+          name: 'SUDO',
+          symbol: 'SUDO',
+          address: '0x3446dd70b2d52a6bf4a5a192d9b0a161295ab7f9',
+          decimals: 18,
+          logoURI: 'https://assets.coingecko.com/coins/images/27151/small/sudo.png'
+        });
+        break;
+      default:
+        setUniswapTokenInfo({
+          name: FLOW_TOKEN.name,
+          symbol: FLOW_TOKEN.symbol,
+          address: FLOW_TOKEN.address,
+          decimals: FLOW_TOKEN.decimals,
+          logoURI: 'https://assets.coingecko.com/coins/images/30617/small/flowLogoSquare.png'
+        });
+    }
+  };
+
   return (
     <div className="space-y-10 mt-6 pb-6 mb-16 mr-4">
       <RewardsSection
-        title="Token Balance"
-        subTitle={`Token balances.`}
-        // subTitle={`Stake $${FLOW_TOKEN.symbol} for royalty waivers, priority support from core team and early/gated access to cool stuff. Staked tokens are locked until the end of each reward season to prevent abuse.`}
+        title="Token Balances"
+        subTitle={`Balances of the top NFT exchange tokens.`}
         sideInfo={
           <div className={twMerge(buttonBorderColor, primaryShadow, 'border py-4 px-6')}>
-            <div>${FLOW_TOKEN.symbol}</div>
-            <div className="flex flex-wrap mt-4">
-              <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{nFormatter(xflBalance, 2)}</div>
-                <div className="text-sm mt-1">Wallet</div>
+            <div className="flex flex-wrap">
+              <div className="lg:w-1/6 sm:w-full space-y-1 flex flex-col">
+                <div>${FLOW_TOKEN.symbol}</div>
+                <div className="text-lg font-heading font-bold">{nFormatter(xflBalance, 2)}</div>
+                <div
+                  className="underline text-sm cursor-pointer"
+                  onClick={() => {
+                    setTokenInfo(FLOW_TOKEN.symbol);
+                    setShowBuyTokensModal(true);
+                  }}
+                >
+                  Buy ${FLOW_TOKEN.symbol}
+                </div>
               </div>
               <Spacer />
+
+              <div className="lg:w-1/6 sm:w-full space-y-1 flex flex-col">
+                <div>$BLUR</div>
+                <div className="text-lg font-heading font-bold">{nFormatter(blurBalance, 2)}</div>
+                <div
+                  className="underline text-sm cursor-pointer"
+                  onClick={() => {
+                    setTokenInfo('BLUR');
+                    setShowBuyTokensModal(true);
+                  }}
+                >
+                  Buy $BLUR
+                </div>
+              </div>
+              <Spacer />
+
+              <div className="lg:w-1/6 sm:w-full space-y-1 flex flex-col">
+                <div>$LOOKS</div>
+                <div className="text-lg font-heading font-bold">{nFormatter(looksBalance, 2)}</div>
+                <div
+                  className="underline text-sm cursor-pointer"
+                  onClick={() => {
+                    setTokenInfo('LOOKS');
+                    setShowBuyTokensModal(true);
+                  }}
+                >
+                  Buy $LOOKS
+                </div>
+              </div>
+              <Spacer />
+
+              <div className="lg:w-1/6 sm:w-full space-y-1 flex flex-col">
+                <div>$X2Y2</div>
+                <div className="text-lg font-heading font-bold">{nFormatter(x2y2Balance, 2)}</div>
+                <div
+                  className="underline text-sm cursor-pointer"
+                  onClick={() => {
+                    setTokenInfo('X2Y2');
+                    setShowBuyTokensModal(true);
+                  }}
+                >
+                  Buy $X2Y2
+                </div>
+              </div>
+              <Spacer />
+
+              <div className="lg:w-1/6 sm:w-full space-y-1 flex flex-col">
+                <div>$SUDO</div>
+                <div className="text-lg font-heading font-bold">{nFormatter(sudoBalance, 2)}</div>
+                <div
+                  className="underline text-sm cursor-pointer"
+                  onClick={() => {
+                    setTokenInfo('SUDO');
+                    setShowBuyTokensModal(true);
+                  }}
+                >
+                  Buy $SUDO
+                </div>
+              </div>
+              <Spacer />
+
               {xflStaked > 0 && (
                 <>
-                  <div className="lg:w-1/4 sm:w-full">
+                  <div className="lg:w-1/6 sm:w-full">
                     <div className="text-2xl font-heading font-bold">{nFormatter(xflStaked, 2)}</div>
                     <div className="text-sm mt-1">Staked</div>
                   </div>
                   <Spacer />
                 </>
               )}
+
               {/* <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{xflStakeBoost}</div>
+                <div className="text-2xl font-heading font-bold">{1}</div>
                 <div className="text-sm mt-1">Rewards boost</div>
               </div>
               <Spacer /> */}
-              <div className="lg:w-1/4 sm:w-full"></div>
-              <Spacer />
             </div>
-            <div className="w-full flex mt-4 items-center flex-wrap space-x-3">
-              {/* <Button size="large" variant="outline" onClick={() => setShowBuyTokensModal(true)}>
-                Buy ${FLOW_TOKEN.symbol}
-              </Button> */}
 
-              {/* <Button size="large" variant="outline" onClick={() => setShowStakeTokensModal(true)}>
+            <div className="w-full flex mt-4 items-center flex-wrap space-x-3">
+              {/* <AButton primary onClick={() => setShowStakeTokensModal(true)}>
                 Stake
-              </Button>*/}
+              </AButton> */}
 
               {xflStaked > 0 && (
-                <Button size="large" variant="outline" onClick={() => setShowUnstakeTokensModal(true)}>
+                <AButton primary onClick={() => setShowUnstakeTokensModal(true)}>
                   Unstake
-                </Button>
+                </AButton>
               )}
               {/* <div className={twMerge(secondaryTextColor, 'ml-2 text-xs')}>
                 Unstake available on Nov 3rd 2023 00:00 UTC)
@@ -173,22 +349,34 @@ const MyRewards = () => {
             <div className={twMerge(buttonBorderColor, primaryShadow, 'border py-4 px-6')}>
               <div>${FLOW_TOKEN.symbol}</div>
               <div className="flex flex-wrap mt-4">
-                <div className="lg:w-1/4 sm:w-full">
+                <div className="lg:w-1/3 sm:w-full">
                   <div className="text-2xl font-heading font-bold">{nFormatter(cumulativeAmount, 2)}</div>
                   <div className="text-sm mt-1">Earned</div>
                 </div>
                 <Spacer />
-                <div className="lg:w-1/4 sm:w-full"></div>
+
+                <div className="lg:w-1/3 sm:w-full">
+                  <div className="text-2xl font-heading font-bold">{nFormatter(claimedAmount, 2)}</div>
+                  <div className="text-sm mt-1">Claimed</div>
+                </div>
+                <Spacer />
+
+                <div className="lg:w-1/3 sm:w-full">
+                  <div className="text-2xl font-heading font-bold">{nFormatter(claimableAmount, 2)}</div>
+                  <div className="text-sm mt-1">Claimable</div>
+                </div>
                 <Spacer />
               </div>
 
               <div className={twMerge('w-full flex mt-2 text-xs', secondaryTextColor)}>Claim coming soon.</div>
 
-              {/* <div className="w-full flex mt-4 items-center flex-wrap space-x-3">
-                <Button size="large" variant="outline" onClick={() => setShowUnstakeTokensModal(true)}>
-                  Claim
-                </Button>
-              </div> */}
+              {claimableAmountWei !== '0' && (
+                <div className="w-full flex mt-4 items-center flex-wrap space-x-3">
+                  <AButton primary onClick={() => doClaim(DistributionType.XFL)}>
+                    Claim
+                  </AButton>
+                </div>
+              )}
             </div>
           }
         ></RewardsSection>
@@ -199,13 +387,13 @@ const MyRewards = () => {
       {showBuyTokensModal && (
         <UniswapModal
           onClose={() => setShowBuyTokensModal(false)}
-          title={'Buy XFL'}
+          title={`Buy ${uniswapTokenInfo.symbol}`}
           chainId={Number(chainId)}
-          tokenAddress={FLOW_TOKEN.address}
-          tokenName={FLOW_TOKEN.name}
-          tokenDecimals={FLOW_TOKEN.decimals}
-          tokenSymbol={FLOW_TOKEN.symbol}
-          tokenLogoURI="https://pbs.twimg.com/profile_images/1640378608492371969/Vkm_Wevj_400x400.jpg"
+          tokenAddress={uniswapTokenInfo.address}
+          tokenName={uniswapTokenInfo.name}
+          tokenDecimals={uniswapTokenInfo.decimals}
+          tokenSymbol={uniswapTokenInfo.symbol}
+          tokenLogoURI={uniswapTokenInfo.logoURI}
         />
       )}
       {showStakeTokensModal && (
