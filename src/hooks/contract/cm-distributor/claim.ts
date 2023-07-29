@@ -12,7 +12,6 @@ export interface ClaimProps {
   cumulativeAmount: string;
   merkleRoot: string;
   merkleProof: string[];
-  contractAddress: string;
 }
 
 export const useClaim = () => {
@@ -23,9 +22,6 @@ export const useClaim = () => {
   const contractAddress = getCmDistributorAddress(chainId, ENV);
   const contract = useContract(contractAddress, FlowCmDistributorABI);
   const claim = async (data: ClaimProps) => {
-    if (data.contractAddress !== contract.address) {
-      throw new Error('Contract address does not match');
-    }
     const { type, account, cumulativeAmount, merkleRoot, merkleProof } = data;
     let txn: { hash?: string };
     if (type === DistributionType.ETH) {
@@ -34,8 +30,8 @@ export const useClaim = () => {
       const flurTokenAddress = getFlurTokenAddress();
       txn = await contract?.claimErc20(flurTokenAddress, account, cumulativeAmount, merkleRoot, merkleProof);
     } else {
-      const flowTokenAddress = getTokenAddress(chainId);
-      txn = await contract?.claimErc20(flowTokenAddress, account, cumulativeAmount, merkleRoot, merkleProof);
+      const tokenAddress = getTokenAddress(chainId);
+      txn = await contract?.claimErc20(tokenAddress, account, cumulativeAmount, merkleRoot, merkleProof);
     }
 
     return {

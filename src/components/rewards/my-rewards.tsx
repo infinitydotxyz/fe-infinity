@@ -1,16 +1,22 @@
+import { DistributionType } from '@infinityxyz/lib-frontend/types/core';
+import { UserCumulativeRewardsDto } from '@infinityxyz/lib-frontend/types/dto';
 import { ethers } from 'ethers';
+import { useTheme } from 'next-themes';
 import React, { useEffect, useState } from 'react';
-import { Button, CenteredContent, ConnectButton, Spacer } from 'src/components/common';
+import { Button, CenteredContent, ConnectButton, Spacer, toastError, toastSuccess } from 'src/components/common';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens-modal';
 import { useUserRewards } from 'src/hooks/api/useUserRewards';
+import { useClaim } from 'src/hooks/contract/cm-distributor/claim';
 import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 import { nFormatter } from 'src/utils';
 import { FLOW_TOKEN } from 'src/utils/constants';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { fetchMinXflStakeForZeroFees } from 'src/utils/orderbook-utils';
 import { buttonBorderColor, primaryShadow, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useAccount, useBalance, useNetwork } from 'wagmi';
+import { AButton } from '../astra/astra-button';
 import { UniswapModal } from '../common/uniswap-model';
 
 interface RewardsSectionProps {
@@ -44,6 +50,9 @@ const MyRewards = () => {
   const { chain } = useNetwork();
   const chainId = String(chain?.id);
 
+  const { theme } = useTheme();
+  const darkMode = theme === 'dark';
+
   const [showBuyTokensModal, setShowBuyTokensModal] = useState(false);
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
@@ -51,6 +60,11 @@ const MyRewards = () => {
   const { result: userRewards } = useUserRewards();
   const cumulativeAmountWei = userRewards?.totals?.totalRewards?.claim?.cumulativeAmount ?? '0';
   const cumulativeAmount = parseFloat(ethers.utils.formatEther(cumulativeAmountWei));
+  const claimableAmountWei = userRewards?.totals?.totalRewards?.claim?.claimableWei ?? '0';
+  const claimableAmount = userRewards?.totals?.totalRewards?.claim?.claimableEth ?? 0;
+  const claimedAmount = userRewards?.totals?.totalRewards?.claim?.claimedEth ?? 0;
+  const merkleRoot = userRewards?.totals?.totalRewards?.claim?.merkleRoot;
+  const merkleProof = userRewards?.totals?.totalRewards?.claim?.merkleProof;
 
   const { stakeBalance } = useStakerContract();
   const [minStakeAmountForFeeWaiverAndBoost, setMinStakeAmountForFeeWaiverAndBoost] = useState(0);
@@ -83,25 +97,26 @@ const MyRewards = () => {
     // setXflStakeBoost(boost + 'x');
   };
 
-  // const { claim } = useClaim();
-  // const { setTxnHash } = useAppContext();
+  const { claim } = useClaim();
+  const { setTxnHash } = useAppContext();
 
-  // const onClaim = async (type: DistributionType, props?: UserCumulativeRewardsDto) => {
-  //   if (!props || !props.claimableWei || props.claimableWei === '0') {
-  //     throw new Error('Nothing to claim');
-  //   }
+  const doClaim = async (type: DistributionType, props?: UserCumulativeRewardsDto) => {
+    const claimableWei = props?.claimableWei || claimableAmountWei || '0';
+    if (claimableWei === '0') {
+      toastError('Nothing to claim', darkMode);
+      return;
+    }
 
-  //   const { hash } = await claim({
-  //     type,
-  //     account: props.account,
-  //     cumulativeAmount: props.cumulativeAmount,
-  //     merkleRoot: props.merkleRoot,
-  //     merkleProof: props.merkleProof,
-  //     contractAddress: props.contractAddress
-  //   });
-  //   toastSuccess('Sent txn to chain for execution');
-  //   setTxnHash(hash);
-  // };
+    const { hash } = await claim({
+      type,
+      account: props?.account ?? address ?? '',
+      cumulativeAmount: props?.cumulativeAmount ?? cumulativeAmountWei,
+      merkleRoot: props?.merkleRoot ?? merkleRoot ?? '',
+      merkleProof: props?.merkleProof ?? merkleProof ?? []
+    });
+    toastSuccess('Transaction submitted', darkMode);
+    setTxnHash(hash);
+  };
 
   if (!address) {
     return (
@@ -173,22 +188,34 @@ const MyRewards = () => {
             <div className={twMerge(buttonBorderColor, primaryShadow, 'border py-4 px-6')}>
               <div>${FLOW_TOKEN.symbol}</div>
               <div className="flex flex-wrap mt-4">
-                <div className="lg:w-1/4 sm:w-full">
+                <div className="lg:w-1/3 sm:w-full">
                   <div className="text-2xl font-heading font-bold">{nFormatter(cumulativeAmount, 2)}</div>
                   <div className="text-sm mt-1">Earned</div>
                 </div>
                 <Spacer />
-                <div className="lg:w-1/4 sm:w-full"></div>
+
+                <div className="lg:w-1/3 sm:w-full">
+                  <div className="text-2xl font-heading font-bold">{nFormatter(claimedAmount, 2)}</div>
+                  <div className="text-sm mt-1">Claimed</div>
+                </div>
+                <Spacer />
+
+                <div className="lg:w-1/3 sm:w-full">
+                  <div className="text-2xl font-heading font-bold">{nFormatter(claimableAmount, 2)}</div>
+                  <div className="text-sm mt-1">Claimable</div>
+                </div>
                 <Spacer />
               </div>
 
               <div className={twMerge('w-full flex mt-2 text-xs', secondaryTextColor)}>Claim coming soon.</div>
 
-              {/* <div className="w-full flex mt-4 items-center flex-wrap space-x-3">
-                <Button size="large" variant="outline" onClick={() => setShowUnstakeTokensModal(true)}>
-                  Claim
-                </Button>
-              </div> */}
+              {claimableAmountWei !== '0' && (
+                <div className="w-full flex mt-4 items-center flex-wrap space-x-3">
+                  <AButton primary onClick={() => doClaim(DistributionType.XFL)}>
+                    Claim
+                  </AButton>
+                </div>
+              )}
             </div>
           }
         ></RewardsSection>
