@@ -139,7 +139,6 @@ const MyRewards = () => {
   const { claim } = useClaim();
   const { setTxnHash } = useAppContext();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const doClaim = async (type: DistributionType, props?: UserCumulativeRewardsDto) => {
     const claimableWei = props?.claimableWei || claimableAmountWei || '0';
     if (claimableWei === '0') {
@@ -371,13 +370,13 @@ const MyRewards = () => {
 
               <div className={twMerge('w-full flex mt-2 text-xs', secondaryTextColor)}>Claim coming soon.</div>
 
-              {/* {claimableAmountWei !== '0' && (
+              {claimableAmountWei !== '0' && (
                 <div className="w-full flex mt-4 items-center flex-wrap space-x-3">
                   <AButton primary onClick={() => doClaim(DistributionType.XFL)}>
                     Claim
                   </AButton>
                 </div>
-              )} */}
+              )}
             </div>
           }
         ></RewardsSection>

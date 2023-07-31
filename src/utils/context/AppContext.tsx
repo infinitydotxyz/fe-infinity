@@ -4,6 +4,7 @@ import { ChainId, ChainNFTs } from '@infinityxyz/lib-frontend/types/core';
 import { ETHEREUM_WETH_ADDRESS, getExchangeAddress, trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { adaptEthersSigner } from '@reservoir0x/ethers-wallet-adapter';
 import { Execute } from '@reservoir0x/reservoir-sdk';
+import { switchNetwork } from '@wagmi/core';
 import { Contract, ethers } from 'ethers';
 import { useTheme } from 'next-themes';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
@@ -113,6 +114,14 @@ interface Props {
 
 export const AppContextProvider = ({ children }: Props) => {
   const { selectedChain, setSelectedChain, isWalletNetworkSupported } = useChain();
+  if (!isWalletNetworkSupported) {
+    switchNetwork({
+      chainId: 1
+    }).catch((err) => {
+      console.error('failed to switch network', err);
+    });
+  }
+
   const [showCart, setShowCart] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [selectedProfileTab, setSelectedProfileTab] = useState(ProfileTabs.Items.toString());
@@ -127,6 +136,7 @@ export const AppContextProvider = ({ children }: Props) => {
   const provider = useProvider();
   const { chain } = useNetwork();
   const chainId = String(chain?.id);
+
   const { address: user } = useAccount();
   const { cartType } = useCartContext();
   const { stakeBalance } = useStakerContract();
