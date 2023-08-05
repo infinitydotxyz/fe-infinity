@@ -13,12 +13,25 @@ import punk from '../src/images/punk.png';
 import remilia from '../src/images/remilia.png';
 import tailwindConfig from '../src/settings/tailwind/elements/foundations';
 import NonSsrWrapper from 'src/components/astra/non-ssr-wrapper';
+import lightLogo from 'src/images/light-logo.png';
+import darkLogo from 'src/images/dark-logo.png';
+import { useEffect, useState } from 'react';
 
 const HomePage = () => {
   const theme = useTheme();
   const darkMode = theme.theme === 'dark';
   const themeToUse = tailwindConfig.colors[darkMode ? 'dark' : 'light'];
   const router = useRouter();
+
+  const [logoSrc, setLogoSrc] = useState(darkLogo.src);
+
+  useEffect(() => {
+    if (theme.theme === 'dark') {
+      setLogoSrc(darkLogo.src);
+    } else {
+      setLogoSrc(lightLogo.src);
+    }
+  }, [theme]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const classes: any = {
@@ -39,25 +52,10 @@ const HomePage = () => {
       backgroundColor: themeToUse.bg,
       position: 'absolute'
     },
-    heading: {
-      whiteSpace: 'pre',
-      WebkitFilter: 'blur(5px)',
-      filter: 'blur(5px)',
-      fontWeight: 400,
-      fontStyle: 'normal',
-      fontFamily: `"RubikMonoOne"`,
-      color: themeToUse.body,
-      fontSize: 120,
-      letterSpacing: '0em',
-      lineHeight: 1.2
-    },
     subheading: {
       whiteSpace: 'wrap',
       WebkitFilter: 'blur(1px)',
       filter: 'blur(1px)',
-      fontWeight: 400,
-      fontStyle: 'normal',
-      fontFamily: `"RubikMonoOne"`,
       color: themeToUse.body,
       fontSize: 40,
       letterSpacing: '0em',
@@ -85,7 +83,7 @@ const HomePage = () => {
     <NonSsrWrapper>
       <div style={classes.background} className="scrollbar-hide">
         <div className="flex flex-col items-center justify-center" style={classes.contrast}>
-          <div style={classes.heading}>PIXL</div>
+          <EZImage src={logoSrc} className="w-40 h-40" />
 
           <div className="w-1/2" style={classes.frame}>
             <Ticker duration={20} direction={1}>
@@ -105,11 +103,13 @@ const HomePage = () => {
           </div>
 
           <div className="flex flex-col w-1/2 space-y-4 pb-60">
-            <div style={classes.subheading}>THE LAST AGGREGATOR</div>
+            <div style={classes.subheading} className="font-heading">
+              THE LAST AGGREGATOR
+            </div>
             <div style={classes.body}>
               <ul className="space-y-2 list-disc">
                 <li>Listings from over 100 NFT marketplaces for instant buys.</li>
-                <li>Aggregated bid liquidity from over 100 marketplaces for instant sells.</li>
+                <li>Bids from over 100 marketplaces for instant sells.</li>
                 <li>Zero fees & royalties for all NFT marketplace token holders: $XFL, $BLUR, $LOOKS, $X2Y2, $SUDO.</li>
                 <li>Gas free batch listings, bids & cancellations.</li>
                 <li>Built on battle tested infra & audited contracts.</li>
@@ -126,13 +126,15 @@ const HomePage = () => {
             </AButton>
 
             <div className="h-2"></div>
-            <div style={classes.subheading}>More soon</div>
+            <div style={classes.subheading} className="font-heading">
+              More soon
+            </div>
             <div style={classes.body}>
               <ul className="space-y-2 list-disc">
                 <li>Referrals.</li>
                 <li>Token incentives.</li>
                 <li>Multichain.</li>
-                <li>L2 (rollup) built for NFTs.</li>
+                <li>L2 built for NFTs.</li>
                 <li>&lt;redacted&gt;.</li>
               </ul>
             </div>
