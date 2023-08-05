@@ -1,13 +1,13 @@
+import { useTheme } from 'next-themes';
 import { ReactNode, useRef } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
 import { AstraCart } from 'src/components/astra/astra-cart';
 import { Grid } from 'src/components/astra/grid';
 import { useAppContext } from 'src/utils/context/AppContext';
-import Dock from 'src/utils/context/Dock';
 import { toastError } from '../common';
 import { ANavbar } from './astra-navbar';
 import NonSsrWrapper from './non-ssr-wrapper';
-import { useTheme } from 'next-themes';
+import { SidebarNav } from './sidebar-nav';
 
 interface Props {
   children: ReactNode;
@@ -87,13 +87,7 @@ export const Layout = ({ children }: Props) => {
     </NonSsrWrapper>
   );
 
-  const dock = (
-    <NonSsrWrapper>
-      <Dock />
-    </NonSsrWrapper>
-  );
-
   const footer = <></>;
 
-  return Grid(<ANavbar />, <>{children}</>, cart, footer, dock, gridRef, containerRef);
+  return Grid(<ANavbar />, <SidebarNav />, <>{children}</>, cart, footer, gridRef, containerRef);
 };
