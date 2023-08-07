@@ -85,7 +85,7 @@ const HomePage = () => {
         <div className="flex flex-col items-center justify-center" style={classes.contrast}>
           <EZImage src={logoSrc} className="w-40 h-40" />
 
-          <div className="w-1/2" style={classes.frame}>
+          <div className="w-1/2">
             <Ticker duration={20} direction={1}>
               {images.map((image, index) => (
                 <div
@@ -107,10 +107,10 @@ const HomePage = () => {
               THE LAST AGGREGATOR
             </div>
             <div style={classes.body}>
-              <ul className="space-y-2 list-disc">
+              <ul className="space-y-2 list-inside list-disc">
                 <li>Listings from over 100 NFT marketplaces for instant buys.</li>
                 <li>Bids from over 100 marketplaces for instant sells.</li>
-                <li>Zero fees & royalties for all NFT marketplace token holders: $XFL, $BLUR, $LOOKS, $X2Y2, $SUDO.</li>
+                <li>Zero fees & royalties for token holders of $XFL, $BLUR, $LOOKS, $X2Y2, $SUDO.</li>
                 <li>Gas free batch listings, bids & cancellations.</li>
                 <li>Built on battle tested infra & audited contracts.</li>
                 <li>Mega gas optimized.</li>
@@ -130,12 +130,12 @@ const HomePage = () => {
               More soon
             </div>
             <div style={classes.body}>
-              <ul className="space-y-2 list-disc">
+              <ul className="space-y-2 list-inside list-disc">
                 <li>Referrals.</li>
                 <li>Token incentives.</li>
                 <li>Multichain.</li>
                 <li>L2 built for NFTs.</li>
-                <li>&lt;redacted&gt;.</li>
+                <li>&lt;super secret cool stuff&gt;.</li>
               </ul>
             </div>
           </div>
