@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
 import { AstraCartButton } from 'src/components/astra/astra-cart-button';
 import { ConnectButton, Spacer } from 'src/components/common';
-import { chainIdToName } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { borderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -9,12 +7,7 @@ import { NetworkWarning } from '../common/network-warning';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
 
 export const ANavbar = () => {
-  const { selectedChain, isWalletNetworkSupported } = useAppContext();
-  const [, setLabelVal] = useState(chainIdToName(selectedChain));
-
-  useEffect(() => {
-    setLabelVal(chainIdToName(selectedChain));
-  }, [selectedChain]);
+  const { isWalletNetworkSupported } = useAppContext();
 
   return (
     <div>

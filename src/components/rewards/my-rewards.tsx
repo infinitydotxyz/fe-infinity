@@ -82,7 +82,8 @@ const MyRewards = () => {
     address,
     token: FLOW_TOKEN.address as `0x${string}`,
     watch: false,
-    cacheTime: 5_000
+    cacheTime: 5_000,
+    chainId: 1
   });
   const xflBalance = parseFloat(xflBalanceObj?.data?.formatted ?? '0');
 
@@ -90,7 +91,8 @@ const MyRewards = () => {
     address,
     token: '0x5283d291dbcf85356a21ba090e6db59121208b44' as `0x${string}`,
     watch: false,
-    cacheTime: 5_000
+    cacheTime: 5_000,
+    chainId: 1
   });
   const blurBalance = parseFloat(blurBalanceObj?.data?.formatted ?? '0');
 
@@ -98,7 +100,8 @@ const MyRewards = () => {
     address,
     token: '0xf4d2888d29d722226fafa5d9b24f9164c092421e' as `0x${string}`,
     watch: false,
-    cacheTime: 5_000
+    cacheTime: 5_000,
+    chainId: 1
   });
   const looksBalance = parseFloat(looksBalanceObj?.data?.formatted ?? '0');
 
@@ -106,7 +109,8 @@ const MyRewards = () => {
     address,
     token: '0x1e4ede388cbc9f4b5c79681b7f94d36a11abebc9' as `0x${string}`,
     watch: false,
-    cacheTime: 5_000
+    cacheTime: 5_000,
+    chainId: 1
   });
   const x2y2Balance = parseFloat(x2y2BalanceObj?.data?.formatted ?? '0');
 
@@ -114,7 +118,8 @@ const MyRewards = () => {
     address,
     token: '0x3446dd70b2d52a6bf4a5a192d9b0a161295ab7f9' as `0x${string}`,
     watch: false,
-    cacheTime: 5_000
+    cacheTime: 5_000,
+    chainId: 1
   });
   const sudoBalance = parseFloat(sudoBalanceObj?.data?.formatted ?? '0');
 
