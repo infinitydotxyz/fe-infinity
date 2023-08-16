@@ -15,9 +15,10 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { fetchMinXflStakeForZeroFees } from 'src/utils/orderbook-utils';
 import { buttonBorderColor, primaryShadow, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { useAccount, useBalance, useNetwork } from 'wagmi';
+import { useAccount, useBalance } from 'wagmi';
 import { AButton } from '../astra/astra-button';
 import { UniswapModal } from '../common/uniswap-model';
+import { useChain } from 'src/hooks/useChain';
 
 interface RewardsSectionProps {
   title: string;
@@ -47,10 +48,8 @@ const RewardsSection = (props: RewardsSectionProps) => {
 };
 
 const MyRewards = () => {
-  const { chain } = useNetwork();
-  const chainId = String(chain?.id);
-
   const { theme } = useTheme();
+  const { selectedChain: chainId } = useChain();
   const darkMode = theme === 'dark';
 
   const [uniswapTokenInfo, setUniswapTokenInfo] = useState({
@@ -64,7 +63,7 @@ const MyRewards = () => {
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
   const { address } = useAccount();
-  const { result: userRewards } = useUserRewards();
+  const { result: userRewards } = useUserRewards(chainId);
   const cumulativeAmountWei = userRewards?.totals?.totalRewards?.claim?.cumulativeAmount ?? '0';
   const cumulativeAmount = parseFloat(ethers.utils.formatEther(cumulativeAmountWei));
   const claimableAmountWei = userRewards?.totals?.totalRewards?.claim?.claimableWei ?? '0';
@@ -73,7 +72,7 @@ const MyRewards = () => {
   const merkleRoot = userRewards?.totals?.totalRewards?.claim?.merkleRoot;
   const merkleProof = userRewards?.totals?.totalRewards?.claim?.merkleProof;
 
-  const { stakeBalance } = useStakerContract();
+  const { stakeBalance } = useStakerContract(chainId);
   const [minStakeAmountForFeeWaiverAndBoost, setMinStakeAmountForFeeWaiverAndBoost] = useState(0);
   const [xflStaked, setXflStaked] = useState(0);
   // const [xflStakeBoost, setXflStakeBoost] = useState('0x');
@@ -83,7 +82,7 @@ const MyRewards = () => {
     token: FLOW_TOKEN.address as `0x${string}`,
     watch: false,
     cacheTime: 5_000,
-    chainId: 1
+    chainId: parseInt(chainId)
   });
   const xflBalance = parseFloat(xflBalanceObj?.data?.formatted ?? '0');
 
@@ -92,7 +91,7 @@ const MyRewards = () => {
     token: '0x5283d291dbcf85356a21ba090e6db59121208b44' as `0x${string}`,
     watch: false,
     cacheTime: 5_000,
-    chainId: 1
+    chainId: parseInt(chainId)
   });
   const blurBalance = parseFloat(blurBalanceObj?.data?.formatted ?? '0');
 
@@ -101,7 +100,7 @@ const MyRewards = () => {
     token: '0xf4d2888d29d722226fafa5d9b24f9164c092421e' as `0x${string}`,
     watch: false,
     cacheTime: 5_000,
-    chainId: 1
+    chainId: parseInt(chainId)
   });
   const looksBalance = parseFloat(looksBalanceObj?.data?.formatted ?? '0');
 
@@ -110,7 +109,7 @@ const MyRewards = () => {
     token: '0x1e4ede388cbc9f4b5c79681b7f94d36a11abebc9' as `0x${string}`,
     watch: false,
     cacheTime: 5_000,
-    chainId: 1
+    chainId: parseInt(chainId)
   });
   const x2y2Balance = parseFloat(x2y2BalanceObj?.data?.formatted ?? '0');
 
@@ -119,7 +118,7 @@ const MyRewards = () => {
     token: '0x3446dd70b2d52a6bf4a5a192d9b0a161295ab7f9' as `0x${string}`,
     watch: false,
     cacheTime: 5_000,
-    chainId: 1
+    chainId: parseInt(chainId)
   });
   const sudoBalance = parseFloat(sudoBalanceObj?.data?.formatted ?? '0');
 
@@ -141,7 +140,7 @@ const MyRewards = () => {
     // setXflStakeBoost(boost + 'x');
   };
 
-  const { claim } = useClaim();
+  const { claim } = useClaim(chainId);
   const { setTxnHash } = useAppContext();
 
   const doClaim = async (type: DistributionType, props?: UserCumulativeRewardsDto) => {
@@ -393,7 +392,7 @@ const MyRewards = () => {
         <UniswapModal
           onClose={() => setShowBuyTokensModal(false)}
           title={`Buy ${uniswapTokenInfo.symbol}`}
-          chainId={Number(chainId)}
+          chainId={1}
           tokenAddress={uniswapTokenInfo.address}
           tokenName={uniswapTokenInfo.name}
           tokenDecimals={uniswapTokenInfo.decimals}
@@ -403,12 +402,15 @@ const MyRewards = () => {
       )}
       {showStakeTokensModal && (
         <StakeTokensModal
+          chainId={chainId}
           onClose={() => {
             setShowStakeTokensModal(false);
           }}
         />
       )}
-      {showUnstakeTokensModal && <UnstakeTokensModal onClose={() => setShowUnstakeTokensModal(false)} />}
+      {showUnstakeTokensModal && (
+        <UnstakeTokensModal onClose={() => setShowUnstakeTokensModal(false)} chainId={chainId} />
+      )}
     </div>
   );
 };

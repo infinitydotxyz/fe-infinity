@@ -1,4 +1,5 @@
 import { ChainId } from '@infinityxyz/lib-frontend/types/core';
+import { switchNetwork } from '@wagmi/core';
 import { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
 
@@ -29,6 +30,7 @@ export const useChain = () => {
     isWalletNetworkSupported,
     selectedChain,
     chainName: chain?.name || 'Unknown',
-    setSelectedChain
+    setSelectedChain,
+    switchNetwork
   };
 };

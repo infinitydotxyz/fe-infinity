@@ -1,14 +1,45 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { APageBox } from 'src/components/astra/astra-page-box';
-import { ToggleTab } from 'src/components/common';
+import { Button, ToggleTab } from 'src/components/common';
 import GlobalRewards from 'src/components/rewards/global-rewards';
 import MyRewards from 'src/components/rewards/my-rewards';
+import { useChain } from 'src/hooks/useChain';
 import { textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 const RewardsPage = () => {
+  const { selectedChain, switchNetwork } = useChain();
+
   const tabs = ['My Rewards'];
   const [selected, setSelected] = useState(tabs[0]);
+  const [supportedChain, setSupportedChain] = useState(false);
+
+  useEffect(() => {
+    setSupportedChain(selectedChain === '1');
+  }, [selectedChain, setSupportedChain]);
+
+  if (!supportedChain) {
+    return (
+      <APageBox title="Rewards">
+        <div className={twMerge(textColor, 'flex flex-col h-full')}>
+          Rewards are only available on Ethereum Mainnet.
+          <div className="flex flex-col h-full w-full align-center justify-center">
+            <div className="m-auto">
+              <Button
+                onClick={() => {
+                  switchNetwork({ chainId: 1 }).catch((err) => {
+                    console.error('Failed to switch network', err);
+                  });
+                }}
+              >
+                Switch to Ethereum Mainnet
+              </Button>
+            </div>
+          </div>
+        </div>
+      </APageBox>
+    );
+  }
   return (
     <APageBox title="Rewards">
       <ToggleTab
