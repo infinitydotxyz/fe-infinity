@@ -212,11 +212,11 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
       }}
       panelClassName={twMerge('max-w-6xl rounded-3xl', dropShadow)}
     >
-      <div className="flex space-x-4 text-sm">
+      <div className="flex md:flex-row flex-col gap-4 text-sm">
         <div className="flex-1">
           <div className="flex flex-col gap-10 mr-auto md:flex-row md:items-start">
             <div className="md:flex-1 space-y-4">
-              <div className="flex items-center mb-2">
+              <div className="md:flex items-center mb-2">
                 <NextLink
                   href={`/collection/${token.token.chainId}:${token.token.contract}`}
                   className="font-heading tracking-tight mr-2"
@@ -224,7 +224,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                   <div>{token.token.collection.name || ellipsisAddress(token.token.contract) || 'Collection'}</div>
                 </NextLink>
                 <ShortAddress
-                  className="ml-2"
+                  className="md:ml-2"
                   address={token.token.contract ?? ''}
                   href={`${getChainScannerBase(chainId)}/address/${token.token.contract}`}
                   tooltip={token.token.contract ?? ''}
@@ -364,8 +364,9 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
           </div>
         </div>
 
-        <div className="flex flex-col">
-          <EZImage src={token?.token?.image ?? ''} className="h-80 w-80 rounded-lg" />
+        <div className="!md:m-0">
+          <EZImage src={token?.token?.image ?? ''} className="md:h-80 md:w-80 h-40 w-40 max-w-full rounded-lg" />
+
           <ATraitList
             traits={token.token?.attributes ?? []}
             totalTokenCount={collectionFloorAndTokenCount.tokenCount}

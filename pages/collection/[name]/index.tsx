@@ -471,7 +471,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               {selectedCollectionTab === CollectionPageTabs.Bid.toString() && !isDesktop && (
                 <AButton
                   primary
-                  className="ml-4 mb-2 px-5 py-1 text-sm"
+                  className="absolute bottom-2 left-20 right-4 z-50 bg-black"
                   onClick={() => {
                     setCartType(CartType.CollectionBid);
                     if (isCollSelectable(collection as ERC721CollectionCartItem)) {
@@ -482,10 +482,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   {isCollSelected(collection as ERC721CollectionCartItem) ? (
                     <div className="flex items-center space-x-1">
                       <AiOutlineCheckCircle className={'h-4 w-4'} />
-                      <div className="flex mt-1">Collection Bid</div>
+                      <div className="flex mt-1 justify-center">Collection Bid</div>
                     </div>
                   ) : (
-                    <div className="flex mt-1">Collection Bid</div>
+                    <div className="flex mt-1 justify-center">Collection Bid</div>
                   )}
                 </AButton>
               )}
