@@ -123,13 +123,13 @@ export function SearchInput({
             setQuery(value);
           }}
         />
-        <div className="relative z-20">
+        <div className="relative z-40">
           <Combobox.Options
             className={twMerge(
               secondaryBgColor,
               data.length === 0 ? 'opacity-0' : '', // without this, a thin line appears
               borderColor,
-              'absolute z-20 md:-mx-8 w-full top-2  w-content h-content max-h-content',
+              'md:absolute fixed md:left-auto left-[5.5rem] md:right-auto right-[1.5rem] z-20 md:-mx-8 md:w-full md:top-2 top-14  w-content h-content max-h-content',
               'py-2 border rounded-lg flex flex-col shadow-lg'
             )}
           >
