@@ -68,22 +68,24 @@ export const CollectionPageHeader = ({
           <div className="flex w-full items-center text-center md:flex-row flex-col mt-2">
             <EZImage
               src={avatarUrl}
-              className="mr-4 h-14 w-14 rounded-lg cursor-pointer hover:scale-90 duration-100"
+              className="md:mr-4 h-14 w-14 rounded-lg cursor-pointer hover:scale-90 duration-100"
               onClick={() => window.open(collection?.metadata?.links?.external)}
             />
             <div className="md:flex w-full items-center space-x-2">
               <div className="font-bold font-heading text-xl">{title}</div>
 
-              <div className="flex p-2 text-sm space-x-2 items-center justify-center">
-                {hasBlueCheck ? <BlueCheck /> : null}
-                <div>{ellipsisAddress(collection?.address).toLowerCase()}</div>
-                <div className={twMerge('cursor-pointer p-2 rounded-lg', hoverColor)}>
-                  <ClipboardButton textToCopy={collection?.address ?? ''} className={twMerge(smallIconButtonStyle)} />
-                </div>
-              </div>
-
               {isDesktop && (
                 <>
+                  <div className="flex p-2 text-sm space-x-2 items-center justify-center">
+                    {hasBlueCheck ? <BlueCheck /> : null}
+                    <div>{ellipsisAddress(collection?.address).toLowerCase()}</div>
+                    <div className={twMerge('cursor-pointer p-2 rounded-lg', hoverColor)}>
+                      <ClipboardButton
+                        textToCopy={collection?.address ?? ''}
+                        className={twMerge(smallIconButtonStyle)}
+                      />
+                    </div>
+                  </div>
                   <Spacer />
                   {collection?.metadata?.links?.external ? (
                     <>
@@ -150,7 +152,7 @@ export const CollectionPageHeader = ({
             </div>
           </div>
 
-          {description ? (
+          {description && isDesktop ? (
             <div className="max-w-5xl text-sm md:text-left text-center">
               <ReadMoreText text={description} min={30} ideal={60} max={100} />
             </div>
