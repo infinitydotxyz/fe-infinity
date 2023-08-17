@@ -129,7 +129,7 @@ export function SearchInput({
               secondaryBgColor,
               data.length === 0 ? 'opacity-0' : '', // without this, a thin line appears
               borderColor,
-              'absolute z-20 -mx-8 top-2  w-content h-content max-h-content',
+              'absolute z-20 md:-mx-8 w-full top-2  w-content h-content max-h-content',
               'py-2 border rounded-lg flex flex-col shadow-lg'
             )}
           >
@@ -145,7 +145,7 @@ export function SearchInput({
                         textColor,
                         'text-sm py-1 px-3 transition-all duration-200',
                         'flex gap-3 place-items-center',
-                        'hover:cursor-pointer w-96 z-20'
+                        'hover:cursor-pointer md:w-96 z-20'
                       )}
                     >
                       <SearchResultItem item={item} />

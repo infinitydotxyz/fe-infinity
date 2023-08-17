@@ -16,6 +16,7 @@ import NProgress from 'nprogress'; //nprogress module
 import { ProfileContextProvider } from 'src/utils/context/ProfileContext';
 import { WagmiConfig, configureChains, createClient, mainnet } from 'wagmi';
 import '../styles/nprogress.css'; //styles of nprogress
+import Head from 'next/head';
 NProgress.configure({ showSpinner: false });
 
 //Binding events.
@@ -64,6 +65,12 @@ const App = (props: AppProps) => {
             <CartContextProvider>
               <AppContextProvider>
                 <ProfileContextProvider>
+                  <Head>
+                    <meta
+                      name="viewport"
+                      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"
+                    />
+                  </Head>
                   <AppBody {...props} />
                 </ProfileContextProvider>
               </AppContextProvider>

@@ -16,7 +16,8 @@ import {
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
-import { AOutlineButton } from '../astra/astra-button';
+import { AOutlineButton, ATextButton } from '../astra/astra-button';
+import useScreenSize from 'src/hooks/useScreenSize';
 
 export interface ProfileHeaderProps {
   expanded: boolean;
@@ -30,6 +31,7 @@ export const ProfilePageHeader = ({ expanded, tabs }: ProfileHeaderProps) => {
   const { selectedChain } = useAppContext();
   const chainId = String(chain?.id ?? selectedChain);
   const { selectedProfileTab, setSelectedProfileTab } = useAppContext();
+  const { isDesktop } = useScreenSize();
 
   return (
     <div className={twMerge(borderColor, secondaryBgColor, 'px-6 pt-4')}>
@@ -40,7 +42,7 @@ export const ProfilePageHeader = ({ expanded, tabs }: ProfileHeaderProps) => {
               <EZImage src={person.src} className="mr-4 h-12 w-12 rounded-full overflow-clip" />
 
               <div className={twMerge('flex items-center mr-2')}>
-                <div className="font-heading font-bold text-xl mr-2">
+                <div className="font-heading font-bold md:text-xl mr-2">
                   {ellipsisAddress(addressFromPath).toLowerCase()}
                 </div>
                 <div className={twMerge('cursor-pointer p-2 rounded-lg', hoverColor)}>
@@ -48,15 +50,24 @@ export const ProfilePageHeader = ({ expanded, tabs }: ProfileHeaderProps) => {
                 </div>
               </div>
 
-              <AOutlineButton
-                className={hoverColor}
-                onClick={() => window.open(getChainScannerBase(chainId) + '/address/' + addressFromPath)}
-              >
-                <span className="flex items-center">
-                  <EZImage src={etherscanLogo.src} className="mr-2 h-5 w-5 rounded-lg" />
-                  <HiOutlineExternalLink className="text-md" />
-                </span>
-              </AOutlineButton>
+              {isDesktop ? (
+                <AOutlineButton
+                  className={hoverColor}
+                  onClick={() => window.open(getChainScannerBase(chainId) + '/address/' + addressFromPath)}
+                >
+                  <span className="flex items-center">
+                    <EZImage src={etherscanLogo.src} className="mr-2 h-5 w-5 rounded-lg" />
+                    <HiOutlineExternalLink className="text-md" />
+                  </span>
+                </AOutlineButton>
+              ) : (
+                <ATextButton
+                  className="px-1"
+                  onClick={() => window.open(getChainScannerBase(chainId) + '/address/' + addressFromPath)}
+                >
+                  <HiOutlineExternalLink className="text-2xl" />
+                </ATextButton>
+              )}
             </div>
           </div>
         </>

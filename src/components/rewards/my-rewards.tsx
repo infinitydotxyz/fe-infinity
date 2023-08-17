@@ -19,6 +19,8 @@ import { useAccount, useBalance, useNetwork } from 'wagmi';
 import { AButton } from '../astra/astra-button';
 import { UniswapModal } from '../common/uniswap-model';
 
+const tokenItemClassname = 'lg:w-1/6 sm:w-full gap-1 flex md:flex-col items-center';
+
 interface RewardsSectionProps {
   title: string;
   subTitle?: string;
@@ -31,15 +33,15 @@ const RewardsSection = (props: RewardsSectionProps) => {
     <div
       className={twMerge(
         buttonBorderColor,
-        'border flex-col px-10 py-4 w-full shadow-brand-primaryFade dark:shadow-brand-darkPrimaryFade shadow-sm'
+        'border flex-col p-4 md:px-10 w-full shadow-brand-primaryFade dark:shadow-brand-darkPrimaryFade shadow-sm'
       )}
     >
-      <div className="flex w-full">
-        <div className="w-1/2">
+      <div className="md:flex w-full">
+        <div className="md:w-1/2">
           <div className="text-2xl font-medium underline">{props.title}</div>
-          {props.subTitle && <div className="w-1/2 mt-5">{props.subTitle}</div>}
+          {props.subTitle && <div className="md:w-1/2 mt-5">{props.subTitle}</div>}
         </div>
-        {props?.sideInfo && <div className="w-1/2">{props.sideInfo}</div>}
+        {props?.sideInfo && <div className="md:w-1/2 md:mt-0 mt-4">{props.sideInfo}</div>}
       </div>
       {props.children && <div className="flex w-full mt-5">{props.children}</div>}
     </div>
@@ -229,9 +231,9 @@ const MyRewards = () => {
         title="Token Balances"
         subTitle={`Balances of the top NFT exchange tokens.`}
         sideInfo={
-          <div className={twMerge(buttonBorderColor, primaryShadow, 'border py-4 px-6')}>
-            <div className="flex flex-wrap">
-              <div className="lg:w-1/6 sm:w-full space-y-1 flex flex-col">
+          <div className={twMerge(buttonBorderColor, primaryShadow, 'border p-4 md:px-6')}>
+            <div className="md:flex flex-wrap">
+              <div className={tokenItemClassname}>
                 <div>${FLOW_TOKEN.symbol}</div>
                 <div className="text-lg font-heading font-bold">{nFormatter(xflBalance, 2)}</div>
                 <div
@@ -246,7 +248,7 @@ const MyRewards = () => {
               </div>
               <Spacer />
 
-              <div className="lg:w-1/6 sm:w-full space-y-1 flex flex-col">
+              <div className={tokenItemClassname}>
                 <div>$BLUR</div>
                 <div className="text-lg font-heading font-bold">{nFormatter(blurBalance, 2)}</div>
                 <div
@@ -261,7 +263,7 @@ const MyRewards = () => {
               </div>
               <Spacer />
 
-              <div className="lg:w-1/6 sm:w-full space-y-1 flex flex-col">
+              <div className={tokenItemClassname}>
                 <div>$LOOKS</div>
                 <div className="text-lg font-heading font-bold">{nFormatter(looksBalance, 2)}</div>
                 <div
@@ -276,7 +278,7 @@ const MyRewards = () => {
               </div>
               <Spacer />
 
-              <div className="lg:w-1/6 sm:w-full space-y-1 flex flex-col">
+              <div className={tokenItemClassname}>
                 <div>$X2Y2</div>
                 <div className="text-lg font-heading font-bold">{nFormatter(x2y2Balance, 2)}</div>
                 <div
@@ -291,7 +293,7 @@ const MyRewards = () => {
               </div>
               <Spacer />
 
-              <div className="lg:w-1/6 sm:w-full space-y-1 flex flex-col">
+              <div className={tokenItemClassname}>
                 <div>$SUDO</div>
                 <div className="text-lg font-heading font-bold">{nFormatter(sudoBalance, 2)}</div>
                 <div

@@ -52,7 +52,9 @@ type Props2 = {
 export const APageHeader = ({ title, rightToolbar }: Props2): JSX.Element => {
   return (
     <div className="flex flex-row items-center">
-      <div className={twMerge(textColor, 'font-heading font-bold text-3xl tracking-tight mt-4 mb-8')}>{title}</div>
+      <div className={twMerge(textColor, 'font-heading font-bold md:text-3xl text-xl tracking-tight mt-4 mb-8')}>
+        {title}
+      </div>
 
       {rightToolbar && (
         <>

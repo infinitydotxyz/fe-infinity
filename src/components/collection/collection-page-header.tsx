@@ -16,6 +16,7 @@ import {
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AOutlineButton } from '../astra/astra-button';
+import useScreenSize from 'src/hooks/useScreenSize';
 
 export interface CollectionPageHeaderProps {
   expanded: boolean;
@@ -51,6 +52,7 @@ export const CollectionPageHeader = ({
   onTabChange
 }: CollectionPageHeaderProps) => {
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
+  const { isDesktop } = useScreenSize();
 
   const chainId = (collection?.chainId ?? '1') as ChainId;
 
@@ -63,90 +65,93 @@ export const CollectionPageHeader = ({
     <div className={twMerge(borderColor, secondaryBgColor, 'border-b px-6')}>
       {expanded && (
         <div className="flex flex-col space-y-3">
-          <div className="flex w-full items-center mt-2">
+          <div className="flex w-full items-center text-center md:flex-row flex-col mt-2">
             <EZImage
               src={avatarUrl}
               className="mr-4 h-14 w-14 rounded-lg cursor-pointer hover:scale-90 duration-100"
               onClick={() => window.open(collection?.metadata?.links?.external)}
             />
-            <div className="flex w-full items-center space-x-2">
+            <div className="md:flex w-full items-center space-x-2">
               <div className="font-bold font-heading text-xl">{title}</div>
-              {hasBlueCheck ? <BlueCheck /> : null}
 
-              <div className={twMerge('flex p-2 text-sm space-x-2 items-center')}>
+              <div className="flex p-2 text-sm space-x-2 items-center justify-center">
+                {hasBlueCheck ? <BlueCheck /> : null}
                 <div>{ellipsisAddress(collection?.address).toLowerCase()}</div>
                 <div className={twMerge('cursor-pointer p-2 rounded-lg', hoverColor)}>
                   <ClipboardButton textToCopy={collection?.address ?? ''} className={twMerge(smallIconButtonStyle)} />
                 </div>
               </div>
 
-              <Spacer />
-
-              {collection?.metadata?.links?.external ? (
+              {isDesktop && (
                 <>
+                  <Spacer />
+                  {collection?.metadata?.links?.external ? (
+                    <>
+                      <AOutlineButton
+                        className={hoverColor}
+                        onClick={() => window.open(collection.metadata?.links?.external)}
+                      >
+                        <span className="flex items-center">
+                          <EZImage src={avatarUrl} className="mr-2 h-5 w-5 rounded-full" />
+                          <HiOutlineExternalLink className="text-md" />
+                        </span>
+                      </AOutlineButton>
+                    </>
+                  ) : null}
+
                   <AOutlineButton
                     className={hoverColor}
-                    onClick={() => window.open(collection.metadata?.links?.external)}
+                    onClick={() => window.open(getChainScannerBase(chainId) + '/address/' + collection?.address)}
                   >
                     <span className="flex items-center">
-                      <EZImage src={avatarUrl} className="mr-2 h-5 w-5 rounded-full" />
+                      <EZImage src={etherscanLogo.src} className="mr-2 h-5 w-5 rounded-lg" />
                       <HiOutlineExternalLink className="text-md" />
                     </span>
                   </AOutlineButton>
+
+                  {collection?.metadata?.links?.twitter ? (
+                    <AOutlineButton
+                      className={hoverColor}
+                      onClick={() => window.open(collection?.metadata?.links?.twitter)}
+                    >
+                      <span className="flex items-center text-sm">
+                        <div className="">
+                          <FaTwitter className="text-brand-twitter h-5 w-5" />
+                        </div>
+                        {/* {twitterFollowers ?? ''} */}
+                      </span>
+                    </AOutlineButton>
+                  ) : null}
+
+                  {collection?.metadata?.links?.discord ? (
+                    <AOutlineButton
+                      className={hoverColor}
+                      onClick={() => window.open(collection?.metadata?.links?.discord)}
+                    >
+                      <span className="flex items-center text-sm">
+                        <div className="">
+                          <FaDiscord className="text-brand-discord h-5 w-5" />
+                        </div>
+                        {/* {discordFollowers ?? ''} */}
+                      </span>
+                    </AOutlineButton>
+                  ) : null}
+
+                  {collection?.metadata?.links?.instagram ? (
+                    <AOutlineButton
+                      className={hoverColor}
+                      onClick={() => window.open(collection?.metadata?.links?.instagram)}
+                    >
+                      <FaInstagram className="text-xl" />
+                    </AOutlineButton>
+                  ) : null}
                 </>
-              ) : null}
-
-              <AOutlineButton
-                className={hoverColor}
-                onClick={() => window.open(getChainScannerBase(chainId) + '/address/' + collection?.address)}
-              >
-                <span className="flex items-center">
-                  <EZImage src={etherscanLogo.src} className="mr-2 h-5 w-5 rounded-lg" />
-                  <HiOutlineExternalLink className="text-md" />
-                </span>
-              </AOutlineButton>
-
-              {collection?.metadata?.links?.twitter ? (
-                <AOutlineButton
-                  className={hoverColor}
-                  onClick={() => window.open(collection?.metadata?.links?.twitter)}
-                >
-                  <span className="flex items-center text-sm">
-                    <div className="">
-                      <FaTwitter className="text-brand-twitter h-5 w-5" />
-                    </div>
-                    {/* {twitterFollowers ?? ''} */}
-                  </span>
-                </AOutlineButton>
-              ) : null}
-
-              {collection?.metadata?.links?.discord ? (
-                <AOutlineButton
-                  className={hoverColor}
-                  onClick={() => window.open(collection?.metadata?.links?.discord)}
-                >
-                  <span className="flex items-center text-sm">
-                    <div className="">
-                      <FaDiscord className="text-brand-discord h-5 w-5" />
-                    </div>
-                    {/* {discordFollowers ?? ''} */}
-                  </span>
-                </AOutlineButton>
-              ) : null}
-
-              {collection?.metadata?.links?.instagram ? (
-                <AOutlineButton
-                  className={hoverColor}
-                  onClick={() => window.open(collection?.metadata?.links?.instagram)}
-                >
-                  <FaInstagram className="text-xl" />
-                </AOutlineButton>
-              ) : null}
+              )}
             </div>
           </div>
 
           {description ? (
-            <div className="max-w-5xl text-sm">
+            <div className="max-w-5xl text-sm md:text-left text-center">
               <ReadMoreText text={description} min={30} ideal={60} max={100} />
             </div>
           ) : null}
@@ -188,8 +193,8 @@ export const CollectionPageHeader = ({
         </div>
       </div> */}
 
-      <div className="flex mt-4 text-sm">
-        <div className="flex space-x-5">
+      <div className="flex mt-4 text-sm gap-3">
+        <div className="flex space-x-3 overflow-auto scrollbar-hide">
           {tabs.map((e) => {
             return (
               <div key={e} className={twMerge('pb-2 px-3', selectedTab === e ? `border-b-2 ${brandBorderColor}` : '')}>
@@ -213,7 +218,7 @@ export const CollectionPageHeader = ({
 
         <Spacer />
 
-        <div className="flex text-sm divide-x divide-light-border dark:divide-dark-border items-center">
+        <div className="md:flex hidden text-sm divide-x divide-light-border dark:divide-dark-border items-center">
           {Number(floorPrice) > 0 && (
             <div className="flex pr-4 gap-2 whitespace-nowrap font-medium">
               <span className={secondaryTextColor}>Floor </span>

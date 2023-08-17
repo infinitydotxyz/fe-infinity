@@ -17,9 +17,7 @@ const OrderDepthChart = ({ data }: Props) => {
   return (
     <ChartBox className="h-full">
       <div className="flex justify-between mb-4">
-        <div className="ml-5">
-          <div className="font-medium mt-3 font-heading text-lg">Order Depth</div>
-        </div>
+        <div className="font-medium mt-3 font-heading text-lg">Order Depth</div>
 
         <div className="items-center flex space-x-6">
           <div className="flex items-center space-x-2">

@@ -28,10 +28,10 @@ export const ToggleTab = ({ options, onChange, defaultOption, className = '', sm
             <div
               key={option}
               className={twMerge(
-                small ? 'min-w-[110px]' : 'min-w-[140px]',
+                small ? 'md:min-w-[110px]' : 'md:min-w-[140px]',
                 'select-none flex text-md items-center justify-center text-center whitespace-nowrap font-medium rounded-lg',
                 selected === option ? twMerge(primaryBtnBgColorText) : hoverColorBrandText,
-                'py-2 px-6'
+                'py-2 md:px-6 px-3'
               )}
               onClick={() => {
                 if (option !== selected) {

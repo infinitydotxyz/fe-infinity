@@ -241,7 +241,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
           {(selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
             selectedCollectionTab === CollectionPageTabs.Buy.toString()) && (
             <div className={twMerge('mt-2 px-4')}>
-              <div className={twMerge('flex text-sm')}>
+              <div className={twMerge('md:flex text-sm')}>
                 <div
                   className={twMerge(
                     'flex mr-1',
@@ -281,14 +281,16 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
                   <div
                     className={twMerge(
-                      'flex flex-row rounded-lg border cursor-pointer',
+                      'flex flex-row rounded-lg border md:m-0 my-2 h-10 cursor-pointer',
                       borderColor,
                       cartType === CartType.CollectionBid
                         ? 'opacity-30 duration-300 pointer-events-none'
                         : 'duration-300'
                     )}
                   >
-                    <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>
+                    <div
+                      className={twMerge('md:flex hidden items-center border-r-[1px] px-6 cursor-default', borderColor)}
+                    >
                       <GiBroom className={twMerge(iconButtonStyle, brandTextColor)} />
                     </div>
                     <div
@@ -455,8 +457,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
           {(selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
             selectedCollectionTab === CollectionPageTabs.Buy.toString()) && (
-            <div className="flex flex-row">
-              <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
+            <div className="flex md:flex-row flex-col">
+              <div className={(twMerge('flex'), showCart ? 'w-full' : 'md:w-2/3')}>
                 <TokenGrid
                   key={collectionAddress}
                   collectionCreator={collectionCreator}
@@ -477,7 +479,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 />
               </div>
 
-              <div className={`${showCart ? 'w-0' : 'flex w-1/3'} transition-width duration-100`}>
+              <div className={`${showCart ? 'w-0' : 'flex md:w-1/3'} transition-width duration-100`}>
                 <CollectionItemsPageSidebar
                   key={collectionAddress}
                   collectionChainId={collection.chainId as ChainId}

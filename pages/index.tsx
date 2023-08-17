@@ -57,7 +57,6 @@ const HomePage = () => {
       WebkitFilter: 'blur(1px)',
       filter: 'blur(1px)',
       color: themeToUse.body,
-      fontSize: 40,
       letterSpacing: '0em',
       lineHeight: 1.2
     },
@@ -83,27 +82,20 @@ const HomePage = () => {
     <NonSsrWrapper>
       <div style={classes.background} className="scrollbar-hide">
         <div className="flex flex-col items-center justify-center" style={classes.contrast}>
-          <EZImage src={logoSrc} className="w-40 h-40" />
+          <EZImage src={logoSrc} className="md:w-40 md:h-40 w-32 h-32" />
 
-          <div className="w-1/2">
+          <div className="md:w-1/2 w-4/5">
             <Ticker duration={20} direction={1}>
               {images.map((image, index) => (
-                <div
-                  key={index}
-                  style={{
-                    margin: '25px',
-                    height: '250px',
-                    width: '200px'
-                  }}
-                >
+                <div key={index} className="md:w-50 md:h-60 md:m-6 w-32 h-44 m-4">
                   <EZImage src={image.src} />
                 </div>
               ))}
             </Ticker>
           </div>
 
-          <div className="flex flex-col w-1/2 space-y-4 pb-60">
-            <div style={classes.subheading} className="font-heading">
+          <div className="flex flex-col md:w-1/2 w-4/5 space-y-4 pb-60">
+            <div style={classes.subheading} className="md:text-4xl text-2xl font-heading">
               THE LAST AGGREGATOR
             </div>
             <div style={classes.body}>
@@ -126,7 +118,7 @@ const HomePage = () => {
             </AButton>
 
             <div className="h-2"></div>
-            <div style={classes.subheading} className="font-heading">
+            <div style={classes.subheading} className="md:text-4xl text-2xl font-heading">
               More soon
             </div>
             <div style={classes.body}>
