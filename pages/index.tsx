@@ -87,14 +87,14 @@ const HomePage = () => {
           <div className="md:w-1/2 w-4/5">
             <Ticker duration={20} direction={1}>
               {images.map((image, index) => (
-                <div key={index} className="md:w-50 md:h-60 md:m-6 w-32 h-44 m-4">
+                <div key={index} className="w-32 h-44 md:w-48 md:h-60 md:m-6 m-4">
                   <EZImage src={image.src} />
                 </div>
               ))}
             </Ticker>
           </div>
 
-          <div className="flex flex-col md:w-1/2 w-4/5 space-y-4 pb-60">
+          <div className="flex flex-col md:w-1/2 w-4/5 space-y-4 md:pb-60 pb-80">
             <div style={classes.subheading} className="md:text-4xl text-2xl font-heading">
               THE LAST AGGREGATOR
             </div>
