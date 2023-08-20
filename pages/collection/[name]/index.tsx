@@ -471,7 +471,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               {selectedCollectionTab === CollectionPageTabs.Bid.toString() && !isDesktop && (
                 <AButton
                   primary
-                  className="absolute bottom-2 left-20 right-4 z-50 bg-black"
+                  className="absolute bottom-2 left-20 right-4 z-10 bg-black"
                   onClick={() => {
                     setCartType(CartType.CollectionBid);
                     if (isCollSelectable(collection as ERC721CollectionCartItem)) {
