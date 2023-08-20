@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import logo from 'src/images/dark-logo.png';
+import logo from 'src/images/light-logo.png';
 import { CenteredContent } from './centered-content';
 import { EZImage } from './ez-image';
 
