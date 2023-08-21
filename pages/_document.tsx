@@ -6,6 +6,7 @@ export default class Document extends NextDocument {
     return (
       <Html lang="en">
         <Head>
+          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
           <link rel="shortcut icon" type="image/ico" href="https://pixl.so/favicon.ico" />
           {/* Warning: viewport meta tags should not be used in _document.js's <Head>. https://nextjs.org/docs/messages/no-document-viewport-meta */}
           {/* <meta name="viewport" content="width=device-width, initial-scale=1" /> */}
