@@ -3,6 +3,7 @@ import * as gtag from 'lib/ga/gtag';
 import LogRocket from 'logrocket';
 import { ThemeProvider } from 'next-themes';
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 import { Router, useRouter } from 'next/router';
 import { StrictMode, memo, useEffect } from 'react';
 import { Layout } from 'src/components/astra/layout';
@@ -16,7 +17,6 @@ import NProgress from 'nprogress'; //nprogress module
 import { ProfileContextProvider } from 'src/utils/context/ProfileContext';
 import { WagmiConfig, configureChains, createClient, mainnet } from 'wagmi';
 import '../styles/nprogress.css'; //styles of nprogress
-import Head from 'next/head';
 NProgress.configure({ showSpinner: false });
 
 //Binding events.

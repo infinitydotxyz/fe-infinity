@@ -70,13 +70,13 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     CollectionPageTabs.Analytics.toString()
   ];
 
-  const types = ['Collections', 'Graph'];
+  const viewTypes = ['Items', 'Charts'];
 
   const { cartType, setCartType } = useCartContext();
   const [numSweep, setNumSweep] = useState('');
   const [bidBelowPct, setBidBelowPct] = useState('');
   const [customSweep, setCustomSweep] = useState('');
-  const [type, setType] = useState(types[0]);
+  const [viewType, setViewType] = useState(viewTypes[0]);
   const { showCart } = useAppContext();
 
   const MAX_NUM_SWEEP_ITEMS = 50;
@@ -471,7 +471,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               {selectedCollectionTab === CollectionPageTabs.Bid.toString() && !isDesktop && (
                 <AButton
                   primary
-                  className="absolute bottom-2 left-20 right-4 z-50 bg-black"
+                  className="absolute bottom-2 left-20 right-4 z-10 bg-black"
                   onClick={() => {
                     setCartType(CartType.CollectionBid);
                     if (isCollSelectable(collection as ERC721CollectionCartItem)) {
@@ -493,16 +493,16 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 <div className="flex justify-between">
                   <ToggleTab
                     className="text-sm ml-4"
-                    options={types}
-                    defaultOption={types[0]}
-                    onChange={setType}
+                    options={viewTypes}
+                    defaultOption={viewTypes[0]}
+                    onChange={setViewType}
                     border
                     small
                   />
                 </div>
               )}
               <div className="flex md:flex-row flex-col">
-                {(isDesktop || type === 'Collections') && (
+                {(isDesktop || viewType === 'Items') && (
                   <div className={(twMerge('flex'), showCart ? 'w-full' : 'md:w-2/3')}>
                     <TokenGrid
                       key={collectionAddress}
@@ -527,7 +527,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   </div>
                 )}
 
-                {(isDesktop || type === 'Graph') && (
+                {(isDesktop || viewType === 'Charts') && (
                   <div className={`${showCart ? 'w-0' : 'flex md:w-1/3'} transition-width duration-100`}>
                     <CollectionItemsPageSidebar
                       key={collectionAddress}

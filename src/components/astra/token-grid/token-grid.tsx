@@ -39,7 +39,6 @@ export const TokenGrid = ({
   collectionCreator
 }: Props) => {
   let contents;
-  console.log(111, listMode);
 
   if (isError) {
     contents = <ErrorOrLoading error={!!isError || !!isLoading} noData={cardData.length === 0} />;
