@@ -129,7 +129,7 @@ export function SearchInput({
               secondaryBgColor,
               data.length === 0 ? 'opacity-0' : '', // without this, a thin line appears
               borderColor,
-              'md:absolute fixed md:left-auto left-[5.5rem] md:right-auto right-[1.5rem] z-20 md:-mx-8 md:w-full md:top-2 top-12  w-content h-content max-h-content',
+              'absolute md:left-auto left-[-2rem] md:right-auto right-[-1rem] z-20 md:-mx-8 md:w-full md:top-2 top-2  w-content h-content max-h-content',
               'py-2 border rounded-lg flex flex-col shadow-lg'
             )}
           >
