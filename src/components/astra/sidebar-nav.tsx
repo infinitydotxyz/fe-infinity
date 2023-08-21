@@ -14,7 +14,8 @@ import {
   brandTextColor,
   hoverColorBrandText,
   iconButtonStyle,
-  secondaryBgColor
+  secondaryBgColor,
+  textColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useAccount } from 'wagmi';
@@ -71,7 +72,7 @@ export const SidebarNav = () => {
               className={twMerge(
                 iconButtonStyle,
                 hoverColorBrandText,
-                router.asPath.startsWith('/trending') ? brandTextColor : 'text-gray-400'
+                router.asPath.startsWith('/trending') ? brandTextColor : textColor
               )}
             />
           </AButton>
@@ -96,7 +97,7 @@ export const SidebarNav = () => {
                 hoverColorBrandText,
                 router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Items
                   ? brandTextColor
-                  : 'text-gray-400'
+                  : textColor
               )}
             />
           </AButton>
@@ -118,7 +119,7 @@ export const SidebarNav = () => {
                 hoverColorBrandText,
                 router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Orders
                   ? brandTextColor
-                  : 'text-gray-400'
+                  : textColor
               )}
             />
           </AButton>
@@ -139,7 +140,7 @@ export const SidebarNav = () => {
                 hoverColorBrandText,
                 router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Send
                   ? brandTextColor
-                  : 'text-gray-400'
+                  : textColor
               )}
             />
           </AButton>
@@ -157,7 +158,7 @@ export const SidebarNav = () => {
               className={twMerge(
                 iconButtonStyle,
                 hoverColorBrandText,
-                router.asPath.startsWith(`/rewards`) ? brandTextColor : 'text-gray-400'
+                router.asPath.startsWith(`/rewards`) ? brandTextColor : textColor
               )}
             />
           </AButton>
