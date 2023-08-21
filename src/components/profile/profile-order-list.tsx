@@ -13,6 +13,7 @@ import { BouncingLogo, CenteredContent, EZImage, EthSymbol, ScrollLoader } from 
 import { CollectionSearchInput } from '../common/search/collection-search-input';
 import { StatusIcon } from '../common/status-icon';
 import { ProfileManualOrderListItem } from './profile-manual-order-list-item';
+import useScreenSize from 'src/hooks/useScreenSize';
 
 interface Props {
   userAddress: string;
@@ -27,6 +28,7 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
   const { selectedCollection, setSelectedCollection } = useProfileContext();
   const { selectedProfileTab } = useAppContext();
   const { setCartType } = useCartContext();
+  const { isDesktop } = useScreenSize();
 
   const [selectedOrderType, setSelectedOrderType] = useState<'listings' | 'bids-placed' | 'offers-received' | ''>(
     DEFAULT_ORDER_TYPE_FILTER
@@ -88,9 +90,9 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
 
   return (
     <div className={twMerge('min-h-[50vh] pb-20', className)}>
-      <div className={twMerge('flex py-2 px-4')}>
+      <div className={twMerge('flex py-2 md:px-4')}>
         <div className="flex flex-col space-y-2 w-full">
-          <div className="flex justify-between">
+          <div className="md:flex justify-between">
             <div className="flex">
               <CollectionSearchInput
                 expanded
@@ -106,9 +108,9 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
               />
             </div>
 
-            <div className="flex space-x-2">
-              <div className="flex text-sm items-cente px-4">
-                <StatusIcon status="pending-indefinite" label="Live" />
+            <div className="flex space-x-2 md:mt-0 mt-2">
+              <div className="flex text-sm items-cente md:px-4">
+                <StatusIcon status="pending-indefinite" label={isDesktop ? 'Live' : ''} />
               </div>
 
               <AOutlineButton

@@ -504,7 +504,7 @@ export const AstraCart = ({
   return (
     <div className={twMerge('h-full flex flex-col border-l-[1px]', borderColor)}>
       <div className="m-4 flex items-center">
-        <div className={twMerge(textColor, 'text-3xl lg:text-2xl font-bold font-heading mr-3')}>{cartTitle}</div>
+        <div className={twMerge(textColor, 'md:text-3xl lg:text-2xl font-bold font-heading mr-3')}>{cartTitle}</div>
 
         <div className="flex items-center">
           {currentCartItems.length > 0 && (

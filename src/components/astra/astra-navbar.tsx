@@ -21,8 +21,8 @@ export const ANavbar = () => {
       <div className={isWalletNetworkSupported ? 'hidden' : 'block'}>
         <NetworkWarning />
       </div>
-      <div className={twMerge('flex px-6 py-2 space-x-4 items-center border-b-[1px]', borderColor)}>
-        <div className="w-1/3">
+      <div className={twMerge('md:flex px-6 py-2 md:space-x-4 items-center border-b-[1px]', borderColor)}>
+        <div className="md:w-1/3 w-full">
           <CollectionSearchInput expanded />
         </div>
 
@@ -56,9 +56,11 @@ export const ANavbar = () => {
           ]}
         /> */}
 
-        <ConnectButton />
+        <div className="flex items-center justify-between md:space-x-4 md:mt-0 mt-2">
+          <ConnectButton />
 
-        <AstraCartButton />
+          <AstraCartButton />
+        </div>
       </div>
     </div>
   );

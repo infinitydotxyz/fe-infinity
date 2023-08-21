@@ -77,8 +77,10 @@ export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
 
   const multiSelect = () => {
     return (
-      <div className={twMerge('flex ml-2 rounded-lg border cursor-pointer text-sm', borderColor)}>
-        <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>Select</div>
+      <div className={twMerge('flex md:ml-2 md:my-0 my-2 h-10 rounded-lg border cursor-pointer text-sm', borderColor)}>
+        <div className={twMerge('md:flex hidden items-center border-r-[1px] px-6 cursor-default', borderColor)}>
+          Select
+        </div>
         <div
           className={twMerge(
             'px-4 h-full flex items-center border-r-[1px]',
@@ -151,8 +153,8 @@ export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
 
   return (
     <>
-      <div className="flex flex-col px-4 mt-2 space-y-2 text-sm">
-        <div className="flex space-x-4">
+      <div className="flex flex-col md:px-4 mt-2 space-y-2 text-sm">
+        <div className="md:flex gap-4">
           <CollectionSearchInput
             expanded
             profileSearch
@@ -199,7 +201,7 @@ export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
 
       <TokenGrid
         listMode={listMode}
-        className="px-4 py-4"
+        className="md:px-4 py-4"
         onClick={toggleNFTSelection}
         isSelectable={isNFTSelectable}
         isSelected={isNFTSelected}

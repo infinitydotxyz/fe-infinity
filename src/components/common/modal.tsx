@@ -123,7 +123,7 @@ export const Modal = ({
                 className={twMerge(
                   'w-full',
                   wide ? 'max-w-xl' : 'max-w-md',
-                  'transform rounded-lg py-8 px-9 text-left align-middle shadow-xl transition-all text-sm',
+                  'transform rounded-lg md:py-8 md:px-9 p-4 text-left align-middle shadow-xl transition-all text-sm',
                   panelClassName,
                   bgColor
                 )}

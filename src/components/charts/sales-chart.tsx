@@ -26,6 +26,7 @@ import tailwindConfig from '../../settings/tailwind/elements/foundations';
 import { ChartBox } from './chart-box';
 import { ChartDimensions } from './chart-utils';
 import { ScatterChartType } from './types';
+import useScreenSize from 'src/hooks/useScreenSize';
 
 export interface SalesChartData {
   id: string;
@@ -53,6 +54,7 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
   const [showOutliers, setShowOutliers] = useState(false);
   const [numSales, setNumSales] = useState(data.length);
   const [chartData, setChartData] = useState<SalesChartData[]>(data);
+  const { isDesktop } = useScreenSize();
 
   useEffect(() => {
     const nowTimestamp = Date.now();
@@ -87,8 +89,8 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
 
   return (
     <ChartBox className="h-full">
-      <div className="flex justify-between mb-4">
-        <div className="ml-5">
+      <div className="md:flex justify-between mb-4">
+        <div>
           <div className="font-medium mt-3 font-heading text-lg">{graphType}</div>
           <div className={twMerge(secondaryTextColor, 'font-medium text-sm')}>{numSales} sales</div>
         </div>
@@ -125,7 +127,7 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
             key={`${selectedTimeBucket}-${showOutliers}-${chartData.length}`}
             data={chartData}
             width={width}
-            height={300}
+            height={isDesktop ? 300 : 270}
             hideOutliers={!showOutliers}
           />
         )}

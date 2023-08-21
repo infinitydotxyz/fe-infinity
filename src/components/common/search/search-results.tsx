@@ -13,11 +13,12 @@ const CollectionSearchResult = ({ item }: { item: CollectionSearchResultData }) 
       <div className="flex items-center">
         <EZImage className="w-8 h-8 rounded-lg overflow-hidden mr-4" src={item?.profileImage} />
 
-        <div className="space-y-1">
+        <div className="truncate flex-1 space-y-1">
           <div className="flex items-center">
-            {item?.name} {item?.hasBlueCheck ? <BlueCheck className="ml-1" /> : null}
+            <div className="truncate">{item?.name}</div>{' '}
+            {item?.hasBlueCheck ? <BlueCheck className="w-6 ml-1" /> : null}
           </div>
-          <div className={twMerge('flex space-x-3 items-center', secondaryTextColor)}>
+          <div className={twMerge('md:flex gap-x-3 items-center text-left', secondaryTextColor)}>
             <div className="text-xs">
               Floor: {nFormatter(item?.floorPrice)} {EthSymbol}
             </div>

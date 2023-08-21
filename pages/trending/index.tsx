@@ -2,6 +2,7 @@ import { Collection, CollectionPeriodStatsContent, StatsPeriod } from '@infinity
 import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { AButton } from 'src/components/astra/astra-button';
+import { ADropdown } from 'src/components/astra/astra-dropdown';
 import { APageBox } from 'src/components/astra/astra-page-box';
 import {
   BlueCheckInline,
@@ -23,14 +24,20 @@ import { twMerge } from 'tailwind-merge';
 
 const TrendingPage = () => {
   const queryBy = 'by_sales_volume';
+  const DEFAULT_TAB = '1 day';
+  const options = [
+    { label: '1 day', value: StatsPeriod.Daily },
+    { label: '7 days', value: StatsPeriod.Weekly },
+    { label: '30 days', value: StatsPeriod.Monthly },
+    { label: 'All Time', value: StatsPeriod.All }
+  ];
   const [data, setData] = useState<Collection[]>([]);
-  const [period, setPeriod] = useState(StatsPeriod.Daily);
+  const [period, setPeriod] = useState(options[0]);
   const [isLoading, setIsLoading] = useState(false);
   const isMounted = useIsMounted();
   const { isCollSelected, isCollSelectable, toggleCollSelection } = useAppContext();
   const { setCartType } = useCartContext();
-  const options = ['1 day', '7 days', '30 days', 'All Time'];
-  const DEFAULT_TAB = '1 day';
+  const { isDesktop } = useScreenSize();
   const { selectedChain } = useAppContext();
 
   const fetchData = async (refresh = false) => {
@@ -39,11 +46,12 @@ const TrendingPage = () => {
     if (refresh) {
       setData([]);
     }
+
     const { result } = await apiGet('/collections/stats', {
       query: {
         chainId,
-        period,
-        queryBy: queryBy
+        period: period.value,
+        queryBy
       }
     });
 
@@ -65,33 +73,27 @@ const TrendingPage = () => {
     fetchData(true);
   }, [period, selectedChain]);
 
-  const onChangeToggleTab = (value: string) => {
-    switch (value) {
-      case '1 day':
-        setPeriod(StatsPeriod.Daily);
-        break;
-      case '7 days':
-        setPeriod(StatsPeriod.Weekly);
-        break;
-      case '30 days':
-        setPeriod(StatsPeriod.Monthly);
-        break;
-      case 'All Time':
-        setPeriod(StatsPeriod.All);
-        break;
-    }
-  };
-
   return (
     <APageBox title="Trending Collections" showTitle={true}>
       <div className="overflow-y-auto overflow-x-clip text-sm scrollbar-hide">
-        <ToggleTab
-          className="font-heading"
-          options={options}
-          defaultOption={DEFAULT_TAB}
-          onChange={onChangeToggleTab}
-          border={true}
-        />
+        {isDesktop ? (
+          <ToggleTab
+            className="font-heading"
+            options={options.map((option) => option.label)}
+            defaultOption={DEFAULT_TAB}
+            onChange={(label) => setPeriod(options.find((option) => option.label === label) || options[0])}
+            border={true}
+          />
+        ) : (
+          <ADropdown
+            label={period.label}
+            innerClassName="w-24"
+            items={options.map((option) => ({
+              label: option.label,
+              onClick: () => setPeriod(option)
+            }))}
+          />
+        )}
 
         <div className="space-y-3 mt-8 pb-20">
           {data.map((coll, index) => {
@@ -108,7 +110,7 @@ const TrendingPage = () => {
                   }
                 }}
                 index={index}
-                period={period}
+                period={period.value}
               />
             );
           })}
@@ -137,6 +139,8 @@ interface Props {
   isCollSelectable: (data: ERC721CollectionCartItem) => boolean;
 }
 
+const propertyClassname = 'md:flex-col flex justify-between md:mt-0 mt-2';
+
 const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelectable, period, index }: Props) => {
   const { isDesktop } = useScreenSize();
 
@@ -155,13 +159,13 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
   const salesVolumeChange = Number(nFormatter(periodStat?.salesVolumeChange ?? 0));
 
   return (
-    <div className={twMerge(borderColor, 'border-b py-4 flex items-center')}>
+    <div className={twMerge(borderColor, 'rounded-lg border p-2 md:flex items-center')}>
       <div
-        className="grid gap-2 justify-between items-center w-full"
+        className="md:grid gap-2 justify-between items-center w-full"
         style={{ gridTemplateColumns: 'minmax(0, 3fr) repeat(auto-fit, minmax(0, 1fr))' }}
       >
         <div className="flex items-center font-bold font-heading">
-          <div className="text-lg mr-8 text-right">{index + 1}</div>
+          {isDesktop && <div className="text-lg mr-8 text-right">{index + 1}</div>}
 
           <NextLink href={`/collection/${collection?.chainId}:${collection?.address}`}>
             <EZImage className="w-14 h-14 rounded-lg overflow-clip" src={collection?.metadata?.profileImage} />
@@ -176,13 +180,13 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
           </NextLink>
         </div>
 
-        <div className="space-y-1">
-          <div className="text-sm font-bold flex items-center">Vol</div>
+        <div className={propertyClassname}>
+          <div className="text-sm font-bold">Vol</div>
           <EthPrice label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`} />
         </div>
 
-        <div className="space-y-1">
-          <div className="text-sm font-bold flex items-center">Vol Change</div>
+        <div className={propertyClassname}>
+          <div className="text-sm font-bold">Vol Change</div>
           {Number.isNaN(salesVolumeChange) ? (
             '-'
           ) : (
@@ -192,13 +196,13 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
           )}
         </div>
 
-        <div className="space-y-1">
-          <div className="text-sm font-bold flex items-center">Floor</div>
+        <div className={propertyClassname}>
+          <div className="text-sm font-bold">Floor</div>
           <EthPrice label={floorPrice > 0 ? formatNumber(floorPrice, 2) : '-'} />
         </div>
 
-        <div className="space-y-1 text-sm">
-          <div className="font-bold flex items-center">Floor Change</div>
+        <div className={propertyClassname}>
+          <div className="font-bold">Floor Change</div>
           {Number.isNaN(floorPriceChange) ? (
             '-'
           ) : (
@@ -209,7 +213,7 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
         </div>
 
         {isDesktop ? (
-          <div className="space-y-1">
+          <div className={propertyClassname}>
             <div className=" text-sm font-bold ">Tokens</div>
             <div>{nFormatter(periodStat?.tokenCount ?? 0)}</div>
           </div>
@@ -218,7 +222,7 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
         <div className="flex gap-2">
           <AButton
             primary
-            className="px-9 py-3"
+            className="px-9 py-3 md:w-auto w-full md:mt-0 mt-2 flex justify-center"
             onClick={() => {
               if (isCollSelectable(collection as ERC721CollectionCartItem)) {
                 onClickBuy(collection as ERC721CollectionCartItem);
