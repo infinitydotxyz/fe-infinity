@@ -1,5 +1,5 @@
 import { UserRewardsDto } from '@infinityxyz/lib-frontend/types/dto/rewards';
-import { swrFetch, useFetch } from 'src/utils';
+import { apiGet, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useAccount, useNetwork } from 'wagmi';
 import { useUserSignature } from './useUserSignature';
@@ -35,38 +35,34 @@ export function useUserPixlRewards() {
     }
   });
 
-  const fetch = async () => {
-    if (signature && !('error' in signature)) {
-      const endpoint = `/pixl/rewards/${signature.address}`;
-      const res = await swrFetch(endpoint, {
-        options: {
-          headers: {
-            'x-auth-nonce': 'error' in signature ? '' : signature?.nonce,
-            'x-auth-signature': 'error' in signature ? '' : signature?.sig
-          }
-        }
-      });
-
-      console.log(`setting result`, res);
-      if (res) {
-        setValue(res);
-      }
-    }
-  };
-
   useEffect(() => {
+    const fetch = async () => {
+      if (signature && !('error' in signature)) {
+        const endpoint = `/pixl/rewards/${signature.address}`;
+        const res = await apiGet(endpoint, {
+          options: {
+            headers: {
+              'x-auth-nonce': 'error' in signature ? '' : signature?.nonce,
+              'x-auth-signature': 'error' in signature ? '' : signature?.sig
+            }
+          }
+        });
+        if (res.result) {
+          setValue({ result: res.result });
+        }
+      }
+    };
+
     if ('error' in signature) {
-      console.log(`error in signature`, signature.error);
       setValue({
         result: {
           error: signature.error
         }
       });
     } else if (signature) {
-      console.log(`fetching rewards`);
       fetch();
     }
-  }, [signature, setValue, fetch]);
+  }, [signature, setValue]);
 
-  return value;
+  return { rewards: value };
 }

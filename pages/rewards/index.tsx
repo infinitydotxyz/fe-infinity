@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { APageBox } from 'src/components/astra/astra-page-box';
 import { ToggleTab } from 'src/components/common';
 import GlobalRewards from 'src/components/rewards/global-rewards';
@@ -9,6 +9,13 @@ import { twMerge } from 'tailwind-merge';
 const RewardsPage = () => {
   const tabs = ['My Rewards'];
   const [selected, setSelected] = useState(tabs[0]);
+
+  // prevent hydration errors
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, [setIsClient]);
+
   return (
     <APageBox title="Rewards">
       <ToggleTab
@@ -20,8 +27,8 @@ const RewardsPage = () => {
       <div
         className={twMerge(textColor, 'flex flex-col h-full w-full overflow-y-auto overflow-x-hidden scrollbar-hide')}
       >
-        {selected === 'My Rewards' && <MyRewards />}
-        {selected === 'Global Rewards' && <GlobalRewards />}
+        {isClient && selected === 'My Rewards' && <MyRewards />}
+        {isClient && selected === 'Global Rewards' && <GlobalRewards />}
       </div>
     </APageBox>
   );
