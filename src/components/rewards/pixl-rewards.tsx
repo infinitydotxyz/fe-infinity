@@ -1,5 +1,5 @@
 import { nFormatter } from 'src/utils';
-import { Spacer } from '../common';
+import { ClipboardButton, Spacer } from '../common';
 import { twMerge } from 'tailwind-merge';
 import { RewardsSection } from './rewards-section';
 import { SignInButton } from '../common/sign-in-button';
@@ -30,6 +30,16 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
       sideInfo={
         <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
           <div className="md:flex flex-wrap mt-4">
+            <div className="lg:w-1/3 sm:w-full md:block flex justify-between">
+              <div className="text-md mt-1 flex flex-row font-bold">
+                Referral Code {rewards.result.referralCode}
+                <ClipboardButton
+                  className="ml-2 mt-0.5"
+                  textToCopy={`https://pixl.so/rewards?ref=${rewards.result.referralCode}`} />
+              </div>
+            </div>
+            <Spacer />
+
             <div className="lg:w-1/3 sm:w-full md:block flex justify-between">
               <div className="md:text-2xl font-heading font-bold">{nFormatter(rewards.result.totalPoints ?? 0, 2)}</div>
               <div className="text-sm mt-1">Total {rewards.result.totalPoints ?? 0}</div>
