@@ -46,11 +46,11 @@ export function InfoBox(props: InfoBoxProps) {
     <div className={twMerge('flex-col px-10 py-7 rounded-lg align-center justify-center', borderColor)}>
       {'renderTooltip' in props
         ? props.renderTooltip({
-            isHovered,
-            children: content,
-            message: props.tooltipMessage,
-            title: props.tooltipTitle
-          })
+          isHovered,
+          children: content,
+          message: props.tooltipMessage,
+          title: props.tooltipTitle
+        })
         : content}
       <div className="mt-6">{props.children}</div>
     </div>
