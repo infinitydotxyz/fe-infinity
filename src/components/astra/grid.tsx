@@ -25,7 +25,13 @@ export const Grid = (
           {grid}
         </div>
         <div className="row-span-3 selection:overflow-y-auto overflow-x-hidden">
-          <div className={twMerge('h-full', showCart ? 'w-[22rem]' : 'w-0', 'transition-width duration-100')}>
+          <div
+            className={twMerge(
+              'h-full',
+              showCart ? 'md:w-[22rem] w-[calc(100vw-4rem)]' : 'w-0',
+              'transition-width duration-100 z-50'
+            )}
+          >
             {cart}
           </div>
         </div>

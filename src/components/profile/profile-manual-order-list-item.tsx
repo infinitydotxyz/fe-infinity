@@ -10,6 +10,7 @@ import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { useAccount } from 'wagmi';
 import { ManualOrderbookItem } from '../orderbook/manual-orderbook-item';
+import useScreenSize from 'src/hooks/useScreenSize';
 
 interface Props {
   isOwner: boolean;
@@ -23,6 +24,7 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
   const { cartType, cartItems, setCartType } = useCartContext();
   const { isNFTSelectable, isNFTSelected, toggleNFTSelection, isCollSelectable, isCollSelected, toggleCollSelection } =
     useAppContext();
+  const { isDesktop } = useScreenSize();
 
   const isTokenBid = orderType === 'bids-placed' && order.criteria?.kind === 'token';
 
@@ -61,9 +63,9 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
   }, [cartType, cartItems]);
 
   return (
-    <div className={twMerge(standardBorderCard, 'flex mx-4 text-sm')}>
-      <div className="flex justify-between items-center w-full">
-        <div className="w-1/3">
+    <div className={twMerge(standardBorderCard, 'flex md:mx-4 text-sm')}>
+      <div className="md:flex justify-between items-center w-full">
+        <div className="md:w-1/3">
           <ManualOrderbookItem
             isCollBid={isCollBid}
             canShowAssetModal={isTokenBid}
@@ -72,7 +74,7 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
           />
         </div>
 
-        <div className="w-1/6">
+        <div className="md:w-1/6 md:flex-col flex justify-between md:mt-0 mt-2">
           <div className={twMerge(secondaryTextColor, 'font-medium')}>Order type</div>
           <div className="">
             {orderType === 'listings'
@@ -83,17 +85,22 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
                 : 'Bid'
               : 'Offer'}
           </div>
-          {order.validUntil ? (
+          {order.validUntil && isDesktop ? (
             <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>Expires {format(order.validUntil)}</div>
           ) : null}
         </div>
 
-        <div className="w-1/6">
+        <div className="md:w-1/6 md:flex-col flex justify-between md:mt-0 mt-2">
           <div className={twMerge(secondaryTextColor, 'font-medium')}>Price</div>
           <div className="">
             <EthPrice label={`${nFormatter(startPriceEth, 2)}`} />
           </div>
         </div>
+        {order.validUntil && !isDesktop ? (
+          <div className={twMerge(secondaryTextColor, 'text-xs font-medium my-2 text-right')}>
+            Expires {format(order.validUntil)}
+          </div>
+        ) : null}
 
         {orderType === 'listings' || orderType === 'bids-placed' ? (
           <div className="w-1/8 flex justify-end">
@@ -155,7 +162,7 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
         ) : null}
 
         {orderType === 'offers-received' ? (
-          <div className="w-1/6 flex justify-end">
+          <div className="md:w-1/6 flex justify-end">
             <Button
               disabled={!isActionable}
               onClick={() => {

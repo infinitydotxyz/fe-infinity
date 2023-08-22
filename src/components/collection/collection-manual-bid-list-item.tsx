@@ -9,6 +9,7 @@ import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { useAccount } from 'wagmi';
 import { ManualOrderbookItem } from '../orderbook/manual-orderbook-item';
+import useScreenSize from 'src/hooks/useScreenSize';
 
 interface Props {
   order: ERC721TokenCartItem;
@@ -21,6 +22,7 @@ export const CollectionManualBidListItem = ({ order, orderType }: Props) => {
   const { cartType, cartItems, setCartType } = useCartContext();
   const { isCollSelectable, isCollSelected, isNFTSelectable, isNFTSelected, toggleCollSelection, toggleNFTSelection } =
     useAppContext();
+  const { isDesktop } = useScreenSize();
 
   const isTokenBid = orderType === 'Token Bid';
   const isCollBid = orderType === 'Collection Bid';
@@ -47,27 +49,32 @@ export const CollectionManualBidListItem = ({ order, orderType }: Props) => {
 
   return (
     <div className={twMerge(standardBorderCard, 'flex mx-4 text-sm')}>
-      <div className="flex justify-between items-center w-full">
-        <div className="w-1/3">
+      <div className="md:flex justify-between items-center w-full">
+        <div className="md:w-1/3">
           <ManualOrderbookItem canShowAssetModal={isTokenBid} order={editableCartItem} isCollBid={isCollBid} />
         </div>
 
-        <div className="w-1/6">
+        <div className="md:w-1/6 md:flex-col flex justify-between md:mt-0 mt-2">
           <div className={twMerge(secondaryTextColor, 'font-medium')}>Order type</div>
           <div className="">{orderType}</div>
-          {order.validUntil ? (
+          {order.validUntil && isDesktop ? (
             <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>Expires {format(order.validUntil)}</div>
           ) : null}
         </div>
 
-        <div className="w-1/6">
+        <div className="md:w-1/6 md:flex-col flex justify-between md:mt-0 mt-2">
           <div className={twMerge(secondaryTextColor, 'font-medium')}>Price</div>
           <div className="">
             <EthPrice label={`${nFormatter(startPriceEth, 2)}`} />
           </div>
         </div>
+        {order.validUntil && !isDesktop ? (
+          <div className={twMerge(secondaryTextColor, 'text-xs font-medium my-2 text-right')}>
+            Expires {format(order.validUntil)}
+          </div>
+        ) : null}
 
-        <div className="w-1/4 flex justify-end">
+        <div className="md:w-1/4 flex justify-end">
           <Button
             disabled={!isActionable}
             className="mr-2"

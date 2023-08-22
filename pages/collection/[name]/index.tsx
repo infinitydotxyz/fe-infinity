@@ -10,10 +10,11 @@ import { CollectionCharts } from 'src/components/collection/collection-charts';
 import { CollectionItemsPageSidebar } from 'src/components/collection/collection-items-page-sidebar';
 import { CollectionManualBidList } from 'src/components/collection/collection-manual-bid-list';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
-import { Spacer, TextInputBox } from 'src/components/common';
+import { Spacer, TextInputBox, ToggleTab } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
 import { StatusIcon } from 'src/components/common/status-icon';
 import { useCollectionListingsFetcher } from 'src/hooks/api/useTokenFetcher';
+import useScreenSize from 'src/hooks/useScreenSize';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
 import { CollectionPageTabs, apiGet, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -48,6 +49,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
   const chainId = collection.chainId as ChainId;
   const { setRef } = useScrollInfo();
+  const { isDesktop } = useScreenSize();
 
   const {
     data: listings,
@@ -68,10 +70,13 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     CollectionPageTabs.Analytics.toString()
   ];
 
+  const viewTypes = ['Items', 'Charts'];
+
   const { cartType, setCartType } = useCartContext();
   const [numSweep, setNumSweep] = useState('');
   const [bidBelowPct, setBidBelowPct] = useState('');
   const [customSweep, setCustomSweep] = useState('');
+  const [viewType, setViewType] = useState(viewTypes[0]);
   const { showCart } = useAppContext();
 
   const MAX_NUM_SWEEP_ITEMS = 50;
@@ -241,7 +246,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
           {(selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
             selectedCollectionTab === CollectionPageTabs.Buy.toString()) && (
             <div className={twMerge('mt-2 px-4')}>
-              <div className={twMerge('flex text-sm')}>
+              <div className={twMerge('md:flex text-sm')}>
                 <div
                   className={twMerge(
                     'flex mr-1',
@@ -257,7 +262,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 </div>
 
                 <div className="flex space-x-2 text-sm">
-                  {selectedCollectionTab === CollectionPageTabs.Bid.toString() && (
+                  {selectedCollectionTab === CollectionPageTabs.Bid.toString() && isDesktop && (
                     <AButton
                       primary
                       className="px-5 py-1 text-sm"
@@ -281,16 +286,18 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
                   <div
                     className={twMerge(
-                      'flex flex-row rounded-lg border cursor-pointer',
+                      'flex flex-row rounded-lg border md:m-0 my-2 h-10 cursor-pointer',
                       borderColor,
                       cartType === CartType.CollectionBid
                         ? 'opacity-30 duration-300 pointer-events-none'
                         : 'duration-300'
                     )}
                   >
-                    <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>
-                      <GiBroom className={twMerge(iconButtonStyle, brandTextColor)} />
-                    </div>
+                    {isDesktop && (
+                      <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>
+                        <GiBroom className={twMerge(iconButtonStyle, brandTextColor)} />
+                      </div>
+                    )}
                     <div
                       className={twMerge(
                         'px-4 h-full flex items-center border-r-[1px]',
@@ -359,133 +366,179 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     </div>
                   </div>
                   <Spacer />
-                  <StatusIcon status="pending-indefinite" label="Live" />
+                  {isDesktop && <StatusIcon status="pending-indefinite" label="Live" />}
                 </div>
               </div>
 
               {selectedCollectionTab === CollectionPageTabs.Bid.toString() && (
-                <div className="flex mt-2 text-sm">
-                  <div
-                    className={twMerge(
-                      'flex flex-row rounded-lg border cursor-pointer',
-                      borderColor,
-                      cartType === CartType.CollectionBid
-                        ? 'opacity-30 duration-300 pointer-events-none'
-                        : 'duration-300'
-                    )}
-                  >
-                    <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>
-                      Bid below price:
-                    </div>
+                <>
+                  {!isDesktop && <div className="text-sm">Bid below price (%):</div>}
+                  <div className="flex md:mt-2 mb-2 text-sm">
                     <div
                       className={twMerge(
-                        'px-4 h-full flex items-center border-r-[1px]',
+                        'flex flex-row rounded-lg border cursor-pointer',
                         borderColor,
-                        hoverColor,
-                        bidBelowPct === '1' && selectedColor
+                        cartType === CartType.CollectionBid
+                          ? 'opacity-30 duration-300 pointer-events-none'
+                          : 'duration-300'
                       )}
-                      onClick={() => {
-                        bidBelowPct === '1' ? setBidBelowPct('') : setBidBelowPct('1');
-                      }}
                     >
-                      1%
-                    </div>
-                    <div
-                      className={twMerge(
-                        'px-4 h-full flex items-center border-r-[1px]',
-                        borderColor,
-                        hoverColor,
-                        bidBelowPct === '2' && selectedColor
+                      {isDesktop && (
+                        <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>
+                          Bid below price:
+                        </div>
                       )}
-                      onClick={() => {
-                        bidBelowPct === '2' ? setBidBelowPct('') : setBidBelowPct('2');
-                      }}
-                    >
-                      2%
-                    </div>
-                    <div
-                      className={twMerge(
-                        'px-4 h-full flex items-center border-r-[1px]',
-                        borderColor,
-                        hoverColor,
-                        bidBelowPct === '5' && selectedColor
-                      )}
-                      onClick={() => {
-                        bidBelowPct === '5' ? setBidBelowPct('') : setBidBelowPct('5');
-                      }}
-                    >
-                      5%
-                    </div>
-                    <div
-                      className={twMerge(
-                        'px-4 h-full flex items-center border-r-[1px]',
-                        borderColor,
-                        hoverColor,
-                        bidBelowPct === '10' && selectedColor
-                      )}
-                      onClick={() => {
-                        bidBelowPct === '10' ? setBidBelowPct('') : setBidBelowPct('10');
-                      }}
-                    >
-                      10%
-                    </div>
-                    <div className="p-3 h-full flex items-center">
-                      <TextInputBox
-                        addPctSymbol={true}
-                        autoFocus={false}
-                        inputClassName="text-sm font-body"
-                        className="border-0 w-20 p-0 text-sm"
-                        type="number"
-                        placeholder="Custom"
-                        value={String(bidBelowPct)}
-                        onChange={(value) => {
-                          let valueNum = parseFloat(value);
-                          if (valueNum > 100) {
-                            valueNum = 100;
-                          }
-                          setBidBelowPct(valueNum.toString());
+                      <div
+                        className={twMerge(
+                          'px-4 h-full flex items-center border-r-[1px]',
+                          borderColor,
+                          hoverColor,
+                          bidBelowPct === '1' && selectedColor
+                        )}
+                        onClick={() => {
+                          bidBelowPct === '1' ? setBidBelowPct('') : setBidBelowPct('1');
                         }}
-                      />
+                      >
+                        1<span className="md:block hidden">%</span>
+                      </div>
+                      <div
+                        className={twMerge(
+                          'px-4 h-full flex items-center border-r-[1px]',
+                          borderColor,
+                          hoverColor,
+                          bidBelowPct === '2' && selectedColor
+                        )}
+                        onClick={() => {
+                          bidBelowPct === '2' ? setBidBelowPct('') : setBidBelowPct('2');
+                        }}
+                      >
+                        2<span className="md:block hidden">%</span>
+                      </div>
+                      <div
+                        className={twMerge(
+                          'px-4 h-full flex items-center border-r-[1px]',
+                          borderColor,
+                          hoverColor,
+                          bidBelowPct === '5' && selectedColor
+                        )}
+                        onClick={() => {
+                          bidBelowPct === '5' ? setBidBelowPct('') : setBidBelowPct('5');
+                        }}
+                      >
+                        5<span className="md:block hidden">%</span>
+                      </div>
+                      <div
+                        className={twMerge(
+                          'px-4 h-full flex items-center border-r-[1px]',
+                          borderColor,
+                          hoverColor,
+                          bidBelowPct === '10' && selectedColor
+                        )}
+                        onClick={() => {
+                          bidBelowPct === '10' ? setBidBelowPct('') : setBidBelowPct('10');
+                        }}
+                      >
+                        10<span className="md:block hidden">%</span>
+                      </div>
+                      <div className="p-3 h-full flex items-center">
+                        <TextInputBox
+                          addPctSymbol={true}
+                          autoFocus={false}
+                          inputClassName="text-sm font-body"
+                          className="border-0 w-20 p-0 text-sm"
+                          type="number"
+                          placeholder="Custom"
+                          value={String(bidBelowPct)}
+                          onChange={(value) => {
+                            let valueNum = parseFloat(value);
+                            if (valueNum > 100) {
+                              valueNum = 100;
+                            }
+                            setBidBelowPct(valueNum.toString());
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
+                </>
               )}
             </div>
           )}
 
           {(selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
             selectedCollectionTab === CollectionPageTabs.Buy.toString()) && (
-            <div className="flex flex-row">
-              <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
-                <TokenGrid
-                  key={collectionAddress}
-                  collectionCreator={collectionCreator}
-                  collectionFloorPrice={floorPrice}
-                  listMode={listMode}
-                  className={twMerge(
-                    'px-4 py-4 min-h-[600px]',
-                    cartType === CartType.CollectionBid ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300'
-                  )} // this min-height is to prevent the grid from collapsing when there are no items so filter menus can still render
-                  onClick={onClickNFT}
-                  isSelectable={isNFTSelectable}
-                  isSelected={isNFTSelected}
-                  data={mutatedData}
-                  hasNextPage={listingsHasNextPage}
-                  onFetchMore={() => fetchListings(true)}
-                  isError={!!listingsError}
-                  isLoading={!!listingsIsLoading}
-                />
-              </div>
+            <>
+              {selectedCollectionTab === CollectionPageTabs.Bid.toString() && !isDesktop && (
+                <AButton
+                  primary
+                  className="absolute bottom-2 left-20 right-4 z-10 bg-black"
+                  onClick={() => {
+                    setCartType(CartType.CollectionBid);
+                    if (isCollSelectable(collection as ERC721CollectionCartItem)) {
+                      return toggleCollSelection(collection as ERC721CollectionCartItem);
+                    }
+                  }}
+                >
+                  {isCollSelected(collection as ERC721CollectionCartItem) ? (
+                    <div className="flex items-center space-x-1">
+                      <AiOutlineCheckCircle className={'h-4 w-4'} />
+                      <div className="flex mt-1 justify-center">Collection Bid</div>
+                    </div>
+                  ) : (
+                    <div className="flex mt-1 justify-center">Collection Bid</div>
+                  )}
+                </AButton>
+              )}
+              {!isDesktop && (
+                <div className="flex justify-between">
+                  <ToggleTab
+                    className="text-sm ml-4"
+                    options={viewTypes}
+                    defaultOption={viewTypes[0]}
+                    onChange={setViewType}
+                    border
+                    small
+                  />
+                </div>
+              )}
+              <div className="flex md:flex-row flex-col">
+                {(isDesktop || viewType === 'Items') && (
+                  <div className={(twMerge('flex'), showCart ? 'w-full' : 'md:w-2/3')}>
+                    <TokenGrid
+                      key={collectionAddress}
+                      collectionCreator={collectionCreator}
+                      collectionFloorPrice={floorPrice}
+                      listMode={listMode}
+                      className={twMerge(
+                        'px-4 py-4 min-h-[600px]',
+                        cartType === CartType.CollectionBid
+                          ? 'opacity-30 duration-300 pointer-events-none'
+                          : 'duration-300'
+                      )} // this min-height is to prevent the grid from collapsing when there are no items so filter menus can still render
+                      onClick={onClickNFT}
+                      isSelectable={isNFTSelectable}
+                      isSelected={isNFTSelected}
+                      data={mutatedData}
+                      hasNextPage={listingsHasNextPage}
+                      onFetchMore={() => fetchListings(true)}
+                      isError={!!listingsError}
+                      isLoading={!!listingsIsLoading}
+                    />
+                  </div>
+                )}
 
-              <div className={`${showCart ? 'w-0' : 'flex w-1/3'} transition-width duration-100`}>
-                <CollectionItemsPageSidebar
-                  key={collectionAddress}
-                  collectionChainId={collection.chainId as ChainId}
-                  collectionAddress={collection.address}
-                  collectionImage={collection.metadata.profileImage}
-                />
+                {(isDesktop || viewType === 'Charts') && (
+                  <div className={`${showCart ? 'w-0' : 'flex md:w-1/3'} transition-width duration-100`}>
+                    <CollectionItemsPageSidebar
+                      key={collectionAddress}
+                      collectionChainId={collection.chainId as ChainId}
+                      collectionAddress={collection.address}
+                      collectionImage={collection.metadata.profileImage}
+                    />
+                  </div>
+                )}
               </div>
-            </div>
+            </>
           )}
 
           {selectedCollectionTab === CollectionPageTabs.LiveBids && (

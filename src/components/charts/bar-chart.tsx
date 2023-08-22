@@ -107,8 +107,8 @@ export const ResponsiveBarChart = ({ data, graphType, displayDetails }: Responsi
   const [showOutliers, setShowOutliers] = useState(false);
   return (
     <ChartBox className="h-full">
-      <div className="flex justify-between mb-4">
-        <div className="ml-6">
+      <div className="md:flex justify-between mb-4">
+        <div>
           <div className="font-medium mt-3 font-heading text-lg">{graphType}</div>
           <div className={twMerge(secondaryTextColor, 'font-medium text-sm')}>
             {data.length} {graphType}
