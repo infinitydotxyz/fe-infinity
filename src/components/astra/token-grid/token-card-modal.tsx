@@ -26,6 +26,7 @@ import { ClipboardButton, EZImage, EthSymbol, Modal, NextLink, ShortAddress, Spa
 import { AButton } from '../astra-button';
 import { ATraitList } from '../astra-trait-list';
 import { ErrorOrLoading } from '../error-or-loading';
+import useScreenSize from 'src/hooks/useScreenSize';
 
 interface Props {
   data: BasicTokenInfo;
@@ -80,6 +81,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
   const { isNFTSelectable, toggleNFTSelection } = useAppContext();
   const router = useRouter();
   const [addedToCart, setAddedToCart] = useState(isNFTSelected);
+  const { isDesktop } = useScreenSize();
 
   const fetchSalesAndOrdersForTimeBucket = async () => {
     const { result, error } = await apiGet(
@@ -212,28 +214,35 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
       }}
       panelClassName={twMerge('max-w-6xl rounded-3xl', dropShadow)}
     >
-      <div className="flex space-x-4 text-sm">
+      <div className="flex md:flex-row flex-col gap-4 text-sm">
         <div className="flex-1">
           <div className="flex flex-col gap-10 mr-auto md:flex-row md:items-start">
             <div className="md:flex-1 space-y-4">
-              <div className="flex items-center mb-2">
-                <NextLink
-                  href={`/collection/${token.token.chainId}:${token.token.contract}`}
-                  className="font-heading tracking-tight mr-2"
-                >
-                  <div>{token.token.collection.name || ellipsisAddress(token.token.contract) || 'Collection'}</div>
-                </NextLink>
-                <ShortAddress
-                  className="ml-2"
-                  address={token.token.contract ?? ''}
-                  href={`${getChainScannerBase(chainId)}/address/${token.token.contract}`}
-                  tooltip={token.token.contract ?? ''}
-                />
-              </div>
+              <div className="md:block flex gap-2">
+                {!isDesktop && <EZImage src={token?.token?.image ?? ''} className="h-24 w-24 max-w-full rounded-lg" />}
+                <div className="flex flex-col justify-center truncate">
+                  <div className="md:flex items-center md:mb-2">
+                    <NextLink
+                      href={`/collection/${token.token.chainId}:${token.token.contract}`}
+                      className="block font-heading tracking-tight mr-2"
+                    >
+                      <div className="truncate">
+                        {token.token.collection.name || ellipsisAddress(token.token.contract) || 'Collection'}
+                      </div>
+                    </NextLink>
+                    <ShortAddress
+                      className="md:ml-2"
+                      address={token.token.contract ?? ''}
+                      href={`${getChainScannerBase(chainId)}/address/${token.token.contract}`}
+                      tooltip={token.token.contract ?? ''}
+                    />
+                  </div>
 
-              <div className="flex space-x-2">
-                <h3 className="font-body text-2xl font-bold mb-2">{ellipsisString(token.token.tokenId)}</h3>
-                <ClipboardButton textToCopy={token.token.tokenId} className={'h-4 w-4 mt-2.5'} />
+                  <div className="flex space-x-2">
+                    <h3 className="font-body text-2xl font-bold mb-2">{ellipsisString(token.token.tokenId)}</h3>
+                    <ClipboardButton textToCopy={token.token.tokenId} className={'h-4 w-4 mt-2.5'} />
+                  </div>
+                </div>
               </div>
 
               <div className="flex space-x-6">
@@ -295,7 +304,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
 
               {listingPrice || offerPrice ? (
                 <div className={twMerge(secondaryBgColor, borderColor, 'rounded-xl p-[30px] border')}>
-                  <div className="flex flex-row">
+                  <div className="flex flex-row items-center">
                     <div className="space-y-1">
                       <div className="text-lg font-medium">
                         {listingPrice ? (
@@ -319,8 +328,8 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                     {addToCartBtn()}
                   </div>
 
-                  <div className="flex flex-row items-center justify-between mt-[26px]">
-                    <div className="space-y-1">
+                  <div className="flex md:flex-row flex-col items-center justify-between mt-[26px]">
+                    <div className="gap-1 w-full flex md:flex-col flex-row justify-between">
                       <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>
                         {listingTime ? 'Listed' : null}
                         {!listingTime && offerTime ? 'Offered' : null}
@@ -331,14 +340,14 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                       </div>
                     </div>
 
-                    <div className="space-y-1">
+                    <div className="gap-1 w-full flex md:flex-col flex-row justify-between md:mt-0 mt-1">
                       <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>
                         Floor difference
                       </div>
                       <div>{!isNaN(Number(floorPricePercentDiff)) ? floorPricePercentDiff + '%' : '-'}</div>
                     </div>
 
-                    <div className="space-y-1 mr-1.5">
+                    <div className="gap-1 w-full flex md:flex-col flex-row justify-between md:mt-0 mt-1">
                       <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>Top bid</div>
                       {offerPrice ? (
                         <div>
@@ -364,8 +373,11 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
           </div>
         </div>
 
-        <div className="flex flex-col">
-          <EZImage src={token?.token?.image ?? ''} className="h-80 w-80 rounded-lg" />
+        <div className="!md:m-0">
+          {isDesktop && (
+            <EZImage src={token?.token?.image ?? ''} className="md:h-80 md:w-80 h-40 w-40 max-w-full rounded-lg" />
+          )}
+
           <ATraitList
             traits={token.token?.attributes ?? []}
             totalTokenCount={collectionFloorAndTokenCount.tokenCount}

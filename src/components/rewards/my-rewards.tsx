@@ -19,6 +19,9 @@ import { useAccount, useBalance } from 'wagmi';
 import { AButton } from '../astra/astra-button';
 import { UniswapModal } from '../common/uniswap-model';
 import { useChain } from 'src/hooks/useChain';
+import useScreenSize from 'src/hooks/useScreenSize';
+
+const tokenItemClassname = 'lg:w-1/6 sm:w-full gap-1 flex md:flex-col items-center justify-between text-sm mt-1';
 
 interface RewardsSectionProps {
   title: string;
@@ -32,15 +35,15 @@ const RewardsSection = (props: RewardsSectionProps) => {
     <div
       className={twMerge(
         buttonBorderColor,
-        'border flex-col px-10 py-4 w-full shadow-brand-primaryFade dark:shadow-brand-darkPrimaryFade shadow-sm'
+        'border flex-col p-4 md:px-10 w-full shadow-brand-primaryFade dark:shadow-brand-darkPrimaryFade shadow-sm'
       )}
     >
-      <div className="flex w-full">
-        <div className="w-1/2">
+      <div className="md:flex w-full">
+        <div className="md:w-1/2">
           <div className="text-2xl font-medium underline">{props.title}</div>
-          {props.subTitle && <div className="w-1/2 mt-5">{props.subTitle}</div>}
+          {props.subTitle && <div className="md:w-1/2 mt-5">{props.subTitle}</div>}
         </div>
-        {props?.sideInfo && <div className="w-1/2">{props.sideInfo}</div>}
+        {props?.sideInfo && <div className="md:w-1/2 md:mt-0 mt-4">{props.sideInfo}</div>}
       </div>
       {props.children && <div className="flex w-full mt-5">{props.children}</div>}
     </div>
@@ -51,6 +54,8 @@ const MyRewards = () => {
   const { theme } = useTheme();
   const { selectedChain: chainId } = useChain();
   const darkMode = theme === 'dark';
+
+  const { isDesktop } = useScreenSize();
 
   const [uniswapTokenInfo, setUniswapTokenInfo] = useState({
     name: FLOW_TOKEN.name,
@@ -233,11 +238,11 @@ const MyRewards = () => {
         title="Token Balances"
         subTitle={`Balances of the top NFT exchange tokens.`}
         sideInfo={
-          <div className={twMerge(buttonBorderColor, primaryShadow, 'border py-4 px-6')}>
-            <div className="flex flex-wrap">
-              <div className="lg:w-1/6 sm:w-full space-y-1 flex flex-col">
+          <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:p-4 md:px-6')}>
+            <div className="md:flex flex-wrap">
+              <div className={tokenItemClassname}>
                 <div>${FLOW_TOKEN.symbol}</div>
-                <div className="text-lg font-heading font-bold">{nFormatter(xflBalance, 2)}</div>
+                <div className="md:text-lg font-heading font-bold">{nFormatter(xflBalance, 2)}</div>
                 <div
                   className="underline text-sm cursor-pointer"
                   onClick={() => {
@@ -250,9 +255,9 @@ const MyRewards = () => {
               </div>
               <Spacer />
 
-              <div className="lg:w-1/6 sm:w-full space-y-1 flex flex-col">
+              <div className={tokenItemClassname}>
                 <div>$BLUR</div>
-                <div className="text-lg font-heading font-bold">{nFormatter(blurBalance, 2)}</div>
+                <div className="md:text-lg font-heading font-bold">{nFormatter(blurBalance, 2)}</div>
                 <div
                   className="underline text-sm cursor-pointer"
                   onClick={() => {
@@ -265,9 +270,9 @@ const MyRewards = () => {
               </div>
               <Spacer />
 
-              <div className="lg:w-1/6 sm:w-full space-y-1 flex flex-col">
+              <div className={tokenItemClassname}>
                 <div>$LOOKS</div>
-                <div className="text-lg font-heading font-bold">{nFormatter(looksBalance, 2)}</div>
+                <div className="md:text-lg font-heading font-bold">{nFormatter(looksBalance, 2)}</div>
                 <div
                   className="underline text-sm cursor-pointer"
                   onClick={() => {
@@ -280,9 +285,9 @@ const MyRewards = () => {
               </div>
               <Spacer />
 
-              <div className="lg:w-1/6 sm:w-full space-y-1 flex flex-col">
+              <div className={tokenItemClassname}>
                 <div>$X2Y2</div>
-                <div className="text-lg font-heading font-bold">{nFormatter(x2y2Balance, 2)}</div>
+                <div className="md:text-lg font-heading font-bold">{nFormatter(x2y2Balance, 2)}</div>
                 <div
                   className="underline text-sm cursor-pointer"
                   onClick={() => {
@@ -295,9 +300,9 @@ const MyRewards = () => {
               </div>
               <Spacer />
 
-              <div className="lg:w-1/6 sm:w-full space-y-1 flex flex-col">
+              <div className={tokenItemClassname}>
                 <div>$SUDO</div>
-                <div className="text-lg font-heading font-bold">{nFormatter(sudoBalance, 2)}</div>
+                <div className="md:text-lg font-heading font-bold">{nFormatter(sudoBalance, 2)}</div>
                 <div
                   className="underline text-sm cursor-pointer"
                   onClick={() => {
@@ -350,23 +355,23 @@ const MyRewards = () => {
           title="Earned Rewards"
           subTitle={`Earned $${FLOW_TOKEN.symbol} rewards.`}
           sideInfo={
-            <div className={twMerge(buttonBorderColor, primaryShadow, 'border py-4 px-6')}>
+            <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
               <div>${FLOW_TOKEN.symbol}</div>
-              <div className="flex flex-wrap mt-4">
-                <div className="lg:w-1/3 sm:w-full">
-                  <div className="text-2xl font-heading font-bold">{nFormatter(cumulativeAmount, 2)}</div>
+              <div className="md:flex flex-wrap mt-4">
+                <div className="lg:w-1/3 sm:w-full md:block flex justify-between">
+                  <div className="md:text-2xl font-heading font-bold">{nFormatter(cumulativeAmount, 2)}</div>
                   <div className="text-sm mt-1">Earned</div>
                 </div>
                 <Spacer />
 
-                <div className="lg:w-1/3 sm:w-full">
-                  <div className="text-2xl font-heading font-bold">{nFormatter(claimedAmount, 2)}</div>
+                <div className="lg:w-1/3 sm:w-full md:block flex justify-between">
+                  <div className="md:text-2xl font-heading font-bold">{nFormatter(claimedAmount, 2)}</div>
                   <div className="text-sm mt-1">Claimed</div>
                 </div>
                 <Spacer />
 
-                <div className="lg:w-1/3 sm:w-full">
-                  <div className="text-2xl font-heading font-bold">{nFormatter(claimableAmount, 2)}</div>
+                <div className="lg:w-1/3 sm:w-full md:block flex justify-between">
+                  <div className="md:text-2xl font-heading font-bold">{nFormatter(claimableAmount, 2)}</div>
                   <div className="text-sm mt-1">Claimable</div>
                 </div>
                 <Spacer />

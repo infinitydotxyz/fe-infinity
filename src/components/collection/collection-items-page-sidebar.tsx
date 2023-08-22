@@ -113,7 +113,7 @@ export const CollectionItemsPageSidebar = ({
   }, [collectionAddress, collectionChainId]);
 
   return (
-    <div className={twMerge('flex flex-col py-[0.87rem] w-full pr-4 space-y-2', className)}>
+    <div className={twMerge('flex flex-col py-[0.87rem] w-full px-4 md:pl-0 space-y-2', className)}>
       <div>
         {/* {depthChartData && <ResponsiveSalesChart graphType={ScatterChartType.Sales} data={salesChartData} />} */}
         {depthChartData && <OrderDepthChart data={depthChartData} />}

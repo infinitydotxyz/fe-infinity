@@ -3,6 +3,7 @@ import * as gtag from 'lib/ga/gtag';
 import LogRocket from 'logrocket';
 import { ThemeProvider } from 'next-themes';
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 import { Router, useRouter } from 'next/router';
 import { StrictMode, memo, useEffect } from 'react';
 import { Layout } from 'src/components/astra/layout';
@@ -95,6 +96,12 @@ const App = (props: AppProps) => {
             <CartContextProvider>
               <AppContextProvider>
                 <ProfileContextProvider>
+                  <Head>
+                    <meta
+                      name="viewport"
+                      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"
+                    />
+                  </Head>
                   <AppBody {...props} />
                 </ProfileContextProvider>
               </AppContextProvider>
