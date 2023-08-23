@@ -153,6 +153,7 @@ const SingleCollectionCell = ({
     basicTokenInfo = {
       tokenId: tokenId,
       collectionAddress: orderNft?.collectionAddress ?? '',
+      collectionSlug: orderNft?.collectionSlug ?? '',
       chainId: orderNft?.chainId ?? ChainId.Mainnet
     };
   }

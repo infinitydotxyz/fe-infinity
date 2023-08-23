@@ -15,6 +15,7 @@ const infoBoxStyle = 'flex items-center justify-center opacity-60 font-bold text
 export type CollectionChartsProps = {
   className?: string;
   collectionAddress: string;
+  collectionSlug: string;
   collectionChainId: ChainId;
   collectionImage: string;
   collectionName?: string;
@@ -23,6 +24,7 @@ export type CollectionChartsProps = {
 export const CollectionCharts = ({
   className = '',
   collectionAddress,
+  collectionSlug,
   collectionChainId,
   collectionImage,
   collectionName
@@ -84,6 +86,7 @@ export const CollectionCharts = ({
         salePrice: sale.salePriceEth,
         tokenImage: sale.tokenImage,
         collectionAddress,
+        collectionSlug,
         tokenId: sale.tokenId,
         timestamp: sale.timestamp
       } as SalesChartData;
@@ -182,6 +185,7 @@ export const CollectionCharts = ({
               valueClassName={secondaryTextColor}
               setIndex={setSelectedListingIndex}
               collectionAddress={collectionAddress}
+              collectionSlug={collectionSlug}
               collectionImage={collectionImage}
               collectionName={collectionName}
             />
@@ -205,6 +209,7 @@ export const CollectionCharts = ({
               valueClassName={secondaryTextColor}
               setIndex={setSelectedBidIndex}
               collectionAddress={collectionAddress}
+              collectionSlug={collectionSlug}
               collectionImage={collectionImage}
               collectionName={collectionName}
             />

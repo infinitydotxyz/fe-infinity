@@ -141,6 +141,7 @@ export interface SearchResponse {
 export interface BasicTokenInfo {
   chainId: string;
   collectionAddress: string;
+  collectionSlug: string;
   tokenId: string;
   collectionFloorPrice?: string | number | null | undefined;
   collectionCreator?: string;
@@ -438,6 +439,7 @@ export interface CollectionHistoricalSale {
   tokenImage: string;
   tokenId: string;
   collectionAddress: string;
+  collectionSlug: string;
   collectionName: string;
   chainId: string;
   txHash: string;

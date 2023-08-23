@@ -55,8 +55,11 @@ const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string)
   };
 };
 
-const useCollectionInfo = (chainId: string, collection: string) => {
-  const COLLECTION_FLOOR_CREATOR_API_ENDPOINT = `/collections/${chainId}:${collection}/floorandtokencount`;
+const useCollectionInfo = (chainId: string, collectionAddress: string, collectionSlug: string) => {
+  let COLLECTION_FLOOR_CREATOR_API_ENDPOINT = `/collections/${chainId}:${collectionAddress}/floorandtokencount`;
+  if (collectionSlug) {
+    COLLECTION_FLOOR_CREATOR_API_ENDPOINT = `/collections/${collectionSlug}/floorandtokencount`;
+  }
   const collectionFloor = useFetch<{ floorPrice: number; tokenCount: number }>(COLLECTION_FLOOR_CREATOR_API_ENDPOINT);
 
   return {
@@ -71,7 +74,8 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
 
   const collectionFloorAndTokenCount: { floorPrice?: number; tokenCount?: number } = useCollectionInfo(
     data.chainId,
-    data.collectionAddress
+    data.collectionAddress,
+    data.collectionSlug ?? ''
   );
 
   const [salesAndOrdersChartData, setSalesAndOrdersChartData] = useState<NftSaleAndOrder[]>([]);

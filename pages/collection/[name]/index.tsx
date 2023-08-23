@@ -22,6 +22,7 @@ import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { ERC721CollectionCartItem, ERC721TokenCartItem } from 'src/utils/types';
 import { borderColor, brandTextColor, hoverColor, iconButtonStyle, selectedColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { useNetwork } from 'wagmi';
 
 interface CollectionDashboardProps {
   collection: Collection & Partial<CollectionStats>;
@@ -47,7 +48,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     collSelection
   } = useAppContext();
 
-  const chainId = collection.chainId as ChainId;
+  const { chain } = useNetwork();
+  const { selectedChain } = useAppContext();
+  const chainId = (chain?.id || selectedChain || collection.chainId) as ChainId;
+
   const { setRef } = useScrollInfo();
   const { isDesktop } = useScreenSize();
 
@@ -531,9 +535,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   <div className={`${showCart ? 'w-0' : 'flex md:w-1/3'} transition-width duration-100`}>
                     <CollectionItemsPageSidebar
                       key={collectionAddress}
-                      collectionChainId={collection.chainId as ChainId}
+                      collectionChainId={chainId}
                       collectionAddress={collection.address}
                       collectionImage={collection.metadata.profileImage}
+                      collectionSlug={collection.slug}
                     />
                   </div>
                 )}
@@ -545,7 +550,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
             <CollectionManualBidList
               key={collectionAddress}
               collectionAddress={collection.address}
-              collectionChainId={collection.chainId as ChainId}
+              collectionChainId={chainId}
             />
           )}
 
@@ -553,6 +558,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
             <CollectionCharts
               key={collectionAddress}
               collectionAddress={collection.address}
+              collectionSlug={collection.slug}
               collectionChainId={chainId}
               collectionImage={collection.metadata.profileImage}
               collectionName={collection.metadata.name}
