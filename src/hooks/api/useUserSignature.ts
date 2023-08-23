@@ -59,7 +59,7 @@ function getLoginMessage(nonce: string): Omit<EIP712Data, 'domain'> & { domain: 
 
 const verifySignature = (signature: string, nonce: number, expectedSigner: string) => {
   const { domain, types, value } = getLoginMessage(nonce.toString());
-  const signingAddress = trimLowerCase(verifyTypedData(domain, types, value as Record<string, any>, signature));
+  const signingAddress = trimLowerCase(verifyTypedData(domain, types, value as Record<string, unknown>, signature));
 
   return signingAddress === trimLowerCase(expectedSigner);
 };

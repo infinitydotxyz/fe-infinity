@@ -145,7 +145,7 @@ export const apiDelete = async (path: string, params?: ApiParams): Promise<ApiRe
 };
 
 // helper fn for 'useFetch'
-export const swrFetch = async (path: string, apiParams?: ApiParams, headers?: Record<string, string>) => {
+export const swrFetch = async (path: string, apiParams?: ApiParams) => {
   const { result, error } = await apiGet(path, apiParams);
   if (error) {
     throw new Error('Error completing request');
@@ -160,7 +160,7 @@ interface useFetchParams {
   apiParams?: ApiParams;
   [key: string]: unknown;
 }
-export const useFetch = <T>(path: string | null, params: useFetchParams = {}, headers: Record<string, string> = {}) => {
+export const useFetch = <T>(path: string | null, params: useFetchParams = {}) => {
   const queryStr = buildQueryString(params?.query);
   const [isLoading, setIsLoading] = useState(false);
   const options = {
