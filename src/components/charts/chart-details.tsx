@@ -22,6 +22,7 @@ interface Props {
   setIndex: (index: number) => void;
   valueClassName?: string;
   collectionAddress: string;
+  collectionSlug: string;
   collectionImage: string;
   collectionName?: string;
 }
@@ -31,6 +32,7 @@ export const OrdersChartDetails = ({
   index,
   setIndex,
   collectionAddress,
+  collectionSlug,
   collectionImage,
   collectionName
 }: Props) => {
@@ -43,6 +45,7 @@ export const OrdersChartDetails = ({
           order={order}
           scroll={true}
           collectionAddress={collectionAddress}
+          collectionSlug={collectionSlug}
           collectionImage={collectionImage}
           collectionName={collectionName}
         />
@@ -71,10 +74,11 @@ interface Props2 {
   scroll?: boolean;
   collectionImage?: string;
   collectionAddress: string;
+  collectionSlug: string;
   collectionName?: string;
 }
 
-const OrderDetailViewer = ({ order, collectionAddress, collectionName }: Props2) => {
+const OrderDetailViewer = ({ order, collectionAddress, collectionName, collectionSlug }: Props2) => {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const { chain } = useNetwork();
@@ -84,6 +88,7 @@ const OrderDetailViewer = ({ order, collectionAddress, collectionName }: Props2)
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: order?.tokenId ?? '',
     collectionAddress: collectionAddress ?? '',
+    collectionSlug: collectionSlug ?? '',
     chainId
   };
 
@@ -144,6 +149,7 @@ export const SalesChartDetails = ({ data }: Props3) => {
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: data?.tokenId ?? '',
     collectionAddress: data?.collectionAddress ?? '',
+    collectionSlug: data?.collectionSlug ?? '',
     chainId
   };
 

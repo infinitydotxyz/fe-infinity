@@ -26,9 +26,10 @@ import { StatusIcon } from '../common/status-icon';
 interface Props {
   data: CollectionSaleAndOrder[];
   collectionAddress: string;
+  collectionSlug: string;
 }
 
-export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) => {
+export const CollectionRecentSalesOrders = ({ data, collectionAddress, collectionSlug }: Props) => {
   const [salesSelected, setSalesSelected] = useState(true);
   const [listingsSelected, setListingsSelected] = useState(true);
   const [bidsSelected, setBidsSelected] = useState(true);
@@ -42,6 +43,7 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: selectedItem?.tokenId ?? '',
     collectionAddress: collectionAddress,
+    collectionSlug: collectionSlug,
     chainId
   };
 

@@ -64,7 +64,8 @@ export function SearchInput({
       const basicTokenInfo: BasicTokenInfo = {
         tokenId: (selected as NftSearchResultData).tokenId,
         collectionAddress: (selected as NftSearchResultData).collectionAddress,
-        chainId: (selected as NftSearchResultData).chainId
+        chainId: (selected as NftSearchResultData).chainId,
+        collectionSlug: ''
       };
       setSelectedToken?.(basicTokenInfo);
     } else if (selected) {
