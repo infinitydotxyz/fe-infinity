@@ -3,7 +3,7 @@ import { twMerge } from 'tailwind-merge';
 
 interface RewardsSectionProps {
   title: string;
-  subTitle?: string;
+  subTitle?: React.ReactNode | string;
   sideInfo?: React.ReactNode;
   children?: React.ReactNode;
 }

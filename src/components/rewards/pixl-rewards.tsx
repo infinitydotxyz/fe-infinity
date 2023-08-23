@@ -31,37 +31,37 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
   return (
     <RewardsSection
       title="Points"
+      subTitle={
+        <div className="flex flex-row text-sm">
+          Referral Code: {rewards.result.referralCode}
+          <ClipboardButton
+            className="ml-2 mt-[0.125rem]"
+            textToCopy={`https://pixl.so/rewards?referrer=${rewards.result.referralCode}`}
+          />
+        </div>
+      }
       sideInfo={
         <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
           <div className="md:flex flex-wrap">
             <div className={tokenItemClassname}>
-              <div className="flex-1">Referral Points</div>
-              <div className="flex-1 md:text-lg font-heading font-bold text-center">
+              <div>Referral Points</div>
+              <div className="md:text-lg font-heading font-bold text-center">
                 {nFormatter(rewards.result.referralPoints, 2)}
               </div>
-              <div className="flex-1 flex flex-row justify-end">
-                {rewards.result.referralCode}
-                <ClipboardButton
-                  className="ml-2 mt-0.5"
-                  textToCopy={`https://pixl.so/rewards?referrer=${rewards.result.referralCode}`}
-                />
-              </div>
             </div>
             <Spacer />
 
             <div className={tokenItemClassname}>
-              <div className="flex-1">Airdrop</div>
-              <div className="flex-1 md:text-lg font-heading font-bold text-center">{rewards.result.airdropTier}</div>
-              <div className="flex-1"></div>
+              <div >Airdrop</div>
+              <div className="md:text-lg font-heading font-bold text-center">{rewards.result.airdropTier}</div>
             </div>
             <Spacer />
 
             <div className={tokenItemClassname}>
-              <div className="flex-1">Total</div>
-              <div className="flex-1 md:text-lg font-heading font-bold text-center">
+              <div>Total</div>
+              <div className="md:text-lg font-heading font-bold text-center">
                 {nFormatter(rewards.result.totalPoints, 2)}
               </div>
-              <div className="flex-1"></div>
             </div>
             <Spacer />
           </div>
