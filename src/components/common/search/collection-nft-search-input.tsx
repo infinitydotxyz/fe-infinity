@@ -16,9 +16,10 @@ interface Props {
 }
 
 export const CollectionNftSearchInput = ({ expanded, collectionAddress, collectionFloorPrice, chainId }: Props) => {
+  const parsedCollectionAddress = collectionAddress.split(':')[0]; // to handle cases like artblocks where address is in the form of 0xabcd...1234:0:1000
   const { search, setSubTypeQuery, setQuery } = useSearchState<SearchType.Collection, 'address', 'nft'>({
     type: SearchType.Collection,
-    query: collectionAddress,
+    query: parsedCollectionAddress,
     searchBy: 'address',
     limit: 10,
     subType: 'nft',
@@ -50,7 +51,8 @@ export const CollectionNftSearchInput = ({ expanded, collectionAddress, collecti
   }, [router.query, basicTokenInfo]);
 
   useEffect(() => {
-    setQuery(collectionAddress);
+    const parsedCollectionAddress = collectionAddress.split(':')[0]; // to handle cases like artblocks where address is in the form of 0xabcd...1234:0:1000
+    setQuery(parsedCollectionAddress);
   }, [collectionAddress]);
 
   return (

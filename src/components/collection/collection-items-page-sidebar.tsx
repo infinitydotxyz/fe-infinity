@@ -17,12 +17,14 @@ export type Props = {
   collectionChainId: ChainId;
   collectionAddress: string;
   collectionImage: string;
+  collectionSlug: string;
 };
 
 export const CollectionItemsPageSidebar = ({
   className = '',
   collectionChainId,
   collectionAddress,
+  collectionSlug,
   collectionImage
 }: Props) => {
   const [salesChartData, setSalesChartData] = useState<SalesChartData[]>([]);
@@ -47,6 +49,7 @@ export const CollectionItemsPageSidebar = ({
         salePrice: sale.salePriceEth,
         tokenImage: sale.tokenImage,
         collectionAddress,
+        collectionSlug,
         tokenId: sale.tokenId,
         timestamp: sale.timestamp
       } as SalesChartData;
@@ -129,7 +132,11 @@ export const CollectionItemsPageSidebar = ({
 
       <div>
         {recentSalesOrdersData.length > 0 && (
-          <CollectionRecentSalesOrders data={recentSalesOrdersData} collectionAddress={collectionAddress} />
+          <CollectionRecentSalesOrders
+            data={recentSalesOrdersData}
+            collectionAddress={collectionAddress}
+            collectionSlug={collectionSlug}
+          />
         )}
       </div>
     </div>
