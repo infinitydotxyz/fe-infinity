@@ -5,8 +5,11 @@ import { RewardsSection } from './rewards-section';
 import { SignInButton } from '../common/sign-in-button';
 import { useUserPixlRewards } from 'src/hooks/api/useUserRewards';
 import { buttonBorderColor, primaryShadow } from 'src/utils/ui-constants';
+import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
 
 export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
+  // save referrals based on query params
+  useSaveReferral();
   const { rewards } = useUserPixlRewards();
   if (!rewards.result) {
     return <div>Loading...</div>;
@@ -35,7 +38,7 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
                 Referral Code {rewards.result.referralCode}
                 <ClipboardButton
                   className="ml-2 mt-0.5"
-                  textToCopy={`https://pixl.so/rewards?ref=${rewards.result.referralCode}`} />
+                  textToCopy={`https://pixl.so/rewards?referrer=${rewards.result.referralCode}`} />
               </div>
             </div>
             <Spacer />

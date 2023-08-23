@@ -1,32 +1,61 @@
-import { ChainId } from '@infinityxyz/lib-frontend/types/core';
-import { AssetReferralDto } from '@infinityxyz/lib-frontend/types/dto';
-import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { apiPut } from 'src/utils';
-import { useAccount } from 'wagmi';
+import { useUserSignature } from './useUserSignature';
 
-export const useSaveReferral = (assetAddress: string, chainId: ChainId, tokenId?: string) => {
+const getCachedReferrer = (user: string) => {
+  const cachedReferrer = localStorage.getItem(`referrer:${user}`);
+  if (cachedReferrer) {
+    return cachedReferrer;
+  }
+  return null;
+};
+
+const saveCachedReferrer = (user: string, referralCode: string) => {
+  localStorage.setItem(`referrer:${user}`, referralCode);
+};
+
+export const useSaveReferral = () => {
   const { query } = useRouter();
-  const { address: user, isConnected } = useAccount();
+  const { signature } = useUserSignature();
+  const [hasCachedReferral, setHasCachedReferral] = useState(true);
 
   useEffect(() => {
-    const userAddress = user;
-
-    const userValid = !!userAddress && isConnected;
-    const assetValid = ethers.utils.isAddress(assetAddress) && chainId;
-    const referrerValid =
-      !!query.referrer && typeof query.referrer === 'string' && ethers.utils.isAddress(query.referrer as string);
-
-    if (userValid && assetValid && referrerValid) {
-      const body: AssetReferralDto = {
-        referrer: query.referrer as string,
-        assetAddress,
-        assetChainId: chainId,
-        assetTokenId: tokenId ?? ''
-      };
-
-      apiPut(`/user/${user}/referrals`, { data: body }).catch((err) => console.error(err));
+    if ('error' in signature) {
+      return;
     }
-  }, [user, assetAddress, chainId, tokenId, query.referrer]);
+    const user = signature.address;
+    const cache = getCachedReferrer(user);
+    setHasCachedReferral(!!cache);
+  }, [signature, getCachedReferrer, setHasCachedReferral]);
+
+  useEffect(() => {
+    if ('error' in signature) {
+      return;
+    }
+
+    if (hasCachedReferral) {
+      return;
+    }
+
+    const user = signature.address;
+    const referralCode = query.referrer;
+    if (user && referralCode && typeof referralCode === 'string') {
+      apiPut(`/pixl/rewards/${user}/referrals`, {
+        data: {
+          code: referralCode
+        },
+        options: {
+          headers: {
+            'x-auth-nonce': signature.nonce,
+            'x-auth-signature': signature.sig
+          }
+        }
+      })
+        .then(() => {
+          saveCachedReferrer(user, referralCode);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [hasCachedReferral, signature, query.referrer, apiPut, saveCachedReferrer]);
 };
