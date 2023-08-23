@@ -35,7 +35,7 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
         <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
           <div className="md:flex flex-wrap">
             <div className={tokenItemClassname}>
-              <div className="flex-1">Referrals</div>
+              <div className="flex-1">Referral Points</div>
               <div className="flex-1 md:text-lg font-heading font-bold text-center">
                 {nFormatter(rewards.result.referralPoints, 2)}
               </div>
@@ -51,9 +51,7 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
 
             <div className={tokenItemClassname}>
               <div className="flex-1">Airdrop</div>
-              <div className="flex-1 md:text-lg font-heading font-bold text-center">
-                {nFormatter(rewards.result.airdropPoints, 2)}
-              </div>
+              <div className="flex-1 md:text-lg font-heading font-bold text-center">{rewards.result.airdropTier}</div>
               <div className="flex-1"></div>
             </div>
             <Spacer />

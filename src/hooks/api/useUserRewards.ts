@@ -14,10 +14,12 @@ export function useUserRewards() {
   return useFetch<UserRewardsDto>(user ? `/user/${chainId}:${user}/rewards` : null);
 }
 
+export type AirdropTier = 'PLATINUM' | 'GOLD' | 'SILVER' | 'BRONZE' | 'NONE';
+
 export type UserRewards = {
   referralPoints: number;
   listingPoints: number;
-  airdropPoints: number;
+  airdropTier: AirdropTier;
   buyPoints: number;
   totalPoints: number;
   updatedAt: number;
