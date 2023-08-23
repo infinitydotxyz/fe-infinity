@@ -38,7 +38,8 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
                 Referral Code {rewards.result.referralCode}
                 <ClipboardButton
                   className="ml-2 mt-0.5"
-                  textToCopy={`https://pixl.so/rewards?referrer=${rewards.result.referralCode}`} />
+                  textToCopy={`https://pixl.so/rewards?referrer=${rewards.result.referralCode}`}
+                />
               </div>
             </div>
             <Spacer />
