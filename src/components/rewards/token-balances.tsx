@@ -95,6 +95,7 @@ export const TokenBalances = ({
   useEffect(() => {
     getStakeInfo();
   }, []);
+
   const setTokenInfo = (token: string) => {
     switch (token) {
       case 'XFL':

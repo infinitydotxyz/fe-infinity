@@ -52,7 +52,7 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
             <Spacer />
 
             <div className={tokenItemClassname}>
-              <div >Airdrop</div>
+              <div>Airdrop</div>
               <div className="md:text-lg font-heading font-bold text-center">{rewards.result.airdropTier}</div>
             </div>
             <Spacer />
