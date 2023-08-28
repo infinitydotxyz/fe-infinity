@@ -34,16 +34,17 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
       subTitle={
         <div className="flex flex-col md:flex-row text-sm">
           <div className="mr-1 min-w-fit">Referral Code:</div>
-          <div className="flex flex-row">{rewards.result.referralCode}
+          <div className="flex flex-row">
+            {rewards.result.referralCode}
             <ClipboardButton
               className="ml-2 mt-[0.125rem]"
               textToCopy={`https://pixl.so/rewards?referrer=${rewards.result.referralCode}`}
             />
           </div>
-        </div >
+        </div>
       }
       sideInfo={
-        < div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
+        <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
           <div className="md:flex flex-wrap">
             <div className={tokenItemClassname}>
               <div>Referral Points</div>
@@ -67,7 +68,7 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
             </div>
             <Spacer />
           </div>
-        </div >
+        </div>
       }
     />
   );
