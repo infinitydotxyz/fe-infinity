@@ -40,10 +40,6 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
   const { rewards } = useUserPixlRewards();
   const { isUnlocked, unlock } = useIsAirdropUnlocked(user || '');
 
-  useEffect(() => {
-    console.log(`Rewards changed!`, rewards);
-  }, [rewards]);
-
   if ('error' in rewards) {
     return (
       <RewardsSection title="Points" subTitle="Sign in to view your rewards">
