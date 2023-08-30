@@ -21,7 +21,7 @@ export const useSaveReferral = () => {
   const [hasCachedReferral, setHasCachedReferral] = useState(true);
 
   useEffect(() => {
-    if ('error' in signature) {
+    if (!signature) {
       return;
     }
     const user = signature.address;
@@ -30,7 +30,7 @@ export const useSaveReferral = () => {
   }, [signature, getCachedReferrer, setHasCachedReferral]);
 
   useEffect(() => {
-    if ('error' in signature) {
+    if (!signature) {
       return;
     }
 

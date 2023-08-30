@@ -67,7 +67,7 @@ const MyRewards = () => {
     <div className="space-y-10 mt-6 pb-6 mb-16 mr-4">
       <PixlRewards isDesktop={isDesktop} />
 
-      <TokenBalances isDesktop={isDesktop} address={address} chainId="1" />
+      {address && <TokenBalances isDesktop={isDesktop} address={address} chainId="1" />}
 
       {cumulativeAmount > 0 && (
         <RewardsSection

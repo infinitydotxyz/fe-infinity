@@ -2,7 +2,8 @@ import { EIP712Data } from '@infinityxyz/lib-frontend/types/core/orderbook/gener
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { verifyTypedData } from 'ethers/lib/utils.js';
 import { useEffect, useState } from 'react';
-import { useAccount, useSignTypedData } from 'wagmi';
+import { useAccount } from 'wagmi';
+import { SignTypedDataArgs, signTypedData } from '@wagmi/core';
 
 export interface Signature {
   address: string;
@@ -66,30 +67,15 @@ const verifySignature = (signature: string, nonce: number, expectedSigner: strin
 
 const LOGIN_NONCE_EXPIRY_TIME = 7 * 24 * 60 * 60 * 1000;
 
-export function useUserSignature(): {
-  signature: { error: 'Wallet not connected' | 'User not signed in' } | Signature;
-  sign: () => Promise<void>;
-  isSigning: boolean;
-} {
+export function useUserSignature() {
   const { address: user } = useAccount();
-  const { signTypedDataAsync } = useSignTypedData();
-  const [sig, setSig] = useState<Signature | null>(null);
+  const [error, setError] = useState<'Wallet not connected' | 'User not signed in' | null>(null);
+  const [sig, setSig] = useState<null | Signature>(null);
   const [isSigning, setIsSigning] = useState(false);
 
   useEffect(() => {
-    if (!sig || !user) {
-      return;
-    }
-
-    const isValid = verifySignature(sig.sig, sig.nonce, user);
-    if (!isValid) {
-      return;
-    }
-    setCachedSignature(sig);
-  }, [sig, user, verifySignature, setCachedSignature]);
-
-  useEffect(() => {
     if (!user) {
+      setError('Wallet not connected');
       setSig(null);
       return;
     }
@@ -97,48 +83,49 @@ export function useUserSignature(): {
 
     if (cachedSig && Date.now() - cachedSig.nonce < LOGIN_NONCE_EXPIRY_TIME) {
       setSig(cachedSig);
+      setError(null);
+    } else {
+      setError('User not signed in');
+      setSig(null);
     }
   }, [user, setSig, getCachedSignature, LOGIN_NONCE_EXPIRY_TIME]);
 
   const sign = async () => {
-    const nonce = Date.now();
-    const data = getLoginMessage(nonce.toString());
-    if (!user) {
+    if (!user || isSigning) {
       return;
     }
 
     setIsSigning(true);
+    const nonce = Date.now();
+    const data = getLoginMessage(nonce.toString());
     try {
-      const res = await signTypedDataAsync(data as unknown as Record<string, unknown>);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const res = await signTypedData(data as unknown as SignTypedDataArgs<any>);
+      const isValid = verifySignature(res, nonce, user);
+      if (!isValid) {
+        console.warn(`Signature is invalid for user ${user}`);
+        setSig(null);
+        setError('User not signed in');
+        setIsSigning(false);
+        return;
+      }
 
-      setSig({
+      const sig = {
         address: user,
-        nonce: nonce,
+        nonce,
         sig: res
-      });
+      };
+      setSig(sig);
+      setError(null);
+      setCachedSignature(sig);
     } catch (err) {
       console.error(err);
     }
     setIsSigning(false);
   };
 
-  if (!user) {
-    return {
-      signature: { error: 'Wallet not connected' },
-      sign,
-      isSigning
-    };
-  }
-
-  if (!sig) {
-    return {
-      signature: { error: 'User not signed in' },
-      sign,
-      isSigning
-    };
-  }
-
   return {
+    error: error,
     signature: sig,
     sign,
     isSigning

@@ -27,44 +27,54 @@ export type UserRewards = {
   user: string;
 };
 
+const fetch = async (sig: ReturnType<typeof useUserSignature>['signature']) => {
+  if (sig) {
+    const endpoint = `/pixl/rewards/${sig.address}`;
+    try {
+      const res = await apiGet(endpoint, {
+        options: {
+          headers: {
+            'x-auth-nonce': sig.nonce,
+            'x-auth-signature': sig.sig
+          }
+        }
+      });
+      if (res.result) {
+        return { result: res.result };
+      } else {
+        throw new Error(`Failed to parse user response result`);
+      }
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  }
+};
+
 export function useUserPixlRewards() {
-  const { signature } = useUserSignature();
+  const { error, signature } = useUserSignature();
   const [value, setValue] = useState<
     { result: { error: 'Wallet not connected' | 'User not signed in' } } | { result: UserRewards }
   >({
     result: {
-      error: 'User not signed in'
+      error: error ? error : 'Wallet not connected'
     }
   });
 
   useEffect(() => {
-    const fetch = async () => {
-      if (signature && !('error' in signature)) {
-        const endpoint = `/pixl/rewards/${signature.address}`;
-        const res = await apiGet(endpoint, {
-          options: {
-            headers: {
-              'x-auth-nonce': 'error' in signature ? '' : signature?.nonce,
-              'x-auth-signature': 'error' in signature ? '' : signature?.sig
-            }
-          }
-        });
-        if (res.result) {
-          setValue({ result: res.result });
+    let isMounted = true;
+    if (signature) {
+      fetch(signature).then((res) => {
+        if (!isMounted || !res) {
+          return;
         }
-      }
-    };
-
-    if ('error' in signature) {
-      setValue({
-        result: {
-          error: signature.error
-        }
+        setValue(res);
       });
-    } else if (signature) {
-      fetch();
     }
-  }, [signature, setValue]);
+    return () => {
+      isMounted = false;
+    };
+  }, [signature, setValue, fetch]);
 
   return { rewards: value };
 }

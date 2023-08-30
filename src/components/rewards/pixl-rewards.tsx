@@ -1,17 +1,44 @@
 import { nFormatter } from 'src/utils';
-import { ClipboardButton, Spacer } from '../common';
+import { Button, ClipboardButton, Spacer } from '../common';
 import { twMerge } from 'tailwind-merge';
 import { RewardsSection } from './rewards-section';
 import { SignInButton } from '../common/sign-in-button';
 import { useUserPixlRewards } from 'src/hooks/api/useUserRewards';
 import { buttonBorderColor, primaryShadow } from 'src/utils/ui-constants';
 import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
+import { useEffect, useState } from 'react';
+import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { useAccount } from 'wagmi';
+
 const tokenItemClassname = 'lg:w-1/6 sm:w-full gap-1 flex md:flex-col items-center justify-between text-sm mt-1';
+
+function useIsAirdropUnlocked(user: string) {
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  useEffect(() => {
+    if (user) {
+      const isUnlocked = Boolean(localStorage.getItem(`airdrop:unlocked:${user}`));
+      setIsUnlocked(isUnlocked);
+    }
+  }, [user]);
+
+  return {
+    isUnlocked,
+    unlock: () => {
+      const address = trimLowerCase(user);
+      if (address) {
+        localStorage.setItem(`airdrop:unlocked:${user}`, 'true');
+        setIsUnlocked(true);
+      }
+    }
+  };
+}
 
 export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
   // save referrals based on query params
   useSaveReferral();
+  const { address: user } = useAccount();
   const { rewards } = useUserPixlRewards();
+  const { isUnlocked, unlock } = useIsAirdropUnlocked(user || '');
   if (!rewards.result) {
     return <div>Loading...</div>;
   }
@@ -56,7 +83,11 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
 
             <div className={tokenItemClassname}>
               <div>Airdrop</div>
-              <div className="md:text-lg font-heading font-bold text-center">{rewards.result.airdropTier}</div>
+              {isUnlocked ? (
+                <div className="md:text-lg font-heading font-bold text-center">{rewards.result.airdropTier}</div>
+              ) : (
+                <Button onClick={unlock}>Unlock Airdrop</Button>
+              )}
             </div>
             <Spacer />
 
