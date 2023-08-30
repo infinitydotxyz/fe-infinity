@@ -39,11 +39,12 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
   const { address: user } = useAccount();
   const { rewards } = useUserPixlRewards();
   const { isUnlocked, unlock } = useIsAirdropUnlocked(user || '');
-  if (!rewards.result) {
-    return <div>Loading...</div>;
-  }
 
-  if ('error' in rewards.result) {
+  useEffect(() => {
+    console.log(`Rewards changed!`, rewards);
+  }, [rewards]);
+
+  if ('error' in rewards) {
     return (
       <RewardsSection title="Points" subTitle="Sign in to view your rewards">
         <div className={twMerge(isDesktop && primaryShadow, 'md:py-4 md:px-6')}>
@@ -62,10 +63,10 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
         <div className="flex flex-col md:flex-row text-sm">
           <div className="mr-1 min-w-fit">Referral Code:</div>
           <div className="flex flex-row">
-            {rewards.result.referralCode}
+            {rewards.referralCode}
             <ClipboardButton
               className="ml-2 mt-[0.125rem]"
-              textToCopy={`https://pixl.so/rewards?referrer=${rewards.result.referralCode}`}
+              textToCopy={`https://pixl.so/rewards?referrer=${rewards.referralCode}`}
             />
           </div>
         </div>
@@ -76,7 +77,7 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
             <div className={tokenItemClassname}>
               <div>Referral Points</div>
               <div className="md:text-lg font-heading font-bold text-center">
-                {nFormatter(rewards.result.referralPoints, 2)}
+                {nFormatter(rewards.referralPoints, 2)}
               </div>
             </div>
             <Spacer />
@@ -84,7 +85,7 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
             <div className={tokenItemClassname}>
               <div>Airdrop</div>
               {isUnlocked ? (
-                <div className="md:text-lg font-heading font-bold text-center">{rewards.result.airdropTier}</div>
+                <div className="md:text-lg font-heading font-bold text-center">{rewards.airdropTier}</div>
               ) : (
                 <Button onClick={unlock}>Unlock Airdrop</Button>
               )}
@@ -93,9 +94,7 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
 
             <div className={tokenItemClassname}>
               <div>Total</div>
-              <div className="md:text-lg font-heading font-bold text-center">
-                {nFormatter(rewards.result.totalPoints, 2)}
-              </div>
+              <div className="md:text-lg font-heading font-bold text-center">{nFormatter(rewards.totalPoints, 2)}</div>
             </div>
             <Spacer />
           </div>

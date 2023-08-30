@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { apiPut } from 'src/utils';
-import { useUserSignature } from './useUserSignature';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 const getCachedReferrer = (user: string) => {
   const cachedReferrer = localStorage.getItem(`referrer:${user}`);
@@ -17,7 +17,7 @@ const saveCachedReferrer = (user: string, referralCode: string) => {
 
 export const useSaveReferral = () => {
   const { query } = useRouter();
-  const { signature } = useUserSignature();
+  const { signature } = useAppContext();
   const [hasCachedReferral, setHasCachedReferral] = useState(true);
 
   useEffect(() => {

@@ -52,24 +52,24 @@ const fetch = async (sig: ReturnType<typeof useUserSignature>['signature']) => {
 };
 
 export function useUserPixlRewards() {
-  const { error, signature } = useUserSignature();
-  const [value, setValue] = useState<
-    { result: { error: 'Wallet not connected' | 'User not signed in' } } | { result: UserRewards }
-  >({
-    result: {
-      error: error ? error : 'Wallet not connected'
-    }
+  const { signature } = useAppContext();
+
+  const [value, setValue] = useState<{ error: 'User not signed in' } | UserRewards>({
+    error: 'User not signed in'
   });
 
   useEffect(() => {
     let isMounted = true;
+
     if (signature) {
       fetch(signature).then((res) => {
         if (!isMounted || !res) {
           return;
         }
-        setValue(res);
+        setValue(res.result);
       });
+    } else {
+      setValue({ error: 'User not signed in' });
     }
     return () => {
       isMounted = false;

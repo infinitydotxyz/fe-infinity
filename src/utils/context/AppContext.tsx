@@ -25,6 +25,7 @@ import { extractErrorMsg, getDefaultOrderExpiryTime, getOrderExpiryTimeInMsFromE
 import { FEE_BPS, FEE_WALLET_ADDRESS, FLOW_TOKEN, ROYALTY_BPS, ZERO_ADDRESS } from '../constants';
 import { fetchMinXflStakeForZeroFees } from '../orderbook-utils';
 import { CartType, useCartContext } from './CartContext';
+import { Signature, useUserSignature } from 'src/hooks/api/useUserSignature';
 
 type ReservoirOrderbookType =
   | 'reservoir'
@@ -103,6 +104,10 @@ type AppContextType = {
   removeOrderFromSelection: (data: ERC721OrderCartItem) => void;
   orderSelection: ERC721OrderCartItem[];
   clearOrderSelection: () => void;
+
+  signature: Signature | null;
+  signIn: () => Promise<void>;
+  isSigning: boolean;
 };
 
 const AppContext = React.createContext<AppContextType | null>(null);
@@ -113,6 +118,7 @@ interface Props {
 
 export const AppContextProvider = ({ children }: Props) => {
   const { selectedChain, setSelectedChain, isWalletNetworkSupported } = useChain();
+  const { signature, sign: signIn, isSigning } = useUserSignature();
   if (!isWalletNetworkSupported) {
     switchNetwork({
       chainId: 1
@@ -695,7 +701,11 @@ export const AppContextProvider = ({ children }: Props) => {
     toggleOrderSelection,
     clearOrderSelection,
     orderSelection,
-    removeOrderFromSelection
+    removeOrderFromSelection,
+
+    signature,
+    signIn,
+    isSigning
   };
 
   return (

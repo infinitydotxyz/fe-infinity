@@ -80,17 +80,21 @@ export const TokenBalances = ({
   const [minStakeAmountForFeeWaiverAndBoost, setMinStakeAmountForFeeWaiverAndBoost] = useState(0);
 
   const getStakeInfo = async () => {
-    const minStakeAmount =
-      minStakeAmountForFeeWaiverAndBoost === 0
-        ? await fetchMinXflStakeForZeroFees()
-        : minStakeAmountForFeeWaiverAndBoost;
-    setMinStakeAmountForFeeWaiverAndBoost(minStakeAmount);
+    try {
+      const minStakeAmount =
+        minStakeAmountForFeeWaiverAndBoost === 0
+          ? await fetchMinXflStakeForZeroFees(chainId)
+          : minStakeAmountForFeeWaiverAndBoost;
+      setMinStakeAmountForFeeWaiverAndBoost(minStakeAmount);
 
-    const xflStaked = parseFloat((await stakeBalance()) ?? '0');
-    setXflStaked(xflStaked);
+      const xflStaked = parseFloat((await stakeBalance()) ?? '0');
+      setXflStaked(xflStaked);
 
-    // const boost = xflStaked >= minStakeAmount ? 2 : 0;
-    // setXflStakeBoost(boost + 'x');
+      // const boost = xflStaked >= minStakeAmount ? 2 : 0;
+      // setXflStakeBoost(boost + 'x');
+    } catch (e) {
+      console.error(e);
+    }
   };
   useEffect(() => {
     getStakeInfo();
