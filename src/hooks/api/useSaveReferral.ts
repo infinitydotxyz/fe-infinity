@@ -41,7 +41,7 @@ export const useSaveReferral = () => {
     const user = signature.address;
     const referralCode = query.referrer;
     if (user && referralCode && typeof referralCode === 'string') {
-      apiPut(`/pixl/rewards/${user}/referrals`, {
+      apiPut(`/pixl/rewards/user/${user}/referrals`, {
         data: {
           code: referralCode
         },

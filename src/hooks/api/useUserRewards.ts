@@ -29,7 +29,7 @@ export type UserRewards = {
 
 const fetch = async (sig: ReturnType<typeof useUserSignature>['signature']) => {
   if (sig) {
-    const endpoint = `/pixl/rewards/${sig.address}`;
+    const endpoint = `/pixl/rewards/user/${sig.address}`;
     try {
       const res = await apiGet(endpoint, {
         options: {
