@@ -1,5 +1,5 @@
 import { UserRewardsDto } from '@infinityxyz/lib-frontend/types/dto/rewards';
-import { apiGet, useFetch } from 'src/utils';
+import { apiGet, apiPut, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useAccount, useNetwork } from 'wagmi';
 import { useUserSignature } from './useUserSignature';
@@ -25,6 +25,7 @@ export type UserRewards = {
   updatedAt: number;
   referralCode: string;
   user: string;
+  airdropBoosted: boolean;
 };
 
 const fetch = async (sig: ReturnType<typeof useUserSignature>['signature']) => {
@@ -58,6 +59,24 @@ export function useUserPixlRewards() {
     error: 'User not signed in'
   });
 
+  const boostAirdrop = async () => {
+    if (!signature) {
+      return;
+    }
+    try {
+      await apiPut(`/pixl/rewards/user/${signature.address}/airdrop/boost`, {
+        options: {
+          headers: {
+            'x-auth-nonce': signature.nonce,
+            'x-auth-signature': signature.sig
+          }
+        }
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     let isMounted = true;
     if (signature !== null) {
@@ -75,5 +94,5 @@ export function useUserPixlRewards() {
     };
   }, [signature, setValue, fetch]);
 
-  return { rewards: value };
+  return { rewards: value, boostAirdrop };
 }

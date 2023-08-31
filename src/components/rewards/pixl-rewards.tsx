@@ -9,6 +9,7 @@ import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
 import { useEffect, useState } from 'react';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useAccount } from 'wagmi';
+import { TwitterLink } from './twitter-link';
 
 const tokenItemClassname = 'lg:w-1/6 sm:w-full gap-1 flex md:flex-col items-center justify-between text-sm mt-1';
 
@@ -37,10 +38,9 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
   // save referrals based on query params
   useSaveReferral();
   const { address: user } = useAccount();
-  const { rewards } = useUserPixlRewards();
+  const { rewards, boostAirdrop } = useUserPixlRewards();
   const { isUnlocked, unlock } = useIsAirdropUnlocked(user || '');
 
-  console.log(rewards);
   if ('error' in rewards) {
     return (
       <RewardsSection title="Points" subTitle="Sign in to view your rewards">
@@ -57,15 +57,29 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
     <RewardsSection
       title="Points"
       subTitle={
-        <div className="flex flex-col md:flex-row text-sm">
-          <div className="mr-1 min-w-fit">Referral Code:</div>
-          <div className="flex flex-row font-bold">
-            {rewards.referralCode}
-            <ClipboardButton
-              className="ml-2 mt-[0.125rem]"
-              textToCopy={`https://pixl.so/rewards?referrer=${rewards.referralCode}`}
-            />
+        <div className="flex flex-col">
+          <div className="flex flex-col md:flex-row text-sm">
+            <div className="mr-1 min-w-fit">Referral Code:</div>
+            <div className="flex flex-row font-bold">
+              {rewards.referralCode}
+              <ClipboardButton
+                className="ml-2 mt-[0.125rem]"
+                textToCopy={`https://pixl.so/rewards?referrer=${rewards.referralCode}`}
+              />
+            </div>
           </div>
+          {isUnlocked && !rewards.airdropBoosted && (
+            <div className="flex flex-col mt-4 mb-1">
+              <p> Share on twitter to boost your airdrop tier!</p>
+              <TwitterLink
+                tweetText="Hello world" // TODO add tweet text
+                linkText="Share"
+                onOpen={() => {
+                  boostAirdrop();
+                }}
+              />
+            </div>
+          )}
         </div>
       }
       sideInfo={
