@@ -1,8 +1,5 @@
-import { TokenomicsConfigDto } from '@infinityxyz/lib-frontend/types/dto';
-import { BouncingLogo, CenteredContent } from 'src/components/common';
-import { FLOW_TOKEN, useFetch } from 'src/utils';
-import { secondaryBgColor, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { Leaderboard } from './leaderboard';
 
 interface Props {
   showCount?: number;
@@ -11,28 +8,30 @@ interface Props {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const GlobalRewards = ({ showCount }: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { result, isLoading, isError } = useFetch<TokenomicsConfigDto>('/rewards');
+  // const [orderBy, setOrderBy] = useState<LeaderboardQuery['orderBy']>('total');
 
-  if (isLoading) {
-    return (
-      <CenteredContent>
-        <BouncingLogo />
-      </CenteredContent>
-    );
-  }
+  // const { result, isLoading, isError } = useFetch<TokenomicsConfigDto>('/pixl/rewards/leaderboard');
 
-  if (isError) {
-    return <div className="flex flex-col mt-10">An error occurred while loading rewards</div>;
-  }
+  // if (isLoading) {
+  //   return (
+  //     <CenteredContent>
+  //       <BouncingLogo />
+  //     </CenteredContent>
+  //   );
+  // }
+
+  // if (isError) {
+  //   return <div className="flex flex-col mt-10">An error occurred while loading rewards</div>;
+  // }
 
   return (
     <div className={twMerge('space-y-4 mt-6 pb-6 mb-16')}>
       <div>
-        <div className="text-2xl font-medium">Season 1</div>
-        <div className={twMerge(secondaryTextColor, 'font-medium text-sm')}>Ends on Jul 31 2023</div>
+        <div className="text-2xl font-medium">Leaderboard</div>
       </div>
       <div className="flex space-x-4 justify-between">
-        <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
+        <Leaderboard />
+        {/* <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
           <div className="text-2xl font-medium underline">Buy Rewards</div>
           <div>9M ${FLOW_TOKEN.symbol} per day.</div>
           <div>
@@ -40,9 +39,9 @@ const GlobalRewards = ({ showCount }: Props) => {
             to all buyers each day.
           </div>
           {/* <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName={`bg-[#FA8147]`} /> */}
-        </div>
+      </div>
 
-        {/* <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
+      {/* <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
           <div className="text-2xl font-medium underline">Listing Rewards</div>
           <div>1M ${FLOW_TOKEN.symbol} per day.</div>
           <div>
@@ -52,7 +51,7 @@ const GlobalRewards = ({ showCount }: Props) => {
           <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName="bg-[#7d81f6]" />
         </div> */}
 
-        {/* <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
+      {/* <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
           <div className="text-2xl font-medium underline">Referral Rewards</div>
           <div>200M ${FLOW_TOKEN.symbol} until supply runs out.</div>
           <div>
@@ -62,7 +61,7 @@ const GlobalRewards = ({ showCount }: Props) => {
             </ExternalLink>{' '}
             for details.
           </div>
-          <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName="bg-[#4899f1]" /> 
+          <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName="bg-[#4899f1]" />
         </div>
 
         <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
@@ -75,7 +74,7 @@ const GlobalRewards = ({ showCount }: Props) => {
           <ProgressBar percentage={25} total={100} className={bgColor} fillerClassName="bg-[#66d981]" />
         </div> */}
 
-        {/* <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
+      {/* <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
           <div className="text-2xl font-medium underline">Creator Rewards</div>
           <div>100k ${FLOW_TOKEN.symbol} per day</div>
           <div>
@@ -86,7 +85,7 @@ const GlobalRewards = ({ showCount }: Props) => {
             to get whitelisted.
           </div>
         </div> */}
-      </div>
+      {/* </div> */}
       {/* <CenteredContent>Leaderboards coming soon.</CenteredContent> */}
     </div>
   );

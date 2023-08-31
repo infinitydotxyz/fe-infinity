@@ -7,7 +7,7 @@ import { textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 const RewardsPage = () => {
-  const tabs = ['My Rewards'];
+  const tabs = ['My Rewards', 'Global Rewards'];
   const [selected, setSelected] = useState(tabs[0]);
 
   // prevent hydration errors
