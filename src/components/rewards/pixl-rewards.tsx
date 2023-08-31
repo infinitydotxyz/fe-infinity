@@ -40,6 +40,7 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
   const { rewards } = useUserPixlRewards();
   const { isUnlocked, unlock } = useIsAirdropUnlocked(user || '');
 
+  console.log(rewards);
   if ('error' in rewards) {
     return (
       <RewardsSection title="Points" subTitle="Sign in to view your rewards">
@@ -58,7 +59,7 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
       subTitle={
         <div className="flex flex-col md:flex-row text-sm">
           <div className="mr-1 min-w-fit">Referral Code:</div>
-          <div className="flex flex-row">
+          <div className="flex flex-row font-bold">
             {rewards.referralCode}
             <ClipboardButton
               className="ml-2 mt-[0.125rem]"

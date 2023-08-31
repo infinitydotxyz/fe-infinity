@@ -60,8 +60,7 @@ export function useUserPixlRewards() {
 
   useEffect(() => {
     let isMounted = true;
-
-    if (signature) {
+    if (signature !== null) {
       fetch(signature).then((res) => {
         if (!isMounted || !res) {
           return;
