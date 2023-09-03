@@ -23,6 +23,7 @@ const RewardsPage = () => {
         options={tabs}
         defaultOption={tabs[0]}
         onChange={setSelected}
+        border={true}
       />
       <div
         className={twMerge(textColor, 'flex flex-col h-full w-full overflow-y-auto overflow-x-hidden scrollbar-hide')}

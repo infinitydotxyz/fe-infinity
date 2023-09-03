@@ -121,7 +121,7 @@ export const Leaderboard = () => {
   const { address } = useAccount();
 
   return (
-    <div className="pb-5 grid grid-flow-row-dense gap-2 grid-cols-1">
+    <div className="pb-5 grid grid-flow-row-dense gap-2 grid-cols-1 md:grid-cols-3">
       {items.map((data, index) => {
         const isUser = trimLowerCase(data.user) === trimLowerCase(address);
         return (
@@ -137,7 +137,7 @@ export const Leaderboard = () => {
               <div className="hidden md:flex items-center font-bold font-heading">{index + 1}</div>
 
               <div className={propertyClassname}>
-                <div className="text-sm font-bold">User</div>
+                <div className="text-sm font-bold">Address</div>
                 <div className="text-sm">{isUser ? 'You' : ellipsisAddress(data.user)}</div>
               </div>
 
