@@ -162,7 +162,7 @@ export const TokenBalances = ({
     <div>
       <RewardsSection
         title="Token Balances"
-        subTitle={`Balances of the top NFT exchange tokens.`}
+        subTitle={<div className="text-sm">Balances of the top NFT exchange tokens.</div>}
         sideInfo={
           <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:p-4 md:px-6')}>
             <div className="md:flex flex-wrap">

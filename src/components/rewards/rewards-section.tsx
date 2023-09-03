@@ -18,7 +18,7 @@ export const RewardsSection = (props: RewardsSectionProps) => {
     >
       <div className="md:flex w-full">
         <div className="md:w-1/2">
-          <div className="text-2xl font-medium underline">{props.title}</div>
+          <div className="text-2xl font-medium">{props.title}</div>
           {props.subTitle && <div className="md:w-1/2 mt-5">{props.subTitle}</div>}
         </div>
         {props?.sideInfo && <div className="md:w-1/2 md:mt-0 mt-4">{props.sideInfo}</div>}

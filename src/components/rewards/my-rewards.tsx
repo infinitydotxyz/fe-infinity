@@ -72,7 +72,7 @@ const MyRewards = () => {
       {cumulativeAmount > 0 && (
         <RewardsSection
           title="Earned Rewards"
-          subTitle={`Earned $${FLOW_TOKEN.symbol} rewards.`}
+          subTitle={<div className="text-sm">Earned ${FLOW_TOKEN.symbol} rewards.</div>}
           sideInfo={
             <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
               <div>${FLOW_TOKEN.symbol}</div>

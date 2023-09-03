@@ -105,7 +105,7 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
         subTitle={
           <div className="flex flex-col">
             <div className="flex flex-col text-sm space-y-2">
-              Airdrop points are based on your past NFT activity on Ethereum. See
+              Airdrop points are based on your past NFT activity. See{' '}
               <a target="_blank" href="https://docs.pixl.so/rewards#airdrop" className="underline cursor-pointer">
                 docs
               </a>
