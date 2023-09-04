@@ -26,6 +26,7 @@ export type UserRewards = {
   referralCode: string;
   user: string;
   airdropBoosted: boolean;
+  numReferrals: number;
 };
 
 const fetch = async (sig: ReturnType<typeof useUserSignature>['signature']) => {

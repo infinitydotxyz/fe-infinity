@@ -89,9 +89,9 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
               <Spacer />
 
               <div className={tokenItemClassname}>
-                <div>Num referrals</div> {/* joe-todo to fill this */}
+                <div>Num referrals</div>
                 <div className="md:text-lg font-heading font-bold text-center">
-                  {nFormatter(rewards.referralPoints, 2)}
+                  {nFormatter(rewards.numReferrals, 2)}
                 </div>
               </div>
               <Spacer />
