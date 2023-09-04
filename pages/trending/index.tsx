@@ -87,7 +87,8 @@ const TrendingPage = () => {
         ) : (
           <ADropdown
             label={period.label}
-            innerClassName="w-24"
+            className="w-30"
+            innerClassName="w-30"
             items={options.map((option) => ({
               label: option.label,
               onClick: () => setPeriod(option)
