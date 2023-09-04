@@ -49,7 +49,7 @@ export const RaffleDescription = ({ raffle, ethPrice }: { raffle: UserRaffleDto;
   const { address: user } = useAccount();
   const state = states[raffle.state];
   const { isMobile } = useScreenSize();
-  const { result } = useRaffleLeaderboard(raffle.id); // joe-todo: add loading states
+  const { result } = useRaffleLeaderboard(raffle.id);
 
   const isStarted = raffle.state !== RaffleState.Unstarted;
 
