@@ -1,16 +1,16 @@
-import { nFormatter } from 'src/utils';
-import { Button, ClipboardButton, Spacer } from '../common';
-import { twMerge } from 'tailwind-merge';
-import { RewardsSection } from './rewards-section';
-import { SignInButton } from '../common/sign-in-button';
-import { useUserPixlRewards } from 'src/hooks/api/useUserRewards';
-import { buttonBorderColor, primaryShadow, secondaryBgColor } from 'src/utils/ui-constants';
-import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
-import { useEffect, useState } from 'react';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { useEffect, useState } from 'react';
+import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
+import { useUserPixlRewards } from 'src/hooks/api/useUserRewards';
+import { nFormatter } from 'src/utils';
+import { buttonBorderColor, primaryShadow, secondaryBgColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 import { useAccount } from 'wagmi';
-import { TwitterLink } from './twitter-link';
 import { AButton } from '../astra/astra-button';
+import { ClipboardButton, Spacer } from '../common';
+import { SignInButton } from '../common/sign-in-button';
+import { RewardsSection } from './rewards-section';
+import { TwitterLink } from './twitter-link';
 
 const tokenItemClassname = 'lg:w-1/6 sm:w-full gap-1 flex md:flex-col items-center justify-between text-sm mt-1';
 
