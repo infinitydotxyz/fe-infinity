@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useAccount } from 'wagmi';
 import { TwitterLink } from './twitter-link';
+import { AButton } from '../astra/astra-button';
 
 const tokenItemClassname = 'lg:w-1/6 sm:w-full gap-1 flex md:flex-col items-center justify-between text-sm mt-1';
 
@@ -105,10 +106,10 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
         subTitle={
           <div className="flex flex-col">
             <div className="flex flex-col text-sm space-y-2">
-              Airdrop points are based on your past NFT activity. See{' '}
+              Airdrop points are based on your past NFT activity on Ethereum. See{' '}
               <a target="_blank" href="https://docs.pixl.so/rewards#airdrop" className="underline cursor-pointer">
                 docs
-              </a>
+              </a>{' '}
               for more info.
             </div>
             {isUnlocked && !rewards.airdropBoosted && (
@@ -128,12 +129,14 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
         sideInfo={
           <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
             <div className="md:flex flex-wrap">
-              <div className={tokenItemClassname}>
+              <div className={twMerge(tokenItemClassname, 'space-y-2')}>
                 <div>Airdrop</div>
                 {isUnlocked ? (
                   <div className="md:text-lg font-heading font-bold text-center">{rewards.airdropTier}</div>
                 ) : (
-                  <Button onClick={unlock}>Unlock Airdrop</Button>
+                  <AButton primary onClick={unlock}>
+                    Unlock Airdrop
+                  </AButton>
                 )}
               </div>
               <Spacer />
