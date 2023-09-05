@@ -1,16 +1,21 @@
-import { nFormatter } from 'src/utils';
-import { Button, ClipboardButton, Spacer } from '../common';
-import { twMerge } from 'tailwind-merge';
-import { RewardsSection } from './rewards-section';
-import { SignInButton } from '../common/sign-in-button';
-import { useUserPixlRewards } from 'src/hooks/api/useUserRewards';
-import { buttonBorderColor, primaryShadow, secondaryBgColor } from 'src/utils/ui-constants';
-import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
-import { useEffect, useState } from 'react';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { useEffect, useState } from 'react';
+import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
+import { useUserPixlRewards } from 'src/hooks/api/useUserRewards';
+import { nFormatter } from 'src/utils';
+import { borderColor, buttonBorderColor, primaryShadow, secondaryBgColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 import { useAccount } from 'wagmi';
-import { TwitterLink } from './twitter-link';
+import chad from '../../images/chad.png';
+import ngmi from '../../images/ngmi.png';
+import pepe from '../../images/pepe.png';
+import virgin from '../../images/virgin.png';
+import rookie from '../../images/rookie.png';
 import { AButton } from '../astra/astra-button';
+import { ClipboardButton, EZImage, Spacer } from '../common';
+import { SignInButton } from '../common/sign-in-button';
+import { RewardsSection } from './rewards-section';
+import { TwitterLink } from './twitter-link';
 
 const tokenItemClassname = 'lg:w-1/6 sm:w-full gap-1 flex md:flex-col items-center justify-between text-sm mt-1';
 
@@ -35,6 +40,23 @@ function useIsAirdropUnlocked(user: string) {
   };
 }
 
+function airdropTierMapper(tier: string) {
+  switch (tier) {
+    case 'NONE':
+      return 'NGMI';
+    case 'BRONZE':
+      return 'VIRGIN';
+    case 'SILVER':
+      return 'ROOKIE';
+    case 'GOLD':
+      return 'CHAD';
+    case 'PLATINUM':
+      return 'DEGEN';
+    default:
+      return 'NGMI';
+  }
+}
+
 export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
   // save referrals based on query params
   useSaveReferral();
@@ -52,8 +74,138 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
     );
   }
 
+  const mappedAirdropTier = airdropTierMapper(rewards.airdropTier);
+
   return (
     <>
+      <RewardsSection
+        title="Airdrop"
+        subTitle={
+          <div className="flex flex-col">
+            <div className="flex flex-col text-sm space-y-2">
+              <div>
+                Airdrop tier is based on your past NFT activity on Ethereum. Your tier is {mappedAirdropTier}. See{' '}
+                <a target="_blank" href="https://docs.pixl.so/rewards#airdrop" className="underline cursor-pointer">
+                  docs
+                </a>{' '}
+                for more info.
+              </div>
+            </div>
+            {isUnlocked && !rewards.airdropBoosted && (
+              <div className="flex flex-col mt-4 mb-1">
+                <p>Share on twitter to boost your airdrop tier!</p>
+                <TwitterLink
+                  tweetText="I just claimed my airdrop on https://pixl.so, the greatest NFT aggregator on the planet. Check it out!"
+                  linkText="Share"
+                  onOpen={() => {
+                    boostAirdrop();
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        }
+        sideInfo={
+          <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
+            <div className="md:flex flex-wrap">
+              <div className={twMerge(tokenItemClassname)}>
+                {isUnlocked ? (
+                  <div
+                    className={twMerge(
+                      'flex flex-col items-center p-2 space-y-2',
+                      mappedAirdropTier === 'NGMI' ? `border ${primaryShadow}` : ''
+                    )}
+                  >
+                    <div>Tier</div>
+                    <div className="flex flex-col space-y-2 items-center">
+                      <EZImage src={ngmi.src} className="w-24 h-24" />
+                      <div className="md:text-lg font-heading font-bold text-center">NGMI</div>
+                    </div>
+                  </div>
+                ) : (
+                  <AButton primary onClick={unlock} className="my-8">
+                    Unlock Airdrop
+                  </AButton>
+                )}
+              </div>
+              <Spacer />
+
+              <div className={twMerge(tokenItemClassname)}>
+                {isUnlocked ? (
+                  <div
+                    className={twMerge(
+                      'flex flex-col items-center p-2 space-y-2',
+                      mappedAirdropTier === 'VIRGIN' ? `border ${primaryShadow}` : ''
+                    )}
+                  >
+                    <div>Tier</div>
+                    <div className="flex flex-col space-y-2 items-center">
+                      <EZImage src={virgin.src} className="w-24 h-24" />
+                      <div className="md:text-lg font-heading font-bold text-center">VIRGIN</div>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+              <Spacer />
+
+              <div className={twMerge(tokenItemClassname)}>
+                {isUnlocked ? (
+                  <div
+                    className={twMerge(
+                      'flex flex-col items-center p-2 space-y-2',
+                      mappedAirdropTier === 'ROOKIE' ? `border ${primaryShadow}` : ''
+                    )}
+                  >
+                    <div>Tier</div>
+                    <div className="flex flex-col space-y-2 items-center">
+                      <EZImage src={rookie.src} className="w-24 h-24" />
+                      <div className="md:text-lg font-heading font-bold text-center">ROOKIE</div>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+              <Spacer />
+
+              <div className={twMerge(tokenItemClassname)}>
+                {isUnlocked ? (
+                  <div
+                    className={twMerge(
+                      'flex flex-col items-center p-2 space-y-2',
+                      mappedAirdropTier === 'CHAD' ? `border ${primaryShadow}` : ''
+                    )}
+                  >
+                    <div>Tier</div>
+                    <div className="flex flex-col space-y-2 items-center">
+                      <EZImage src={chad.src} className="w-[5.5rem] h-24" />
+                      <div className="md:text-lg font-heading font-bold text-center">CHAD</div>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+              <Spacer />
+
+              <div className={twMerge(tokenItemClassname)}>
+                {isUnlocked ? (
+                  <div
+                    className={twMerge(
+                      'flex flex-col items-center p-2 space-y-2',
+                      mappedAirdropTier === 'DEGEN' ? `border ${primaryShadow}` : ''
+                    )}
+                  >
+                    <div>Tier</div>
+                    <div className="flex flex-col space-y-2 items-center">
+                      <EZImage src={pepe.src} className="w-24 h-24" />
+                      <div className="md:text-lg font-heading font-bold text-center">DEGEN</div>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+              <Spacer />
+            </div>
+          </div>
+        }
+      />
+
       <RewardsSection
         title="Referral Points"
         subTitle={
@@ -67,8 +219,10 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
                 </a>{' '}
                 for more info.
               </div>
-              <div className="mr-1 min-w-fit mt-2">Referral link:</div>
-              <div className={twMerge(secondaryBgColor, 'flex flex-row mt-1 p-2 font-bold rounded-lg')}>
+              <div className="min-w-fit mt-2">Referral link:</div>
+              <div
+                className={twMerge(secondaryBgColor, borderColor, 'flex flex-row mt-1 p-2 font-bold rounded-lg border')}
+              >
                 {`https://pixl.so/rewards?referrer=${rewards.referralCode}`}
                 <ClipboardButton
                   className="ml-2 mt-[0.5rem] w-6 h-6"
@@ -94,50 +248,6 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
                 <div className="md:text-lg font-heading font-bold text-center">
                   {nFormatter(rewards.numReferrals, 2)}
                 </div>
-              </div>
-              <Spacer />
-            </div>
-          </div>
-        }
-      />
-
-      <RewardsSection
-        title="Airdrop points"
-        subTitle={
-          <div className="flex flex-col">
-            <div className="flex flex-col text-sm space-y-2">
-              Airdrop points are based on your past NFT activity on Ethereum. See{' '}
-              <a target="_blank" href="https://docs.pixl.so/rewards#airdrop" className="underline cursor-pointer">
-                docs
-              </a>{' '}
-              for more info.
-            </div>
-            {isUnlocked && !rewards.airdropBoosted && (
-              <div className="flex flex-col mt-4 mb-1">
-                <p>Share on twitter to boost your airdrop tier!</p>
-                <TwitterLink
-                  tweetText="I just claimed my airdrop on https://pixl.so, the greatest NFT aggregator on the planet. Check it out!"
-                  linkText="Share"
-                  onOpen={() => {
-                    boostAirdrop();
-                  }}
-                />
-              </div>
-            )}
-          </div>
-        }
-        sideInfo={
-          <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
-            <div className="md:flex flex-wrap">
-              <div className={twMerge(tokenItemClassname, 'space-y-2')}>
-                <div>Airdrop</div>
-                {isUnlocked ? (
-                  <div className="md:text-lg font-heading font-bold text-center">{rewards.airdropTier}</div>
-                ) : (
-                  <AButton primary onClick={unlock}>
-                    Unlock Airdrop
-                  </AButton>
-                )}
               </div>
               <Spacer />
             </div>
