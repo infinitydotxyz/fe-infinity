@@ -2,20 +2,19 @@ import { DistributionType } from '@infinityxyz/lib-frontend/types/core';
 import { UserCumulativeRewardsDto } from '@infinityxyz/lib-frontend/types/dto';
 import { ethers } from 'ethers';
 import { useTheme } from 'next-themes';
-import React from 'react';
 import { CenteredContent, ConnectButton, Spacer, toastError, toastSuccess } from 'src/components/common';
 import { useUserRewards } from 'src/hooks/api/useUserRewards';
 import { useClaim } from 'src/hooks/contract/cm-distributor/claim';
+import useScreenSize from 'src/hooks/useScreenSize';
 import { nFormatter } from 'src/utils';
 import { FLOW_TOKEN } from 'src/utils/constants';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { buttonBorderColor, primaryShadow, secondaryTextColor } from 'src/utils/ui-constants';
+import { buttonBorderColor, primaryShadow } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useAccount } from 'wagmi';
 import { AButton } from '../astra/astra-button';
-import useScreenSize from 'src/hooks/useScreenSize';
-import { RewardsSection } from './rewards-section';
 import { PixlRewards } from './pixl-rewards';
+import { RewardsSection } from './rewards-section';
 import { TokenBalances } from './token-balances';
 
 const MyRewards = () => {
@@ -78,25 +77,23 @@ const MyRewards = () => {
               <div>${FLOW_TOKEN.symbol}</div>
               <div className="md:flex flex-wrap mt-4">
                 <div className="lg:w-1/3 sm:w-full md:block flex justify-between">
-                  <div className="md:text-2xl font-heading font-bold">{nFormatter(cumulativeAmount, 2)}</div>
                   <div className="text-sm mt-1">Earned</div>
+                  <div className="md:text-2xl font-heading font-bold">{nFormatter(cumulativeAmount, 2)}</div>
                 </div>
                 <Spacer />
 
                 <div className="lg:w-1/3 sm:w-full md:block flex justify-between">
-                  <div className="md:text-2xl font-heading font-bold">{nFormatter(claimedAmount, 2)}</div>
                   <div className="text-sm mt-1">Claimed</div>
+                  <div className="md:text-2xl font-heading font-bold">{nFormatter(claimedAmount, 2)}</div>
                 </div>
                 <Spacer />
 
                 <div className="lg:w-1/3 sm:w-full md:block flex justify-between">
-                  <div className="md:text-2xl font-heading font-bold">{nFormatter(claimableAmount, 2)}</div>
                   <div className="text-sm mt-1">Claimable</div>
+                  <div className="md:text-2xl font-heading font-bold">{nFormatter(claimableAmount, 2)}</div>
                 </div>
                 <Spacer />
               </div>
-
-              <div className={twMerge('w-full flex mt-2 text-xs', secondaryTextColor)}>Claim coming soon.</div>
 
               {claimableAmountWei !== '0' && (
                 <div className="w-full flex mt-4 items-center flex-wrap space-x-3">
