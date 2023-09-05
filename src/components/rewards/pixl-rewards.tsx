@@ -213,7 +213,7 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
             <div className="flex flex-col text-sm">
               <div>
                 Earn referral points by sharing your referral link with friends. Direct as well as indirect referrals
-                upto a 100 levels will earn you points. See{' '}
+                upto a 100 levels will earn you points. Points from inorganic activity will be slashed. See{' '}
                 <a target="_blank" href="https://docs.pixl.so/rewards#referrals" className="underline cursor-pointer">
                   docs
                 </a>{' '}
