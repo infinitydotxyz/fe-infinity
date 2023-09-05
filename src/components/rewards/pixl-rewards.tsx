@@ -95,7 +95,7 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
               <div className="flex flex-col mt-4 mb-1">
                 <p>Share on twitter to boost your airdrop tier!</p>
                 <TwitterLink
-                  tweetText="I just claimed my airdrop on https://pixl.so, the greatest NFT aggregator on the planet. Check it out!"
+                  tweetText="I just claimed my airdrop from @pixlso, the greatest NFT aggregator on the planet. Check it out!"
                   linkText="Share"
                   onOpen={() => {
                     boostAirdrop();
