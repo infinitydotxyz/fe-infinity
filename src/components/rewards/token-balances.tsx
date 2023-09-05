@@ -1,6 +1,6 @@
 import { twMerge } from 'tailwind-merge';
 import { RewardsSection } from './rewards-section';
-import { buttonBorderColor, primaryShadow } from 'src/utils/ui-constants';
+import { borderColor, buttonBorderColor, primaryShadow } from 'src/utils/ui-constants';
 import { FLOW_TOKEN, nFormatter } from 'src/utils';
 import { AButton } from '../astra/astra-button';
 import { UniswapModal } from '../common/uniswap-model';
@@ -162,7 +162,33 @@ export const TokenBalances = ({
     <div>
       <RewardsSection
         title="Token Balances"
-        subTitle={<div className="text-sm">Balances of the top NFT exchange tokens.</div>}
+        subTitle={
+          <div className="flex flex-col items-center space-y-3">
+            <div className="text-sm">
+              Balances of the top NFT exchange tokens. Min balance required (any one of the tokens) for 0 fees and
+              royalties: {nFormatter(minStakeAmountForFeeWaiverAndBoost, 2)}
+            </div>
+            {xflBalance > 0 ? (
+              <div className="text-sm">
+                Your current reward boost for holding {nFormatter(xflBalance, 2)} ${FLOW_TOKEN.symbol} tokens:{' '}
+                <span className={twMerge(primaryShadow, borderColor, 'font-bold text-lg border p-1')}>5x</span>
+              </div>
+            ) : (
+              <div className="text-sm">
+                You are not earning a reward boost as your ${FLOW_TOKEN.symbol} balance is 0. You can earn upto a 10x
+                boost on rewards for holding ${FLOW_TOKEN.symbol} tokens. See{' '}
+                <a
+                  target="_blank"
+                  href="https://docs.pixl.so/xfl-tokenomics#utility"
+                  className="underline cursor-pointer"
+                >
+                  docs
+                </a>{' '}
+                for more info.
+              </div>
+            )}
+          </div>
+        }
         sideInfo={
           <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:p-4 md:px-6')}>
             <div className="md:flex flex-wrap">
