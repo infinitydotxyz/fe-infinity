@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils';
 
-interface SaleStats {
+export interface SaleStats {
   numBuys: number;
   numNativeBuys: number;
   volume: number;
   nativeVolume: number;
+}
+
+export interface HistoricalSalesStats extends SaleStats {
+  day: string;
+  timestamp: number;
 }
 
 const fetch = async (filters: { user?: string; chainId?: string }) => {
@@ -21,7 +26,7 @@ const fetch = async (filters: { user?: string; chainId?: string }) => {
   }
   const data = result as {
     aggregated: SaleStats;
-    historical: SaleStats[];
+    historical: HistoricalSalesStats[];
   };
   return data;
 };
@@ -36,7 +41,7 @@ export function useBuyRewardStats() {
     volume: 0
   });
 
-  const [historical, setHistorical] = useState<SaleStats[]>([]);
+  const [historical, setHistorical] = useState<HistoricalSalesStats[]>([]);
 
   useEffect(() => {
     let isMounted = true;
@@ -63,9 +68,9 @@ export function useBuyRewardStats() {
   }, [filters]);
 
   return {
-    isLoading,
     filters,
     setFilters,
+    isLoading,
     aggregated,
     historical
   };
