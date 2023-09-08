@@ -7,7 +7,7 @@ import { UniswapModal } from '../common/uniswap-model';
 import { useBalance } from 'wagmi';
 import { useEffect, useState } from 'react';
 import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
-import { fetchMinXflStakeForZeroFees } from 'src/utils/orderbook-utils';
+import { fetchMinXflBalanceForZeroFee } from 'src/utils/orderbook-utils';
 import { Spacer } from '../common';
 import { StakeTokensModal } from './stake-tokens-modal';
 import { UnstakeTokensModal } from './unstake-tokens-modal';
@@ -83,7 +83,7 @@ export const TokenBalances = ({
     try {
       const minStakeAmount =
         minStakeAmountForFeeWaiverAndBoost === 0
-          ? await fetchMinXflStakeForZeroFees(chainId)
+          ? await fetchMinXflBalanceForZeroFee(chainId)
           : minStakeAmountForFeeWaiverAndBoost;
       setMinStakeAmountForFeeWaiverAndBoost(minStakeAmount);
 
