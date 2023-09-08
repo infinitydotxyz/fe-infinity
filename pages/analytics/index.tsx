@@ -1,4 +1,7 @@
+import { SetStateAction } from 'jotai';
+import { Dispatch, useState } from 'react';
 import { APageBox } from 'src/components/astra/astra-page-box';
+import { DonutChart, DonutDataPoint } from 'src/components/charts/donut-chart';
 import { LineChart } from 'src/components/charts/line-chart';
 import { Checkbox, Spacer } from 'src/components/common';
 import { RewardsSection } from 'src/components/rewards/rewards-section';
@@ -9,6 +12,7 @@ import {
   VolumeDataSetIds,
   useBuyRewardDataSets
 } from 'src/hooks/api/useBuyRewardDataSets';
+import { useTopBuyersDataSets } from 'src/hooks/api/useTopBuyersDataSets';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { nFormatter } from 'src/utils';
 import { buttonBorderColor, primaryShadow, textColor } from 'src/utils/ui-constants';
@@ -43,6 +47,24 @@ const AnalyticsPage = () => {
     setSelectedBuyDataSets,
     setSelectedVolumeDataSets
   } = useBuyRewardDataSets();
+
+  const {
+    topUsersByVolumeDataSet,
+    topUsersByNumBuysDataSet,
+    topUsersByNativeVolumeDataSet,
+    topUsersByNumNativeBuysDataSet
+  } = useTopBuyersDataSets();
+
+  const [selectedUserByVolume, setSelectedUserByVolume] = useState<null | DonutDataPoint>(null);
+  const [selectedUserByNativeVolume, setSelectedUserByNativeVolume] = useState<null | DonutDataPoint>(null);
+  const [selectedUserByBuys, setSelectedUserByBuys] = useState<null | DonutDataPoint>(null);
+  const [selectedUserByNativeBuys, setSelectedUserByNativeBuys] = useState<null | DonutDataPoint>(null);
+
+  const handleDonutSelect = (set: Dispatch<SetStateAction<DonutDataPoint | null>>) => (item: DonutDataPoint) => {
+    set((prev) => {
+      return prev && prev.id === item.id ? null : item;
+    });
+  };
 
   return (
     <APageBox title="Analytics">
@@ -132,6 +154,52 @@ const AnalyticsPage = () => {
             ></RewardsSection>
           </div>
         )}
+
+        <div className={twMerge('space-y-4 mt-6 pb-6')}>
+          <div className="flex flex-col lg:flex-row mb-2 mx-2">
+            <div className="mb-2 lg:mb-0 lg:flex-1 lg:mr-1 lg:max-w-[50%]">
+              <DonutChart
+                title={topUsersByVolumeDataSet.name}
+                subTitle={''}
+                dataSet={topUsersByVolumeDataSet}
+                selectedDataPoint={selectedUserByVolume}
+                onClick={handleDonutSelect(setSelectedUserByVolume)}
+              />
+            </div>
+            <div className="lg:flex-1 lg:ml-1 lg:max-w-[50%]">
+              <DonutChart
+                title={topUsersByNativeVolumeDataSet.name}
+                subTitle={''}
+                dataSet={topUsersByNativeVolumeDataSet}
+                selectedDataPoint={selectedUserByNativeVolume}
+                onClick={handleDonutSelect(setSelectedUserByNativeVolume)}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className={twMerge('space-y-4 mt-6 pb-6')}>
+          <div className="flex flex-col lg:flex-row mb-2 mx-2">
+            <div className="mb-2 lg:mb-0 lg:flex-1 lg:mr-1 lg:max-w-[50%]">
+              <DonutChart
+                title={topUsersByNumBuysDataSet.name}
+                subTitle={''}
+                dataSet={topUsersByNumBuysDataSet}
+                selectedDataPoint={selectedUserByBuys}
+                onClick={handleDonutSelect(setSelectedUserByBuys)}
+              />
+            </div>
+            <div className="lg:flex-1 lg:ml-1 lg:max-w-[50%]">
+              <DonutChart
+                title={topUsersByNumNativeBuysDataSet.name}
+                subTitle={''}
+                dataSet={topUsersByNumNativeBuysDataSet}
+                selectedDataPoint={selectedUserByNativeBuys}
+                onClick={handleDonutSelect(setSelectedUserByNativeBuys)}
+              />
+            </div>
+          </div>
+        </div>
         <div className={twMerge('space-y-4 mt-6 pb-6 mb-16')}>
           <div className="flex flex-col lg:flex-row mb-2 mx-2">
             <div className="mb-2 lg:mb-0 lg:flex-1 lg:mr-1 lg:max-w-[50%]">
