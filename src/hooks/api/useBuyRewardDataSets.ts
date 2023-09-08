@@ -9,10 +9,6 @@ import { useAccount } from 'wagmi';
 import { useEffect, useState } from 'react';
 import { DataPoint, DataSet } from 'src/components/charts/line-chart';
 
-const randomInt = (max: number) => {
-  return Math.round(Math.random() * max);
-}; // TODO remove randomInt used generate non-flat data points
-
 export type BuyDataSetIds = 'buys' | 'native-buys' | 'user-buys' | 'user-native-buys';
 export type VolumeDataSetIds = 'volume' | 'native-volume' | 'user-volume' | 'user-native-volume';
 export const AllBuyDataSetIds: BuyDataSetIds[] = ['buys', 'native-buys', 'user-buys', 'user-native-buys'];
@@ -78,7 +74,7 @@ export const useBuyRewardDataSets = () => {
         dataSetId: 'buys',
         id: `buys:${item.day}`,
         x: item.timestamp,
-        y: item.numBuys + randomInt(1000)
+        y: item.numBuys
       };
     });
 
@@ -87,7 +83,7 @@ export const useBuyRewardDataSets = () => {
         dataSetId: 'native-buys',
         id: `native-buys:${item.day}`,
         x: item.timestamp,
-        y: item.numNativeBuys + randomInt(300)
+        y: item.numNativeBuys
       };
     });
 
@@ -118,7 +114,7 @@ export const useBuyRewardDataSets = () => {
         dataSetId: 'volume',
         id: `volume:${item.day}`,
         x: item.timestamp,
-        y: item.volume + randomInt(2000)
+        y: item.volume
       };
     });
 
@@ -127,7 +123,7 @@ export const useBuyRewardDataSets = () => {
         dataSetId: 'native-volume',
         id: `native-volume:${item.day}`,
         x: item.timestamp,
-        y: item.nativeVolume + randomInt(1000)
+        y: item.nativeVolume
       };
     });
 
@@ -161,7 +157,7 @@ export const useBuyRewardDataSets = () => {
         dataSetId: 'user-buys',
         id: `user-buys:${item.day}`,
         x: item.timestamp,
-        y: item.numBuys + randomInt(100)
+        y: item.numBuys
       };
     });
 
@@ -170,7 +166,7 @@ export const useBuyRewardDataSets = () => {
         dataSetId: 'user-native-buys',
         id: `user-native-buys:${item.day}`,
         x: item.timestamp,
-        y: item.numNativeBuys + randomInt(30)
+        y: item.numNativeBuys
       };
     });
 
@@ -179,7 +175,7 @@ export const useBuyRewardDataSets = () => {
         dataSetId: 'user-volume',
         id: `user-volume:${item.day}`,
         x: item.timestamp,
-        y: item.volume + randomInt(20)
+        y: item.volume
       };
     });
 
@@ -188,7 +184,7 @@ export const useBuyRewardDataSets = () => {
         dataSetId: 'user-native-volume',
         id: `user-native-volume:${item.day}`,
         x: item.timestamp,
-        y: item.nativeVolume + randomInt(100)
+        y: item.nativeVolume
       };
     });
 
