@@ -23,7 +23,7 @@ import { useAccount, useBalance, useNetwork, useProvider, useSigner } from 'wagm
 import { getReservoirClient } from '../astra-utils';
 import { extractErrorMsg, getDefaultOrderExpiryTime, getOrderExpiryTimeInMsFromEnum } from '../common-utils';
 import { FEE_BPS, FEE_WALLET_ADDRESS, FLOW_TOKEN, ROYALTY_BPS, ZERO_ADDRESS } from '../constants';
-import { fetchMinXflStakeForZeroFees } from '../orderbook-utils';
+import { fetchMinXflBalanceForZeroFee } from '../orderbook-utils';
 import { CartType, useCartContext } from './CartContext';
 import { Signature, useUserSignature } from 'src/hooks/api/useUserSignature';
 
@@ -412,7 +412,7 @@ export const AppContextProvider = ({ children }: Props) => {
           // calculate fees
           let automatedRoyalties = true;
           let fees = [`${FEE_WALLET_ADDRESS}:${FEE_BPS}`];
-          const minBal = await fetchMinXflStakeForZeroFees();
+          const minBal = await fetchMinXflBalanceForZeroFee();
           if (minBal) {
             const feesWaived =
               xflBalance >= minBal ||
