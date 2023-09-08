@@ -26,8 +26,8 @@ export const useBuyRewardDataSets = () => {
   const [availableBuyDataSets, setAvailableBuyDataSets] = useState(AllBuyDataSetIds);
   const [availableVolumeDataSets, setAvailableVolumeDataSets] = useState(AllVolumeDataSetIds);
 
-  const { historical } = useBuyRewardStats();
-  const { filters, historical: userHistoricalBuyRewards, setFilters } = useBuyRewardStats();
+  const { historical, aggregated } = useBuyRewardStats();
+  const { filters, historical: userHistoricalBuyRewards, aggregated: userAggregated, setFilters } = useBuyRewardStats();
 
   const [internalBuyDataSets, setInternalBuyDataSets] = useState<DataSet[]>([]);
   const [internalVolumeDataSets, setInternalVolumeDataSets] = useState<DataSet[]>([]);
@@ -263,6 +263,9 @@ export const useBuyRewardDataSets = () => {
   }, [address]);
 
   return {
+    userAvailable: !!address,
+    aggregated,
+    userAggregated,
     buyDataSets,
     volumeDataSets,
     availableBuyDataSets,
