@@ -23,6 +23,7 @@ const GlobalRewards = ({ showCount }: Props) => {
   // if (isError) {
   //   return <div className="flex flex-col mt-10">An error occurred while loading rewards</div>;
   // }
+  //
 
   return (
     <div className={twMerge('space-y-4 mt-6 pb-6 mb-16')}>

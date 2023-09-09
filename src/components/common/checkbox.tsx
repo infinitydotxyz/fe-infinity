@@ -38,12 +38,12 @@ export const Checkbox = ({
         disabled={disabled}
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="rounded h-5 w-5 cursor-pointer checked:bg-brand-primary dark:checked:bg-brand-darkPrimaryFade
-       hover:bg-brand-primary dark:hover:bg-brand-darkPrimaryFade
-         focus:shadow-none dark:focus:shadow-none hover:shadow-none dark:hover:shadow-none
-         focus:outline-none dark:focus:outline-none hover:outline-none dark:hover:outline-none
-         focus:ring-0 dark:focus:ring-0 hover:ring-0 dark:hover:ring-0
-         focus:ring-offset-0 dark:ring-offset-0"
+        className={`rounded h-5 w-5 cursor-pointer checked:bg-brand-primary dark:checked:bg-brand-darkPrimaryFade
+         ${
+           disabled
+             ? 'bg-gray-500'
+             : 'hover:bg-brand-primary dark:hover:bg-brand-darkPrimaryFade focus:shadow-none dark:focus:shadow-none hover:shadow-none dark:hover:shadow-none focus:outline-none dark:focus:outline-none hover:outline-none dark:hover:outline-none focus:ring-0 dark:focus:ring-0 hover:ring-0 dark:hover:ring-0 focus:ring-offset-0 dark:ring-offset-0'
+         }`}
       />
 
       {boxOnLeft && checkLabel}

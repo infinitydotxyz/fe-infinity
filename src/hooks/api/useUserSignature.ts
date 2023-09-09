@@ -1,5 +1,5 @@
 import { EIP712Data } from '@infinityxyz/lib-frontend/types/core/orderbook/generate/signer-request';
-import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { LOGIN_NONCE_EXPIRY_TIME, trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { verifyTypedData } from 'ethers/lib/utils.js';
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
@@ -64,8 +64,6 @@ const verifySignature = (signature: string, nonce: number, expectedSigner: strin
 
   return signingAddress === trimLowerCase(expectedSigner);
 };
-
-const LOGIN_NONCE_EXPIRY_TIME = 7 * 24 * 60 * 60 * 1000;
 
 export function useUserSignature() {
   const { address: user } = useAccount();
