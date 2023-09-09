@@ -44,18 +44,21 @@ export const useTopBuyersDataSets = () => {
     total: 0
   });
 
-  const mapDataPoint = (item: SaleStats & { user: string }): DonutDataPoint => {
-    return {
-      id: item.user,
-      label: address === item.user ? 'You' : ellipsisAddress(item.user, 6, 0),
-      value: item.volume,
-      color: `#${item.user?.slice?.(2, 8)}`
+  const mapDataPoint =
+    (value: keyof SaleStats) =>
+    (item: SaleStats & { user: string }): DonutDataPoint => {
+      return {
+        id: item.user,
+        label: address === item.user ? 'You' : ellipsisAddress(item.user, 6, 0),
+        value: item[value],
+        color: `#${item.user?.slice?.(2, 8)}`
+      };
     };
-  };
 
   const toDataSet = (
     name: string,
     units: string,
+    value: keyof SaleStats,
     {
       data,
       total
@@ -64,7 +67,7 @@ export const useTopBuyersDataSets = () => {
       total: number;
     }
   ): DonutChartDataSet => {
-    const dataPoints = data.map(mapDataPoint);
+    const dataPoints = data.map(mapDataPoint(value));
     const sum = dataPoints.reduce((acc, item) => {
       return acc + item.value;
     }, 0);
@@ -86,19 +89,23 @@ export const useTopBuyersDataSets = () => {
   };
 
   useEffect(() => {
-    setTopUsersByVolumeDataSet(toDataSet('Top users by buy volume', 'USD', topBuyersByVolume));
+    setTopUsersByVolumeDataSet(toDataSet('Top users by buy volume', 'USD', 'volume', topBuyersByVolume));
   }, [topBuyersByVolume, address]);
 
   useEffect(() => {
-    setTopUsersByNativeVolumeDataSet(toDataSet('Top users by native buy volume', 'USD', topBuyersByNativeVolume));
+    setTopUsersByNativeVolumeDataSet(
+      toDataSet('Top users by native buy volume', 'USD', 'nativeVolume', topBuyersByNativeVolume)
+    );
   }, [topBuyersByNativeVolume, address]);
 
   useEffect(() => {
-    setTopUsersByNumBuysDataSet(toDataSet('Top users by num buys', 'Buys', topBuyersByNumBuys));
+    setTopUsersByNumBuysDataSet(toDataSet('Top users by num buys', 'Buys', 'numBuys', topBuyersByNumBuys));
   }, [topBuyersByNumBuys, address]);
 
   useEffect(() => {
-    setTopUsersByNumNativeBuysDataSet(toDataSet('Top users by num native buys', 'Buys', topBuyersByNumNativeBuys));
+    setTopUsersByNumNativeBuysDataSet(
+      toDataSet('Top users by num native buys', 'Buys', 'numNativeBuys', topBuyersByNumNativeBuys)
+    );
   }, [topBuyersByNumNativeBuys, address]);
 
   return {
