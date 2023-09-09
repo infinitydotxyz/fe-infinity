@@ -85,7 +85,11 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
             <div className="flex flex-col text-sm space-y-2">
               <div>
                 Airdrop tier is based on your past NFT activity on Ethereum. Your tier is {mappedAirdropTier}. See{' '}
-                <a target="_blank" href="https://docs.pixl.so/rewards#airdrop" className="underline cursor-pointer">
+                <a
+                  target="_blank"
+                  href="https://docs.pixl.so/reward-points#airdrop"
+                  className="underline cursor-pointer"
+                >
                   docs
                 </a>{' '}
                 for more info.
@@ -214,7 +218,11 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
               <div>
                 Earn referral points by sharing your referral link with friends. Direct as well as indirect referrals
                 upto a 100 levels will earn you points. Points from inorganic activity will be slashed. See{' '}
-                <a target="_blank" href="https://docs.pixl.so/rewards#referrals" className="underline cursor-pointer">
+                <a
+                  target="_blank"
+                  href="https://docs.pixl.so/reward-points#referral-points"
+                  className="underline cursor-pointer"
+                >
                   docs
                 </a>{' '}
                 for more info.

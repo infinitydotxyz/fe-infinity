@@ -100,6 +100,8 @@ export const TokenBalances = ({
     getStakeInfo();
   }, []);
 
+  const rewardBoost = xflBalance >= 10_000_000 ? 10 : xflBalance >= 5_000_000 ? 5 : xflBalance >= 1_000_000 ? 2 : 0;
+
   const setTokenInfo = (token: string) => {
     switch (token) {
       case 'XFL':
@@ -171,7 +173,9 @@ export const TokenBalances = ({
             {xflBalance > 0 ? (
               <div className="text-sm">
                 Your current reward boost for holding {nFormatter(xflBalance, 2)} ${FLOW_TOKEN.symbol} tokens:{' '}
-                <span className={twMerge(primaryShadow, borderColor, 'font-bold text-lg border p-1')}>5x</span>
+                <span className={twMerge(primaryShadow, borderColor, 'font-bold text-lg border p-1')}>
+                  {rewardBoost}x
+                </span>
               </div>
             ) : (
               <div className="text-sm">

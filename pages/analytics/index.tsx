@@ -78,29 +78,25 @@ const AnalyticsPage = () => {
               <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
                 <div className="md:flex flex-wrap mt-4">
                   <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                    <div className="md:text-2xl font-heading font-bold">{nFormatter(aggregated.volume, 2)} USD</div>
-                    <div className="text-sm mt-1">Buy volume</div>
+                    <div className="md:text-2xl font-heading font-bold">{nFormatter(aggregated.volume, 2)}</div>
+                    <div className="text-sm mt-1">Buy volume USD</div>
                   </div>
                   <Spacer />
 
                   <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                    <div className="md:text-2xl font-heading font-bold">
-                      {nFormatter(aggregated.nativeVolume, 2)} USD
-                    </div>
-                    <div className="text-sm mt-1">Native buy volume</div>
+                    <div className="md:text-2xl font-heading font-bold">{nFormatter(aggregated.nativeVolume, 2)}</div>
+                    <div className="text-sm mt-1">Native buy volume USD</div>
                   </div>
                   <Spacer />
 
                   <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                    <div className="md:text-2xl font-heading font-bold">{nFormatter(aggregated.numBuys, 2)} Buys</div>
+                    <div className="md:text-2xl font-heading font-bold">{nFormatter(aggregated.numBuys, 2)}</div>
                     <div className="text-sm mt-1">Number of buys</div>
                   </div>
                   <Spacer />
 
                   <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                    <div className="md:text-2xl font-heading font-bold">
-                      {nFormatter(aggregated.numNativeBuys, 2)} Buys
-                    </div>
+                    <div className="md:text-2xl font-heading font-bold">{nFormatter(aggregated.numNativeBuys, 2)}</div>
                     <div className="text-sm mt-1">Number of native buys</div>
                   </div>
                   <Spacer />
@@ -118,32 +114,28 @@ const AnalyticsPage = () => {
                 <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
                   <div className="md:flex flex-wrap mt-4">
                     <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                      <div className="md:text-2xl font-heading font-bold">
-                        {nFormatter(userAggregated.volume, 2)} USD
-                      </div>
-                      <div className="text-sm mt-1">Buy volume</div>
+                      <div className="md:text-2xl font-heading font-bold">{nFormatter(userAggregated.volume, 2)}</div>
+                      <div className="text-sm mt-1">Buy volume USD</div>
                     </div>
                     <Spacer />
 
                     <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
                       <div className="md:text-2xl font-heading font-bold">
-                        {nFormatter(userAggregated.nativeVolume, 2)} USD
+                        {nFormatter(userAggregated.nativeVolume, 2)}
                       </div>
-                      <div className="text-sm mt-1">Native buy volume</div>
+                      <div className="text-sm mt-1">Native buy volume USD</div>
                     </div>
                     <Spacer />
 
                     <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                      <div className="md:text-2xl font-heading font-bold">
-                        {nFormatter(userAggregated.numBuys, 2)} Buys
-                      </div>
+                      <div className="md:text-2xl font-heading font-bold">{nFormatter(userAggregated.numBuys, 2)}</div>
                       <div className="text-sm mt-1">Number of buys</div>
                     </div>
                     <Spacer />
 
                     <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
                       <div className="md:text-2xl font-heading font-bold">
-                        {nFormatter(userAggregated.numNativeBuys, 2)} Buys
+                        {nFormatter(userAggregated.numNativeBuys, 2)}
                       </div>
                       <div className="text-sm mt-1">Number of native buys</div>
                     </div>
