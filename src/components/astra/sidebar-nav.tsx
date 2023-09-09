@@ -25,6 +25,7 @@ import { GiJeweledChalice } from 'react-icons/gi';
 import { RxDiscordLogo } from 'react-icons/rx';
 import { TfiTwitter } from 'react-icons/tfi';
 import { AiOutlineRead } from 'react-icons/ai';
+import { IoAnalyticsOutline } from 'react-icons/io5';
 
 export const SidebarNav = () => {
   const { theme, setTheme } = useTheme();
@@ -159,6 +160,24 @@ export const SidebarNav = () => {
                 iconButtonStyle,
                 hoverColorBrandText,
                 router.asPath.startsWith(`/rewards`) ? brandTextColor : textColor
+              )}
+            />
+          </AButton>
+        </HelpToolTip>
+
+        <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Analytics</div>}>
+          <AButton
+            highlighted={router.asPath.startsWith(`/analytics`)}
+            onClick={() => {
+              router.push(`/analytics`);
+            }}
+            className="rounded-lg"
+          >
+            <IoAnalyticsOutline
+              className={twMerge(
+                iconButtonStyle,
+                hoverColorBrandText,
+                router.asPath.startsWith(`/analytics`) ? brandTextColor : textColor
               )}
             />
           </AButton>
