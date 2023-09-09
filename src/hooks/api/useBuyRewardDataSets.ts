@@ -170,7 +170,7 @@ export const useBuyRewardDataSets = () => {
       };
     });
 
-    const volume: DataPoint[] = historical.map((item) => {
+    const volume: DataPoint[] = userHistoricalBuyRewards.map((item) => {
       return {
         dataSetId: 'user-volume',
         id: `user-volume:${item.day}`,
@@ -179,7 +179,7 @@ export const useBuyRewardDataSets = () => {
       };
     });
 
-    const nativeVolume: DataPoint[] = historical.map((item) => {
+    const nativeVolume: DataPoint[] = userHistoricalBuyRewards.map((item) => {
       return {
         dataSetId: 'user-native-volume',
         id: `user-native-volume:${item.day}`,
