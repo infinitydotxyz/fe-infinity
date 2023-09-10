@@ -27,6 +27,10 @@ export type UserRewards = {
   user: string;
   airdropBoosted: boolean;
   numReferrals: number;
+  numBuys: number;
+  numNativeBuys: number;
+  volume: number;
+  nativeVolume: number;
 };
 
 const fetch = async (sig: ReturnType<typeof useUserSignature>['signature']) => {
