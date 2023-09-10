@@ -8,8 +8,7 @@ import { ScrollLoader } from '../common';
 import { useAccount } from 'wagmi';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 
-// }
-interface LeaderboardQuery {
+export interface LeaderboardQuery {
   orderBy: 'total' | 'referrals' | 'buys';
   limit: number;
 }
@@ -38,8 +37,7 @@ const fetch = async ({ orderBy, cursor }: { orderBy: LeaderboardQuery['orderBy']
   };
 };
 
-const useLeaderboard = () => {
-  const [orderBy, setOrderBy] = useState<LeaderboardQuery['orderBy']>('total');
+const useLeaderboard = (orderBy: LeaderboardQuery['orderBy']) => {
   const [items, setItems] = useState<LeaderboardItem[]>([]);
   const [pagination, setPagination] = useState<{ hasNextPage: boolean; cursor: string }>({
     hasNextPage: true,
@@ -58,6 +56,8 @@ const useLeaderboard = () => {
       hasNextPage: true,
       cursor: ''
     });
+
+    loadNextPage();
   };
 
   useEffect(() => {
@@ -106,8 +106,6 @@ const useLeaderboard = () => {
   }, [nonce]);
 
   return {
-    orderBy,
-    setOrderBy,
     items,
     isLoading,
     fetchMore: loadNextPage,
@@ -117,8 +115,8 @@ const useLeaderboard = () => {
 
 const propertyClassname = 'flex-col flex justify-between md:mt-0 mt-2';
 
-export const Leaderboard = () => {
-  const { items, isLoading, fetchMore, pagination } = useLeaderboard();
+export const Leaderboard = ({ orderBy }: { orderBy: LeaderboardQuery['orderBy'] }) => {
+  const { items, isLoading, fetchMore, pagination } = useLeaderboard(orderBy);
   const { address } = useAccount();
 
   return (
