@@ -37,11 +37,11 @@ const GlobalRewards = ({ showCount }: Props) => {
 
   return (
     <div className={twMerge('space-y-4 mt-6 pb-6 mb-16')}>
-      <div>
+      <div className="flex flex-row justify-between align-center mr-6">
         <div className="text-2xl font-medium">Leaderboard</div>
         <ADropdown
           label={OrderByValueToName[orderBy]}
-          innerClassName="w-30"
+          innerClassName="w-24"
           items={Object.keys(OrderByValueToName).map((option) => ({
             label: OrderByValueToName[option as LeaderboardQuery['orderBy']],
             onClick: () => setOrderBy(option as LeaderboardQuery['orderBy'])

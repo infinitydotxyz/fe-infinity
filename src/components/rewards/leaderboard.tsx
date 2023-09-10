@@ -132,7 +132,7 @@ export const Leaderboard = ({ orderBy }: { orderBy: LeaderboardQuery['orderBy'] 
             )}
             key={data.user}
           >
-            <div className="grid gap-2 justify-between items-center w-full grid-cols-3 md:grid-cols-5 mx-2">
+            <div className="grid gap-2 justify-between items-center w-full grid-cols-4 md:grid-cols-5 mx-2">
               <div className="hidden md:flex items-center font-bold font-heading">{index + 1}</div>
 
               <div className={propertyClassname}>
