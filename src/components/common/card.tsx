@@ -147,7 +147,7 @@ export const GridCard = ({
 
                   {data?.source?.icon && !hideIcon && (
                     <div className={twMerge('flex items-center')}>
-                      <EZImage src={data?.source?.icon} className="w-4 h-4" />
+                      <EZImage src={data?.source?.icon} className="w-4 h-4 rounded-full" />
                     </div>
                   )}
                 </div>
