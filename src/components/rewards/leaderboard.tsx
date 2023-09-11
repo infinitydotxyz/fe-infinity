@@ -1,12 +1,14 @@
 // export const LeaderboardRow = () => {
 
-import { useEffect, useState } from 'react';
-import { apiGet, ellipsisAddress, nFormatter } from 'src/utils';
-import { borderColor } from 'src/utils/ui-constants';
-import { twMerge } from 'tailwind-merge';
-import { ScrollLoader } from '../common';
-import { useAccount } from 'wagmi';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { useEffect, useState } from 'react';
+import { HiOutlineExternalLink } from 'react-icons/hi';
+import { apiGet, ellipsisAddress, getChainScannerBase, nFormatter } from 'src/utils';
+import { borderColor, brandBorderColor, hoverColorBrandText } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
+import { useAccount, useNetwork } from 'wagmi';
+import { ClipboardButton, ScrollLoader } from '../common';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 export interface LeaderboardQuery {
   orderBy: 'total' | 'referrals' | 'buys';
@@ -118,26 +120,35 @@ const propertyClassname = 'flex-col flex justify-between md:mt-0 mt-2';
 export const Leaderboard = ({ orderBy }: { orderBy: LeaderboardQuery['orderBy'] }) => {
   const { items, isLoading, fetchMore, pagination } = useLeaderboard(orderBy);
   const { address } = useAccount();
+  const { chain } = useNetwork();
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id || selectedChain);
 
   return (
-    <div className="pb-5 grid grid-flow-row-dense gap-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+    <div className="pb-5 grid grid-flow-row-dense gap-2 grid-cols-1 w-full">
       {items.map((data, index) => {
         const isUser = trimLowerCase(data.user) === trimLowerCase(address);
         return (
           <div
             className={twMerge(
               borderColor,
-              'rounded-lg border p-2 flex items-center',
-              isUser ? '!border-green-600' : ''
+              'rounded-lg border-2 p-2 flex items-center',
+              isUser ? brandBorderColor : ''
             )}
             key={data.user}
           >
-            <div className="grid gap-2 justify-between items-center w-full grid-cols-4 md:grid-cols-5 mx-2">
-              <div className="hidden md:flex items-center font-bold font-heading">{index + 1}</div>
-
+            <div className="hidden md:flex items-center font-bold font-heading">{index + 1}</div>
+            <div className="ml-10 grid gap-2 justify-between items-center w-full grid-cols-2 md:grid-cols-4 mx-2">
               <div className={propertyClassname}>
                 <div className="text-sm font-bold">Address</div>
-                <div className="text-sm">{isUser ? 'You' : ellipsisAddress(data.user)}</div>
+                <div className="flex items-center space-x-2">
+                  <div className="text-sm">{isUser ? 'You' : ellipsisAddress(data.user)}</div>
+                  <ClipboardButton className={twMerge(hoverColorBrandText)} textToCopy={data.user} />
+                  <HiOutlineExternalLink
+                    className={twMerge(hoverColorBrandText, 'text-md cursor-pointer')}
+                    onClick={() => window.open(getChainScannerBase(chainId) + '/address/' + data.user)}
+                  />
+                </div>
               </div>
 
               <div className={propertyClassname}>

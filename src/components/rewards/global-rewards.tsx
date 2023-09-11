@@ -37,7 +37,7 @@ const GlobalRewards = ({ showCount }: Props) => {
 
   return (
     <div className={twMerge('space-y-4 mt-6 pb-6 mb-16')}>
-      <div className="flex flex-row justify-between align-center mr-6">
+      <div className="flex flex-col md:flex-row align-center md:space-x-5">
         <div className="text-2xl font-medium">Leaderboard</div>
         <ADropdown
           label={OrderByValueToName[orderBy]}
