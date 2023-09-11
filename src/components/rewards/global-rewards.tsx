@@ -1,9 +1,17 @@
 import { twMerge } from 'tailwind-merge';
-import { Leaderboard } from './leaderboard';
+import { Leaderboard, LeaderboardQuery } from './leaderboard';
+import { ADropdown } from '../astra/astra-dropdown';
+import { useState } from 'react';
 
 interface Props {
   showCount?: number;
 }
+
+const OrderByValueToName: Record<LeaderboardQuery['orderBy'], string> = {
+  total: 'Total',
+  referrals: 'Referral Points',
+  buys: 'Buy Points'
+};
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const GlobalRewards = ({ showCount }: Props) => {
@@ -25,13 +33,23 @@ const GlobalRewards = ({ showCount }: Props) => {
   // }
   //
 
+  const [orderBy, setOrderBy] = useState<LeaderboardQuery['orderBy']>('total');
+
   return (
     <div className={twMerge('space-y-4 mt-6 pb-6 mb-16')}>
-      <div>
+      <div className="flex flex-col md:flex-row align-center md:space-x-5">
         <div className="text-2xl font-medium">Leaderboard</div>
+        <ADropdown
+          label={OrderByValueToName[orderBy]}
+          innerClassName="w-24"
+          items={Object.keys(OrderByValueToName).map((option) => ({
+            label: OrderByValueToName[option as LeaderboardQuery['orderBy']],
+            onClick: () => setOrderBy(option as LeaderboardQuery['orderBy'])
+          }))}
+        />
       </div>
       <div className="flex space-x-4 justify-between">
-        <Leaderboard />
+        <Leaderboard orderBy={orderBy} />
         {/* <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
           <div className="text-2xl font-medium underline">Buy Rewards</div>
           <div>9M ${FLOW_TOKEN.symbol} per day.</div>
