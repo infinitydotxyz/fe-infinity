@@ -9,7 +9,7 @@ import { useAccount } from 'wagmi';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 
 export interface LeaderboardQuery {
-  orderBy: 'total' | 'referrals' | 'buys';
+  orderBy: 'total' | 'referrals' | 'buys' | 'listings';
   limit: number;
 }
 
@@ -18,6 +18,7 @@ interface LeaderboardItem {
   referralPoints: number;
   totalPoints: number;
   buyPoints: number;
+  listingPoints: number;
 }
 
 const fetch = async ({ orderBy, cursor }: { orderBy: LeaderboardQuery['orderBy']; cursor: string }) => {
@@ -132,9 +133,8 @@ export const Leaderboard = ({ orderBy }: { orderBy: LeaderboardQuery['orderBy'] 
             )}
             key={data.user}
           >
-            <div className="grid gap-2 justify-between items-center w-full grid-cols-4 md:grid-cols-5 mx-2">
-              <div className="hidden md:flex items-center font-bold font-heading">{index + 1}</div>
-
+            <div className="grid gap-2 justify-between items-center w-full grid-cols-5 lg:grid-cols-6 mx-2">
+              <div className="hidden lg:flex items-center font-bold font-heading">{index + 1}</div>
               <div className={propertyClassname}>
                 <div className="text-sm font-bold">Address</div>
                 <div className="text-sm">{isUser ? 'You' : ellipsisAddress(data.user)}</div>
@@ -164,6 +164,15 @@ export const Leaderboard = ({ orderBy }: { orderBy: LeaderboardQuery['orderBy'] 
                   '-'
                 ) : (
                   <div className={'text-green-600'}>{nFormatter(data.buyPoints)}</div>
+                )}
+              </div>
+
+              <div className={propertyClassname}>
+                <div className="text-sm font-bold">Listing Points</div>
+                {Number.isNaN(data.listingPoints) ? (
+                  '-'
+                ) : (
+                  <div className={'text-green-600'}>{nFormatter(data.listingPoints)}</div>
                 )}
               </div>
             </div>
