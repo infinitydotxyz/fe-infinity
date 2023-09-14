@@ -5,6 +5,9 @@ import { buttonBorderColor, primaryShadow } from 'src/utils/ui-constants';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { nFormatter } from 'src/utils';
 import { Spacer } from '../common';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { DonutChart, DonutDataPoint } from '../charts/donut-chart';
+import { useTopUsersByListingsDataSets } from 'src/hooks/api/useTopUsersByListingsDataSets';
 
 interface Props {
   stats: OrderStats;
@@ -13,6 +16,27 @@ interface Props {
 }
 export function ListingStats({ stats, userStats, showUserStats }: Props) {
   const { isDesktop } = useScreenSize();
+
+  const {
+    topUsersByNumListingsDataSet,
+    topUsersByNumActiveListingsDataSet,
+    topUsersByNumListingsBelowFloorDataSet,
+    topUsersByNumActiveListingsBelowFloorDataSet
+  } = useTopUsersByListingsDataSets();
+
+  const [selectedUserByNumListings, setSelectedUserByNumListings] = useState<null | DonutDataPoint>(null);
+  const [selectedUserByNumActiveListings, setSelectedUserByNumActiveListings] = useState<null | DonutDataPoint>(null);
+  const [selectedUserByNumListingsBelowFloor, setSelectedUserByNumListingsBelowFloor] = useState<null | DonutDataPoint>(
+    null
+  );
+  const [selectedUserByNumActiveListingsBelowFloor, setSelectedUserByNumActiveListingsBelowFloor] =
+    useState<null | DonutDataPoint>(null);
+
+  const handleDonutSelect = (set: Dispatch<SetStateAction<DonutDataPoint | null>>) => (item: DonutDataPoint) => {
+    set((prev) => {
+      return prev && prev.id === item.id ? null : item;
+    });
+  };
 
   return (
     <>
@@ -95,6 +119,52 @@ export function ListingStats({ stats, userStats, showUserStats }: Props) {
           ></RewardsSection>
         </div>
       )}
+
+      <div className={twMerge('space-y-4 mt-6 pb-6')}>
+        <div className="flex flex-col lg:flex-row mb-2 mx-2">
+          <div className="mb-2 lg:mb-0 lg:flex-1 lg:mr-1 lg:max-w-[50%]">
+            <DonutChart
+              title={topUsersByNumListingsDataSet.name}
+              subTitle={''}
+              dataSet={topUsersByNumListingsDataSet}
+              selectedDataPoint={selectedUserByNumListings}
+              onClick={handleDonutSelect(setSelectedUserByNumListings)}
+            />
+          </div>
+          <div className="lg:flex-1 lg:ml-1 lg:max-w-[50%]">
+            <DonutChart
+              title={topUsersByNumActiveListingsDataSet.name}
+              subTitle={''}
+              dataSet={topUsersByNumActiveListingsDataSet}
+              selectedDataPoint={selectedUserByNumActiveListings}
+              onClick={handleDonutSelect(setSelectedUserByNumActiveListings)}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className={twMerge('space-y-4 mt-6 pb-6')}>
+        <div className="flex flex-col lg:flex-row mb-2 mx-2">
+          <div className="mb-2 lg:mb-0 lg:flex-1 lg:mr-1 lg:max-w-[50%]">
+            <DonutChart
+              title={topUsersByNumListingsBelowFloorDataSet.name}
+              subTitle={''}
+              dataSet={topUsersByNumListingsBelowFloorDataSet}
+              selectedDataPoint={selectedUserByNumListingsBelowFloor}
+              onClick={handleDonutSelect(setSelectedUserByNumListingsBelowFloor)}
+            />
+          </div>
+          <div className="lg:flex-1 lg:ml-1 lg:max-w-[50%]">
+            <DonutChart
+              title={topUsersByNumActiveListingsBelowFloorDataSet.name}
+              subTitle={''}
+              dataSet={topUsersByNumActiveListingsBelowFloorDataSet}
+              selectedDataPoint={selectedUserByNumActiveListingsBelowFloor}
+              onClick={handleDonutSelect(setSelectedUserByNumActiveListingsBelowFloor)}
+            />
+          </div>
+        </div>
+      </div>
     </>
   );
 }

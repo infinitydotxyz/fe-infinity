@@ -5,6 +5,9 @@ import { buttonBorderColor, primaryShadow } from 'src/utils/ui-constants';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { nFormatter } from 'src/utils';
 import { Spacer } from '../common';
+import { useTopUsersByBidsDataSets } from 'src/hooks/api/useTopUsersByBidsDataSets';
+import { DonutChart, DonutDataPoint } from '../charts/donut-chart';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 interface Props {
   stats: OrderStats;
@@ -13,6 +16,25 @@ interface Props {
 }
 export function BidStats({ stats, userStats, showUserStats }: Props) {
   const { isDesktop } = useScreenSize();
+
+  const {
+    topUsersByNumBidsDataSet,
+    topUsersByNumBidsNearFloorDataSet,
+    topUsersByNumActiveBidsDataSet,
+    topUsersByNumActiveBidsNearFloorDataSet
+  } = useTopUsersByBidsDataSets();
+
+  const [selectedUserByNumBids, setSelectedUserByNumBids] = useState<null | DonutDataPoint>(null);
+  const [selectedUserByNumActiveBids, setSelectedUserByNumActiveBids] = useState<null | DonutDataPoint>(null);
+  const [selectedUserByNumBidsNearFloor, setSelectedUserByNumBidsNearFloor] = useState<null | DonutDataPoint>(null);
+  const [selectedUserByNumActiveBidsNearFloor, setSelectedUserByNumActiveBidsNearFloor] =
+    useState<null | DonutDataPoint>(null);
+
+  const handleDonutSelect = (set: Dispatch<SetStateAction<DonutDataPoint | null>>) => (item: DonutDataPoint) => {
+    set((prev) => {
+      return prev && prev.id === item.id ? null : item;
+    });
+  };
 
   return (
     <>
@@ -93,6 +115,52 @@ export function BidStats({ stats, userStats, showUserStats }: Props) {
           ></RewardsSection>
         </div>
       )}
+
+      <div className={twMerge('space-y-4 mt-6 pb-6')}>
+        <div className="flex flex-col lg:flex-row mb-2 mx-2">
+          <div className="mb-2 lg:mb-0 lg:flex-1 lg:mr-1 lg:max-w-[50%]">
+            <DonutChart
+              title={topUsersByNumBidsDataSet.name}
+              subTitle={''}
+              dataSet={topUsersByNumBidsDataSet}
+              selectedDataPoint={selectedUserByNumBids}
+              onClick={handleDonutSelect(setSelectedUserByNumBids)}
+            />
+          </div>
+          <div className="lg:flex-1 lg:ml-1 lg:max-w-[50%]">
+            <DonutChart
+              title={topUsersByNumActiveBidsDataSet.name}
+              subTitle={''}
+              dataSet={topUsersByNumActiveBidsDataSet}
+              selectedDataPoint={selectedUserByNumActiveBids}
+              onClick={handleDonutSelect(setSelectedUserByNumActiveBids)}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className={twMerge('space-y-4 mt-6 pb-6')}>
+        <div className="flex flex-col lg:flex-row mb-2 mx-2">
+          <div className="mb-2 lg:mb-0 lg:flex-1 lg:mr-1 lg:max-w-[50%]">
+            <DonutChart
+              title={topUsersByNumBidsNearFloorDataSet.name}
+              subTitle={''}
+              dataSet={topUsersByNumBidsNearFloorDataSet}
+              selectedDataPoint={selectedUserByNumBidsNearFloor}
+              onClick={handleDonutSelect(setSelectedUserByNumBidsNearFloor)}
+            />
+          </div>
+          <div className="lg:flex-1 lg:ml-1 lg:max-w-[50%]">
+            <DonutChart
+              title={topUsersByNumActiveBidsNearFloorDataSet.name}
+              subTitle={''}
+              dataSet={topUsersByNumActiveBidsNearFloorDataSet}
+              selectedDataPoint={selectedUserByNumActiveBidsNearFloor}
+              onClick={handleDonutSelect(setSelectedUserByNumActiveBidsNearFloor)}
+            />
+          </div>
+        </div>
+      </div>
     </>
   );
 }
