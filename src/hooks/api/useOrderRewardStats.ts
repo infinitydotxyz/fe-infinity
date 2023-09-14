@@ -50,7 +50,8 @@ const fetch = async (filters: { user?: string; chainId?: string }) => {
   return data;
 };
 
-export function useOrderRewardStats(filters: { user?: string; chain?: string }) {
+export function useOrderRewardStats() {
+  const [filters, setFilters] = useState<{ user?: string; chain?: string }>({});
   const [isLoading, setIsLoading] = useState(false);
   const [aggregated, setAggregated] = useState<OrderStats>({
     numListings: 0,
@@ -108,6 +109,7 @@ export function useOrderRewardStats(filters: { user?: string; chain?: string }) 
 
   return {
     filters,
+    setFilters,
     isLoading,
     aggregated
   };
