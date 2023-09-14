@@ -31,6 +31,10 @@ export type UserRewards = {
   numNativeBuys: number;
   volume: number;
   nativeVolume: number;
+  numListings: number;
+  numActiveListings: number;
+  numListingsBelowFloor: number;
+  numActiveListingsBelowFloor: number;
 };
 
 const fetch = async (sig: ReturnType<typeof useUserSignature>['signature']) => {
