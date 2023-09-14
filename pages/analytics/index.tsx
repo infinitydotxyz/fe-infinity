@@ -12,11 +12,13 @@ import {
   VolumeDataSetIds,
   useBuyRewardDataSets
 } from 'src/hooks/api/useBuyRewardDataSets';
+import { useOrderRewardStats } from 'src/hooks/api/useOrderRewardStats';
 import { useTopBuyersDataSets } from 'src/hooks/api/useTopBuyersDataSets';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { nFormatter } from 'src/utils';
 import { buttonBorderColor, primaryShadow, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { useAccount } from 'wagmi';
 
 const BuyDataSetIdsToNames: Record<BuyDataSetIds, string> = {
   buys: 'Total',
@@ -33,6 +35,11 @@ const VolumeDataSetIdsToNames: Record<VolumeDataSetIds, string> = {
 };
 
 const AnalyticsPage = () => {
+  const { address } = useAccount();
+
+  const { aggregated: userOrderStats } = useOrderRewardStats({ user: address });
+  const { aggregated: globalOrderStats } = useOrderRewardStats({});
+
   const { isDesktop } = useScreenSize();
   const {
     aggregated,
@@ -73,7 +80,7 @@ const AnalyticsPage = () => {
       >
         <div className="mb-4">
           <RewardsSection
-            title="Totals"
+            title="Buy totals"
             sideInfo={
               <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
                 <div className="md:flex flex-wrap mt-4">
@@ -91,13 +98,13 @@ const AnalyticsPage = () => {
 
                   <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
                     <div className="md:text-2xl font-heading font-bold">{nFormatter(aggregated.numBuys, 2)}</div>
-                    <div className="text-sm mt-1">Number of buys</div>
+                    <div className="text-sm mt-1">Buys</div>
                   </div>
                   <Spacer />
 
                   <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
                     <div className="md:text-2xl font-heading font-bold">{nFormatter(aggregated.numNativeBuys, 2)}</div>
-                    <div className="text-sm mt-1">Number of native buys</div>
+                    <div className="text-sm mt-1">Native buys</div>
                   </div>
                   <Spacer />
                 </div>
@@ -106,45 +113,219 @@ const AnalyticsPage = () => {
           ></RewardsSection>
         </div>
 
-        {userAvailable && (
-          <div className="mb-4">
-            <RewardsSection
-              title="Your Totals"
-              sideInfo={
-                <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
-                  <div className="md:flex flex-wrap mt-4">
-                    <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                      <div className="md:text-2xl font-heading font-bold">{nFormatter(userAggregated.volume, 2)}</div>
-                      <div className="text-sm mt-1">Buy volume USD</div>
+        <div className="mb-4">
+          <RewardsSection
+            title="Listing totals"
+            sideInfo={
+              <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
+                <div className="md:flex flex-wrap mt-4">
+                  <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
+                    <div className="md:text-2xl font-heading font-bold">
+                      {nFormatter(globalOrderStats.numListings, 2)}
                     </div>
-                    <Spacer />
-
-                    <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                      <div className="md:text-2xl font-heading font-bold">
-                        {nFormatter(userAggregated.nativeVolume, 2)}
-                      </div>
-                      <div className="text-sm mt-1">Native buy volume USD</div>
-                    </div>
-                    <Spacer />
-
-                    <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                      <div className="md:text-2xl font-heading font-bold">{nFormatter(userAggregated.numBuys, 2)}</div>
-                      <div className="text-sm mt-1">Number of buys</div>
-                    </div>
-                    <Spacer />
-
-                    <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                      <div className="md:text-2xl font-heading font-bold">
-                        {nFormatter(userAggregated.numNativeBuys, 2)}
-                      </div>
-                      <div className="text-sm mt-1">Number of native buys</div>
-                    </div>
-                    <Spacer />
+                    <div className="text-sm mt-1">Listings</div>
                   </div>
+                  <Spacer />
+
+                  <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
+                    <div className="md:text-2xl font-heading font-bold">
+                      {nFormatter(globalOrderStats.numActiveListings, 2)}
+                    </div>
+                    <div className="text-sm mt-1">Active listings</div>
+                  </div>
+                  <Spacer />
+
+                  <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
+                    <div className="md:text-2xl font-heading font-bold">
+                      {nFormatter(globalOrderStats.numActiveListingsBelowFloor, 2)}
+                    </div>
+                    <div className="text-sm mt-1">Active listings below floor</div>
+                  </div>
+                  <Spacer />
+
+                  <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
+                    <div className="md:text-2xl font-heading font-bold">
+                      {nFormatter(globalOrderStats.numCancelledListings, 2)}
+                    </div>
+                    <div className="text-sm mt-1">Cancelled listings</div>
+                  </div>
+                  <Spacer />
                 </div>
-              }
-            ></RewardsSection>
-          </div>
+              </div>
+            }
+          ></RewardsSection>
+        </div>
+
+        <div className="mb-4">
+          <RewardsSection
+            title="Bid totals"
+            sideInfo={
+              <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
+                <div className="md:flex flex-wrap mt-4">
+                  <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
+                    <div className="md:text-2xl font-heading font-bold">{nFormatter(globalOrderStats.numBids, 2)}</div>
+                    <div className="text-sm mt-1">Bids</div>
+                  </div>
+                  <Spacer />
+
+                  <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
+                    <div className="md:text-2xl font-heading font-bold">
+                      {nFormatter(globalOrderStats.numActiveBids, 2)}
+                    </div>
+                    <div className="text-sm mt-1">Active bids</div>
+                  </div>
+                  <Spacer />
+
+                  <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
+                    <div className="md:text-2xl font-heading font-bold">
+                      {nFormatter(globalOrderStats.numActiveBidsNearFloor, 2)}
+                    </div>
+                    <div className="text-sm mt-1">Active bids near floor</div>
+                  </div>
+                  <Spacer />
+
+                  <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
+                    <div className="md:text-2xl font-heading font-bold">
+                      {nFormatter(globalOrderStats.numCancelledBids, 2)}
+                    </div>
+                    <div className="text-sm mt-1">Cancelled bids</div>
+                  </div>
+                  <Spacer />
+                </div>
+              </div>
+            }
+          ></RewardsSection>
+        </div>
+
+        {address && userAvailable && (
+          <>
+            <div className="mb-4">
+              <RewardsSection
+                title="Your buy totals"
+                sideInfo={
+                  <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
+                    <div className="md:flex flex-wrap mt-4">
+                      <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
+                        <div className="md:text-2xl font-heading font-bold">{nFormatter(userAggregated.volume, 2)}</div>
+                        <div className="text-sm mt-1">Buy volume USD</div>
+                      </div>
+                      <Spacer />
+
+                      <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
+                        <div className="md:text-2xl font-heading font-bold">
+                          {nFormatter(userAggregated.nativeVolume, 2)}
+                        </div>
+                        <div className="text-sm mt-1">Native buy volume USD</div>
+                      </div>
+                      <Spacer />
+
+                      <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
+                        <div className="md:text-2xl font-heading font-bold">
+                          {nFormatter(userAggregated.numBuys, 2)}
+                        </div>
+                        <div className="text-sm mt-1">Buys</div>
+                      </div>
+                      <Spacer />
+
+                      <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
+                        <div className="md:text-2xl font-heading font-bold">
+                          {nFormatter(userAggregated.numNativeBuys, 2)}
+                        </div>
+                        <div className="text-sm mt-1">Native buys</div>
+                      </div>
+                      <Spacer />
+                    </div>
+                  </div>
+                }
+              ></RewardsSection>
+            </div>
+
+            <div className="mb-4">
+              <RewardsSection
+                title="Your listing totals"
+                sideInfo={
+                  <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
+                    <div className="md:flex flex-wrap mt-4">
+                      <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
+                        <div className="md:text-2xl font-heading font-bold">
+                          {nFormatter(userOrderStats.numListings, 2)}
+                        </div>
+                        <div className="text-sm mt-1">Listings</div>
+                      </div>
+                      <Spacer />
+
+                      <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
+                        <div className="md:text-2xl font-heading font-bold">
+                          {nFormatter(userOrderStats.numActiveListings, 2)}
+                        </div>
+                        <div className="text-sm mt-1">Active listings</div>
+                      </div>
+                      <Spacer />
+
+                      <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
+                        <div className="md:text-2xl font-heading font-bold">
+                          {nFormatter(userOrderStats.numActiveListingsBelowFloor, 2)}
+                        </div>
+                        <div className="text-sm mt-1">Active listings below floor</div>
+                      </div>
+                      <Spacer />
+
+                      <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
+                        <div className="md:text-2xl font-heading font-bold">
+                          {nFormatter(userOrderStats.numCancelledListings, 2)}
+                        </div>
+                        <div className="text-sm mt-1">Cancelled listings</div>
+                      </div>
+                      <Spacer />
+                    </div>
+                  </div>
+                }
+              ></RewardsSection>
+            </div>
+
+            <div className="mb-4">
+              <RewardsSection
+                title="Your bid totals"
+                sideInfo={
+                  <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
+                    <div className="md:flex flex-wrap mt-4">
+                      <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
+                        <div className="md:text-2xl font-heading font-bold">
+                          {nFormatter(userOrderStats.numBids, 2)}
+                        </div>
+                        <div className="text-sm mt-1">Bids</div>
+                      </div>
+                      <Spacer />
+
+                      <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
+                        <div className="md:text-2xl font-heading font-bold">
+                          {nFormatter(userOrderStats.numActiveBids, 2)}
+                        </div>
+                        <div className="text-sm mt-1">Active bids</div>
+                      </div>
+                      <Spacer />
+
+                      <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
+                        <div className="md:text-2xl font-heading font-bold">
+                          {nFormatter(userOrderStats.numActiveBidsNearFloor, 2)}
+                        </div>
+                        <div className="text-sm mt-1">Active bids near floor</div>
+                      </div>
+                      <Spacer />
+
+                      <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
+                        <div className="md:text-2xl font-heading font-bold">
+                          {nFormatter(userOrderStats.numCancelledBids, 2)}
+                        </div>
+                        <div className="text-sm mt-1">Cancelled bids</div>
+                      </div>
+                      <Spacer />
+                    </div>
+                  </div>
+                }
+              ></RewardsSection>
+            </div>
+          </>
         )}
 
         <div className={twMerge('space-y-4 mt-6 pb-6')}>
