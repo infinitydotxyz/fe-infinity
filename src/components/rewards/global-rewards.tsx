@@ -9,8 +9,9 @@ interface Props {
 
 const OrderByValueToName: Record<LeaderboardQuery['orderBy'], string> = {
   total: 'Total',
-  referrals: 'Referral Points',
-  buys: 'Buy Points'
+  referrals: 'Referral points',
+  buys: 'Buy points',
+  listings: 'Listing points'
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
