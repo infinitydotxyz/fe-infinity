@@ -217,7 +217,7 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
             <div className="flex flex-col text-sm">
               <div>
                 Earn referral points by sharing your referral link with friends. Direct as well as indirect referrals
-                upto a 100 levels will earn you points. Points from inorganic activity will be slashed. See{' '}
+                upto a 100 levels will earn you points. Points earned from inorganic activity will be slashed. See{' '}
                 <a
                   target="_blank"
                   href="https://docs.pixl.so/reward-points#referral-points"
@@ -269,9 +269,9 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
           <div className="flex flex-col">
             <div className="flex flex-col text-sm">
               <div>
-                Earn buy points by purchasing nfts on Pixl, the higher the price is the more points you will earn.
-                Buying a NFT that was listed on Pixl will give you 100x more points than listings from other
-                marketplaces. See{' '}
+                Earn buy points by purchasing nfts on Pixl, the higher the price, the more points you will earn. Buying
+                a NFT that was listed on Pixl will give you 100x more points than buying listings from other
+                marketplaces. Points earned from inorganic activity will be slashed. See{' '}
                 <a
                   target="_blank"
                   href="https://docs.pixl.so/reward-points#buy-points"
@@ -294,28 +294,30 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
               <Spacer />
 
               <div className={tokenItemClassname}>
-                <div>Volume</div>
-                <div className="md:text-lg font-heading font-bold text-center">{nFormatter(rewards.volume, 2)} USD</div>
+                <div>Volume (USD)</div>
+                <div className="md:text-lg font-heading font-bold text-center">{nFormatter(rewards.volume, 2)}</div>
               </div>
               <Spacer />
 
               <div className={tokenItemClassname}>
-                <div>Native volume</div>
+                <div>Native volume (USD)</div>
                 <div className="md:text-lg font-heading font-bold text-center">
-                  {nFormatter(rewards.nativeVolume, 2)} USD
+                  {nFormatter(rewards.nativeVolume, 2)}
                 </div>
               </div>
               <Spacer />
 
               <div className={tokenItemClassname}>
                 <div>Num buys</div>
-                <div className="md:text-lg font-heading font-bold text-center">{nFormatter(rewards.buyPoints, 2)}</div>
+                <div className="md:text-lg font-heading font-bold text-center">{nFormatter(rewards.numBuys, 2)}</div>
               </div>
               <Spacer />
 
               <div className={tokenItemClassname}>
                 <div>Num native buys</div>
-                <div className="md:text-lg font-heading font-bold text-center">{nFormatter(rewards.buyPoints, 2)}</div>
+                <div className="md:text-lg font-heading font-bold text-center">
+                  {nFormatter(rewards.numNativeBuys, 2)}
+                </div>
               </div>
               <Spacer />
             </div>
