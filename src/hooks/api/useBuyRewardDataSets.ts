@@ -232,7 +232,6 @@ export const useBuyRewardDataSets = () => {
 
   useEffect(() => {
     if (address) {
-      console.log(`Found Address ${address}`);
       if (filters.user === address) {
         return;
       }
@@ -240,7 +239,6 @@ export const useBuyRewardDataSets = () => {
       setAvailableBuyDataSets(AllBuyDataSetIds);
       setAvailableVolumeDataSets(AllVolumeDataSetIds);
     } else {
-      console.log(`No Address!`);
       setInternalBuyDataSets((prev) =>
         prev.filter((item) => item.id === 'user-buys' || item.id === 'user-native-buys')
       );
