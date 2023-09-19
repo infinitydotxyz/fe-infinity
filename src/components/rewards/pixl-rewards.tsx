@@ -324,6 +324,73 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
           </div>
         }
       />
+
+      <RewardsSection
+        title="Listing Points"
+        subTitle={
+          <div className="flex flex-col">
+            <div className="flex flex-col text-sm">
+              <div>
+                Earn listing points by listing NFTs at or below the floor price. The longer the time a listing is active
+                and higher the floor price of the collection, the more points you will earn. See{' '}
+                <a
+                  target="_blank"
+                  href="https://docs.pixl.so/reward-points#listing-points"
+                  className="underline cursor-pointer"
+                >
+                  docs
+                </a>{' '}
+                for more info.
+              </div>
+            </div>
+          </div>
+        }
+        sideInfo={
+          <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
+            <div className="md:flex flex-wrap">
+              <div className={tokenItemClassname}>
+                <div>Earned</div>
+                <div className="md:text-lg font-heading font-bold text-center">
+                  {nFormatter(rewards.listingPoints, 2)}
+                </div>
+              </div>
+              <Spacer />
+
+              <div className={tokenItemClassname}>
+                <div>Listings</div>
+                <div className="md:text-lg font-heading font-bold text-center">
+                  {nFormatter(rewards.numListings, 2)}
+                </div>
+              </div>
+              <Spacer />
+
+              <div className={tokenItemClassname}>
+                <div>Listings below floor</div>
+                <div className="md:text-lg font-heading font-bold text-center">
+                  {nFormatter(rewards.numListingsBelowFloor, 2)}
+                </div>
+              </div>
+              <Spacer />
+
+              <div className={tokenItemClassname}>
+                <div>Active</div>
+                <div className="md:text-lg font-heading font-bold text-center">
+                  {nFormatter(rewards.numActiveListings, 2)}
+                </div>
+              </div>
+              <Spacer />
+
+              <div className={tokenItemClassname}>
+                <div>Active below floor</div>
+                <div className="md:text-lg font-heading font-bold text-center">
+                  {nFormatter(rewards.numActiveListingsBelowFloor, 2)}
+                </div>
+              </div>
+              <Spacer />
+            </div>
+          </div>
+        }
+      />
     </>
   );
 };

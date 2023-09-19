@@ -11,7 +11,7 @@ import { ClipboardButton, ScrollLoader } from '../common';
 import { useAppContext } from 'src/utils/context/AppContext';
 
 export interface LeaderboardQuery {
-  orderBy: 'total' | 'referrals' | 'buys';
+  orderBy: 'total' | 'referrals' | 'buys' | 'listings';
   limit: number;
 }
 
@@ -20,6 +20,7 @@ interface LeaderboardItem {
   referralPoints: number;
   totalPoints: number;
   buyPoints: number;
+  listingPoints: number;
 }
 
 const fetch = async ({ orderBy, cursor }: { orderBy: LeaderboardQuery['orderBy']; cursor: string }) => {
@@ -138,7 +139,7 @@ export const Leaderboard = ({ orderBy }: { orderBy: LeaderboardQuery['orderBy'] 
             key={data.user}
           >
             <div className="hidden md:flex items-center font-bold font-heading">{index + 1}</div>
-            <div className="ml-10 grid gap-2 justify-between items-center w-full grid-cols-2 md:grid-cols-4 mx-2">
+            <div className="ml-10 grid gap-2 justify-between items-center w-full grid-cols-2 md:grid-cols-5 mx-2">
               <div className={propertyClassname}>
                 <div className="text-sm font-bold">Address</div>
                 <div className="flex items-center space-x-2">
@@ -175,6 +176,15 @@ export const Leaderboard = ({ orderBy }: { orderBy: LeaderboardQuery['orderBy'] 
                   '-'
                 ) : (
                   <div className={'text-green-600'}>{nFormatter(data.buyPoints)}</div>
+                )}
+              </div>
+
+              <div className={propertyClassname}>
+                <div className="text-sm font-bold">Listing Points</div>
+                {Number.isNaN(data.listingPoints) ? (
+                  '-'
+                ) : (
+                  <div className={'text-green-600'}>{nFormatter(data.listingPoints)}</div>
                 )}
               </div>
             </div>
