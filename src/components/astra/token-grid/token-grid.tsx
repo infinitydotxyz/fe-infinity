@@ -115,6 +115,7 @@ const GridItem = ({ data, onClick, selected, isSelectable, collectionFloorPrice 
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: data?.tokenId ?? '',
     collectionAddress: data?.address ?? '',
+    collectionSlug: data?.collectionSlug ?? '',
     chainId: data?.chainId ?? '',
     collectionFloorPrice
   };

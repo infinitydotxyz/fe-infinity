@@ -14,7 +14,8 @@ import {
   brandTextColor,
   hoverColorBrandText,
   iconButtonStyle,
-  secondaryBgColor
+  secondaryBgColor,
+  textColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useAccount } from 'wagmi';
@@ -24,6 +25,7 @@ import { GiJeweledChalice } from 'react-icons/gi';
 import { RxDiscordLogo } from 'react-icons/rx';
 import { TfiTwitter } from 'react-icons/tfi';
 import { AiOutlineRead } from 'react-icons/ai';
+import { IoAnalyticsOutline } from 'react-icons/io5';
 
 export const SidebarNav = () => {
   const { theme, setTheme } = useTheme();
@@ -71,7 +73,7 @@ export const SidebarNav = () => {
               className={twMerge(
                 iconButtonStyle,
                 hoverColorBrandText,
-                router.asPath.startsWith('/trending') ? brandTextColor : 'text-gray-400'
+                router.asPath.startsWith('/trending') ? brandTextColor : textColor
               )}
             />
           </AButton>
@@ -96,7 +98,7 @@ export const SidebarNav = () => {
                 hoverColorBrandText,
                 router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Items
                   ? brandTextColor
-                  : 'text-gray-400'
+                  : textColor
               )}
             />
           </AButton>
@@ -118,7 +120,7 @@ export const SidebarNav = () => {
                 hoverColorBrandText,
                 router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Orders
                   ? brandTextColor
-                  : 'text-gray-400'
+                  : textColor
               )}
             />
           </AButton>
@@ -139,7 +141,7 @@ export const SidebarNav = () => {
                 hoverColorBrandText,
                 router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Send
                   ? brandTextColor
-                  : 'text-gray-400'
+                  : textColor
               )}
             />
           </AButton>
@@ -157,7 +159,25 @@ export const SidebarNav = () => {
               className={twMerge(
                 iconButtonStyle,
                 hoverColorBrandText,
-                router.asPath.startsWith(`/rewards`) ? brandTextColor : 'text-gray-400'
+                router.asPath.startsWith(`/rewards`) ? brandTextColor : textColor
+              )}
+            />
+          </AButton>
+        </HelpToolTip>
+
+        <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Analytics</div>}>
+          <AButton
+            highlighted={router.asPath.startsWith(`/analytics`)}
+            onClick={() => {
+              router.push(`/analytics`);
+            }}
+            className="rounded-lg"
+          >
+            <IoAnalyticsOutline
+              className={twMerge(
+                iconButtonStyle,
+                hoverColorBrandText,
+                router.asPath.startsWith(`/analytics`) ? brandTextColor : textColor
               )}
             />
           </AButton>

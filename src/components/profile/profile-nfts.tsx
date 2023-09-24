@@ -7,7 +7,7 @@ import { SelectedCollectionType, useProfileContext } from 'src/utils/context/Pro
 import { TokensFilter } from 'src/utils/types';
 import { borderColor, hoverColor, hoverColorBrandText, selectedColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { Checkbox, EZImage, Spacer, TextInputBox } from '../common';
+import { EZImage, Spacer, TextInputBox } from '../common';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
 
 interface Props {
@@ -26,9 +26,7 @@ export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
     selectedProfileTab
   } = useAppContext();
   const { selectedChain } = useAppContext();
-
-  const [hideSpamSelected, setHideSpamSelected] = useState(true);
-  const [filter, setFilter] = useState<TokensFilter>({ hideSpam: hideSpamSelected });
+  const [filter, setFilter] = useState<TokensFilter>({ hideSpam: false });
 
   const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(userAddress, selectedChain, filter);
   const [numSweep, setNumSweep] = useState('');
@@ -46,12 +44,6 @@ export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
   useEffect(() => {
     fetch(false);
   }, [filter]);
-
-  useEffect(() => {
-    const newFilter = { ...filter };
-    newFilter.hideSpam = hideSpamSelected;
-    setFilter(newFilter);
-  }, [hideSpamSelected]);
 
   useEffect(() => {
     if (selectedCollection) {
@@ -170,15 +162,6 @@ export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
           {isOwner && multiSelect()}
 
           <Spacer />
-          <div className="flex">
-            <Checkbox
-              label="Hide spam"
-              checked={hideSpamSelected}
-              onChange={() => {
-                setHideSpamSelected(!hideSpamSelected);
-              }}
-            />
-          </div>
         </div>
 
         {selectedCollection ? (

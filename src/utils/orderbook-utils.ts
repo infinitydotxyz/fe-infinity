@@ -64,13 +64,13 @@ export const fetchOrderNonce = async (user: string, chainId: ChainId): Promise<n
   }
 };
 
-export const fetchMinXflStakeForZeroFees = async (
+export const fetchMinXflBalanceForZeroFee = async (
   chainId?: string,
   collection?: string,
   user?: string
 ): Promise<number> => {
   try {
-    const response = await apiGet(`/v2/orders/minxflstakeforzerofees`, {
+    const response = await apiGet(`/v2/orders/minxflbalanceforzerofee`, {
       requiresAuth: false,
       query: {
         chainId,

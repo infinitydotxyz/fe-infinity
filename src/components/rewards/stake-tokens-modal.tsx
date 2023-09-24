@@ -4,7 +4,7 @@ import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
 import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
 import { FLOW_TOKEN, SEASON_2_UNLOCK_BLOCK, nFormatter } from 'src/utils';
-import { fetchMinXflStakeForZeroFees } from 'src/utils/orderbook-utils';
+import { fetchMinXflBalanceForZeroFee } from 'src/utils/orderbook-utils';
 import { useAccount, useBalance } from 'wagmi';
 import { BouncingLogo, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
@@ -33,7 +33,7 @@ export const StakeTokensModal = ({ onClose, chainId }: Props) => {
   useEffect(() => {
     const fetchMinStakeAmountForBoost = async () => {
       const minStakeAmount =
-        minStakeAmountForBoost === 0 ? await fetchMinXflStakeForZeroFees() : minStakeAmountForBoost;
+        minStakeAmountForBoost === 0 ? await fetchMinXflBalanceForZeroFee() : minStakeAmountForBoost;
       setMinStakeAmountForBoost(minStakeAmount);
     };
     fetchMinStakeAmountForBoost();

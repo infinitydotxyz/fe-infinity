@@ -49,6 +49,7 @@ export const GridCard = ({
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: data?.tokenId ?? '',
     collectionAddress: data?.address ?? '',
+    collectionSlug: data?.collectionSlug ?? '',
     chainId: data?.chainId ?? '',
     collectionFloorPrice,
     lastSalePriceEth: data?.lastSalePriceEth,
@@ -116,21 +117,15 @@ export const GridCard = ({
 
         <div className={twMerge('mt-1 mb-1 px-2')}>
           {!isCollectionPage && (
-            <div
-              className="flex items-center space-x-1 cursor-pointer"
-              onClick={(e) => {
-                e.stopPropagation();
-                router.push(`/collection/${data?.chainId}:${data?.address}`);
-              }}
-            >
-              <div className={twMerge('truncate text-xs', hoverColorBrandText)}>{title}</div>
+            <div className="flex items-center space-x-1">
+              <div className={twMerge('truncate text-xs')}>{title}</div>
               {hasBlueCheck ? <BlueCheck className={'h-3 w-3'} /> : ''}
             </div>
           )}
 
           <div className="flex items-center text-xs mt-0.5">
             <div
-              className="truncate hover:text-blue-500"
+              className={twMerge('truncate', hoverColorBrandText)}
               onClick={(e) => {
                 e.stopPropagation();
                 const { pathname, query } = router;
@@ -152,7 +147,7 @@ export const GridCard = ({
 
                   {data?.source?.icon && !hideIcon && (
                     <div className={twMerge('flex items-center')}>
-                      <EZImage src={data?.source?.icon} className="w-4 h-4" />
+                      <EZImage src={data?.source?.icon} className="w-4 h-4 rounded-full" />
                     </div>
                   )}
                 </div>

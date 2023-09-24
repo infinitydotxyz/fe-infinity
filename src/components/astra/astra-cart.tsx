@@ -21,7 +21,7 @@ import {
 } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartItem, CartType, useCartContext } from 'src/utils/context/CartContext';
-import { fetchMinXflStakeForZeroFees } from 'src/utils/orderbook-utils';
+import { fetchMinXflBalanceForZeroFee } from 'src/utils/orderbook-utils';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
 import {
   borderColor,
@@ -212,7 +212,7 @@ export const AstraCart = ({
   });
 
   const getMinBalanceInfo = async () => {
-    const minBal = minBalForFeeWaiverAndBoost === 0 ? await fetchMinXflStakeForZeroFees() : minBalForFeeWaiverAndBoost;
+    const minBal = minBalForFeeWaiverAndBoost === 0 ? await fetchMinXflBalanceForZeroFee() : minBalForFeeWaiverAndBoost;
     setMinBalForFeeWaiverAndBoost(minBal);
 
     // const boost = xflStaked >= minStakeAmount ? 2 : 0;

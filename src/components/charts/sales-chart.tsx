@@ -32,6 +32,7 @@ export interface SalesChartData {
   id: string;
   timestamp: number;
   collectionAddress: string;
+  collectionSlug: string;
   collectionName: string;
   tokenId: string;
   tokenImage: string;
@@ -161,6 +162,7 @@ function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: selectedSale?.tokenId ?? '',
     collectionAddress: selectedSale?.collectionAddress ?? '',
+    collectionSlug: selectedSale?.collectionSlug ?? '',
     chainId
   };
 
@@ -186,6 +188,7 @@ function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
       id: '',
       timestamp: 0,
       collectionAddress: '',
+      collectionSlug: '',
       collectionName: '',
       tokenId: '',
       tokenImage: '',

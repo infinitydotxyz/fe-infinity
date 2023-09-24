@@ -72,6 +72,7 @@ const SingleCollectionCell = ({ order, image, title, canShowAssetModal, isCollBi
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: tokenIdOrAttribute ?? '',
     collectionAddress: collectionAddress ?? '',
+    collectionSlug: collectionSlug ?? '',
     chainId: chainId ?? ChainId.Mainnet
   };
 

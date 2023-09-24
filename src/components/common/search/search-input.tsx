@@ -64,13 +64,12 @@ export function SearchInput({
       const basicTokenInfo: BasicTokenInfo = {
         tokenId: (selected as NftSearchResultData).tokenId,
         collectionAddress: (selected as NftSearchResultData).collectionAddress,
-        chainId: (selected as NftSearchResultData).chainId
+        chainId: (selected as NftSearchResultData).chainId,
+        collectionSlug: ''
       };
       setSelectedToken?.(basicTokenInfo);
     } else if (selected) {
-      const pathname = `/collection/${(selected as CollectionSearchDto).chainId}:${
-        (selected as CollectionSearchDto).address
-      }`;
+      const pathname = `/collection/${(selected as CollectionSearchDto).slug}`;
       router.push(
         {
           pathname

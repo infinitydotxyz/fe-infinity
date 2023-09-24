@@ -22,8 +22,10 @@ import { useAccount, useBalance, useProvider, useSigner } from 'wagmi';
 import { getReservoirClient } from '../astra-utils';
 import { extractErrorMsg, getDefaultOrderExpiryTime, getOrderExpiryTimeInMsFromEnum } from '../common-utils';
 import { FEE_BPS, FEE_WALLET_ADDRESS, FLOW_TOKEN, ROYALTY_BPS, ZERO_ADDRESS } from '../constants';
-import { fetchMinXflStakeForZeroFees } from '../orderbook-utils';
+import { fetchMinXflBalanceForZeroFee } from '../orderbook-utils';
 import { CartType, useCartContext } from './CartContext';
+import { Signature, useUserSignature } from 'src/hooks/api/useUserSignature';
+import { switchNetwork } from '@wagmi/core';
 
 type ReservoirOrderbookType =
   | 'reservoir'
@@ -102,6 +104,10 @@ type AppContextType = {
   removeOrderFromSelection: (data: ERC721OrderCartItem) => void;
   orderSelection: ERC721OrderCartItem[];
   clearOrderSelection: () => void;
+
+  signature: Signature | null;
+  signIn: () => Promise<void>;
+  isSigning: boolean;
 };
 
 const AppContext = React.createContext<AppContextType | null>(null);
@@ -112,6 +118,15 @@ interface Props {
 
 export const AppContextProvider = ({ children }: Props) => {
   const { selectedChain, chainName, isWalletNetworkSupported } = useChain();
+  const { signature, sign: signIn, isSigning } = useUserSignature();
+  if (!isWalletNetworkSupported) {
+    switchNetwork({
+      chainId: 1
+    }).catch((err) => {
+      console.error('failed to switch network', err);
+    });
+  }
+
 
   const [showCart, setShowCart] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -388,7 +403,7 @@ export const AppContextProvider = ({ children }: Props) => {
           // calculate fees
           let automatedRoyalties = true;
           let fees = [`${FEE_WALLET_ADDRESS}:${FEE_BPS}`];
-          const minBal = await fetchMinXflStakeForZeroFees();
+          const minBal = await fetchMinXflBalanceForZeroFee();
           if (minBal) {
             const feesWaived =
               xflBalance >= minBal ||
@@ -677,7 +692,11 @@ export const AppContextProvider = ({ children }: Props) => {
     toggleOrderSelection,
     clearOrderSelection,
     orderSelection,
-    removeOrderFromSelection
+    removeOrderFromSelection,
+
+    signature,
+    signIn,
+    isSigning
   };
 
   return (
