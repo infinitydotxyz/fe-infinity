@@ -11,7 +11,7 @@ import { twMerge } from 'tailwind-merge';
 
 const RewardsPage = () => {
   const { selectedChain, switchNetwork } = useChain();
-  const tabs = ['My Rewards', 'Glboal Rewards'];
+  const tabs = ['My Rewards', 'Global Rewards'];
   const [selected, setSelected] = useState(tabs[0]);
   const [supportedChain, setSupportedChain] = useState(false);
   const { isDesktop } = useScreenSize();
@@ -20,13 +20,11 @@ const RewardsPage = () => {
     setSupportedChain(selectedChain === '1');
   }, [selectedChain, setSupportedChain]);
 
-
   // prevent hydration errors
   const [isClient, setIsClient] = useState(false);
   useEffect(() => {
     setIsClient(true);
   }, [setIsClient]);
-
 
   if (!supportedChain) {
     return (

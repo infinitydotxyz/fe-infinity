@@ -69,7 +69,9 @@ export function SearchInput({
       };
       setSelectedToken?.(basicTokenInfo);
     } else if (selected) {
-      const pathname = `/collection/${(selected as CollectionSearchDto).slug}`;
+      const pathname = `/collection/${(selected as CollectionSearchDto).chainId}:${
+        (selected as CollectionSearchDto).address
+      }`;
       router.push(
         {
           pathname

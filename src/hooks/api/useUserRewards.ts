@@ -5,7 +5,6 @@ import { useAccount } from 'wagmi';
 import { useUserSignature } from './useUserSignature';
 import { useEffect, useState } from 'react';
 
-
 export function useUserRewards(chainId: string) {
   const { address: user } = useAccount();
 

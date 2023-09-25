@@ -1,6 +1,5 @@
 import { getAddress } from '@ethersproject/address';
-import { ChainId } from '@infinityxyz/lib-frontend/types/core';
-import { ETHEREUM_WETH_ADDRESS, GOERLI_WETH_ADDRESS, PROTOCOL_FEE_BPS } from '@infinityxyz/lib-frontend/utils';
+import { PROTOCOL_FEE_BPS } from '@infinityxyz/lib-frontend/utils';
 import { formatEther, parseEther } from 'ethers/lib/utils.js';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
@@ -12,6 +11,7 @@ import {
   FEE_BPS,
   FLOW_TOKEN,
   ROYALTY_BPS,
+  WNative,
   ellipsisString,
   getCartType,
   getCollectionKeyId,
@@ -115,17 +115,22 @@ export const AstraCart = ({
 
   const setTokenInfo = (token: string) => {
     switch (token) {
-      case 'WETH':
+      case 'WETH': {
+        const address = WNative[parseInt(selectedChain, 10)];
+        if (!address) {
+          throw new Error(`Unsupported chainId`);
+        }
         setUniswapTokenInfo({
           title: 'Wrap ETH',
           name: 'WETH',
           symbol: 'WETH',
-          address: WETH_ADDRESS,
+          address: address,
           decimals: 18,
           logoURI:
             'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png'
         });
         break;
+      }
       default:
         setUniswapTokenInfo({
           title: `Buy ${FLOW_TOKEN.symbol}`,
@@ -241,13 +246,14 @@ export const AstraCart = ({
     setHolderOfToken(holder);
   };
 
-  // future-todo change when supporting more chains
-  const WETH_ADDRESS =
-    chainId === ChainId.Mainnet ? ETHEREUM_WETH_ADDRESS : chainId === ChainId.Goerli ? GOERLI_WETH_ADDRESS : '';
+  const currency = WNative[parseInt(selectedChain, 10)];
+  if (!currency) {
+    throw new Error(`Unsupported network`);
+  }
 
   const { data: wethBalance, isLoading } = useBalance({
     address: user,
-    token: WETH_ADDRESS as `0x{string}`,
+    token: currency as `0x{string}`,
     watch: false
   });
 

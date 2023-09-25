@@ -1,7 +1,7 @@
 import { JsonRpcSigner } from '@ethersproject/providers';
 import { ERC721ABI, FlowExchangeABI } from '@infinityxyz/lib-frontend/abi';
 import { ChainNFTs } from '@infinityxyz/lib-frontend/types/core';
-import { ETHEREUM_WETH_ADDRESS, getExchangeAddress, trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { getExchangeAddress, trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { adaptEthersSigner } from '@reservoir0x/ethers-wallet-adapter';
 import { Execute } from '@reservoir0x/reservoir-sdk';
 import { Contract, ethers } from 'ethers';
@@ -21,7 +21,7 @@ import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem } fr
 import { useAccount, useBalance, useProvider, useSigner } from 'wagmi';
 import { getReservoirClient } from '../astra-utils';
 import { extractErrorMsg, getDefaultOrderExpiryTime, getOrderExpiryTimeInMsFromEnum } from '../common-utils';
-import { FEE_BPS, FEE_WALLET_ADDRESS, FLOW_TOKEN, ROYALTY_BPS, ZERO_ADDRESS } from '../constants';
+import { FEE_BPS, FEE_WALLET_ADDRESS, FLOW_TOKEN, Native, ROYALTY_BPS, WNative } from '../constants';
 import { fetchMinXflBalanceForZeroFee } from '../orderbook-utils';
 import { CartType, useCartContext } from './CartContext';
 import { Signature, useUserSignature } from 'src/hooks/api/useUserSignature';
@@ -126,7 +126,6 @@ export const AppContextProvider = ({ children }: Props) => {
       console.error('failed to switch network', err);
     });
   }
-
 
   const [showCart, setShowCart] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -431,6 +430,11 @@ export const AppContextProvider = ({ children }: Props) => {
             }
             const weiPrice = ethers.utils.parseEther(ethPrice.toString()).toString();
 
+            const currency = Native[parseInt(selectedChain, 10)];
+            if (!currency) {
+              throw new Error(`Unsupported network`);
+            }
+
             const expiry = token.orderExpiry ?? getDefaultOrderExpiryTime();
             const endTimeSeconds = getOrderExpiryTimeInMsFromEnum(listingTimeSeconds * 1000, expiry) / 1000;
             tokenSet.push({
@@ -443,7 +447,7 @@ export const AppContextProvider = ({ children }: Props) => {
               automatedRoyalties,
               royaltyBps: ROYALTY_BPS,
               fees,
-              currency: ZERO_ADDRESS, // default ETH for listings and mainnet NFTs
+              currency: currency,
               options: {
                 'seaport-v1.5': {
                   useOffChainCancellation: true
@@ -471,6 +475,11 @@ export const AppContextProvider = ({ children }: Props) => {
           const currentBlock = await provider.getBlock('latest');
           const bidTimeSeconds = currentBlock.timestamp;
 
+          const currency = WNative[parseInt(selectedChain, 10)];
+          if (!currency) {
+            throw new Error(`Unsupported network`);
+          }
+
           for (const token of tokens) {
             const collection = trimLowerCase(token.address || token.tokenAddress || '');
             const tokenId = token.tokenId;
@@ -495,7 +504,7 @@ export const AppContextProvider = ({ children }: Props) => {
               orderKind: 'seaport-v1.5' as ReservoirOrderKindType,
               automatedRoyalties: false,
               fees: [],
-              currency: ETHEREUM_WETH_ADDRESS, // default WETH for bids and ETH mainnet NFTs; future-todo - support other currencies for other chains
+              currency: currency,
               options: {
                 'seaport-v1.5': {
                   useOffChainCancellation: true
@@ -561,6 +570,11 @@ export const AppContextProvider = ({ children }: Props) => {
           const currentBlock = await provider.getBlock('latest');
           const bidTimeSeconds = currentBlock.timestamp;
 
+          const currency = WNative[parseInt(selectedChain, 10)];
+          if (!currency) {
+            throw new Error(`Unsupported network`);
+          }
+
           for (const collection of collections) {
             if (!collection.address) {
               continue;
@@ -582,7 +596,7 @@ export const AppContextProvider = ({ children }: Props) => {
               orderbook: 'reservoir' as ReservoirOrderbookType,
               orderKind: 'seaport-v1.5' as ReservoirOrderKindType,
               automatedRoyalties: false,
-              currency: ETHEREUM_WETH_ADDRESS, // default WETH for bids and ETH mainnet NFTs
+              currency,
               options: {
                 'seaport-v1.5': {
                   useOffChainCancellation: true

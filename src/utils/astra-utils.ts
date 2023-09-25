@@ -10,16 +10,118 @@ export type TokenFetcherOptions = { cursor?: string } & TokensFilter;
 
 let reservoirClient: ReservoirClient;
 
+const BASE_URL = {
+  Ethereum: {
+    chainId: 1,
+    api: 'https://api.reservoir.tools',
+    ws: 'wss://ws.reservoir.tools'
+  },
+  Goerli: {
+    chainId: 5,
+    api: 'https://api-goerli.reservoir.tools',
+    ws: 'wss://ws-goerli.reservoir.tools'
+  },
+  Sepolia: {
+    chainId: 6,
+    api: 'https://api-sepolia.reservoir.tools',
+    ws: 'wss://ws-sepolia.reservoir.tools'
+  },
+  Polygon: {
+    chainId: 137,
+    api: 'https://api-polygon.reservoir.tools',
+    ws: 'wss://ws-polygon.reservoir.tools'
+  },
+  Mumbai: {
+    chainId: 80001,
+    api: 'https://api-mumbai.reservoir.tools',
+    ws: 'wss://ws-mumbai.reservoir.tools'
+  },
+  BNB: {
+    chainId: 56,
+    api: 'https://api-bsc.reservoir.tools',
+    ws: 'wss://ws-bsc.reservoir.tools'
+  },
+  Arbitrum: {
+    chainId: 42161,
+    api: 'https://api-arbitrum.reservoir.tools',
+    ws: 'wss://ws-arbitrum.reservoir.tools'
+  },
+  Optimism: {
+    chainId: 10,
+    api: 'https://api-optimism.reservoir.tools',
+    ws: 'wss://ws-optimism.reservoir.tools'
+  },
+  ArbitrumNova: {
+    chainId: 42170,
+    api: 'https://api-arbitrum-nova.reservoir.tools',
+    ws: 'wss://ws-arbitrum-nova.reservoir.tools'
+  },
+  Base: {
+    chainId: 8453,
+    api: 'https://api-base.reservoir.tools',
+    ws: 'wss://ws-base.reservoir.tools'
+  },
+  BaseGoerli: {
+    chainId: 84531,
+    api: 'https://api-base-goerli.reservoir.tools',
+    ws: 'wss://ws-base-goerli.reservoir.tools'
+  },
+  Zora: {
+    chainId: 7777777,
+    api: 'https://api-zora.reservoir.tools',
+    ws: 'wss://ws-zora.reservoir.tools'
+  },
+  ZoraGoerli: {
+    chainId: 999,
+    api: 'https://api-zora-testnet.reservoir.tools',
+    ws: 'wss://ws-zora-testnet.reservoir.tools'
+  },
+  ScrollAlpha: {
+    chainId: 534353,
+    api: 'https://api-scroll-alpha.reservoir.tools',
+    ws: 'wss://ws-scroll-alpha.reservoir.tools'
+  },
+  Linea: {
+    chainId: 59144,
+    api: 'https://api-linea.reservoir.tools',
+    ws: 'wss://ws-linea.reservoir.tools'
+  }
+};
+
+export const chainIdToNetwork: Record<number, keyof typeof BASE_URL> = Object.fromEntries(
+  (Object.entries(BASE_URL) as [keyof typeof BASE_URL, (typeof BASE_URL)[keyof typeof BASE_URL]][]).map(
+    ([name, value]) => [value.chainId, name]
+  )
+);
+
+export const getClientUrl = (chainId: string) => {
+  const network = chainIdToNetwork[parseInt(chainId, 10)];
+  const baseUrl = BASE_URL[network];
+  if (!baseUrl) {
+    throw new Error(`Unsupported chainId ${chainId}`);
+  }
+
+  return {
+    api: new URL(baseUrl.api),
+    ws: new URL(baseUrl.ws)
+  };
+};
+
 export const getReservoirClient = (chainId: string): ReservoirClient => {
   if (reservoirClient) {
     return reservoirClient;
+  }
+
+  const baseUrl = getClientUrl(chainId).api;
+  if (!baseUrl) {
+    throw new Error(`Unsupported chain ${chainId}`);
   }
 
   reservoirClient = createClient({
     chains: [
       {
         id: Number(chainId),
-        baseApiUrl: 'https://api.reservoir.tools', // future-todo: change to other chain urls
+        baseApiUrl: baseUrl.origin,
         active: true
       }
     ],

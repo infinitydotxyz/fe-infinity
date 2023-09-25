@@ -76,7 +76,7 @@ export const TokenBalances = ({
     cacheTime: 5_000
   });
   const sudoBalance = parseFloat(sudoBalanceObj?.data?.formatted ?? '0');
-  const { stakeBalance } = useStakerContract();
+  const { stakeBalance } = useStakerContract(chainId);
   const [minStakeAmountForFeeWaiverAndBoost, setMinStakeAmountForFeeWaiverAndBoost] = useState(0);
 
   const getStakeInfo = async () => {
@@ -320,12 +320,15 @@ export const TokenBalances = ({
       )}
       {showStakeTokensModal && (
         <StakeTokensModal
+          chainId={chainId}
           onClose={() => {
             setShowStakeTokensModal(false);
           }}
         />
       )}
-      {showUnstakeTokensModal && <UnstakeTokensModal onClose={() => setShowUnstakeTokensModal(false)} />}
+      {showUnstakeTokensModal && (
+        <UnstakeTokensModal chainId={chainId} onClose={() => setShowUnstakeTokensModal(false)} />
+      )}
     </div>
   );
 };

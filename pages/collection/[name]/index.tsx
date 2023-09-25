@@ -222,7 +222,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     <Head>
       <meta property="og:title" content={collection.metadata?.name} />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content={`https://pixl.so/collection/${collection?.slug}`} />
+      <meta
+        property="og:url"
+        content={`https://pixl.so/collection/${collection?.chainId}:${collection?.collectionAddress}`}
+      />
       <meta property="og:site_name" content="pixl.so" />
       <meta property="og:image" content={collection.metadata?.bannerImage || collection.metadata?.profileImage} />
       <meta property="og:image:alt" content={collection.metadata?.description} />
