@@ -18,7 +18,7 @@ import { ProfileContextProvider } from 'src/utils/context/ProfileContext';
 import { WagmiConfig, configureChains, createClient } from 'wagmi';
 import {
   mainnet,
-  goerli,
+  // goerli,
   // sepolia,
   polygon
   // polygonMumbai,
