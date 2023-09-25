@@ -48,7 +48,7 @@ if (!isLocalhost()) {
 
 const supportedChains = [
   mainnet,
-  goerli,
+  // goerli,
   // sepolia,
   polygon
   // polygonMumbai,
@@ -67,7 +67,7 @@ const { chains, provider } = configureChains(supportedChains, [publicProvider()]
 const client = createClient(
   getDefaultClient({
     appName: 'Pixl',
-    chains: chains,
+    chains,
     provider
   })
 );
