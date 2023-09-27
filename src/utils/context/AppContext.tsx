@@ -314,7 +314,9 @@ export const AppContextProvider = ({ children }: Props) => {
           const transfers: Promise<{ hash: string }>[] = [];
           for (const item of step.items) {
             if (item.status === 'incomplete') {
-              const res = await signer.sendTransaction({ ...item.data });
+              const tx = { ...item.data };
+              console.log(tx);
+              const res = await signer.sendTransaction(tx);
               transfers.push(Promise.resolve(res));
             }
           }

@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
 import { BlueCheckInline, EZImage, NextLink } from 'src/components/common';
-import { ellipsisString, ENS_ADDRESS } from 'src/utils';
+import { ellipsisString, ENS_ADDRESS, getNetworkName } from 'src/utils';
 import { BasicTokenInfo } from 'src/utils/types';
 import { secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -50,7 +50,9 @@ export const OrderbookItem = ({ title, content, nameItem, order, onClick, canSho
             order={order}
             nfts={order.nfts}
             onClickTitle={() => {
-              router.push(`/chain/${nft.chainId}/collection/${nft.collectionSlug || nft.collectionAddress}`);
+              router.push(
+                `/chain/${getNetworkName(nft.chainId)}/collection/${nft.collectionSlug || nft.collectionAddress}`
+              );
             }}
             image={nft.collectionImage}
             title={nft.collectionName}
@@ -199,7 +201,9 @@ const SingleCollectionCell = ({
       <div className={`flex flex-col truncate ${onClickTitle ? 'cursor-pointer' : ''}`}>
         {orderNft?.collectionSlug ? (
           <NextLink
-            href={`/chain/${orderNft?.chainId}/collection/${orderNft.collectionSlug || orderNft.collectionAddress}`}
+            href={`/chain/${getNetworkName(orderNft?.chainId)}/collection/${
+              orderNft.collectionSlug || orderNft.collectionAddress
+            }`}
             className="font-bold whitespace-pre-wrap flex items-center"
             title={title}
           >
@@ -210,7 +214,7 @@ const SingleCollectionCell = ({
           </NextLink>
         ) : (
           <NextLink
-            href={`/chain/${order?.nfts?.[0]?.chainId}/collection/${
+            href={`/chain/${getNetworkName(order?.nfts?.[0]?.chainId)}/collection/${
               order?.nfts?.[0]?.collectionSlug || order?.nfts?.[0]?.collectionAddress
             }`}
             className="font-bold whitespace-pre-wrap flex items-center"

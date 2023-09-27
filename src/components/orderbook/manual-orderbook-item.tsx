@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
 import { BlueCheckInline, EZImage, NextLink } from 'src/components/common';
+import { getNetworkName } from 'src/utils';
 import { BasicTokenInfo, ERC721CollectionCartItem, ERC721TokenCartItem } from 'src/utils/types';
 import { secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -111,7 +112,7 @@ const SingleCollectionCell = ({ order, image, title, canShowAssetModal, isCollBi
       <div className={`flex flex-col truncate`}>
         {collectionAddress && chainId ? (
           <NextLink
-            href={`/chain/${chainId}/collection/${collectionSlug || collectionAddress}`}
+            href={`/chain/${getNetworkName(chainId)}/collection/${collectionSlug || collectionAddress}`}
             className="font-bold whitespace-pre-wrap flex items-center"
             title={title}
           >

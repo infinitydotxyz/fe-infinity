@@ -15,7 +15,7 @@ import {
 } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
-import { apiGet, formatNumber, nFormatter } from 'src/utils';
+import { apiGet, formatNumber, getNetworkName, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { ERC721CollectionCartItem } from 'src/utils/types';
@@ -168,12 +168,14 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
         <div className="flex items-center font-bold font-heading">
           {isDesktop && <div className="text-lg mr-8 text-right">{index + 1}</div>}
 
-          <NextLink href={`/chain/${collection?.chainId}/collection/${collection?.slug || collection?.address}`}>
+          <NextLink
+            href={`/chain/${getNetworkName(collection?.chainId)}/collection/${collection?.slug || collection?.address}`}
+          >
             <EZImage className="w-14 h-14 rounded-lg overflow-clip" src={collection?.metadata?.profileImage} />
           </NextLink>
 
           <NextLink
-            href={`/chain/${collection?.chainId}/collection/${collection?.slug || collection?.address}`}
+            href={`/chain/${getNetworkName(collection?.chainId)}/collection/${collection?.slug || collection?.address}`}
             className="ml-2 whitespace-normal"
           >
             {collection?.metadata?.name}

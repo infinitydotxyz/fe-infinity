@@ -114,6 +114,50 @@ export enum Network {
 
 export type ChainIdToAddress = { [chainId: number]: string };
 
+const NetworkNames: Record<Network, string> = {
+  [Network.Ethereum]: 'eth',
+  [Network.EthereumGoerli]: 'goerli',
+  [Network.EthereumSepolia]: 'sepolia',
+  [Network.Bsc]: 'bsc',
+  [Network.Optimism]: 'optimism',
+  [Network.Polygon]: 'polygon',
+  [Network.Arbitrum]: 'arbitrum',
+  [Network.ArbitrumNova]: 'arbitrum-nova',
+  [Network.Avalanche]: 'avalanche',
+  [Network.Mumbai]: 'mumbai',
+  [Network.ScrollAlpha]: 'scroll-alpha',
+  [Network.MantleTestnet]: 'mantle-testnet',
+  [Network.LineaTestnet]: 'linea-testnet',
+  [Network.ZoraTestnet]: 'zora-testnet',
+  [Network.Zora]: 'zora',
+  [Network.Base]: 'base',
+  [Network.BaseGoerli]: 'base-goerli',
+  [Network.Linea]: 'linea',
+  [Network.Zksync]: 'zksync',
+  [Network.PolygonZkevm]: 'polygon-zkevm',
+  [Network.Ancient8Testnet]: 'ancient8-testnet'
+};
+
+export const getNetworkName = (network: string | Network = '0') => {
+  const net = (typeof network === 'string' ? parseInt(network) : network) as Network;
+  const name = NetworkNames[net];
+  if (!name) {
+    throw new Error(`Unsupported chain ${network}`);
+  }
+  return name;
+};
+
+export const getNetwork = (name: string): Network => {
+  const entry = (Object.entries(NetworkNames) as unknown as [Network, string][]).find(
+    ([, networkName]) => name === networkName
+  );
+  const network = entry?.[0];
+  if (!network) {
+    throw new Error(`Unsupported network ${name}`);
+  }
+  return network;
+};
+
 // Native currency (https://github.com/reservoirprotocol/indexer/blob/main/packages/sdk/src/common/addresses.ts)
 export const Native: ChainIdToAddress = {
   [Network.Ethereum]: AddressZero,
