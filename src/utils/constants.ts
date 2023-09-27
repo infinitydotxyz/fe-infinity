@@ -114,7 +114,7 @@ export enum Network {
 
 export type ChainIdToAddress = { [chainId: number]: string };
 
-// Native currency
+// Native currency (https://github.com/reservoirprotocol/indexer/blob/main/packages/sdk/src/common/addresses.ts)
 export const Native: ChainIdToAddress = {
   [Network.Ethereum]: AddressZero,
   [Network.EthereumGoerli]: AddressZero,
@@ -139,7 +139,7 @@ export const Native: ChainIdToAddress = {
   [Network.Ancient8Testnet]: AddressZero
 };
 
-// Wrapped native currency
+// Wrapped native currency (https://github.com/reservoirprotocol/indexer/blob/main/packages/sdk/src/common/addresses.ts)
 export const WNative: ChainIdToAddress = {
   [Network.Ethereum]: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
   [Network.EthereumGoerli]: '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6',
