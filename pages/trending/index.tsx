@@ -168,12 +168,12 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
         <div className="flex items-center font-bold font-heading">
           {isDesktop && <div className="text-lg mr-8 text-right">{index + 1}</div>}
 
-          <NextLink href={`/collection/${collection?.chainId}:${collection?.address}`}>
+          <NextLink href={`/chain/${collection?.chainId}/collection/${collection?.slug || collection?.address}`}>
             <EZImage className="w-14 h-14 rounded-lg overflow-clip" src={collection?.metadata?.profileImage} />
           </NextLink>
 
           <NextLink
-            href={`/collection/${collection?.chainId}:${collection?.address}`}
+            href={`/chain/${collection?.chainId}/collection/${collection?.slug || collection?.address}`}
             className="ml-2 whitespace-normal"
           >
             {collection?.metadata?.name}

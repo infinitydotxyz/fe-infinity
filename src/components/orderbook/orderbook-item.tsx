@@ -50,7 +50,7 @@ export const OrderbookItem = ({ title, content, nameItem, order, onClick, canSho
             order={order}
             nfts={order.nfts}
             onClickTitle={() => {
-              router.push(`/collection/${nft.chainId}:${nft.collectionAddress}`);
+              router.push(`/chain/${nft.chainId}/collection/${nft.collectionSlug || nft.collectionAddress}`);
             }}
             image={nft.collectionImage}
             title={nft.collectionName}
@@ -199,7 +199,7 @@ const SingleCollectionCell = ({
       <div className={`flex flex-col truncate ${onClickTitle ? 'cursor-pointer' : ''}`}>
         {orderNft?.collectionSlug ? (
           <NextLink
-            href={`/collection/${orderNft?.chainId}:${orderNft.collectionAddress}`}
+            href={`/chain/${orderNft?.chainId}/collection/${orderNft.collectionSlug || orderNft.collectionAddress}`}
             className="font-bold whitespace-pre-wrap flex items-center"
             title={title}
           >
@@ -210,7 +210,9 @@ const SingleCollectionCell = ({
           </NextLink>
         ) : (
           <NextLink
-            href={`/collection/${order?.nfts?.[0]?.chainId}:${order?.nfts?.[0]?.collectionAddress}`}
+            href={`/chain/${order?.nfts?.[0]?.chainId}/collection/${
+              order?.nfts?.[0]?.collectionSlug || order?.nfts?.[0]?.collectionAddress
+            }`}
             className="font-bold whitespace-pre-wrap flex items-center"
             title={title}
           >

@@ -1,7 +1,7 @@
 import { JsonRpcSigner } from '@ethersproject/providers';
-import { ERC721ABI, FlowExchangeABI } from '@infinityxyz/lib-frontend/abi';
+import { ERC721ABI } from '@infinityxyz/lib-frontend/abi';
 import { ChainNFTs } from '@infinityxyz/lib-frontend/types/core';
-import { getExchangeAddress, trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { adaptEthersSigner } from '@reservoir0x/ethers-wallet-adapter';
 import { Execute } from '@reservoir0x/reservoir-sdk';
 import { Contract, ethers } from 'ethers';
@@ -16,16 +16,17 @@ import { useCollectionSelection } from 'src/hooks/useCollectionSelection';
 import { useNFTSelection } from 'src/hooks/useNFTSelection';
 import { useOrderSelection } from 'src/hooks/useOrderSelection';
 import { CollectionPageTabs, ProfileTabs } from 'src/utils';
-import { approveERC721ForChainNFTs, cancelMultipleOrders } from 'src/utils/orders';
+import { cancelMultipleOrders } from 'src/utils/orders';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem } from 'src/utils/types';
 import { useAccount, useBalance, useProvider, useSigner } from 'wagmi';
-import { getReservoirClient } from '../astra-utils';
+import { getClientUrl, getReservoirClient } from '../astra-utils';
 import { extractErrorMsg, getDefaultOrderExpiryTime, getOrderExpiryTimeInMsFromEnum } from '../common-utils';
 import { FEE_BPS, FEE_WALLET_ADDRESS, FLOW_TOKEN, Native, ROYALTY_BPS, WNative } from '../constants';
 import { fetchMinXflBalanceForZeroFee } from '../orderbook-utils';
 import { CartType, useCartContext } from './CartContext';
 import { Signature, useUserSignature } from 'src/hooks/api/useUserSignature';
 import { switchNetwork } from '@wagmi/core';
+import axios, { AxiosResponse } from 'axios';
 
 type ReservoirOrderbookType =
   | 'reservoir'
@@ -227,24 +228,126 @@ export const AppContextProvider = ({ children }: Props) => {
   }
 
   async function sendMultipleNfts(signer: JsonRpcSigner, chainId: string, orderItems: ChainNFTs[], toAddress: string) {
-    const exchangeAddress = getExchangeAddress(chainId);
-    const flowExchange = new Contract(exchangeAddress, FlowExchangeABI, signer);
-    // grant approvals
-    setCheckoutBtnStatus('Awaiting approval confirmation');
-    const results = await approveERC721ForChainNFTs(orderItems, signer, exchangeAddress);
-    if (results.length > 0) {
-      const lastApprovalTx = results[results.length - 1];
-      setTxnHash(lastApprovalTx.hash);
-      setCheckoutBtnStatus('Awaiting approval txns');
-      await lastApprovalTx.wait();
+    const baseUrl = getClientUrl(chainId).api;
+    const endpoint = '/execute/transfer/v1';
+    const fromAddress = await signer.getAddress();
+    const items = orderItems.flatMap((item) => {
+      return item.tokens.map((token) => {
+        return {
+          quantity: token.numTokens,
+          token: `${item.collection}:${token.tokenId}`
+        };
+      });
+    });
+
+    type NftApproval = {
+      id: 'nft-approval';
+      action: 'Approve NFT contracts';
+      description: string;
+      kind: 'transaction';
+      items: {
+        status: 'complete' | 'incomplete';
+        data: {
+          from: string;
+          to: string;
+          data: string;
+        };
+      }[];
+    };
+
+    type NftTransfer = {
+      id: 'transfer';
+      action: 'Authorize transfer';
+      description: string;
+      kind: 'transaction';
+      items: {
+        status: 'complete' | 'incomplete';
+        data: {
+          from: string;
+          to: string;
+          data: string;
+        };
+      }[];
+    };
+    type ResponseData = {
+      steps: (NftApproval | NftTransfer)[];
+    };
+    const url = new URL(endpoint, baseUrl);
+    const response: AxiosResponse<ResponseData> = await axios.post(
+      url.toString(),
+      {
+        items: items,
+        from: fromAddress,
+        to: toAddress
+      },
+      {
+        responseType: 'json'
+      }
+    );
+    const data = response.data;
+    console.log(data);
+
+    let lastTransferTx: { hash: string } | undefined;
+    for (const step of data.steps) {
+      switch (step.id) {
+        case 'nft-approval': {
+          setCheckoutBtnStatus('Awaiting approval confirmation');
+          const approvals: Promise<ethers.providers.TransactionResponse>[] = [];
+          for (const item of step.items) {
+            if (item.status === 'incomplete') {
+              const res = signer.sendTransaction(item.data);
+              approvals.push(res);
+            }
+          }
+          if (approvals.length > 0) {
+            const results = await Promise.all(approvals);
+            const lastApprovalTx = results[results.length - 1];
+            setTxnHash(lastApprovalTx.hash);
+            setCheckoutBtnStatus('Awaiting approval txns');
+            await lastApprovalTx.wait();
+          }
+          break;
+        }
+
+        case 'transfer': {
+          setCheckoutBtnStatus('Awaiting wallet confirmation');
+          const transfers: Promise<{ hash: string }>[] = [];
+          for (const item of step.items) {
+            if (item.status === 'incomplete') {
+              const res = await signer.sendTransaction({ ...item.data });
+              transfers.push(Promise.resolve(res));
+            }
+          }
+          if (transfers.length > 0) {
+            const results = await Promise.all(transfers);
+            lastTransferTx = results[results.length - 1];
+          }
+          break;
+        }
+      }
     }
+    return {
+      hash: lastTransferTx?.hash ?? ''
+    };
+
+    // const exchangeAddress = getExchangeAddress(chainId);
+    // const flowExchange = new Contract(exchangeAddress, FlowExchangeABI, signer);
+    // grant approvals
+    // setCheckoutBtnStatus('Awaiting approval confirmation');
+    // const results = await approveERC721ForChainNFTs(orderItems, signer, exchangeAddress);
+    // if (results.length > 0) {
+    //   const lastApprovalTx = results[results.length - 1];
+    //   setTxnHash(lastApprovalTx.hash);
+    //   setCheckoutBtnStatus('Awaiting approval txns');
+    //   await lastApprovalTx.wait();
+    // }
 
     // perform send
-    setCheckoutBtnStatus('Awaiting wallet confirmation');
-    const transferResult = await flowExchange.transferMultipleNFTs(toAddress, orderItems);
-    return {
-      hash: transferResult?.hash ?? ''
-    };
+    // setCheckoutBtnStatus('Awaiting wallet confirmation');
+    // const transferResult = await flowExchange.transferMultipleNFTs(toAddress, orderItems);
+    // return {
+    //   hash: transferResult?.hash ?? ''
+    // };
   }
 
   const handleTokenSend = async (nftsToSend: ERC721TokenCartItem[], sendToAddress: string): Promise<boolean> => {

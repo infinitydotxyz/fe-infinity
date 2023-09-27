@@ -111,7 +111,7 @@ const SingleCollectionCell = ({ order, image, title, canShowAssetModal, isCollBi
       <div className={`flex flex-col truncate`}>
         {collectionAddress && chainId ? (
           <NextLink
-            href={`/collection/${chainId}:${collectionAddress}`}
+            href={`/chain/${chainId}/collection/${collectionSlug || collectionAddress}`}
             className="font-bold whitespace-pre-wrap flex items-center"
             title={title}
           >
@@ -122,7 +122,7 @@ const SingleCollectionCell = ({ order, image, title, canShowAssetModal, isCollBi
           </NextLink>
         ) : (
           <NextLink
-            href={`/collection/${chainId}:${collectionAddress}`}
+            href={`/chain/${chainId}/collection${collectionSlug || collectionAddress}`}
             className="font-bold whitespace-pre-wrap flex items-center"
             title={title}
           >
