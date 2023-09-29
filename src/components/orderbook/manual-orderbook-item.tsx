@@ -3,8 +3,7 @@ import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
-import { BlueCheckInline, EZImage, NextLink } from 'src/components/common';
-import { getNetworkName } from 'src/utils';
+import { BlueCheckInline, EZImage } from 'src/components/common';
 import { BasicTokenInfo, ERC721CollectionCartItem, ERC721TokenCartItem } from 'src/utils/types';
 import { secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -16,9 +15,10 @@ type Props1 = {
   sortClick?: () => void;
   onClick?: () => void;
   canShowAssetModal?: boolean;
+  collectionSlug: string;
 };
 
-export const ManualOrderbookItem = ({ isCollBid, order, canShowAssetModal }: Props1): JSX.Element => {
+export const ManualOrderbookItem = ({ isCollBid, order, canShowAssetModal, collectionSlug }: Props1): JSX.Element => {
   const image = isCollBid
     ? (order as ERC721CollectionCartItem).metadata.profileImage
     : (order as ERC721TokenCartItem).image;
@@ -29,6 +29,7 @@ export const ManualOrderbookItem = ({ isCollBid, order, canShowAssetModal }: Pro
 
   return (
     <SingleCollectionCell
+      collectionSlug={collectionSlug}
       isCollBid={isCollBid}
       canShowAssetModal={canShowAssetModal}
       image={image ?? ''}
@@ -46,9 +47,10 @@ type Props3 = {
   title: string;
   order?: ERC721TokenCartItem | ERC721CollectionCartItem;
   canShowAssetModal?: boolean;
+  collectionSlug: string;
 };
 
-const SingleCollectionCell = ({ order, image, title, canShowAssetModal, isCollBid }: Props3) => {
+const SingleCollectionCell = ({ order, image, title, canShowAssetModal, isCollBid, collectionSlug }: Props3) => {
   const [modalOpen, setModalOpen] = useState(false);
   const tokenIdOrAttribute = isCollBid
     ? ''
@@ -63,9 +65,6 @@ const SingleCollectionCell = ({ order, image, title, canShowAssetModal, isCollBi
   const chainId = isCollBid
     ? (order as ERC721CollectionCartItem).chainId
     : (order as ERC721TokenCartItem).chainId ?? ChainId.Mainnet;
-  const collectionSlug = isCollBid
-    ? (order as ERC721CollectionCartItem).slug
-    : (order as ERC721TokenCartItem).collectionSlug;
   const hasBlueCheck = isCollBid
     ? (order as ERC721CollectionCartItem).hasBlueCheck
     : (order as ERC721TokenCartItem).hasBlueCheck;
@@ -111,28 +110,11 @@ const SingleCollectionCell = ({ order, image, title, canShowAssetModal, isCollBi
 
       <div className={`flex flex-col truncate`}>
         {collectionAddress && chainId ? (
-          <NextLink
-            href={`/chain/${getNetworkName(chainId)}/collection/${collectionSlug || collectionAddress}`}
-            className="font-bold whitespace-pre-wrap flex items-center"
-            title={title}
-          >
-            <div className={twMerge(secondaryTextColor, 'font-medium')}>
-              {title}
-              {hasBlueCheck === true && <BlueCheckInline />}
-            </div>
-          </NextLink>
-        ) : (
-          <NextLink
-            href={`/chain/${chainId}/collection${collectionSlug || collectionAddress}`}
-            className="font-bold whitespace-pre-wrap flex items-center"
-            title={title}
-          >
-            <div>
-              {title}
-              {hasBlueCheck === true && <BlueCheckInline />}
-            </div>
-          </NextLink>
-        )}
+          <div className={twMerge(secondaryTextColor, 'font-medium')}>
+            {title}
+            {hasBlueCheck === true && <BlueCheckInline />}
+          </div>
+        ) : null}
 
         {tokenIdOrAttribute && <div className={twMerge('whitespace-pre-wrap')}>{tokenIdOrAttribute}</div>}
       </div>

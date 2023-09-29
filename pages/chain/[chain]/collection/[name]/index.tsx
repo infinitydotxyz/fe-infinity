@@ -556,6 +556,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               key={collectionAddress}
               collectionAddress={collection.address}
               collectionChainId={chainId}
+              collectionSlug={collection.slug}
             />
           )}
 
@@ -578,9 +579,9 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   context.res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=300');
   const chain = context.query.chain as string;
-  const id = context.query.name as string;
+  const slug = context.query.name as string;
   const chainId = getNetwork(chain);
-  const collDataPromise = apiGet(`/collections/${chainId}:${id}`);
+  const collDataPromise = apiGet(`/collections/${chainId}:${slug}`);
   const [collData] = await Promise.all([collDataPromise]);
 
   return {
