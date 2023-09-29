@@ -8,12 +8,13 @@ import { useTheme } from 'next-themes';
 
 interface Props {
   onClose: () => void;
+  chainId: string;
 }
 
-export const UnstakeTokensModal = ({ onClose }: Props) => {
+export const UnstakeTokensModal = ({ onClose, chainId }: Props) => {
   const [value, setValue] = useState(0);
   const [isUnstaking, setIsUnstaking] = useState(false);
-  const { unstake, stakeBalance } = useStakerContract();
+  const { unstake, stakeBalance } = useStakerContract(chainId);
   const { theme } = useTheme();
   const darkMode = theme === 'dark';
 
@@ -140,7 +141,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
         )}
 
         {/* Keep the below code as an example for implementing the rage quit ui */}
-        {/* 
+        {/*
         <Divider className="my-10" />
 
         <TooltipWrapper

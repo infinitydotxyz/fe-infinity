@@ -54,7 +54,7 @@ export function useCollectionTokenFetcher(
   });
 }
 
-export function useProfileTokenFetcher(userAddress: string | undefined, chainId: ChainId, filter: TokensFilter) {
+export function useProfileTokenFetcher(userAddress: string | undefined, chainId: string, filter: TokensFilter) {
   const fetcher = useTokenFetcher<ApiNftData, ERC721TokenCartItem>({
     fetcher: (cursor, filters) => fetchProfileTokens(userAddress || '', chainId, { cursor, ...filters }),
     mapper: (data) => nftsToCardDataWithOrderFields(data),

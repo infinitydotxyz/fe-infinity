@@ -15,7 +15,23 @@ import { CartContextProvider } from 'src/utils/context/CartContext';
 import { publicProvider } from '@wagmi/core/providers/public';
 import NProgress from 'nprogress'; //nprogress module
 import { ProfileContextProvider } from 'src/utils/context/ProfileContext';
-import { WagmiConfig, configureChains, createClient, mainnet } from 'wagmi';
+import { WagmiConfig, configureChains, createClient } from 'wagmi';
+import {
+  mainnet,
+  // goerli,
+  // sepolia,
+  polygon
+  // polygonMumbai,
+  // arbitrum,
+  // optimism,
+  // arbitrumNova,
+  // base,
+  // baseGoerli,
+  // zora,
+  // zoraTestnet,
+  // scrollTestnet,
+  // linea
+} from '@wagmi/chains';
 import '../styles/nprogress.css'; //styles of nprogress
 NProgress.configure({ showSpinner: false });
 
@@ -30,13 +46,28 @@ if (!isLocalhost()) {
   LogRocket.init('0pu9ak/nftco');
 }
 
-const supportedChains = [mainnet];
+const supportedChains = [
+  mainnet,
+  // goerli,
+  // sepolia,
+  polygon
+  // polygonMumbai,
+  // arbitrum,
+  // optimism,
+  // arbitrumNova,
+  // base,
+  // baseGoerli,
+  // zora,
+  // zoraTestnet,
+  // scrollTestnet,
+  // linea
+];
 const { chains, provider } = configureChains(supportedChains, [publicProvider()]);
 
 const client = createClient(
   getDefaultClient({
     appName: 'Pixl',
-    chains: chains,
+    chains,
     provider
   })
 );

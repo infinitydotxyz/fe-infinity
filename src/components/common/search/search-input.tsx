@@ -9,6 +9,7 @@ import { borderColor, secondaryBgColor, hoverColor, textColor } from 'src/utils/
 import { twMerge } from 'tailwind-merge';
 import { getSearchResultKey, SearchResultItem } from './search-results';
 import { SearchResult } from './types';
+import { getNetworkName } from 'src/utils';
 
 interface Props {
   expanded?: boolean;
@@ -69,7 +70,9 @@ export function SearchInput({
       };
       setSelectedToken?.(basicTokenInfo);
     } else if (selected) {
-      const pathname = `/collection/${(selected as CollectionSearchDto).slug}`;
+      const pathname = `/chain/${getNetworkName((selected as CollectionSearchDto).chainId)}/collection/${
+        (selected as CollectionSearchDto).slug || (selected as CollectionSearchDto).address
+      }`;
       router.push(
         {
           pathname

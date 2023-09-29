@@ -1,10 +1,9 @@
 import { JsonRpcSigner } from '@ethersproject/providers';
-import { ERC721ABI, FlowExchangeABI } from '@infinityxyz/lib-frontend/abi';
-import { ChainId, ChainNFTs } from '@infinityxyz/lib-frontend/types/core';
-import { ETHEREUM_WETH_ADDRESS, getExchangeAddress, trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { ERC721ABI } from '@infinityxyz/lib-frontend/abi';
+import { ChainNFTs } from '@infinityxyz/lib-frontend/types/core';
+import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { adaptEthersSigner } from '@reservoir0x/ethers-wallet-adapter';
 import { Execute } from '@reservoir0x/reservoir-sdk';
-import { switchNetwork } from '@wagmi/core';
 import { Contract, ethers } from 'ethers';
 import { useTheme } from 'next-themes';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
@@ -17,15 +16,17 @@ import { useCollectionSelection } from 'src/hooks/useCollectionSelection';
 import { useNFTSelection } from 'src/hooks/useNFTSelection';
 import { useOrderSelection } from 'src/hooks/useOrderSelection';
 import { CollectionPageTabs, ProfileTabs } from 'src/utils';
-import { approveERC721ForChainNFTs, cancelMultipleOrders } from 'src/utils/orders';
+import { cancelMultipleOrders } from 'src/utils/orders';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem } from 'src/utils/types';
-import { useAccount, useBalance, useNetwork, useProvider, useSigner } from 'wagmi';
-import { getReservoirClient } from '../astra-utils';
+import { useAccount, useBalance, useProvider, useSigner } from 'wagmi';
+import { getClientUrl, getReservoirClient } from '../astra-utils';
 import { extractErrorMsg, getDefaultOrderExpiryTime, getOrderExpiryTimeInMsFromEnum } from '../common-utils';
-import { FEE_BPS, FEE_WALLET_ADDRESS, FLOW_TOKEN, ROYALTY_BPS, ZERO_ADDRESS } from '../constants';
+import { FEE_BPS, FEE_WALLET_ADDRESS, FLOW_TOKEN, Native, ROYALTY_BPS, WNative } from '../constants';
 import { fetchMinXflBalanceForZeroFee } from '../orderbook-utils';
 import { CartType, useCartContext } from './CartContext';
 import { Signature, useUserSignature } from 'src/hooks/api/useUserSignature';
+import { switchNetwork } from '@wagmi/core';
+import axios, { AxiosResponse } from 'axios';
 
 type ReservoirOrderbookType =
   | 'reservoir'
@@ -52,8 +53,8 @@ type ReservoirOrderKindType =
   | undefined;
 
 type AppContextType = {
-  selectedChain: ChainId;
-  setSelectedChain: (chain: ChainId) => void;
+  selectedChain: string;
+  chainName: string;
   isWalletNetworkSupported: boolean;
 
   showCart: boolean;
@@ -117,7 +118,7 @@ interface Props {
 }
 
 export const AppContextProvider = ({ children }: Props) => {
-  const { selectedChain, setSelectedChain, isWalletNetworkSupported } = useChain();
+  const { selectedChain, chainName, isWalletNetworkSupported } = useChain();
   const { signature, sign: signIn, isSigning } = useUserSignature();
   if (!isWalletNetworkSupported) {
     switchNetwork({
@@ -139,8 +140,6 @@ export const AppContextProvider = ({ children }: Props) => {
 
   const { data: signer } = useSigner();
   const provider = useProvider();
-  const { chain } = useNetwork();
-  const chainId = String(chain?.id);
 
   const { address: user } = useAccount();
   const { cartType } = useCartContext();
@@ -152,7 +151,8 @@ export const AppContextProvider = ({ children }: Props) => {
     address: user,
     token: FLOW_TOKEN.address as `0x${string}`,
     watch: false,
-    cacheTime: 5_000
+    cacheTime: 5_000,
+    chainId: 1
   });
   const xflBalance = parseFloat(xflBalanceObj?.data?.formatted ?? '0');
 
@@ -160,7 +160,8 @@ export const AppContextProvider = ({ children }: Props) => {
     address: user,
     token: '0x5283d291dbcf85356a21ba090e6db59121208b44' as `0x${string}`,
     watch: false,
-    cacheTime: 5_000
+    cacheTime: 5_000,
+    chainId: 1
   });
   const blurBalance = parseFloat(blurBalanceObj?.data?.formatted ?? '0');
 
@@ -168,7 +169,8 @@ export const AppContextProvider = ({ children }: Props) => {
     address: user,
     token: '0xf4d2888d29d722226fafa5d9b24f9164c092421e' as `0x${string}`,
     watch: false,
-    cacheTime: 5_000
+    cacheTime: 5_000,
+    chainId: 1
   });
   const looksBalance = parseFloat(looksBalanceObj?.data?.formatted ?? '0');
 
@@ -176,7 +178,8 @@ export const AppContextProvider = ({ children }: Props) => {
     address: user,
     token: '0x1e4ede388cbc9f4b5c79681b7f94d36a11abebc9' as `0x${string}`,
     watch: false,
-    cacheTime: 5_000
+    cacheTime: 5_000,
+    chainId: 1
   });
   const x2y2Balance = parseFloat(x2y2BalanceObj?.data?.formatted ?? '0');
 
@@ -184,22 +187,10 @@ export const AppContextProvider = ({ children }: Props) => {
     address: user,
     token: '0x3446dd70b2d52a6bf4a5a192d9b0a161295ab7f9' as `0x${string}`,
     watch: false,
-    cacheTime: 5_000
+    cacheTime: 5_000,
+    chainId: 1
   });
   const sudoBalance = parseFloat(sudoBalanceObj?.data?.formatted ?? '0');
-
-  useEffect(() => {
-    switch (chain?.id) {
-      case 1:
-        setSelectedChain(ChainId.Mainnet);
-        break;
-      case 5:
-        setSelectedChain(ChainId.Goerli);
-        break;
-      default:
-        setSelectedChain(ChainId.Mainnet);
-    }
-  }, [chain]);
 
   const {
     isNFTSelected,
@@ -237,23 +228,106 @@ export const AppContextProvider = ({ children }: Props) => {
   }
 
   async function sendMultipleNfts(signer: JsonRpcSigner, chainId: string, orderItems: ChainNFTs[], toAddress: string) {
-    const exchangeAddress = getExchangeAddress(chainId);
-    const flowExchange = new Contract(exchangeAddress, FlowExchangeABI, signer);
-    // grant approvals
-    setCheckoutBtnStatus('Awaiting approval confirmation');
-    const results = await approveERC721ForChainNFTs(orderItems, signer, exchangeAddress);
-    if (results.length > 0) {
-      const lastApprovalTx = results[results.length - 1];
-      setTxnHash(lastApprovalTx.hash);
-      setCheckoutBtnStatus('Awaiting approval txns');
-      await lastApprovalTx.wait();
-    }
+    const baseUrl = getClientUrl(chainId).api;
+    const endpoint = '/execute/transfer/v1';
+    const fromAddress = await signer.getAddress();
+    const items = orderItems.flatMap((item) => {
+      return item.tokens.map((token) => {
+        return {
+          quantity: token.numTokens,
+          token: `${item.collection}:${token.tokenId}`
+        };
+      });
+    });
 
-    // perform send
-    setCheckoutBtnStatus('Awaiting wallet confirmation');
-    const transferResult = await flowExchange.transferMultipleNFTs(toAddress, orderItems);
+    type NftApproval = {
+      id: 'nft-approval';
+      action: 'Approve NFT contracts';
+      description: string;
+      kind: 'transaction';
+      items: {
+        status: 'complete' | 'incomplete';
+        data: {
+          from: string;
+          to: string;
+          data: string;
+        };
+      }[];
+    };
+
+    type NftTransfer = {
+      id: 'transfer';
+      action: 'Authorize transfer';
+      description: string;
+      kind: 'transaction';
+      items: {
+        status: 'complete' | 'incomplete';
+        data: {
+          from: string;
+          to: string;
+          data: string;
+        };
+      }[];
+    };
+    type ResponseData = {
+      steps: (NftApproval | NftTransfer)[];
+    };
+    const url = new URL(endpoint, baseUrl);
+    const response: AxiosResponse<ResponseData> = await axios.post(
+      url.toString(),
+      {
+        items: items,
+        from: fromAddress,
+        to: toAddress
+      },
+      {
+        responseType: 'json'
+      }
+    );
+    const data = response.data;
+
+    let lastTransferTx: { hash: string } | undefined;
+    for (const step of data.steps) {
+      switch (step.id) {
+        case 'nft-approval': {
+          setCheckoutBtnStatus('Awaiting approval confirmation');
+          const approvals: Promise<ethers.providers.TransactionResponse>[] = [];
+          for (const item of step.items) {
+            if (item.status === 'incomplete') {
+              const res = signer.sendTransaction(item.data);
+              approvals.push(res);
+            }
+          }
+          if (approvals.length > 0) {
+            const results = await Promise.all(approvals);
+            const lastApprovalTx = results[results.length - 1];
+            setTxnHash(lastApprovalTx.hash);
+            setCheckoutBtnStatus('Awaiting approval txns');
+            await lastApprovalTx.wait();
+          }
+          break;
+        }
+
+        case 'transfer': {
+          setCheckoutBtnStatus('Awaiting wallet confirmation');
+          const transfers: Promise<{ hash: string }>[] = [];
+          for (const item of step.items) {
+            if (item.status === 'incomplete') {
+              const tx = { ...item.data };
+              const res = await signer.sendTransaction(tx);
+              transfers.push(Promise.resolve(res));
+            }
+          }
+          if (transfers.length > 0) {
+            const results = await Promise.all(transfers);
+            lastTransferTx = results[results.length - 1];
+          }
+          break;
+        }
+      }
+    }
     return {
-      hash: transferResult?.hash ?? ''
+      hash: lastTransferTx?.hash ?? ''
     };
   }
 
@@ -300,7 +374,7 @@ export const AppContextProvider = ({ children }: Props) => {
             );
           } else {
             setCheckoutBtnStatus('Sending multiple NFTs');
-            result = await sendMultipleNfts(signer as JsonRpcSigner, chainId, orderItems, sendToAddress);
+            result = await sendMultipleNfts(signer as JsonRpcSigner, selectedChain, orderItems, sendToAddress);
           }
           if (result.hash) {
             setTxnHash(result.hash);
@@ -332,7 +406,7 @@ export const AppContextProvider = ({ children }: Props) => {
         const isAcceptOfferCart = cartType === CartType.AcceptOffer;
 
         if (isAcceptOfferCart) {
-          const client = getReservoirClient(chainId);
+          const client = getReservoirClient(selectedChain);
           const tokenSet = [];
           for (const token of tokens) {
             const collection = trimLowerCase(token.address || token.tokenAddress || '');
@@ -345,7 +419,7 @@ export const AppContextProvider = ({ children }: Props) => {
           await client.actions.acceptOffer({
             items: tokenSet,
             wallet: adaptEthersSigner(signer),
-            chainId: Number(chainId),
+            chainId: Number(selectedChain),
             onProgress: (steps: Execute['steps']) => {
               for (const step of steps) {
                 setCheckoutBtnStatus(step.action || 'Working');
@@ -362,12 +436,12 @@ export const AppContextProvider = ({ children }: Props) => {
         }
 
         if (isCancelCart) {
-          const client = getReservoirClient(chainId);
+          const client = getReservoirClient(selectedChain);
           const orderIds = tokens.map((token) => token.id);
           await client.actions.cancelOrder({
             ids: orderIds,
             wallet: adaptEthersSigner(signer),
-            chainId: Number(chainId),
+            chainId: Number(selectedChain),
             onProgress: (steps: Execute['steps']) => {
               for (const step of steps) {
                 setCheckoutBtnStatus(step.action || 'Working');
@@ -379,7 +453,7 @@ export const AppContextProvider = ({ children }: Props) => {
         }
 
         if (isBuyCart) {
-          const client = getReservoirClient(chainId);
+          const client = getReservoirClient(selectedChain);
           const tokenSet = [];
           for (const token of tokens) {
             const collection = trimLowerCase(token.address || token.tokenAddress || '');
@@ -393,7 +467,7 @@ export const AppContextProvider = ({ children }: Props) => {
           await client.actions.buyToken({
             items: tokenSet,
             wallet: adaptEthersSigner(signer),
-            chainId: Number(chainId),
+            chainId: Number(selectedChain),
             onProgress: (steps: Execute['steps']) => {
               for (const step of steps) {
                 setCheckoutBtnStatus(step.action || 'Working');
@@ -404,7 +478,7 @@ export const AppContextProvider = ({ children }: Props) => {
           return true;
         } else if (isListCart) {
           // prepare orders
-          const client = getReservoirClient(chainId);
+          const client = getReservoirClient(selectedChain);
           const tokenSet = [];
           const currentBlock = await provider.getBlock('latest');
           const listingTimeSeconds = currentBlock.timestamp;
@@ -440,6 +514,11 @@ export const AppContextProvider = ({ children }: Props) => {
             }
             const weiPrice = ethers.utils.parseEther(ethPrice.toString()).toString();
 
+            const currency = Native[parseInt(selectedChain, 10)];
+            if (!currency) {
+              throw new Error(`Unsupported network`);
+            }
+
             const expiry = token.orderExpiry ?? getDefaultOrderExpiryTime();
             const endTimeSeconds = getOrderExpiryTimeInMsFromEnum(listingTimeSeconds * 1000, expiry) / 1000;
             tokenSet.push({
@@ -452,7 +531,7 @@ export const AppContextProvider = ({ children }: Props) => {
               automatedRoyalties,
               royaltyBps: ROYALTY_BPS,
               fees,
-              currency: ZERO_ADDRESS, // default ETH for listings and mainnet NFTs
+              currency: currency,
               options: {
                 'seaport-v1.5': {
                   useOffChainCancellation: true
@@ -463,7 +542,7 @@ export const AppContextProvider = ({ children }: Props) => {
 
           // list
           await client.actions.listToken({
-            chainId: Number(chainId),
+            chainId: Number(selectedChain),
             listings: tokenSet,
             wallet: adaptEthersSigner(signer),
             onProgress: (steps: Execute['steps']) => {
@@ -475,10 +554,15 @@ export const AppContextProvider = ({ children }: Props) => {
           toastSuccess('Listing Complete', darkMode);
           return true;
         } else if (isBidCart) {
-          const client = getReservoirClient(chainId);
+          const client = getReservoirClient(selectedChain);
           const tokenSet = [];
           const currentBlock = await provider.getBlock('latest');
           const bidTimeSeconds = currentBlock.timestamp;
+
+          const currency = WNative[parseInt(selectedChain, 10)];
+          if (!currency) {
+            throw new Error(`Unsupported network`);
+          }
 
           for (const token of tokens) {
             const collection = trimLowerCase(token.address || token.tokenAddress || '');
@@ -504,7 +588,7 @@ export const AppContextProvider = ({ children }: Props) => {
               orderKind: 'seaport-v1.5' as ReservoirOrderKindType,
               automatedRoyalties: false,
               fees: [],
-              currency: ETHEREUM_WETH_ADDRESS, // default WETH for bids and ETH mainnet NFTs; future-todo - support other currencies for other chains
+              currency: currency,
               options: {
                 'seaport-v1.5': {
                   useOffChainCancellation: true
@@ -515,7 +599,7 @@ export const AppContextProvider = ({ children }: Props) => {
 
           // bid
           await client.actions.placeBid({
-            chainId: Number(chainId),
+            chainId: Number(selectedChain),
             bids: tokenSet,
             wallet: adaptEthersSigner(signer),
             onProgress: (steps: Execute['steps']) => {
@@ -546,14 +630,14 @@ export const AppContextProvider = ({ children }: Props) => {
         const isCancelCart = cartType === CartType.Cancel;
 
         if (isCancelCart) {
-          const client = getReservoirClient(chainId);
+          const client = getReservoirClient(selectedChain);
           const orderIds = collections.map((collection) => collection.id ?? '');
           // remove empty ids
           const orderIdsNonEmpty = orderIds.filter((id) => id !== '');
           await client.actions.cancelOrder({
             ids: orderIdsNonEmpty,
             wallet: adaptEthersSigner(signer),
-            chainId: Number(chainId),
+            chainId: Number(selectedChain),
             onProgress: (steps: Execute['steps']) => {
               for (const step of steps) {
                 setCheckoutBtnStatus(step.action || 'Working');
@@ -565,10 +649,15 @@ export const AppContextProvider = ({ children }: Props) => {
         }
 
         if (isCollBidCart) {
-          const client = getReservoirClient(chainId);
+          const client = getReservoirClient(selectedChain);
           const collectionSet = [];
           const currentBlock = await provider.getBlock('latest');
           const bidTimeSeconds = currentBlock.timestamp;
+
+          const currency = WNative[parseInt(selectedChain, 10)];
+          if (!currency) {
+            throw new Error(`Unsupported network`);
+          }
 
           for (const collection of collections) {
             if (!collection.address) {
@@ -591,7 +680,7 @@ export const AppContextProvider = ({ children }: Props) => {
               orderbook: 'reservoir' as ReservoirOrderbookType,
               orderKind: 'seaport-v1.5' as ReservoirOrderKindType,
               automatedRoyalties: false,
-              currency: ETHEREUM_WETH_ADDRESS, // default WETH for bids and ETH mainnet NFTs
+              currency,
               options: {
                 'seaport-v1.5': {
                   useOffChainCancellation: true
@@ -602,7 +691,7 @@ export const AppContextProvider = ({ children }: Props) => {
 
           // bid
           await client.actions.placeBid({
-            chainId: Number(chainId),
+            chainId: Number(selectedChain),
             bids: collectionSet,
             wallet: adaptEthersSigner(signer),
             onProgress: (steps: Execute['steps']) => {
@@ -631,7 +720,7 @@ export const AppContextProvider = ({ children }: Props) => {
         setCheckoutBtnStatus('Mapping nonces');
         const nonces = ordersToCancel.map((order) => order.nonce);
         setCheckoutBtnStatus('Awaiting wallet confirmation');
-        const { hash } = await cancelMultipleOrders(signer as JsonRpcSigner, chainId, nonces);
+        const { hash } = await cancelMultipleOrders(signer as JsonRpcSigner, selectedChain, nonces);
         toastSuccess('Sent txn to chain for execution', darkMode);
         setTxnHash(hash);
         return true;
@@ -652,7 +741,7 @@ export const AppContextProvider = ({ children }: Props) => {
 
   const value: AppContextType = {
     selectedChain,
-    setSelectedChain,
+    chainName,
     isWalletNetworkSupported,
 
     showCart,
