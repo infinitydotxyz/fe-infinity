@@ -1,6 +1,5 @@
 import { getAddress } from '@ethersproject/address';
-import { ChainId } from '@infinityxyz/lib-frontend/types/core';
-import { ETHEREUM_WETH_ADDRESS, GOERLI_WETH_ADDRESS, PROTOCOL_FEE_BPS } from '@infinityxyz/lib-frontend/utils';
+import { PROTOCOL_FEE_BPS } from '@infinityxyz/lib-frontend/utils';
 import { formatEther, parseEther } from 'ethers/lib/utils.js';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
@@ -12,6 +11,7 @@ import {
   FEE_BPS,
   FLOW_TOKEN,
   ROYALTY_BPS,
+  WNative,
   ellipsisString,
   getCartType,
   getCollectionKeyId,
@@ -115,17 +115,22 @@ export const AstraCart = ({
 
   const setTokenInfo = (token: string) => {
     switch (token) {
-      case 'WETH':
+      case 'WETH': {
+        const address = WNative[parseInt(selectedChain, 10)];
+        if (!address) {
+          throw new Error(`Unsupported chainId`);
+        }
         setUniswapTokenInfo({
           title: 'Wrap ETH',
           name: 'WETH',
           symbol: 'WETH',
-          address: WETH_ADDRESS,
+          address: address,
           decimals: 18,
           logoURI:
             'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png'
         });
         break;
+      }
       default:
         setUniswapTokenInfo({
           title: `Buy ${FLOW_TOKEN.symbol}`,
@@ -142,7 +147,8 @@ export const AstraCart = ({
     address: user,
     token: FLOW_TOKEN.address as `0x${string}`,
     watch: false,
-    cacheTime: 5_000
+    cacheTime: 5_000,
+    chainId: 1
   });
   const xflBalance = parseFloat(xflBalanceObj?.data?.formatted ?? '0');
 
@@ -150,7 +156,8 @@ export const AstraCart = ({
     address: user,
     token: '0x5283d291dbcf85356a21ba090e6db59121208b44' as `0x${string}`,
     watch: false,
-    cacheTime: 5_000
+    cacheTime: 5_000,
+    chainId: 1
   });
   const blurBalance = parseFloat(blurBalanceObj?.data?.formatted ?? '0');
 
@@ -158,7 +165,8 @@ export const AstraCart = ({
     address: user,
     token: '0xf4d2888d29d722226fafa5d9b24f9164c092421e' as `0x${string}`,
     watch: false,
-    cacheTime: 5_000
+    cacheTime: 5_000,
+    chainId: 1
   });
   const looksBalance = parseFloat(looksBalanceObj?.data?.formatted ?? '0');
 
@@ -166,7 +174,8 @@ export const AstraCart = ({
     address: user,
     token: '0x1e4ede388cbc9f4b5c79681b7f94d36a11abebc9' as `0x${string}`,
     watch: false,
-    cacheTime: 5_000
+    cacheTime: 5_000,
+    chainId: 1
   });
   const x2y2Balance = parseFloat(x2y2BalanceObj?.data?.formatted ?? '0');
 
@@ -174,7 +183,8 @@ export const AstraCart = ({
     address: user,
     token: '0x3446dd70b2d52a6bf4a5a192d9b0a161295ab7f9' as `0x${string}`,
     watch: false,
-    cacheTime: 5_000
+    cacheTime: 5_000,
+    chainId: 1
   });
   const sudoBalance = parseFloat(sudoBalanceObj?.data?.formatted ?? '0');
 
@@ -236,13 +246,14 @@ export const AstraCart = ({
     setHolderOfToken(holder);
   };
 
-  // future-todo change when supporting more chains
-  const WETH_ADDRESS =
-    chainId === ChainId.Mainnet ? ETHEREUM_WETH_ADDRESS : chainId === ChainId.Goerli ? GOERLI_WETH_ADDRESS : '';
+  const currency = WNative[parseInt(selectedChain, 10)];
+  if (!currency) {
+    throw new Error(`Unsupported network`);
+  }
 
   const { data: wethBalance, isLoading } = useBalance({
     address: user,
-    token: WETH_ADDRESS as `0x{string}`,
+    token: currency as `0x{string}`,
     watch: false
   });
 

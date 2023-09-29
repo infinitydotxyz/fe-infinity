@@ -1,20 +1,17 @@
-import { useEffect, useState } from 'react';
 import { AstraCartButton } from 'src/components/astra/astra-cart-button';
 import { ConnectButton, Spacer } from 'src/components/common';
-import { chainIdToName } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { borderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { NetworkWarning } from '../common/network-warning';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
+import { useNetwork } from 'wagmi';
+import { getReadableNetworkName } from 'src/utils';
 
 export const ANavbar = () => {
-  const { selectedChain, isWalletNetworkSupported } = useAppContext();
-  const [, setLabelVal] = useState(chainIdToName(selectedChain));
-
-  useEffect(() => {
-    setLabelVal(chainIdToName(selectedChain));
-  }, [selectedChain]);
+  const { isWalletNetworkSupported } = useAppContext();
+  const { chain } = useNetwork();
+  const chainName = getReadableNetworkName(chain?.id || 1);
 
   return (
     <div>
@@ -57,8 +54,8 @@ export const ANavbar = () => {
         /> */}
 
         <div className="flex items-center justify-between md:space-x-4 md:mt-0 mt-2">
+          <div className={twMerge('border-2 py-2 px-4', borderColor)}>{chainName}</div>
           <ConnectButton />
-
           <AstraCartButton />
         </div>
       </div>

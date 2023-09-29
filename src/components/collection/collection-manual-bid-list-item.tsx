@@ -13,10 +13,11 @@ import useScreenSize from 'src/hooks/useScreenSize';
 
 interface Props {
   order: ERC721TokenCartItem;
+  collectionSlug: string;
   orderType: 'Collection Bid' | 'Token Bid' | 'Trait Bid';
 }
 
-export const CollectionManualBidListItem = ({ order, orderType }: Props) => {
+export const CollectionManualBidListItem = ({ order, orderType, collectionSlug }: Props) => {
   const [startPriceEth] = useState(order.price);
   const { isConnected } = useAccount();
   const { cartType, cartItems, setCartType } = useCartContext();
@@ -51,7 +52,12 @@ export const CollectionManualBidListItem = ({ order, orderType }: Props) => {
     <div className={twMerge(standardBorderCard, 'flex mx-4 text-sm')}>
       <div className="md:flex justify-between items-center w-full">
         <div className="md:w-1/3">
-          <ManualOrderbookItem canShowAssetModal={isTokenBid} order={editableCartItem} isCollBid={isCollBid} />
+          <ManualOrderbookItem
+            canShowAssetModal={isTokenBid}
+            order={editableCartItem}
+            isCollBid={isCollBid}
+            collectionSlug={collectionSlug}
+          />
         </div>
 
         <div className="md:w-1/6 md:flex-col flex justify-between md:mt-0 mt-2">

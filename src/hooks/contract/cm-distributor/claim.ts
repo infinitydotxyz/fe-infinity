@@ -2,8 +2,6 @@ import { FlowCmDistributorABI } from '@infinityxyz/lib-frontend/abi';
 import { DistributionType } from '@infinityxyz/lib-frontend/types/core';
 import { getCmDistributorAddress, getFlurTokenAddress, getTokenAddress } from '@infinityxyz/lib-frontend/utils';
 import { ENV } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
-import { useNetwork } from 'wagmi';
 import { useContract } from '../useContract';
 
 export interface ClaimProps {
@@ -14,13 +12,9 @@ export interface ClaimProps {
   merkleProof: string[];
 }
 
-export const useClaim = () => {
-  const { chain } = useNetwork();
-  const { selectedChain } = useAppContext();
-  const chainId = String(chain?.id ?? selectedChain);
-
+export const useClaim = (chainId: string) => {
   const contractAddress = getCmDistributorAddress(chainId, ENV);
-  const contract = useContract(contractAddress, FlowCmDistributorABI);
+  const contract = useContract(contractAddress, chainId, FlowCmDistributorABI);
   const claim = async (data: ClaimProps) => {
     const { type, account, cumulativeAmount, merkleRoot, merkleProof } = data;
     let txn: { hash?: string };

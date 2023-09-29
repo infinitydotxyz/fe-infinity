@@ -10,8 +10,8 @@ import { twMerge } from 'tailwind-merge';
 
 const RewardsPage = () => {
   const tabs = ['My Rewards', 'Global Rewards'];
-  const { isDesktop } = useScreenSize();
   const [selected, setSelected] = useState(tabs[0]);
+  const { isDesktop } = useScreenSize();
 
   // prevent hydration errors
   const [isClient, setIsClient] = useState(false);

@@ -89,7 +89,7 @@ export const useCollectionOrderFetcher = (
   limit: number,
   filter: TokensFilter,
   collectionAddress: string,
-  collectionChainId: ChainId
+  collectionChainId: string
 ) => {
   const props: CollectionProps = {
     kind: 'collection',
@@ -144,7 +144,7 @@ export const useTokenOrderFetcher = (
   return useOrderFetcher(limit, filter, collectionChainId, props);
 };
 
-const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, chainId: ChainId, props: FetcherProps) => {
+const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, chainId: string, props: FetcherProps) => {
   const [profileOrders, setProfileOrders] = useState<ERC721TokenCartItem[]>([]);
   const [totalOffersValue, setTotalOffersValue] = useState<number>(0);
   const [numTokensWithOffers, setNumTokensWithOffers] = useState<number>(0);

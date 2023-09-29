@@ -21,7 +21,7 @@ export const ProfileCollections = ({ userAddress }: Props) => {
 
   const { selectedCollection, setSelectedCollection } = useProfileContext();
 
-  const fetchOwnedColls = async () => {
+  const fetchOwnedColls = async (chainId: string, userAddress: string) => {
     const { result, error } = await apiGet(`/user/${userAddress}/collections`, {
       query: { chainId, hideSpam: true }
     });
@@ -36,8 +36,8 @@ export const ProfileCollections = ({ userAddress }: Props) => {
   };
 
   useEffect(() => {
-    fetchOwnedColls();
-  }, []);
+    fetchOwnedColls(chainId, userAddress);
+  }, [userAddress, chainId]);
 
   return (
     <div className={twMerge('border rounded-lg p-2 overflow-y-scroll scrollbar-hide text-sm w-full', borderColor)}>

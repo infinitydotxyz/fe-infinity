@@ -16,7 +16,7 @@ import { StatusIcon } from 'src/components/common/status-icon';
 import { useCollectionListingsFetcher } from 'src/hooks/api/useTokenFetcher';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
-import { CollectionPageTabs, apiGet, nFormatter } from 'src/utils';
+import { CollectionPageTabs, apiGet, getNetwork, getNetworkName, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { ERC721CollectionCartItem, ERC721TokenCartItem } from 'src/utils/types';
@@ -222,7 +222,12 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     <Head>
       <meta property="og:title" content={collection.metadata?.name} />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content={`https://pixl.so/collection/${collection?.slug}`} />
+      <meta
+        property="og:url"
+        content={`https://pixl.so/chain/${getNetworkName(collection?.chainId)}/collection/${
+          collection?.slug || collection?.address
+        }`}
+      />
       <meta property="og:site_name" content="pixl.so" />
       <meta property="og:image" content={collection.metadata?.bannerImage || collection.metadata?.profileImage} />
       <meta property="og:image:alt" content={collection.metadata?.description} />
@@ -551,6 +556,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               key={collectionAddress}
               collectionAddress={collection.address}
               collectionChainId={chainId}
+              collectionSlug={collection.slug}
             />
           )}
 
@@ -572,9 +578,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   context.res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=300');
-
-  const id = context.query.name as string;
-  const collDataPromise = apiGet(`/collections/${id}`);
+  const chain = context.query.chain as string;
+  const slug = context.query.name as string;
+  const chainId = getNetwork(chain);
+  const collDataPromise = apiGet(`/collections/${chainId}:${slug}`);
   const [collData] = await Promise.all([collDataPromise]);
 
   return {

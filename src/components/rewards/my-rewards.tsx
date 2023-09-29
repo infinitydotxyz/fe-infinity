@@ -13,18 +13,20 @@ import { buttonBorderColor, primaryShadow } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useAccount } from 'wagmi';
 import { AButton } from '../astra/astra-button';
+import { useChain } from 'src/hooks/useChain';
 import { PixlRewards } from './pixl-rewards';
-import { RewardsSection } from './rewards-section';
 import { TokenBalances } from './token-balances';
+import { RewardsSection } from './rewards-section';
 
 const MyRewards = () => {
   const { theme } = useTheme();
+  const { selectedChain: chainId } = useChain();
   const darkMode = theme === 'dark';
 
   const { isDesktop } = useScreenSize();
 
   const { address } = useAccount();
-  const { result: userRewards } = useUserRewards();
+  const { result: userRewards } = useUserRewards(chainId);
   const cumulativeAmountWei = userRewards?.totals?.totalRewards?.claim?.cumulativeAmount ?? '0';
   const cumulativeAmount = parseFloat(ethers.utils.formatEther(cumulativeAmountWei));
   const claimableAmountWei = userRewards?.totals?.totalRewards?.claim?.claimableWei ?? '0';
@@ -33,7 +35,7 @@ const MyRewards = () => {
   const merkleRoot = userRewards?.totals?.totalRewards?.claim?.merkleRoot;
   const merkleProof = userRewards?.totals?.totalRewards?.claim?.merkleProof;
 
-  const { claim } = useClaim();
+  const { claim } = useClaim(chainId);
   const { setTxnHash } = useAppContext();
 
   const doClaim = async (type: DistributionType, props?: UserCumulativeRewardsDto) => {

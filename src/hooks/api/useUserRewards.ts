@@ -1,15 +1,12 @@
 import { UserRewardsDto } from '@infinityxyz/lib-frontend/types/dto/rewards';
 import { apiGet, apiPut, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { useUserSignature } from './useUserSignature';
 import { useEffect, useState } from 'react';
 
-export function useUserRewards() {
-  const { chain } = useNetwork();
+export function useUserRewards(chainId: string) {
   const { address: user } = useAccount();
-  const { selectedChain } = useAppContext();
-  const chainId = String(chain?.id ?? selectedChain);
 
   return useFetch<UserRewardsDto>(user ? `/user/${chainId}:${user}/rewards` : null);
 }

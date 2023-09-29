@@ -1,5 +1,4 @@
 import { BaseToken, ChainId, Erc721Token, OrdersSnippet } from '@infinityxyz/lib-frontend/types/core';
-import { getSearchFriendlyString } from '@infinityxyz/lib-frontend/utils';
 import { useEffect, useState } from 'react';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { ApiResponse, SITE_HOST, nFormatter } from 'src/utils';
@@ -54,7 +53,7 @@ export function useCollectionTokenFetcher(
   });
 }
 
-export function useProfileTokenFetcher(userAddress: string | undefined, chainId: ChainId, filter: TokensFilter) {
+export function useProfileTokenFetcher(userAddress: string | undefined, chainId: string, filter: TokensFilter) {
   const fetcher = useTokenFetcher<ApiNftData, ERC721TokenCartItem>({
     fetcher: (cursor, filters) => fetchProfileTokens(userAddress || '', chainId, { cursor, ...filters }),
     mapper: (data) => nftsToCardDataWithOrderFields(data),
@@ -156,7 +155,7 @@ export const resvUserTopOfferToCardData = (item: ReservoirUserTopOffer): ERC721T
     validFrom: item?.validFrom * 1000 ?? 0,
     validUntil: item?.validUntil * 1000 ?? 0,
     collectionName: item?.token?.collection?.name ?? '',
-    collectionSlug: getSearchFriendlyString(item?.token?.collection?.name ?? ''),
+    collectionSlug: '',
     image,
     price: item?.price?.amount?.native ?? 0,
     address: item.token?.contract,
@@ -196,7 +195,7 @@ export const resvOrderToCardData = (item: AggregatedOrder): ERC721TokenCartItem 
     validUntil: item?.validUntil * 1000 ?? 0,
     orderSide: item?.side ?? '',
     collectionName: item?.criteria?.data?.collection?.name ?? '',
-    collectionSlug: getSearchFriendlyString(item?.criteria?.data?.collection?.name ?? ''),
+    collectionSlug: '',
     image,
     price: item?.price?.amount?.native ?? 0,
     address: item.contract,

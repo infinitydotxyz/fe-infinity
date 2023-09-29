@@ -10,6 +10,7 @@ import {
   ellipsisAddress,
   ellipsisString,
   getChainScannerBase,
+  getNetworkName,
   nFormatter,
   reservoirTokenToERC721Token,
   useFetch
@@ -227,7 +228,9 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                 <div className="flex flex-col justify-center truncate">
                   <div className="md:flex items-center md:mb-2">
                     <NextLink
-                      href={`/collection/${token.token.chainId}:${token.token.contract}`}
+                      href={`/chain/${getNetworkName(token.token.chainId)}/collection/${
+                        (token.token.collection.slug as string | undefined) || token.token.contract
+                      }`}
                       className="block font-heading tracking-tight mr-2"
                     >
                       <div className="truncate">

@@ -10,10 +10,11 @@ import { CollectionManualBidListItem } from './collection-manual-bid-list-item';
 interface Props {
   collectionAddress: string;
   collectionChainId: ChainId;
+  collectionSlug: string;
   className?: string;
 }
 
-export const CollectionManualBidList = ({ collectionAddress, collectionChainId, className }: Props) => {
+export const CollectionManualBidList = ({ collectionAddress, collectionSlug, collectionChainId, className }: Props) => {
   const [onlyCollectionBids, setOnlyCollectionBids] = useState(false);
   const {
     data: orders,
@@ -60,7 +61,7 @@ export const CollectionManualBidList = ({ collectionAddress, collectionChainId, 
 
           {!isLoading && hasNextPage === false && orders?.length === 0 ? (
             <CenteredContent>
-              <div className="font-heading mt-4">No Collection Bids</div>
+              <div className="font-heading mt-4">No Bids</div>
             </CenteredContent>
           ) : null}
 
@@ -77,7 +78,14 @@ export const CollectionManualBidList = ({ collectionAddress, collectionChainId, 
               orderType = 'Trait Bid';
               order.cartType = CartType.None;
             }
-            return <CollectionManualBidListItem key={order.id} order={order} orderType={orderType} />;
+            return (
+              <CollectionManualBidListItem
+                key={order.id}
+                order={order}
+                orderType={orderType}
+                collectionSlug={collectionSlug}
+              />
+            );
           })}
 
           {hasNextPage === true ? (

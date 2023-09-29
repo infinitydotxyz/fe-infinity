@@ -1,14 +1,7 @@
 import { getAddress } from '@ethersproject/address';
 import { BigNumber } from '@ethersproject/bignumber/lib/bignumber';
 import { Provider } from '@ethersproject/providers';
-import {
-  BaseToken,
-  ChainId,
-  Erc721Token,
-  OrdersSnippet,
-  OwnerInfo,
-  TokenStandard
-} from '@infinityxyz/lib-frontend/types/core';
+import { BaseToken, Erc721Token, OrdersSnippet, OwnerInfo, TokenStandard } from '@infinityxyz/lib-frontend/types/core';
 import { CreationFlow } from '@infinityxyz/lib-frontend/types/core/Collection';
 import {
   ETHEREUM_CHAIN_SCANNER_BASE,
@@ -635,16 +628,6 @@ export const reservoirTokenToERC721Token = (resvToken: ReservoirTokenV6): Erc721
     }
   };
   return result;
-};
-
-export const chainIdToName = (chainId: ChainId) => {
-  return chainId === ChainId.Mainnet
-    ? 'Ethereum (beta)'
-    : chainId === ChainId.Goerli
-    ? 'Goerli'
-    : chainId === ChainId.Polygon
-    ? 'Polygon'
-    : 'Unknown';
 };
 
 export const ENV: Env = (process.env.NEXT_PUBLIC_ENV as Env | undefined | '') || Env.Prod;

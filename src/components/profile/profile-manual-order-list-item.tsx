@@ -71,6 +71,7 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
             canShowAssetModal={isTokenBid}
             key={`${order.id} ${order.chainId}`}
             order={editableCartItem}
+            collectionSlug={order.collectionSlug ?? ''}
           />
         </div>
 

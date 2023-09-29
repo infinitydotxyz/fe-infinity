@@ -16,14 +16,15 @@ import { useTheme } from 'next-themes';
 
 interface Props {
   onClose: () => void;
+  chainId: string;
 }
 
-export const StakeTokensModal = ({ onClose }: Props) => {
+export const StakeTokensModal = ({ onClose, chainId }: Props) => {
   const [value, setValue] = useState('');
   const [isStaking, setIsStaking] = useState(false);
-  const { stake } = useStakerContract();
-  const { approve } = useTokenApprove();
-  const { allowance } = useTokenAllowance();
+  const { stake } = useStakerContract(chainId);
+  const { approve } = useTokenApprove(chainId);
+  const { allowance } = useTokenAllowance(chainId);
   const { address } = useAccount();
   const [minStakeAmountForBoost, setMinStakeAmountForBoost] = useState(0);
   const { theme } = useTheme();
@@ -42,7 +43,8 @@ export const StakeTokensModal = ({ onClose }: Props) => {
     address,
     token: FLOW_TOKEN.address as `0x${string}`,
     watch: false,
-    cacheTime: 5_000
+    cacheTime: 5_000,
+    chainId: parseInt(chainId)
   });
   const tokenBalance = parseFloat(xflBalanceObj?.data?.formatted ?? '0');
 
