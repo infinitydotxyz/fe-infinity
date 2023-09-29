@@ -285,7 +285,6 @@ export const AppContextProvider = ({ children }: Props) => {
       }
     );
     const data = response.data;
-    console.log(data);
 
     let lastTransferTx: { hash: string } | undefined;
     for (const step of data.steps) {
@@ -315,7 +314,6 @@ export const AppContextProvider = ({ children }: Props) => {
           for (const item of step.items) {
             if (item.status === 'incomplete') {
               const tx = { ...item.data };
-              console.log(tx);
               const res = await signer.sendTransaction(tx);
               transfers.push(Promise.resolve(res));
             }
@@ -331,25 +329,6 @@ export const AppContextProvider = ({ children }: Props) => {
     return {
       hash: lastTransferTx?.hash ?? ''
     };
-
-    // const exchangeAddress = getExchangeAddress(chainId);
-    // const flowExchange = new Contract(exchangeAddress, FlowExchangeABI, signer);
-    // grant approvals
-    // setCheckoutBtnStatus('Awaiting approval confirmation');
-    // const results = await approveERC721ForChainNFTs(orderItems, signer, exchangeAddress);
-    // if (results.length > 0) {
-    //   const lastApprovalTx = results[results.length - 1];
-    //   setTxnHash(lastApprovalTx.hash);
-    //   setCheckoutBtnStatus('Awaiting approval txns');
-    //   await lastApprovalTx.wait();
-    // }
-
-    // perform send
-    // setCheckoutBtnStatus('Awaiting wallet confirmation');
-    // const transferResult = await flowExchange.transferMultipleNFTs(toAddress, orderItems);
-    // return {
-    //   hash: transferResult?.hash ?? ''
-    // };
   }
 
   const handleTokenSend = async (nftsToSend: ERC721TokenCartItem[], sendToAddress: string): Promise<boolean> => {
