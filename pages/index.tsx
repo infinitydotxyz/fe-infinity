@@ -100,6 +100,8 @@ const HomePage = () => {
             </div>
             <div style={classes.body}>
               <ul className="space-y-2 list-inside list-disc">
+                <li>Multichain.</li>
+                <li>Rewards for platform usage.</li>
                 <li>Listings from over 100 NFT marketplaces for instant buys.</li>
                 <li>Bids from over 100 marketplaces for instant sells.</li>
                 <li>Zero fees & royalties for token holders of $XFL, $BLUR, $LOOKS, $X2Y2, $SUDO.</li>

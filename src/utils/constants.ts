@@ -138,9 +138,42 @@ const NetworkNames: Record<Network, string> = {
   [Network.Ancient8Testnet]: 'ancient8-testnet'
 };
 
+const ReadableNetworkNames: Record<Network, string> = {
+  [Network.Ethereum]: 'Ethereum',
+  [Network.EthereumGoerli]: 'Goerli',
+  [Network.EthereumSepolia]: 'Sepolia',
+  [Network.Bsc]: 'BSC',
+  [Network.Optimism]: 'Optimism',
+  [Network.Polygon]: 'Polygon',
+  [Network.Arbitrum]: 'Arbitrum',
+  [Network.ArbitrumNova]: 'Arbitrum Nova',
+  [Network.Avalanche]: 'Avalanche',
+  [Network.Mumbai]: 'Mumbai',
+  [Network.ScrollAlpha]: 'Scroll Alpha',
+  [Network.MantleTestnet]: 'Mantle Testnet',
+  [Network.LineaTestnet]: 'Linea Testnet',
+  [Network.ZoraTestnet]: 'Zora Testnet',
+  [Network.Zora]: 'Zora',
+  [Network.Base]: 'Base',
+  [Network.BaseGoerli]: 'Base Goerli',
+  [Network.Linea]: 'Linea',
+  [Network.Zksync]: 'ZkSync',
+  [Network.PolygonZkevm]: 'Polygon ZKEVM',
+  [Network.Ancient8Testnet]: 'Ancient8 Testnet'
+};
+
 export const getNetworkName = (network: string | Network = '0') => {
   const net = (typeof network === 'string' ? parseInt(network) : network) as Network;
   const name = NetworkNames[net];
+  if (!name) {
+    throw new Error(`Unsupported chain ${network}`);
+  }
+  return name;
+};
+
+export const getReadableNetworkName = (network: string | Network = '0') => {
+  const net = (typeof network === 'string' ? parseInt(network) : network) as Network;
+  const name = ReadableNetworkNames[net];
   if (!name) {
     throw new Error(`Unsupported chain ${network}`);
   }
