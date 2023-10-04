@@ -1,15 +1,15 @@
-import React from 'react';
-import Pie from '@visx/shape/lib/shapes/Pie';
 import { Group } from '@visx/group';
-import useScreenSize from 'src/hooks/useScreenSize';
-import { ChartBox } from './chart-box';
-import { twMerge } from 'tailwind-merge';
-import { secondaryTextColor } from 'src/utils/ui-constants';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
-import { AnimatedPie } from './animated-pie';
-import { ChartDimensions } from './chart-utils';
-import { nFormatter } from 'src/utils';
+import Pie from '@visx/shape/lib/shapes/Pie';
 import { Text } from '@visx/text';
+import React from 'react';
+import useScreenSize from 'src/hooks/useScreenSize';
+import { nFormatter } from 'src/utils';
+import { secondaryTextColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
+import { AnimatedPie } from './animated-pie';
+import { ChartBox } from './chart-box';
+import { ChartDimensions } from './chart-utils';
 
 export type PieProps = {
   width: number;
@@ -110,11 +110,11 @@ function Chart({
             )}
           </Pie>
           {selectedDataPoint ? (
-            <Text width={width} fill="white" textAnchor="middle" verticalAnchor="middle">
+            <Text width={width} fill="gray" textAnchor="middle" verticalAnchor="middle">
               {`${nFormatter(selectedDataPoint.value, 2)} ${dataSet.showUnits ? dataSet.units : ''}`}
             </Text>
           ) : (
-            <Text width={width} fill="white" textAnchor="middle" verticalAnchor="middle">
+            <Text width={width} fill="gray" textAnchor="middle" verticalAnchor="middle">
               {`${nFormatter(dataSet.total, 2)} ${dataSet.showUnits ? dataSet.units : ''}`}
             </Text>
           )}
