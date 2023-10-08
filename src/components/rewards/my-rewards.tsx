@@ -108,8 +108,6 @@ const MyRewards = () => {
           }
         ></RewardsSection>
       )}
-
-      <CenteredContent>More rewards dropping soon.</CenteredContent>
     </div>
   );
 };
