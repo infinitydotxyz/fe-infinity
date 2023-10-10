@@ -1,7 +1,7 @@
 import { HistoricalSalesTimeBucket } from '@infinityxyz/lib-frontend/types/core';
 import { localPoint } from '@visx/event';
 import { Group } from '@visx/group';
-import { AnimatedAxis, AnimatedGridRows } from '@visx/react-spring';
+import { AnimatedAxis, AnimatedGridColumns, AnimatedGridRows } from '@visx/react-spring';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { scaleLinear, scaleTime } from '@visx/scale';
 import { Circle } from '@visx/shape';
@@ -19,11 +19,9 @@ import { EthSymbol, EZImage } from 'src/components/common';
 import { ellipsisString } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { BasicTokenInfo } from 'src/utils/types';
-import { saleDataPointColor, secondaryBgColor, secondaryTextColor, textColor } from 'src/utils/ui-constants';
+import { secondaryBgColor, secondaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
-import tailwindConfig from '../../settings/tailwind/elements/foundations';
-import { ChartBox } from './chart-box';
 import { ChartDimensions } from './chart-utils';
 import { ScatterChartType } from './types';
 import useScreenSize from 'src/hooks/useScreenSize';
@@ -57,6 +55,9 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
   const [chartData, setChartData] = useState<SalesChartData[]>(data);
   const { isDesktop } = useScreenSize();
 
+  const { theme } = useTheme();
+  const darkMode = theme === 'dark';
+
   useEffect(() => {
     const nowTimestamp = Date.now();
     let prevTimestamp = nowTimestamp;
@@ -89,31 +90,36 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
   }, [selectedTimeBucket, data]);
 
   return (
-    <ChartBox className="h-full">
-      <div className="md:flex justify-between mb-4">
-        <div>
-          <div className="font-medium mt-3 font-heading text-lg">{graphType}</div>
-          <div className={twMerge(secondaryTextColor, 'font-medium text-sm')}>{numSales} sales</div>
+    <div className="h-full">
+      <div className="xl:flex justify-between py-5 items-center">
+        <div className="flex items-end gap-1">
+          <div className={twMerge('font-medium font-heading text-xl', darkMode ? 'text-white' : 'text-[#444444]')}>
+            {graphType}
+          </div>
+          <div className={twMerge(secondaryTextColor, 'font-medium text-sm !text-[#aaaaaa]')}>{numSales} sales</div>
         </div>
 
-        <div className="items-center flex space-x-6">
-          <div className="flex items-center space-x-2">
+        <div className="items-center flex gap-[10px]">
+          <div className="flex items-center space-x-[10px]">
+            <span className={twMerge('text-sm font-medium !text-[#444444] dark:!text-white')}>Outliers</span>
+
             <ASwitchButton
               checked={showOutliers}
               onChange={() => {
                 setShowOutliers(!showOutliers);
               }}
             ></ASwitchButton>
-
-            <span className={twMerge('text-sm font-medium', secondaryTextColor)}>Outliers</span>
           </div>
 
           <ADropdown
-            hasBorder={true}
+            hasBorder={false}
             alignMenuRight
             innerClassName="w-[100px]"
-            menuItemClassName="py-2"
+            menuItemClassName="py-1 px-2"
+            menuButtonClassName="py-1 px-[10px]"
             label={selectedTimeBucket}
+            className="py-0 px-0"
+            menuParentButtonClassName="px-0 py-0 border dark:border-[#E7E7E7] dark:border-[#222222] rounded h-[32px]"
             items={Object.values(HistoricalSalesTimeBucket).map((bucket) => ({
               label: bucket,
               onClick: () => setSelectedTimeBucket(bucket)
@@ -122,18 +128,32 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
         </div>
       </div>
 
-      <ParentSize debounceTime={10}>
-        {({ width }) => (
-          <SalesChart
-            key={`${selectedTimeBucket}-${showOutliers}-${chartData.length}`}
-            data={chartData}
-            width={width}
-            height={isDesktop ? 300 : 270}
-            hideOutliers={!showOutliers}
-          />
-        )}
-      </ParentSize>
-    </ChartBox>
+      <div className="rounded-lg bg-[#F1F1EB] dark:bg-[#1C1C16] pt-5 px-2.5">
+        <ParentSize debounceTime={10}>
+          {({ width }) => (
+            <SalesChart
+              key={`${selectedTimeBucket}-${showOutliers}-${chartData.length}`}
+              data={[
+                {
+                  id: '0',
+                  timestamp: new Date().getTime(),
+                  collectionAddress: '0',
+                  collectionSlug: '0',
+                  collectionName: '0',
+                  tokenId: '0',
+                  tokenImage: '0',
+                  salePrice: 0
+                },
+                ...chartData
+              ]}
+              width={width}
+              height={isDesktop ? 576 : 270}
+              hideOutliers={!showOutliers}
+            />
+          )}
+        </ParentSize>
+      </div>
+    </div>
   );
 };
 
@@ -298,24 +318,23 @@ function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
     setSelectedSale(closest.data);
   };
 
+  const { theme } = useTheme();
+  const darkMode = theme === 'dark';
+
   const dots = useMemo(
     () =>
       dataToRender.map((d: SalesChartData) => (
         <Circle
           key={d.id}
-          fill={saleDataPointColor}
+          fill={darkMode ? '#FFEB00' : '#675D1E'}
           cx={xScale(xAccessor(d))}
           cy={yScale(yAccessor(d))}
-          r={5}
+          r={7.5}
           style={{ cursor: 'pointer' }}
         />
       )),
-    [xScale, yScale]
+    [xScale, yScale, darkMode]
   );
-
-  const { theme } = useTheme();
-  const darkMode = theme === 'dark';
-  const themeToUse = tailwindConfig.colors[darkMode ? 'dark' : 'light'];
 
   return (
     <div>
@@ -330,22 +349,17 @@ function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
         style={{ transition: 'all 0.7s ease-in-out' }}
       >
         <Group top={margin.top} left={margin.left}>
-          <AnimatedGridRows
-            scale={yScale}
-            width={boundedWidth}
-            stroke={themeToUse.disabledFade}
-            strokeDasharray="6,6"
-            numTicks={6}
-          />
+          <AnimatedGridRows scale={yScale} width={boundedWidth} stroke={darkMode ? '#222' : '#E7E7E7'} />
+          <AnimatedGridColumns scale={xScale} height={boundedHeight} stroke={darkMode ? '#222' : '#E7E7E7'} />
           <AnimatedAxis
             orientation="left"
-            numTicks={5}
+            numTicks={10}
             hideAxisLine={true}
             hideTicks={true}
             scale={yScale}
             tickLabelProps={() => ({
-              fill: themeToUse.disabled,
-              fontWeight: 700,
+              fill: darkMode ? '#ffffff' : '#444444',
+              fontWeight: 400,
               fontSize: 12,
               textAnchor: 'end',
               verticalAnchor: 'middle'
@@ -353,14 +367,14 @@ function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
           />
           <AnimatedAxis
             orientation="bottom"
-            numTicks={5}
+            numTicks={4}
             top={boundedHeight}
             hideAxisLine={true}
             hideTicks={true}
             scale={xScale}
             tickLabelProps={() => ({
-              fill: themeToUse.disabled,
-              fontWeight: 700,
+              fill: darkMode ? '#ffffff' : '#444444',
+              fontWeight: 400,
               fontSize: 12,
               textAnchor: 'middle'
             })}

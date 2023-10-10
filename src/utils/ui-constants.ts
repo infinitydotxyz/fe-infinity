@@ -33,6 +33,7 @@ export const bidDataPointColor = '#f731bf';
 // these include both dark and light
 export const bgColor = 'dark:bg-dark-bg bg-light-bg';
 export const brandBgColor = 'dark:bg-brand-darkPrimary bg-brand-primary';
+export const brandBgCustomColor = 'dark:bg-[#FFEB00] bg-[#675D1E]';
 export const inverseBgColor = 'dark:bg-light-bg bg-dark-bg';
 export const secondaryBgColor = 'dark:bg-dark-card bg-light-card';
 export const secondaryBgColorDarker = 'dark:bg-dark-card bg-gray-200 bg-opacity-60';

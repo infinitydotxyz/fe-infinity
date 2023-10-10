@@ -5,12 +5,11 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import {
   activeColor,
   buttonBorderColor,
-  brandBorderColor,
   hoverColor,
   primaryBtnWithBgColorTextTransition,
   textColor,
   brandTextColor,
-  brandBgColor
+  brandBgCustomColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
@@ -244,18 +243,17 @@ export const ASwitchButton = ({ checked, onChange }: Props5) => {
       checked={checked}
       onChange={onChange}
       className={twMerge(
-        'border-[1px] relative inline-flex h-[24px] w-[50px] shrink-0 cursor-pointer rounded-full \
+        'border-[1px] border-[#E7E7E7] dark:border-[#222222] relative inline-flex p-1 w-[52px] shrink-0 cursor-pointer rounded \
              transition-colors duration-100 ease-in-out',
-        brandBorderColor,
-        checked ? brandBgColor : ''
+        checked ? brandBgCustomColor : ''
       )}
     >
       <span className="sr-only">Use setting</span>
       <span
         className={twMerge(
-          'dark:bg-gray-200 bg-gray-300',
-          checked ? 'translate-x-[25px] bg-white dark:bg-black' : 'translate-x-1',
-          'mt-[1px] h-[20px] w-[20px] rounded-full'
+          'bg-[#EEEEE8]',
+          checked ? 'translate-x-full bg-white dark:bg-black' : 'translate-x-0',
+          'h-[22px] w-[22px] rounded-[3px]'
         )}
       />
     </Switch>
