@@ -4,7 +4,8 @@ import { borderColor, dropShadow, hoverColor, hoverColorBrandText, secondaryBgCo
 import { twMerge } from 'tailwind-merge';
 import { Divider } from '../common';
 import { AOutlineButton, ATextButton } from './astra-button';
-import { ChevronDown } from '../icons';
+import ChevronDown from '../../images/chevrondown.svg';
+import Image from 'next/image';
 
 export type ADropdownItem = {
   label: string | ReactElement;
@@ -22,7 +23,7 @@ export const ADropdownButton = ({ children, isMenuOpen, className }: DropdownBtn
   return (
     <div
       className={twMerge(
-        'flex items-center gap-1.5 py-1 text-sm text-[#444444] dark:text-white font-medium',
+        'flex items-center gap-1.5 py-1 text-sm text-neutral-200 dark:text-white font-medium',
         hoverColorBrandText,
         className
       )}
@@ -34,7 +35,7 @@ export const ADropdownButton = ({ children, isMenuOpen, className }: DropdownBtn
           transform: `rotate(${!isMenuOpen ? 0 : '0.5turn'})`
         }}
       >
-        <ChevronDown />
+        <Image src={ChevronDown} width={12} height={7} alt="chevron down" />
       </div>
     </div>
   );

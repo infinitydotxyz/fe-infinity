@@ -26,9 +26,15 @@ export const weekSeconds = secondsPerDay * 7;
 export const thirtyDaySeconds = secondsPerDay * 30;
 
 export const saleDataPointColor = '#FA8147';
+export const saleDataPointDarkColor = '#FFEB00';
+export const saleDataPointLightColor = '#675D1E';
 export const hoveredDataPointColor = '#66d981';
 export const listingDataPointColor = '#4899f1';
 export const bidDataPointColor = '#f731bf';
+export const gridDarkColor = '#222222';
+export const gridLightColor = '#E7E7E7';
+export const chartAxisLabelDarkColor = '#ffffff';
+export const chartAxisLabelLightColor = '#444444';
 
 // these include both dark and light
 export const bgColor = 'dark:bg-dark-bg bg-light-bg';

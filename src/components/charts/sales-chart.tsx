@@ -19,7 +19,17 @@ import { EthSymbol, EZImage } from 'src/components/common';
 import { ellipsisString } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { BasicTokenInfo } from 'src/utils/types';
-import { secondaryBgColor, secondaryTextColor, textColor } from 'src/utils/ui-constants';
+import {
+  chartAxisLabelDarkColor,
+  chartAxisLabelLightColor,
+  gridDarkColor,
+  gridLightColor,
+  saleDataPointDarkColor,
+  saleDataPointLightColor,
+  secondaryBgColor,
+  secondaryTextColor,
+  textColor
+} from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
 import { ChartDimensions } from './chart-utils';
@@ -93,15 +103,15 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
     <div className="h-full">
       <div className="xl:flex justify-between py-5 items-center">
         <div className="flex items-end gap-1">
-          <div className={twMerge('font-medium font-heading text-xl', darkMode ? 'text-white' : 'text-[#444444]')}>
+          <div className={twMerge('font-medium font-heading text-xl', darkMode ? 'text-white' : 'text-neutral-200')}>
             {graphType}
           </div>
-          <div className={twMerge(secondaryTextColor, 'font-medium text-sm !text-[#aaaaaa]')}>{numSales} sales</div>
+          <div className={twMerge(secondaryTextColor, 'font-medium text-sm !text-neutral-100')}>{numSales} sales</div>
         </div>
 
         <div className="items-center flex gap-[10px]">
           <div className="flex items-center space-x-[10px]">
-            <span className={twMerge('text-sm font-medium !text-[#444444] dark:!text-white')}>Outliers</span>
+            <span className={twMerge('text-sm font-medium !text-neutral-200 dark:!text-white')}>Outliers</span>
 
             <ASwitchButton
               checked={showOutliers}
@@ -119,7 +129,7 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
             menuButtonClassName="py-1 px-[10px]"
             label={selectedTimeBucket}
             className="py-0 px-0"
-            menuParentButtonClassName="px-0 py-0 border dark:border-[#E7E7E7] dark:border-[#222222] rounded h-[32px]"
+            menuParentButtonClassName="px-0 py-0 border border-light-customBorder dark:border-dark-customBorder rounded h-[32px]"
             items={Object.values(HistoricalSalesTimeBucket).map((bucket) => ({
               label: bucket,
               onClick: () => setSelectedTimeBucket(bucket)
@@ -128,7 +138,7 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
         </div>
       </div>
 
-      <div className="rounded-lg bg-[#F1F1EB] dark:bg-[#1C1C16] pt-5 px-2.5">
+      <div className="rounded-lg bg-neutral-4000 dark:bg-neutral-900 pt-5 px-2.5">
         <ParentSize debounceTime={10}>
           {({ width }) => (
             <SalesChart
@@ -320,13 +330,12 @@ function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
 
   const { theme } = useTheme();
   const darkMode = theme === 'dark';
-
   const dots = useMemo(
     () =>
       dataToRender.map((d: SalesChartData) => (
         <Circle
           key={d.id}
-          fill={darkMode ? '#FFEB00' : '#675D1E'}
+          fill={darkMode ? saleDataPointDarkColor : saleDataPointLightColor}
           cx={xScale(xAccessor(d))}
           cy={yScale(yAccessor(d))}
           r={7.5}
@@ -349,8 +358,12 @@ function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
         style={{ transition: 'all 0.7s ease-in-out' }}
       >
         <Group top={margin.top} left={margin.left}>
-          <AnimatedGridRows scale={yScale} width={boundedWidth} stroke={darkMode ? '#222' : '#E7E7E7'} />
-          <AnimatedGridColumns scale={xScale} height={boundedHeight} stroke={darkMode ? '#222' : '#E7E7E7'} />
+          <AnimatedGridRows scale={yScale} width={boundedWidth} stroke={darkMode ? gridDarkColor : gridLightColor} />
+          <AnimatedGridColumns
+            scale={xScale}
+            height={boundedHeight}
+            stroke={darkMode ? gridDarkColor : gridLightColor}
+          />
           <AnimatedAxis
             orientation="left"
             numTicks={10}
@@ -358,7 +371,7 @@ function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
             hideTicks={true}
             scale={yScale}
             tickLabelProps={() => ({
-              fill: darkMode ? '#ffffff' : '#444444',
+              fill: darkMode ? chartAxisLabelDarkColor : chartAxisLabelLightColor,
               fontWeight: 400,
               fontSize: 12,
               textAnchor: 'end',
@@ -373,7 +386,7 @@ function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
             hideTicks={true}
             scale={xScale}
             tickLabelProps={() => ({
-              fill: darkMode ? '#ffffff' : '#444444',
+              fill: darkMode ? chartAxisLabelDarkColor : chartAxisLabelLightColor,
               fontWeight: 400,
               fontSize: 12,
               textAnchor: 'middle'

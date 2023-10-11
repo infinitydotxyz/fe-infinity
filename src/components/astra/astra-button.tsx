@@ -243,7 +243,7 @@ export const ASwitchButton = ({ checked, onChange }: Props5) => {
       checked={checked}
       onChange={onChange}
       className={twMerge(
-        'border-[1px] border-[#E7E7E7] dark:border-[#222222] relative inline-flex p-1 w-[52px] shrink-0 cursor-pointer rounded \
+        'border border-light-customBorder dark:border-dark-customBorder relative inline-flex p-1 w-13 shrink-0 cursor-pointer rounded \
              transition-colors duration-100 ease-in-out',
         checked ? brandBgCustomColor : ''
       )}
@@ -251,7 +251,7 @@ export const ASwitchButton = ({ checked, onChange }: Props5) => {
       <span className="sr-only">Use setting</span>
       <span
         className={twMerge(
-          'bg-[#EEEEE8]',
+          'bg-gray-300',
           checked ? 'translate-x-full bg-white dark:bg-black' : 'translate-x-0',
           'h-[22px] w-[22px] rounded-[3px]'
         )}
