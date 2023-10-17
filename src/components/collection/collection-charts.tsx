@@ -160,7 +160,7 @@ export const CollectionCharts = ({
 
           {isSalesLoading && <Loading graphType={ScatterChartType.Sales} />}
         </div>
-        <div className="md:w-1/4 p-2">
+        <div className={twMerge('md:w-1/4 p-2', salesChartData.length <= 0 && 'mt-18')}>
           {salesChartData.length > 0 && <SalesChartDetails data={salesChartData[0]} />}
         </div>
       </div>
@@ -177,7 +177,7 @@ export const CollectionCharts = ({
 
           {isListingsLoading && <Loading graphType={BarChartType.Listings} />}
         </div>
-        <div className="md:w-1/4 p-2">
+        <div className="md:w-1/4 p-2 mt-18">
           {listingsData.length > 5 && (
             <OrdersChartDetails
               orders={selectedListings}
@@ -201,7 +201,7 @@ export const CollectionCharts = ({
 
           {isBidsLoading && <Loading graphType={BarChartType.Bids} />}
         </div>
-        <div className="md:w-1/4 p-2">
+        <div className="md:w-1/4 p-2 mt-18">
           {bidsData.length > 5 && (
             <OrdersChartDetails
               orders={selectedBids}

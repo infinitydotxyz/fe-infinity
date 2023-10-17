@@ -5,7 +5,7 @@ import { useTheme } from 'next-themes';
 import { useLayoutEffect } from 'react';
 import { ReservoirOrderDepth } from 'src/utils/types';
 import tailwindConfig from '../../settings/tailwind/elements/foundations';
-import { ChartBox } from './chart-box';
+import { twMerge } from 'tailwind-merge';
 
 type Props = {
   data: { buy: ReservoirOrderDepth; sell: ReservoirOrderDepth };
@@ -13,28 +13,22 @@ type Props = {
 
 const OrderDepthChart = ({ data }: Props) => {
   const showOutliers = true;
-
+  const { theme } = useTheme();
+  const darkMode = theme === 'dark';
   return (
-    <ChartBox className="h-full">
-      <div className="flex justify-between mb-4">
-        <div className="font-medium mt-3 font-heading text-lg">Order Depth</div>
-
-        <div className="items-center flex space-x-6">
-          <div className="flex items-center space-x-2">
-            {/* <ASwitchButton
-              checked={showOutliers}
-              onChange={() => {
-                setShowOutliers(!showOutliers);
-              }}
-            ></ASwitchButton> */}
-
-            {/* <span className={twMerge('text-sm font-medium', secondaryTextColor)}>Outliers</span> */}
+    <div className="h-full">
+      <div className="xl:flex justify-between py-5 items-center">
+        <div className="flex items-end gap-1">
+          <div className={twMerge('font-medium font-heading text-xl', darkMode ? 'text-white' : 'text-neutral-200')}>
+            Order Depth
           </div>
         </div>
       </div>
 
-      <OrderDepthChartSub data={data} hideOutliers={!showOutliers} key={String(showOutliers)} />
-    </ChartBox>
+      <div className="rounded-lg h-[618px] bg-zinc-300 dark:bg-neutral-800 pt-5 px-2.5">
+        <OrderDepthChartSub data={data} hideOutliers={!showOutliers} key={String(showOutliers)} />
+      </div>
+    </div>
   );
 };
 
@@ -70,16 +64,27 @@ const OrderDepthChartSub = ({ data, hideOutliers }: Props2) => {
     const root = am5.Root.new('chartdiv');
     root._logo?.dispose();
 
+    const chartLinesColor = darkMode ? tailwindConfig.colors['yellow'][700] : tailwindConfig.colors['amber'][500];
+
     // Set themes
     // https://www.amcharts.com/docs/v5/concepts/themes/
     const myTheme = am5.Theme.new(root);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const commonConfig: any = {
       fill: am5.color(themeToUse.disabled),
-      fontSize: '.75em',
-      fontFamily: 'DM Sans',
-      fontWeight: '800'
+      fontSize: '12px',
+      fontFamily: 'Barlow',
+      fontWeight: '400'
     };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const tooltipConfig: any = {
+      fill: am5.color(tailwindConfig.colors['neutral'][700]),
+      fontSize: '12px',
+      fontFamily: 'Barlow',
+      fontWeight: '500'
+    };
+
     myTheme.rule('Label').setAll(commonConfig);
 
     root.setThemes([am5themes_Animated.new(root), myTheme]);
@@ -105,10 +110,21 @@ const OrderDepthChartSub = ({ data, hideOutliers }: Props2) => {
           minGridDistance: 50
         }),
         tooltip: am5.Tooltip.new(root, {
-          ...commonConfig
+          ...tooltipConfig
         })
       })
     );
+
+    xAxis
+      .get('tooltip')
+      ?.get('background')
+      ?.setAll({
+        fill: am5.color(tailwindConfig.colors['yellow'][200]),
+        stroke: am5.color(tailwindConfig.colors['yellow'][300])
+      });
+    xAxis.get('tooltip')?.label.setAll({
+      fill: am5.color(tailwindConfig.colors['neutral'][700])
+    });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     xAxis.get('renderer').labels.template.adapters.add('text', function (text, target: any) {
@@ -119,7 +135,8 @@ const OrderDepthChartSub = ({ data, hideOutliers }: Props2) => {
     });
 
     xAxis.get('renderer').grid.template.setAll({
-      stroke: am5.color(themeToUse.disabledFade)
+      stroke: am5.color(themeToUse.gridLine),
+      opacity: 1
     });
 
     const yAxis = chart.yAxes.push(
@@ -130,7 +147,8 @@ const OrderDepthChartSub = ({ data, hideOutliers }: Props2) => {
     );
 
     yAxis.get('renderer').grid.template.setAll({
-      stroke: am5.color(themeToUse.disabledFade)
+      stroke: am5.color(themeToUse.gridLine),
+      opacity: 1
     });
 
     // Add cursor
@@ -142,8 +160,8 @@ const OrderDepthChartSub = ({ data, hideOutliers }: Props2) => {
       })
     );
     cursor.lineY.set('visible', true);
-    cursor.lineX.set('stroke', am5.color(themeToUse.disabledFade));
-    cursor.lineY.set('stroke', am5.color(themeToUse.disabledFade));
+    cursor.lineX.set('stroke', am5.color(themeToUse.gridLine));
+    cursor.lineY.set('stroke', am5.color(themeToUse.gridLine));
 
     // Add series
     // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
@@ -154,11 +172,13 @@ const OrderDepthChartSub = ({ data, hideOutliers }: Props2) => {
         yAxis: yAxis,
         valueYField: 'bidstotalvolume',
         categoryXField: 'value',
-        stroke: am5.color(tailwindConfig.colors['green'][500]),
-        fill: am5.color(tailwindConfig.colors['green'][500]),
+        stroke: am5.color(chartLinesColor),
+        fill: am5.color(chartLinesColor),
         tooltip: am5.Tooltip.new(root, {
-          pointerOrientation: 'horizontal',
-          labelText: '[width: 120px]Price:[/]{categoryX}[/]\n[width: 120px]Bids:[/]{valueY}[/]'
+          getFillFromSprite: false,
+          getLabelFillFromSprite: false,
+          pointerOrientation: 'down',
+          labelText: '[width: 106px]Price:[/]{categoryX}[/]\n[width: 106px]Bids:[/]{valueY}[/]'
         })
       })
     );
@@ -166,6 +186,16 @@ const OrderDepthChartSub = ({ data, hideOutliers }: Props2) => {
     bidsTotalVolume.fills.template.setAll({
       visible: true,
       fillOpacity: 0.2
+    });
+    bidsTotalVolume
+      .get('tooltip')
+      ?.get('background')
+      ?.setAll({
+        fill: am5.color(tailwindConfig.colors['yellow'][200]),
+        stroke: am5.color(tailwindConfig.colors['yellow'][300])
+      });
+    bidsTotalVolume.get('tooltip')?.label.setAll({
+      fill: am5.color(tailwindConfig.colors['neutral'][700])
     });
 
     const asksTotalVolume = chart.series.push(
@@ -175,10 +205,12 @@ const OrderDepthChartSub = ({ data, hideOutliers }: Props2) => {
         yAxis: yAxis,
         valueYField: 'askstotalvolume',
         categoryXField: 'value',
-        stroke: am5.color(tailwindConfig.colors['red'][500]),
-        fill: am5.color(tailwindConfig.colors['red'][500]),
+        stroke: am5.color(chartLinesColor),
+        fill: am5.color(chartLinesColor),
         tooltip: am5.Tooltip.new(root, {
-          pointerOrientation: 'horizontal',
+          getFillFromSprite: false,
+          getLabelFillFromSprite: false,
+          pointerOrientation: 'down',
           labelText: '[width: 120px]Price:[/]{categoryX}[/]\n[width: 120px]Listings:[/]{valueY}[/]'
         })
       })
@@ -187,6 +219,16 @@ const OrderDepthChartSub = ({ data, hideOutliers }: Props2) => {
     asksTotalVolume.fills.template.setAll({
       visible: true,
       fillOpacity: 0.2
+    });
+    asksTotalVolume
+      .get('tooltip')
+      ?.get('background')
+      ?.setAll({
+        fill: am5.color(tailwindConfig.colors['yellow'][200]),
+        stroke: am5.color(tailwindConfig.colors['yellow'][300])
+      });
+    asksTotalVolume.get('tooltip')?.label.setAll({
+      fill: am5.color(tailwindConfig.colors['neutral'][700])
     });
 
     const bidVolume = chart.series.push(
@@ -201,7 +243,7 @@ const OrderDepthChartSub = ({ data, hideOutliers }: Props2) => {
     );
     bidVolume.columns.template.set('fillOpacity', 1);
     bidVolume.columns.template.set('width', 1);
-    bidVolume.columns.template.set('stroke', am5.color(tailwindConfig.colors['green'][500]));
+    bidVolume.columns.template.set('stroke', am5.color(chartLinesColor));
 
     const asksVolume = chart.series.push(
       am5xy.ColumnSeries.new(root, {
@@ -215,7 +257,7 @@ const OrderDepthChartSub = ({ data, hideOutliers }: Props2) => {
     );
     asksVolume.columns.template.set('fillOpacity', 1);
     asksVolume.columns.template.set('width', 1);
-    asksVolume.columns.template.set('stroke', am5.color(tailwindConfig.colors['red'][500]));
+    asksVolume.columns.template.set('stroke', am5.color(chartLinesColor));
 
     loadData();
 
@@ -303,7 +345,7 @@ const OrderDepthChartSub = ({ data, hideOutliers }: Props2) => {
     return () => {
       root.dispose();
     };
-  }, []);
+  }, [darkMode]);
   return <div id="chartdiv" style={{ width: '100%', height: '100%' }}></div>;
 };
 

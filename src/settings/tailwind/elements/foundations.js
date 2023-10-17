@@ -107,10 +107,21 @@ module.exports = {
     'blur-100': 'blur(100px)'
   },
   fontFamily: {
-    body: 'PPNeueMachinaInktrap,DM Sans,SF UI Text,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol',
+    body: ['Barlow', 'sans-serif'],
+    supply: 'Supply-Mono',
+    'supply-light': 'Supply-Mono-Light',
     heading:
       'Monument-Bold,SF UI Display,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol',
     monospace: 'SF Mono,Monaco,Inconsolata,Fira Mono,Droid Sans Mono,Source Code Pro,monospace'
+  },
+  backgroundImage: {
+    'card-header-90': 'linear-gradient(90deg, rgba(255, 255, 255, 0.70) 0%, rgba(241, 241, 235, 0.70) 100%)',
+    'radial-back-light':
+      "radial-gradient(100% 100% at 0% 0%, #F1F1EB 5.65%, rgba(241, 241, 235, 0.00) 100%), url('/images/IconChevronDown.png'), lightgray -68.235px -103.192px / 25.515% 142.643% no-repeat, #F1F1EB",
+    'radial-back-no-image-light': 'radial-gradient(100% 100% at 0% 0%, #F1F1EB 5.65%, rgba(241, 241, 235, 0.00) 100%)',
+    'radial-back-dark':
+      "radial-gradient(100% 100% at 0% 0%, #23230E 5.65%, rgba(95, 95, 75, 0.00) 100%), url('/images/IconChevronDown.png'), lightgray -68.235px -103.192px / 25.515% 142.643% no-repeat, #141400",
+    'radial-back-no-image-dark': 'radial-gradient(100% 100% at 0% 0%, #23230E 5.65%, rgba(95, 95, 75, 0.00) 100%)'
   },
   boxShadow: {
     // used for tooltip shadow
@@ -121,18 +132,52 @@ module.exports = {
       '0 0 20px 4px rgb(154 161 177 / 15%), 0 4px 80px -8px rgb(36 40 47 / 25%), 0 4px 4px -2px rgb(91 94 105 / 15%)',
     darkDropdown: '0 1px 3px 0 hsla(0,0%,100%,.1),0 1px 2px -1px hsla(0,0%,100%,.1)'
   },
+  skew: {
+    14: '14deg',
+    16: '16deg',
+    18: '18deg'
+  },
   colors: {
+    black: '#000000',
+    white: '#ffffff',
     background: 'transparent',
     current: 'currentColor',
+    pink: {
+      700: '#EE00FF'
+    },
     red: {
       500: '#d63c3c',
       300: '#e8adad'
     },
     blue: {
-      300: '#92deff'
+      300: '#92deff',
+      700: '#0011FF'
+    },
+    emerald: {
+      700: '#11FF00'
+    },
+    cyan: {
+      400: '#3BD5FF',
+      500: '#0ED2EB'
     },
     green: {
       500: '#15a456'
+    },
+    amber: {
+      500: '#675D1E',
+      400: '#39382C',
+      600: '#C0C0C0',
+      700: '#979156',
+      800: '#3C3B2F',
+      900: '#BDB046'
+    },
+    yellow: {
+      200: '#F1EFD2',
+      300: '#EBE275',
+      500: '#BFBA7C',
+      700: '#F0DF00',
+      800: '#E7D60E',
+      900: '#FFEE00'
     },
     dark: {
       bg: '#141416',
@@ -140,7 +185,8 @@ module.exports = {
       disabled: '#777E90',
       disabledFade: '#777E9080',
       border: '#353945',
-      card: '#23262f'
+      card: '#23262f',
+      gridLine: '#222222'
     },
     light: {
       bg: '#FFFFFF',
@@ -148,7 +194,8 @@ module.exports = {
       disabled: '#777E90',
       disabledFade: '#777E9080',
       card: '#FbFbFb',
-      border: '#e6e8ec'
+      border: '#e6e8ec',
+      gridLine: '#E7E7E7'
     },
     brand: {
       primary: '#edc100',
@@ -159,20 +206,81 @@ module.exports = {
       discord: '#5765F2'
     },
     gray: {
-      400: '#b1b5c3'
+      100: '#F7F7F3',
+      200: '#F7F7F7',
+      300: '#E7E7E7',
+      400: '#b1b5c3',
+      500: '#1D1D00',
+      600: '#282822',
+      700: '#A3A3A3'
+    },
+    zinc: {
+      100: '#ECEAD5',
+      200: '#EEEEE8',
+      300: '#F1F1EB',
+      400: '#F6F6F6',
+      500: '#FbFbFb',
+      600: '#f0f1eb',
+      700: '#212116',
+      800: '#30302A',
+      900: '#1F1E12'
+    },
+    neutral: {
+      100: '#CCCCCC',
+      200: '#222222',
+      300: '#AAAAAA',
+      400: '#131306',
+      500: '#555555',
+      700: '#444444',
+      800: '#1C1C16',
+      900: '#333333'
     }
   },
   letterSpacing: {
     wide: '0.01rem',
     tight: '-.01em'
   },
+  borderRadius: {
+    3: '3px',
+    4: '4px',
+    5: '5px',
+    10: '10px'
+  },
   width: {
     120: '30rem',
     128: '32rem',
-    144: '36rem'
+    144: '36rem',
+    5.5: '22px',
+    4.5: '18px',
+    13: '52px',
+    19.5: '78px'
+  },
+  height: {
+    5.5: '22px',
+    4.5: '18px',
+    19.5: '78px'
+  },
+  spacing: {
+    0.25: '1px',
+    7: '7px',
+    4.5: '18px',
+    6.5: '26px',
+    7.5: '30px',
+    15: '60px',
+    18: '72px'
   },
   fontSize: {
-    '6xl': '4rem'
+    '6xl': '4rem',
+    54: '54px',
+    35: '35px',
+    17: '17px',
+    22: '22px'
+  },
+  opacity: {
+    3: '0.03'
+  },
+  lineHeight: {
+    4.5: '18px'
   },
   // https://tailwindcss.com/docs/transition-property#customizing-your-theme
   transitionProperty: {

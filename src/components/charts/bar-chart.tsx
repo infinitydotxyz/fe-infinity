@@ -7,18 +7,13 @@ import { ASwitchButton } from 'src/components/astra/astra-button';
 import { ADropdown } from 'src/components/astra/astra-dropdown';
 import { EthSymbol, SimpleTable, SimpleTableItem } from 'src/components/common';
 import { numStr } from 'src/utils';
-import {
-  borderColor,
-  hoveredDataPointColor,
-  secondaryBgColor,
-  secondaryTextColor,
-  textColor
-} from 'src/utils/ui-constants';
+import { borderColor, secondaryBgColor, secondaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import tailwindConfig from '../../settings/tailwind/elements/foundations';
-import { ChartBox } from './chart-box';
+// import { ChartBox } from './chart-box';
 import { BarChartType } from './types';
 import { useBidsChartTheme, useListingsChartTheme } from './use-theme';
+import useScreenSize from 'src/hooks/useScreenSize';
 
 export interface ResponsiveBarChartProps extends Omit<BarChartProps, 'width' | 'height' | 'selectedPriceBucket'> {
   graphType: BarChartType;
@@ -105,34 +100,45 @@ function convertRawDataToChartData(
 export const ResponsiveBarChart = ({ data, graphType, displayDetails }: ResponsiveBarChartProps) => {
   const [selectedPriceBucket, setSelectedPriceBucket] = useState(1);
   const [showOutliers, setShowOutliers] = useState(false);
+
+  const { theme } = useTheme();
+  const darkMode = theme === 'dark';
+
+  const { isDesktop } = useScreenSize();
+
   return (
-    <ChartBox className="h-full">
-      <div className="md:flex justify-between mb-4">
-        <div>
-          <div className="font-medium mt-3 font-heading text-lg">{graphType}</div>
-          <div className={twMerge(secondaryTextColor, 'font-medium text-sm')}>
+    <div className="h-full">
+      <div className="xl:flex justify-between py-5 items-center">
+        <div className="flex items-end gap-1">
+          <div className={twMerge('font-medium font-heading text-xl', darkMode ? 'text-white' : 'text-neutral-200')}>
+            {graphType}
+          </div>
+          <div className={twMerge(secondaryTextColor, 'font-medium text-sm dark:text-neutral-300 text-neutral-300')}>
             {data.length} {graphType}
           </div>
         </div>
 
-        <div className="items-center flex space-x-6">
-          <div className="flex items-center space-x-2">
+        <div className="items-center flex gap-[10px]">
+          <div className="flex items-center space-x-[10px]">
+            <span className={twMerge('text-sm font-medium !text-neutral-200 dark:!text-white')}>Outliers</span>
+
             <ASwitchButton
               checked={showOutliers}
               onChange={() => {
                 setShowOutliers(!showOutliers);
               }}
             ></ASwitchButton>
-
-            <span className={twMerge('text-sm font-medium', secondaryTextColor)}>Outliers</span>
           </div>
 
           <ADropdown
-            hasBorder={true}
+            hasBorder={false}
             alignMenuRight
             innerClassName="w-[100px]"
-            menuItemClassName="py-2"
+            menuItemClassName="py-1 px-2"
+            menuButtonClassName="py-1 px-[10px]"
             label={selectedPriceBucket + ' ' + EthSymbol}
+            className="py-0 px-0"
+            menuParentButtonClassName="px-0 py-0 border border-light-customBorder dark:border-dark-customBorder rounded h-[32px]"
             items={priceBuckets.map((bucket) => ({
               label: numStr(bucket),
               onClick: () => setSelectedPriceBucket(bucket)
@@ -141,20 +147,22 @@ export const ResponsiveBarChart = ({ data, graphType, displayDetails }: Responsi
         </div>
       </div>
 
-      <ParentSize debounceTime={10}>
-        {({ width }) => (
-          <BarChart
-            data={data}
-            graphType={graphType}
-            width={width}
-            height={300}
-            selectedPriceBucket={selectedPriceBucket}
-            displayDetails={displayDetails}
-            hideOutliers={!showOutliers}
-          />
-        )}
-      </ParentSize>
-    </ChartBox>
+      <div className="rounded-10 overflow-hidden bg-zinc-300 dark:bg-neutral-800 pt-5 px-2.5">
+        <ParentSize debounceTime={10}>
+          {({ width }) => (
+            <BarChart
+              data={data}
+              graphType={graphType}
+              width={width}
+              height={isDesktop ? 576 : 270}
+              selectedPriceBucket={selectedPriceBucket}
+              displayDetails={displayDetails}
+              hideOutliers={!showOutliers}
+            />
+          )}
+        </ParentSize>
+      </div>
+    </div>
   );
 };
 
@@ -199,6 +207,8 @@ const BarChart: React.FC<BarChartProps> = ({
   const { theme: chartTheme } = graphType === BarChartType.Listings ? useListingsChartTheme() : useBidsChartTheme();
   const [hoveredBarIndex, setHoveredBarIndex] = useState(-1);
 
+  const getBarColor = darkMode ? tailwindConfig.colors['yellow'][700] : tailwindConfig.colors['amber'][500];
+  const labelColor = darkMode ? tailwindConfig.colors.white : tailwindConfig.colors['neutral'][700];
   return (
     <XYChart
       width={width}
@@ -225,10 +235,12 @@ const BarChart: React.FC<BarChartProps> = ({
         hideAxisLine={true}
         hideTicks={true}
         top={boundedHeight}
+        axisLineClassName="text-gray-300 dark:text-neutral-200"
         tickLabelProps={() => ({
-          fill: themeToUse.disabled,
-          fontWeight: 700,
+          fill: labelColor,
+          fontWeight: 400,
           fontSize: 12,
+          fontFamily: 'Barlow',
           textAnchor: 'middle'
         })}
       />
@@ -236,24 +248,25 @@ const BarChart: React.FC<BarChartProps> = ({
         numTicks={5}
         orientation="left"
         tickFormat={(v) => `${parseInt(v)}`}
-        hideAxisLine={true}
+        // hideAxisLine={true}
+        axisLineClassName="text-gray-300 dark:text-neutral-200"
         hideTicks={true}
         tickLabelProps={() => ({
-          fill: themeToUse.disabled,
-          fontWeight: 700,
+          fill: labelColor,
+          fontWeight: 400,
           fontSize: 12,
           textAnchor: 'end',
           verticalAnchor: 'middle'
         })}
       />
-      <AnimatedGrid columns={false} strokeDasharray="6,6" stroke={themeToUse.disabledFade} numTicks={6} />
+      <AnimatedGrid columns={false} stroke={themeToUse.gridLine} numTicks={6} />
       <AnimatedBarSeries
         data={chartData.entries}
         dataKey={graphType}
         xAccessor={getAxisLabel}
         barPadding={0.4}
         yAccessor={getOrderCount}
-        colorAccessor={(_, i) => (i === hoveredBarIndex ? hoveredDataPointColor : undefined)}
+        colorAccessor={(_, i) => (i === hoveredBarIndex ? tailwindConfig.colors['yellow'][700] : getBarColor)}
         onPointerMove={({ index }) => setHoveredBarIndex(index)}
         onPointerDown={({ event, datum, index }) => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any

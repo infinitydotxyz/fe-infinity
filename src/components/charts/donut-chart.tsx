@@ -1,15 +1,14 @@
 import { Group } from '@visx/group';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import Pie from '@visx/shape/lib/shapes/Pie';
-import { Text } from '@visx/text';
 import React from 'react';
 import useScreenSize from 'src/hooks/useScreenSize';
-import { nFormatter } from 'src/utils';
 import { secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AnimatedPie } from './animated-pie';
 import { ChartBox } from './chart-box';
 import { ChartDimensions } from './chart-utils';
+import { useTheme } from 'next-themes';
 
 export type PieProps = {
   width: number;
@@ -40,6 +39,20 @@ interface DonutChartProps {
   children?: React.ReactNode;
   selectedDataPoint?: DonutDataPoint | null;
   onClick?: (dataPoint: DonutDataPoint) => void;
+}
+
+interface ArkDataInterface {
+  data: {
+    id: string;
+    label: string;
+    value: number;
+    color: string;
+  };
+  index: number;
+  value: number;
+  startAngle: number;
+  endAngle: number;
+  padAngle: number;
 }
 
 function Chart({
@@ -77,9 +90,24 @@ function Chart({
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
   const radius = Math.min(innerWidth, innerHeight) / 2;
-  const donutThickness = 50;
+  const donutThickness = 100;
   const centerY = innerHeight / 2;
   const centerX = innerWidth / 2;
+  const { theme } = useTheme();
+  const darkMode = theme === 'dark';
+
+  const pieDefaultColor = darkMode ? '#979156' : '#E3E3D9';
+
+  const getTopThree = (arkData: ArkDataInterface[]): ArkDataInterface[] => {
+    const sortedArkData = [...arkData.filter((arkItem) => arkItem.data.label !== 'Rest')];
+    sortedArkData.sort((a, b) => b.value - a.value);
+    const topThree = sortedArkData.slice(0, 3).map((selectedArkData) => selectedArkData.data.label);
+    return arkData?.map((arc) =>
+      topThree.includes(arc.data.label)
+        ? { ...arc, data: { ...arc.data, color: topThree[0] === arc.data.label ? '#E7D60E' : pieDefaultColor } }
+        : { ...arc, data: { ...arc.data, label: '', color: pieDefaultColor } }
+    );
+  };
 
   return (
     <div>
@@ -94,22 +122,24 @@ function Chart({
             pieValue={(point) => point.value}
             outerRadius={radius}
             innerRadius={radius - donutThickness}
-            cornerRadius={3}
-            padAngle={0.005}
+            // cornerRadius={3}
+            padAngle={0.01}
           >
             {(pie) => (
               <AnimatedPie<DonutDataPoint>
                 {...pie}
                 animate={true}
+                arcs={getTopThree(pie.arcs)}
                 getKey={(arc) => arc.data.label}
                 onClickDatum={({ data }) => {
                   onClick?.(data);
                 }}
+                labelColor="#444444"
                 getColor={(arc) => arc.data.color}
               />
             )}
           </Pie>
-          {selectedDataPoint ? (
+          {/* {selectedDataPoint ? (
             <Text width={width} fill="gray" textAnchor="middle" verticalAnchor="middle">
               {`${nFormatter(selectedDataPoint.value, 2)} ${dataSet.showUnits ? dataSet.units : ''}`}
             </Text>
@@ -117,7 +147,7 @@ function Chart({
             <Text width={width} fill="gray" textAnchor="middle" verticalAnchor="middle">
               {`${nFormatter(dataSet.total, 2)} ${dataSet.showUnits ? dataSet.units : ''}`}
             </Text>
-          )}
+          )} */}
         </Group>
       </svg>
     </div>
@@ -129,9 +159,9 @@ export function DonutChart({ title, subTitle, children, dataSet, selectedDataPoi
 
   return (
     <ChartBox className="h-full">
-      <div className="md:flex justify-between mb-4">
-        <div>
-          <div className="font-medium mt-3 font-heading text-lg">{title}</div>
+      <div className="md:flex justify-between mb-7.5">
+        <div className="w-max mx-auto">
+          <div className="font-bold mt-3 font-body text-22 text-center">{title}</div>
           <div className={twMerge(secondaryTextColor, 'font-medium text-sm')}>{subTitle}</div>
         </div>
         {children}
@@ -141,7 +171,7 @@ export function DonutChart({ title, subTitle, children, dataSet, selectedDataPoi
           <Chart
             dataSet={dataSet}
             width={width}
-            height={isDesktop ? 300 : 270}
+            height={isDesktop ? 324 : 270}
             selectedDataPoint={selectedDataPoint}
             onClick={onClick}
           />

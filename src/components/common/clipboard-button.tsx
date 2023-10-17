@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
-import { RxCopy } from 'react-icons/rx';
 import { useIsMounted } from 'src/hooks/useIsMounted';
+import { CopyClipBoardIcon } from 'src/icons';
 import { twMerge } from 'tailwind-merge';
 
 interface ClipboardButtonProps {
@@ -35,8 +35,8 @@ export const ClipboardButton: React.FC<ClipboardButtonProps> = ({ textToCopy, cl
       {copied ? (
         <AiOutlineCheckCircle className={className} />
       ) : (
-        <div>
-          <RxCopy onClick={copyToClipboard} className={twMerge(className, 'cursor-pointer')} />
+        <div onClick={copyToClipboard}>
+          <CopyClipBoardIcon className={twMerge(className, 'cursor-pointer')} />
         </div>
       )}
     </>

@@ -30,7 +30,7 @@ export const ATrait: FC<ATraitProps> = ({ trait, description }) => {
     <div className={twMerge(borderColor, 'border rounded-lg flex flex-col py-1')}>
       <div className="text-center text-xs break-words">{trait.key}</div>
       <div className="text-center text-sm font-medium break-words mt-0.5">{trait.value}</div>
-      <div className={twMerge('text-center text-xs rounded-br-lg rounded-bl-lg tracking-tighter mt-0.5')}>
+      <div className={twMerge('text-center text-xs rounded-br-4 rounded-bl-4 tracking-tighter mt-0.5')}>
         {description}
       </div>
     </div>

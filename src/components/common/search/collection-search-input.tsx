@@ -11,9 +11,16 @@ interface Props {
   profileSearch?: boolean;
   orderSearch?: boolean;
   setSelectedCollection?: (collection: CollectionSearchDto) => void;
+  shortCuts?: boolean;
 }
 
-export const CollectionSearchInput = ({ expanded, profileSearch, orderSearch, setSelectedCollection }: Props) => {
+export const CollectionSearchInput = ({
+  expanded,
+  profileSearch,
+  orderSearch,
+  setSelectedCollection,
+  shortCuts = false
+}: Props) => {
   const { chain } = useNetwork();
   const { selectedChain } = useAppContext();
   const chainId = String(chain?.id ?? selectedChain);
@@ -34,9 +41,10 @@ export const CollectionSearchInput = ({ expanded, profileSearch, orderSearch, se
       setSelectedCollection={setSelectedCollection}
       expanded={expanded}
       query={search.query}
+      shortCuts={shortCuts}
       setQuery={setQuery}
       data={result.data}
-      placeholder="Search by collection"
+      placeholder="Search collections, NFTs or users"
     />
   );
 };

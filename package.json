@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@amcharts/amcharts5": "^5.4.0",
+    "@fontsource/barlow": "^5.0.8",
     "@headlessui/react": "^1.7.8",
     "@infinityxyz/lib-frontend": "^1.349.15",
     "@next/bundle-analyzer": "^13.1.6",

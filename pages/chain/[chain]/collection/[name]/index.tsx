@@ -3,7 +3,6 @@ import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
-import { GiBroom } from 'react-icons/gi';
 import { AButton } from 'src/components/astra/astra-button';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { CollectionCharts } from 'src/components/collection/collection-charts';
@@ -11,6 +10,7 @@ import { CollectionItemsPageSidebar } from 'src/components/collection/collection
 import { CollectionManualBidList } from 'src/components/collection/collection-manual-bid-list';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
 import { Spacer, TextInputBox, ToggleTab } from 'src/components/common';
+import TabSelector from 'src/components/common/TabSelecter';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
 import { StatusIcon } from 'src/components/common/status-icon';
 import { useCollectionListingsFetcher } from 'src/hooks/api/useTokenFetcher';
@@ -20,7 +20,7 @@ import { CollectionPageTabs, apiGet, getNetwork, getNetworkName, nFormatter } fr
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { ERC721CollectionCartItem, ERC721TokenCartItem } from 'src/utils/types';
-import { borderColor, brandTextColor, hoverColor, iconButtonStyle, selectedColor } from 'src/utils/ui-constants';
+import { borderColor, hoverColor, selectedColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
 
@@ -255,7 +255,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
           {(selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
             selectedCollectionTab === CollectionPageTabs.Buy.toString()) && (
             <div className={twMerge('mt-2 px-4')}>
-              <div className={twMerge('md:flex text-sm')}>
+              <div className={twMerge('md:flex text-sm items-center gap-2.5')}>
                 <div
                   className={twMerge(
                     'flex mr-1',
@@ -270,7 +270,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   />
                 </div>
 
-                <div className="flex space-x-2 text-sm">
+                <div className="flex space-x-2 text-sm items-center">
                   {selectedCollectionTab === CollectionPageTabs.Bid.toString() && isDesktop && (
                     <AButton
                       primary
@@ -292,88 +292,15 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                       )}
                     </AButton>
                   )}
-
-                  <div
-                    className={twMerge(
-                      'flex flex-row rounded-lg border md:m-0 my-2 h-10 cursor-pointer',
-                      borderColor,
-                      cartType === CartType.CollectionBid
-                        ? 'opacity-30 duration-300 pointer-events-none'
-                        : 'duration-300'
-                    )}
-                  >
-                    {isDesktop && (
-                      <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>
-                        <GiBroom className={twMerge(iconButtonStyle, brandTextColor)} />
-                      </div>
-                    )}
-                    <div
-                      className={twMerge(
-                        'px-4 h-full flex items-center border-r-[1px]',
-                        borderColor,
-                        hoverColor,
-                        numSweep === '5' && selectedColor
-                      )}
-                      onClick={() => {
-                        numSweep === '5' ? setNumSweep('') : setNumSweep('5');
-                      }}
-                    >
-                      5
-                    </div>
-                    <div
-                      className={twMerge(
-                        'px-4 h-full flex items-center border-r-[1px]',
-                        borderColor,
-                        hoverColor,
-                        numSweep === '10' && selectedColor
-                      )}
-                      onClick={() => {
-                        numSweep === '10' ? setNumSweep('') : setNumSweep('10');
-                      }}
-                    >
-                      10
-                    </div>
-                    <div
-                      className={twMerge(
-                        'px-4 h-full flex items-center border-r-[1px]',
-                        borderColor,
-                        hoverColor,
-                        numSweep === '20' && selectedColor
-                      )}
-                      onClick={() => {
-                        numSweep === '20' ? setNumSweep('') : setNumSweep('20');
-                      }}
-                    >
-                      20
-                    </div>
-                    <div
-                      className={twMerge(
-                        'px-4 h-full flex items-center border-r-[1px]',
-                        borderColor,
-                        hoverColor,
-                        numSweep === '50' && selectedColor
-                      )}
-                      onClick={() => {
-                        numSweep === '50' ? setNumSweep('') : setNumSweep('50');
-                      }}
-                    >
-                      50
-                    </div>
-                    <div className="px-4 h-full flex items-center">
-                      <TextInputBox
-                        autoFocus={true}
-                        inputClassName="text-sm font-body"
-                        className="border-0 w-14 p-0 text-sm"
-                        type="number"
-                        placeholder="Custom"
-                        value={customSweep}
-                        onChange={(value) => {
-                          setNumSweep(value);
-                          setCustomSweep(value);
-                        }}
-                      />
-                    </div>
-                  </div>
+                  <TabSelector
+                    numSweep={numSweep}
+                    customSweep={customSweep}
+                    setCustomSweep={setCustomSweep}
+                    setNumSweep={setNumSweep}
+                    tabItems={['5', '10', '20', '50']}
+                    showClear
+                    showCustom
+                  />
                   <Spacer />
                   {isDesktop && <StatusIcon status="pending-indefinite" label="Live" />}
                 </div>

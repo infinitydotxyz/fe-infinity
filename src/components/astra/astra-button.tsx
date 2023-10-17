@@ -5,11 +5,10 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import {
   activeColor,
   buttonBorderColor,
-  hoverColor,
-  primaryBtnWithBgColorTextTransition,
   textColor,
   brandTextColor,
-  brandBgCustomColor
+  brandBgCustomColor,
+  btnBgColorText
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
@@ -43,11 +42,7 @@ export const AButton = ({
       primary={primary}
       highlighted={highlighted}
       tooltip={tooltip}
-      className={twMerge(
-        small ? 'text-sm px-2 py-0.5' : 'px-2.5 py-[5px]',
-        primary ? primaryBtnWithBgColorTextTransition : '',
-        className
-      )}
+      className={twMerge(small ? 'text-sm px-2 py-0.5' : 'px-2.5 py-[5px]', primary ? btnBgColorText : '', className)}
       onClick={onClick}
     >
       {children}
@@ -89,7 +84,6 @@ const ButtonBase = ({
       className={twMerge(
         highlighted ? brandTextColor : primary ? 'text-light-body' : textColor,
         activeColor,
-        hoverColor,
         'select-none transition ease-in-out duration-300',
         'focus:outline-none focus-visible:ring focus:ring-dark-bg focus:ring-opacity-50',
         disabled ? disabledClass : '',

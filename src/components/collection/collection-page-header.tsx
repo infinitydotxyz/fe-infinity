@@ -7,9 +7,8 @@ import etherscanLogo from 'src/images/etherscan-logo.png';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
 import {
   borderColor,
-  brandBorderColor,
+  golderBorderColor,
   hoverColor,
-  hoverColorBrandText,
   secondaryBgColor,
   secondaryTextColor,
   smallIconButtonStyle
@@ -199,11 +198,11 @@ export const CollectionPageHeader = ({
         <div className="flex space-x-3 overflow-auto scrollbar-hide">
           {tabs.map((e) => {
             return (
-              <div key={e} className={twMerge('pb-2 px-3', selectedTab === e ? `border-b-2 ${brandBorderColor}` : '')}>
+              <div key={e} className={twMerge('pb-2 px-3', selectedTab === e ? `border-b-2 ${golderBorderColor}` : '')}>
                 <div
                   className={twMerge(
-                    selectedTab === e ? '' : secondaryTextColor,
-                    hoverColorBrandText,
+                    selectedTab === e ? 'text-yellow-900' : secondaryTextColor,
+                    'hover:text-yellow-900',
                     'font-medium cursor-pointer'
                   )}
                   onClick={() => {

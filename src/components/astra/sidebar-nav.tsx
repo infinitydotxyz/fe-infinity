@@ -1,31 +1,25 @@
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { BiGlobeAlt, BiWalletAlt } from 'react-icons/bi';
-import { HiOutlineTag } from 'react-icons/hi';
-import { MdDarkMode, MdLightMode } from 'react-icons/md';
-import { TbSend } from 'react-icons/tb';
+import { ReactNode, useEffect, useState } from 'react';
 import { AButton, ARoundButton } from 'src/components/astra/astra-button';
 import { EZImage, HelpToolTip, NextLink, Spacer } from 'src/components/common';
 import { ProfileTabs } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import {
-  borderColor,
-  brandTextColor,
-  hoverColorBrandText,
-  iconButtonStyle,
-  secondaryBgColor,
-  textColor
-} from 'src/utils/ui-constants';
+import { hoverColorNewBrandText, iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useAccount } from 'wagmi';
 import lightLogo from 'src/images/light-logo.png';
 import darkLogo from 'src/images/dark-logo.png';
-import { GiJeweledChalice } from 'react-icons/gi';
-import { RxDiscordLogo } from 'react-icons/rx';
-import { TfiTwitter } from 'react-icons/tfi';
-import { AiOutlineRead } from 'react-icons/ai';
-import { IoAnalyticsOutline } from 'react-icons/io5';
+import {
+  AnalyticsBoxIcon,
+  ExploreBoxIcon,
+  ItemsBoxIcon,
+  OrdersBoxIcon,
+  SendBoxIcon,
+  SocialXIcon,
+  ThemeSwitcherIcon
+} from 'src/icons';
+import { FaDiscord } from 'react-icons/fa';
 
 export const SidebarNav = () => {
   const { theme, setTheme } = useTheme();
@@ -42,163 +36,108 @@ export const SidebarNav = () => {
     }
   }, [theme]);
 
+  console.log('path : ', router.asPath.startsWith('/trending'));
+
   return (
     <div
       className={twMerge(
-        secondaryBgColor,
-        'flex px-2 pt-1 pb-3 h-full w-[4rem] flex-col items-center border-r-[1px]',
-        borderColor
+        'flex pb-3 h-full w-19.5 flex-col items-center border-r border-gray-300 dark:border-neutral-200 bg-zinc-500 dark:bg-neutral-800'
       )}
     >
-      <NextLink href="/">
-        <EZImage src={logoSrc} className="w-14 h-14" />
-      </NextLink>
+      <div className="border-b border-gray-300 dark:border-neutral-200 w-full pb-1 h-19.5 flex justify-center items-center">
+        <NextLink href="/">
+          <EZImage src={logoSrc} className="w-14 h-14" />
+        </NextLink>
+      </div>
 
       <div className="h-8" />
 
-      <div className="flex flex-col space-y-4">
-        <div className="font-medium text-xs text-dark-border dark:text-light-border tracking-wide text-center">
-          Explore
-        </div>
+      <div className="flex flex-col h-full justify-center items-center gap-6">
+        <SidebarNavItem
+          title="Explore"
+          highlighted={router.asPath.startsWith('/trending')}
+          onClick={() => {
+            router.push('/trending');
+          }}
+        >
+          <ExploreBoxIcon
+            className={twMerge(
+              'group-hover:text-white',
+              router.asPath.startsWith('/trending') && 'text-white dark:text-white'
+            )}
+          />
+        </SidebarNavItem>
+        <SidebarNavItem
+          title="Profile"
+          highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Items}
+          onClick={() => {
+            setSelectedProfileTab(ProfileTabs.Items);
+            router.push(`/profile/${user}`);
+          }}
+        >
+          <ItemsBoxIcon
+            className={twMerge(
+              'group-hover:text-white',
+              router.asPath.startsWith(`/profile`) &&
+                selectedProfileTab === ProfileTabs.Items &&
+                'text-white dark:text-white'
+            )}
+          />
+        </SidebarNavItem>
+        <SidebarNavItem
+          title="Orders"
+          highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Orders}
+          onClick={() => {
+            setSelectedProfileTab(ProfileTabs.Orders);
+            router.push(`/profile/${user}`);
+          }}
+        >
+          <OrdersBoxIcon
+            className={twMerge(
+              'group-hover:text-white',
+              router.asPath.startsWith(`/profile`) &&
+                selectedProfileTab === ProfileTabs.Orders &&
+                'text-white dark:text-white'
+            )}
+          />
+        </SidebarNavItem>
+        <SidebarNavItem
+          title="Send"
+          highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Send}
+          onClick={() => {
+            setSelectedProfileTab(ProfileTabs.Send);
+            router.push(`/profile/${user}`);
+          }}
+        >
+          <SendBoxIcon
+            className={twMerge(
+              'group-hover:text-white',
+              router.asPath.startsWith(`/profile`) &&
+                selectedProfileTab === ProfileTabs.Send &&
+                'text-white dark:text-white'
+            )}
+          />
+        </SidebarNavItem>
+        <SidebarNavItem
+          title="Analytics"
+          highlighted={router.asPath.startsWith(`/analytics`)}
+          onClick={() => {
+            router.push(`/analytics`);
+          }}
+        >
+          <AnalyticsBoxIcon
+            className={twMerge(
+              'group-hover:text-white',
+              router.asPath.startsWith(`/analytics`) && 'text-white dark:text-white'
+            )}
+          />
+        </SidebarNavItem>
 
-        <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Trending</div>}>
-          <AButton
-            highlighted={router.asPath.startsWith('/trending')}
-            onClick={() => {
-              router.push('/trending');
-            }}
-            className="rounded-lg"
-          >
-            <BiGlobeAlt
-              className={twMerge(
-                iconButtonStyle,
-                hoverColorBrandText,
-                router.asPath.startsWith('/trending') ? brandTextColor : textColor
-              )}
-            />
-          </AButton>
-        </HelpToolTip>
+        <ARoundButton onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+          <ThemeSwitcherIcon className={hoverColorNewBrandText} />
+        </ARoundButton>
 
-        <div className="font-medium text-xs text-dark-border dark:text-light-border tracking-wide text-center">
-          Wallet
-        </div>
-
-        <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Profile</div>}>
-          <AButton
-            highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Items}
-            onClick={() => {
-              setSelectedProfileTab(ProfileTabs.Items);
-              router.push(`/profile/${user}`);
-            }}
-            className="rounded-lg"
-          >
-            <BiWalletAlt
-              className={twMerge(
-                iconButtonStyle,
-                hoverColorBrandText,
-                router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Items
-                  ? brandTextColor
-                  : textColor
-              )}
-            />
-          </AButton>
-        </HelpToolTip>
-
-        <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Orders</div>}>
-          <AButton
-            highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Orders}
-            onClick={() => {
-              setSelectedProfileTab(ProfileTabs.Orders);
-              router.push(`/profile/${user}`);
-            }}
-            className="rounded-lg"
-          >
-            <HiOutlineTag
-              style={{ transform: 'rotate(90deg)' }}
-              className={twMerge(
-                iconButtonStyle,
-                hoverColorBrandText,
-                router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Orders
-                  ? brandTextColor
-                  : textColor
-              )}
-            />
-          </AButton>
-        </HelpToolTip>
-
-        <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Send</div>}>
-          <AButton
-            highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Send}
-            onClick={() => {
-              setSelectedProfileTab(ProfileTabs.Send);
-              router.push(`/profile/${user}`);
-            }}
-            className="rounded-lg"
-          >
-            <TbSend
-              className={twMerge(
-                iconButtonStyle,
-                hoverColorBrandText,
-                router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Send
-                  ? brandTextColor
-                  : textColor
-              )}
-            />
-          </AButton>
-        </HelpToolTip>
-
-        <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Rewards</div>}>
-          <AButton
-            highlighted={router.asPath.startsWith(`/rewards`)}
-            onClick={() => {
-              router.push(`/rewards`);
-            }}
-            className="rounded-lg"
-          >
-            <GiJeweledChalice
-              className={twMerge(
-                iconButtonStyle,
-                hoverColorBrandText,
-                router.asPath.startsWith(`/rewards`) ? brandTextColor : textColor
-              )}
-            />
-          </AButton>
-        </HelpToolTip>
-
-        <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Analytics</div>}>
-          <AButton
-            highlighted={router.asPath.startsWith(`/analytics`)}
-            onClick={() => {
-              router.push(`/analytics`);
-            }}
-            className="rounded-lg"
-          >
-            <IoAnalyticsOutline
-              className={twMerge(
-                iconButtonStyle,
-                hoverColorBrandText,
-                router.asPath.startsWith(`/analytics`) ? brandTextColor : textColor
-              )}
-            />
-          </AButton>
-        </HelpToolTip>
-
-        <div className="font-medium text-xs text-dark-border dark:text-light-border tracking-wide text-center">
-          Socials
-        </div>
-
-        <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Discord</div>}>
-          <AButton className="rounded-lg">
-            <a
-              aria-label="Discord"
-              href="https://discord.gg/pixlso"
-              rel="external nofollow noopener noreferrer"
-              target="_blank"
-            >
-              <RxDiscordLogo className={twMerge(iconButtonStyle, hoverColorBrandText)} aria-hidden="true" />
-            </a>
-          </AButton>
-        </HelpToolTip>
+        <Spacer />
 
         <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Twitter</div>}>
           <AButton className="rounded-lg">
@@ -208,29 +147,64 @@ export const SidebarNav = () => {
               rel="external nofollow noopener noreferrer"
               target="_blank"
             >
-              <TfiTwitter className={twMerge(iconButtonStyle, hoverColorBrandText)} aria-hidden="true" />
+              <SocialXIcon
+                className={twMerge(iconButtonStyle, hoverColorNewBrandText, 'h-5 w-5.5')}
+                aria-hidden="true"
+              />
             </a>
           </AButton>
         </HelpToolTip>
 
-        <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Docs</div>}>
+        <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Discord</div>}>
           <AButton className="rounded-lg">
             <a
-              aria-label="Docs"
-              href="https://docs.pixl.so"
+              aria-label="Discord"
+              href="https://discord.gg/pixlso"
               rel="external nofollow noopener noreferrer"
               target="_blank"
             >
-              <AiOutlineRead className={twMerge(iconButtonStyle, hoverColorBrandText)} aria-hidden="true" />
+              <FaDiscord
+                className={twMerge(iconButtonStyle, hoverColorNewBrandText, 'text-neutral-300 h-5 w-6.5')}
+                aria-hidden="true"
+              />
             </a>
           </AButton>
         </HelpToolTip>
       </div>
+    </div>
+  );
+};
 
-      <Spacer />
-      <ARoundButton onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
-        {theme === 'dark' ? <MdLightMode className={iconButtonStyle} /> : <MdDarkMode className={iconButtonStyle} />}
-      </ARoundButton>
+export const SidebarNavItem = ({
+  title,
+  children,
+  highlighted,
+  onClick
+}: {
+  title: string;
+  children: ReactNode;
+  highlighted?: boolean;
+  onClick?: () => void;
+}) => {
+  return (
+    <div className="group flex flex-col items-center">
+      <HelpToolTip placement="right" content={<div className="whitespace-nowrap">{title}</div>}>
+        <AButton
+          highlighted={highlighted}
+          onClick={onClick}
+          className={twMerge('rounded-lg group-hover:bg-yellow-700 w-max p-0', highlighted && 'bg-yellow-700')}
+        >
+          {children}
+        </AButton>
+      </HelpToolTip>
+      <div
+        className={twMerge(
+          'font-medium text-sm cursor-pointer group-hover:text-yellow-700 text-dark-border dark:text-light-border text-center',
+          highlighted && 'text-yellow-700 dark:text-yellow-700'
+        )}
+      >
+        {title}
+      </div>
     </div>
   );
 };

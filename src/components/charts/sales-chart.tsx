@@ -106,7 +106,9 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
           <div className={twMerge('font-medium font-heading text-xl', darkMode ? 'text-white' : 'text-neutral-200')}>
             {graphType}
           </div>
-          <div className={twMerge(secondaryTextColor, 'font-medium text-sm !text-neutral-100')}>{numSales} sales</div>
+          <div className={twMerge(secondaryTextColor, 'font-medium text-sm dark:text-neutral-300 text-neutral-300')}>
+            {numSales} sales
+          </div>
         </div>
 
         <div className="items-center flex gap-[10px]">
@@ -138,7 +140,7 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
         </div>
       </div>
 
-      <div className="rounded-lg bg-neutral-4000 dark:bg-neutral-900 pt-5 px-2.5">
+      <div className="rounded-lg bg-zinc-300 dark:bg-neutral-800 pt-5 px-2.5">
         <ParentSize debounceTime={10}>
           {({ width }) => (
             <SalesChart

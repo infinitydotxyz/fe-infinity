@@ -1,26 +1,26 @@
-import { AstraCartButton } from 'src/components/astra/astra-cart-button';
+// import { AstraCartButton } from 'src/components/astra/astra-cart-button';
 import { ConnectButton, Spacer } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { borderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { NetworkWarning } from '../common/network-warning';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
-import { useNetwork } from 'wagmi';
-import { getReadableNetworkName } from 'src/utils';
+import { ShoppingBagButton } from '../common/shoping-bag-button';
 
 export const ANavbar = () => {
   const { isWalletNetworkSupported } = useAppContext();
-  const { chain } = useNetwork();
-  const chainName = getReadableNetworkName(chain?.id || 1);
 
   return (
     <div>
       <div className={isWalletNetworkSupported ? 'hidden' : 'block'}>
         <NetworkWarning />
       </div>
-      <div className={twMerge('md:flex px-6 py-2 md:space-x-4 items-center border-b-[1px]', borderColor)}>
+      <div
+        className={twMerge(
+          'md:flex px-5 py-3.5 md:space-x-4 bg-zinc-500 dark:bg-neutral-800 items-center border-b border-gray-300 dark:border-neutral-200'
+        )}
+      >
         <div className="md:w-1/3 w-full">
-          <CollectionSearchInput expanded />
+          <CollectionSearchInput shortCuts={true} expanded />
         </div>
 
         <Spacer />
@@ -53,10 +53,9 @@ export const ANavbar = () => {
           ]}
         /> */}
 
-        <div className="flex items-center justify-between md:space-x-4 md:mt-0 mt-2">
-          <div className={twMerge('border-2 py-2 px-4', borderColor)}>{chainName}</div>
-          <ConnectButton />
-          <AstraCartButton />
+        <div className="flex items-center justify-between md:mt-0 mt-2">
+          <ConnectButton half />
+          <ShoppingBagButton />
         </div>
       </div>
     </div>

@@ -2,7 +2,6 @@ import { Combobox } from '@headlessui/react';
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import { AiOutlineSearch } from 'react-icons/ai';
 import { BasicTokenInfo, NftSearchResultData } from 'src/utils/types';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { borderColor, secondaryBgColor, hoverColor, textColor } from 'src/utils/ui-constants';
@@ -10,6 +9,7 @@ import { twMerge } from 'tailwind-merge';
 import { getSearchResultKey, SearchResultItem } from './search-results';
 import { SearchResult } from './types';
 import { getNetworkName } from 'src/utils';
+import { MagnifyingGlassIcon } from 'src/icons';
 
 interface Props {
   expanded?: boolean;
@@ -19,6 +19,7 @@ interface Props {
   data: SearchResult[];
   tokenSearch?: boolean;
   profileSearch?: boolean;
+  shortCuts?: boolean;
   orderSearch?: boolean;
   setSelectedCollection?: (collection: CollectionSearchDto) => void;
   setSelectedToken?: (basicTokenInfo: BasicTokenInfo) => void;
@@ -34,12 +35,15 @@ export function SearchInput({
   profileSearch,
   orderSearch,
   setSelectedCollection,
-  setSelectedToken
+  setSelectedToken,
+  shortCuts = false
 }: Props): JSX.Element {
   const router = useRouter();
   const [isActive, setIsActive] = useState(false);
+  const [showShortCut, setShowShortCut] = useState(true);
   const [selected, setSelected] = useState<SearchResult | null>(null);
   const isMounted = useIsMounted();
+
   const inputRef: React.RefObject<HTMLInputElement> = useRef(null);
 
   useEffect(() => {
@@ -53,9 +57,15 @@ export function SearchInput({
   };
 
   const deactivate = () => {
+    setShowShortCut(true);
     if (isMounted()) {
       query.length === 0 && !expanded ? setIsActive(false) : null;
     }
+  };
+
+  const handleFocus = () => {
+    console.log('show short cuts : ');
+    setShowShortCut(false);
   };
 
   useEffect(() => {
@@ -89,16 +99,18 @@ export function SearchInput({
     }
   }, [expanded]);
 
+  console.log('is active : ', isActive, selected);
+
   return (
     <div
       className={twMerge(
         textColor,
-        borderColor,
-        'border w-full px-4 rounded-lg text-center h-10 flex place-items-center'
+        'w-full max-w-xs px-2.5 rounded-lg text-center h-10 flex place-items-center bg-black bg-opacity-3 dark:bg-gray-600 peer-focus-within:ring-1 peer-focus-within:ring-cyan-500',
+        showShortCut ? 'ring-0' : 'ring-1 ring-cyan-500'
       )}
     >
       <div className="w-content h-content  hover:cursor-pointer" onClick={activate}>
-        <AiOutlineSearch className={twMerge(textColor, 'flex-[1] w-[18px] h-[18px] max-h-full')}></AiOutlineSearch>
+        <MagnifyingGlassIcon className={twMerge('flex-[1] w-2.5 h-2.5 max-h-full')}></MagnifyingGlassIcon>
       </div>
       <Combobox
         as="div"
@@ -114,11 +126,12 @@ export function SearchInput({
             'focus-visible:outline-none focus:ring-transparent focus:border-transparent focus:shadow-none',
             'active:outline-none active:ring-transparent active:border-transparent active:shadow-none',
             'outline-none ring-transparent border-transparent shadow-none',
-            'text-sm align-middle p-3'
+            'text-sm align-middle p-2.5 placeholder:text-neutral-500 dark:placeholder:text-amber-600 caret-cyan-400'
           )}
           placeholder={placeholder}
           ref={inputRef}
           onBlur={deactivate}
+          onFocus={handleFocus}
           autoComplete="off"
           onChange={(e: React.FormEvent<HTMLInputElement>) => {
             const value = e.currentTarget.value;
@@ -159,6 +172,16 @@ export function SearchInput({
           </Combobox.Options>
         </div>
       </Combobox>
+      {showShortCut && shortCuts && (
+        <div className="flex gap-0.5">
+          <div className="w-4.5 h-4.5 flex justify-center items-center rounded-3 bg-white dark:bg-amber-400 border border-gray-300 dark:border-amber-800 dark:text-white text-black text-xs leading-3 font-normal">
+            <code className="pt-0.5">⌘</code>
+          </div>
+          <div className="w-4.5 h-4.5 flex justify-center items-center rounded-3 bg-white dark:bg-amber-400 border border-gray-300 dark:border-amber-800 dark:text-white text-black text-sm leading-3 font-normal">
+            <code className="">K</code>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
