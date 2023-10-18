@@ -44,7 +44,7 @@ export const OrdersChartDetails = ({
       <div
         className={twMerge(
           borderColor,
-          'border-[1px] rounded-lg pb-2.5 flex-1 h-full flex flex-col justify-between items-center'
+          'border rounded-lg pb-2.5 flex-1 h-full flex flex-col justify-between items-center'
         )}
       >
         <div className="w-full" />
@@ -155,7 +155,7 @@ const OrderDetailViewer = ({ order, collectionAddress, collectionName, collectio
       >
         <EZImage src={order.tokenImage} className="w-60 h-60 shrink-0 overflow-clip rounded-lg" />
 
-        <div className={twMerge('flex justify-between border-[0px] rounded-lg w-60', borderColor)}>
+        <div className={twMerge('flex justify-between border-0 rounded-lg w-60', borderColor)}>
           <div className="flex flex-col">
             <div className="flex truncate font-bold">{ellipsisString(order.tokenId)}</div>
             <div>
@@ -206,10 +206,7 @@ export const SalesChartDetails = ({ data }: Props3) => {
         Most Recent Sale
       </div>
       <div
-        className={twMerge(
-          borderColor,
-          'border-[1px] rounded-lg pb-[30px] flex-1 h-full justify-center items-center flex'
-        )}
+        className={twMerge(borderColor, 'border-1 rounded-lg pb-7.5 flex-1 h-full justify-center items-center flex')}
       >
         <div className={twMerge('flex flex-col text-sm mt-4 items-center')}>
           <div
@@ -226,7 +223,7 @@ export const SalesChartDetails = ({ data }: Props3) => {
           >
             <EZImage src={data.tokenImage} className="w-60 h-60 shrink-0 overflow-clip rounded-lg" />
 
-            <div className={twMerge('flex justify-between border-[0px] rounded-lg w-60', borderColor)}>
+            <div className={twMerge('flex justify-between border-0 rounded-lg w-60', borderColor)}>
               <div className="flex flex-col">
                 <div className="flex truncate font-bold">{ellipsisString(data.tokenId)}</div>
                 <div>

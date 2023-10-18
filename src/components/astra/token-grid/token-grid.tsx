@@ -8,6 +8,7 @@ import { twMerge } from 'tailwind-merge';
 import { AOutlineButton } from '../astra-button';
 import { ErrorOrLoading } from '../error-or-loading';
 import { TokenCardModal } from './token-card-modal';
+import { CardNFT } from 'src/components/common/CardNFT';
 
 interface Props {
   listMode: boolean;
@@ -70,8 +71,8 @@ export const TokenGrid = ({
       contents = (
         <>
           <div
-            className="md:pb-20 pb-5 grid grid-flow-row-dense gap-2 3xl:grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))]
-                          sm:grid-cols-[repeat(auto-fill,_minmax(167px,_1fr))] grid-cols-[repeat(auto-fit,_minmax(100px,_1fr))]"
+            className="md:pb-20 pb-5 grid grid-flow-row-dense gap-5 3xl:grid-cols-[repeat(auto-fill,_minmax(258px,_1fr))]
+                          sm:grid-cols-[repeat(auto-fill,_minmax(225px,_1fr))] grid-cols-[repeat(auto-fit,_minmax(169px,_1fr))]"
           >
             {cardData.map((data) => {
               return (

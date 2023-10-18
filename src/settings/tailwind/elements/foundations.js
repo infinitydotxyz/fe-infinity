@@ -47,6 +47,9 @@ module.exports = {
     'desktop-8k': {
       min: '2561px'
     },
+    flex: {
+      10: '10'
+    },
     // for grids with cards
     grid1: {
       max: '640px'
@@ -172,6 +175,7 @@ module.exports = {
       900: '#BDB046'
     },
     yellow: {
+      100: '#E3E3D9',
       200: '#F1EFD2',
       300: '#EBE275',
       500: '#BFBA7C',
@@ -186,7 +190,8 @@ module.exports = {
       disabledFade: '#777E9080',
       border: '#353945',
       card: '#23262f',
-      gridLine: '#222222'
+      gridLine: '#222222',
+      borderDark: '#2A2A26'
     },
     light: {
       bg: '#FFFFFF',
@@ -195,7 +200,9 @@ module.exports = {
       disabledFade: '#777E9080',
       card: '#FbFbFb',
       border: '#e6e8ec',
-      gridLine: '#E7E7E7'
+      gridLine: '#E7E7E7',
+      divider: '#ECECEC',
+      borderLight: '#E6E6DC'
     },
     brand: {
       primary: '#edc100',
@@ -212,7 +219,8 @@ module.exports = {
       400: '#b1b5c3',
       500: '#1D1D00',
       600: '#282822',
-      700: '#A3A3A3'
+      700: '#A3A3A3',
+      800: '#B1B1B1'
     },
     zinc: {
       100: '#ECEAD5',
@@ -244,21 +252,37 @@ module.exports = {
     3: '3px',
     4: '4px',
     5: '5px',
-    10: '10px'
+    10: '10px',
+    11: '11px'
+  },
+  borderWidth: {
+    5: '5px'
+  },
+  maxWidth: {
+    '1/2': '50%'
   },
   width: {
     120: '30rem',
     128: '32rem',
     144: '36rem',
     5.5: '22px',
+    10.5: '42px',
     4.5: '18px',
     13: '52px',
-    19.5: '78px'
+    19.5: '78px',
+    25: '100px',
+    51.25: '205px',
+    225: '900px'
   },
   height: {
+    0.75: '3px',
     5.5: '22px',
     4.5: '18px',
-    19.5: '78px'
+    10.5: '42px',
+    19.5: '78px',
+    51.25: '205px',
+    154.5: '618px',
+    300: '1200px'
   },
   spacing: {
     0.25: '1px',
@@ -280,7 +304,23 @@ module.exports = {
     3: '0.03'
   },
   lineHeight: {
+    2.5: '10px',
+    4.25: '17px',
     4.5: '18px'
+  },
+  margin: {
+    0.75: '3px',
+    3.75: '15px',
+    6.25: '25px'
+  },
+  padding: {
+    1.25: '5px',
+    2.75: '11px',
+    3.25: '13px',
+    7.5: '30px'
+  },
+  outlineWidth: {
+    6: '6px'
   },
   // https://tailwindcss.com/docs/transition-property#customizing-your-theme
   transitionProperty: {

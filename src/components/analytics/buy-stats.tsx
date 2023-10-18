@@ -139,7 +139,7 @@ export function BuyStats() {
 
       <div className={twMerge('space-y-4 mt-6 pb-6')}>
         <div className="flex flex-col lg:flex-row mb-2 mx-2">
-          <div className="mb-2 lg:mb-0 lg:flex-1 lg:mr-1 lg:max-w-[50%]">
+          <div className="mb-2 lg:mb-0 lg:flex-1 lg:mr-1 lg:max-w-1/2">
             <DonutChart
               title={topUsersByVolumeDataSet.name}
               subTitle={''}
@@ -148,7 +148,7 @@ export function BuyStats() {
               onClick={handleDonutSelect(setSelectedUserByVolume)}
             />
           </div>
-          <div className="lg:flex-1 lg:ml-1 lg:max-w-[50%]">
+          <div className="lg:flex-1 lg:ml-1 lg:max-w-1/2">
             <DonutChart
               title={topUsersByNativeVolumeDataSet.name}
               subTitle={''}
@@ -162,7 +162,7 @@ export function BuyStats() {
 
       <div className={twMerge('space-y-4 mt-6 pb-6')}>
         <div className="flex flex-col lg:flex-row mb-2 mx-2">
-          <div className="mb-2 lg:mb-0 lg:flex-1 lg:mr-1 lg:max-w-[50%]">
+          <div className="mb-2 lg:mb-0 lg:flex-1 lg:mr-1 lg:max-w-1/2">
             <DonutChart
               title={topUsersByNumBuysDataSet.name}
               subTitle={''}
@@ -171,7 +171,7 @@ export function BuyStats() {
               onClick={handleDonutSelect(setSelectedUserByBuys)}
             />
           </div>
-          <div className="lg:flex-1 lg:ml-1 lg:max-w-[50%]">
+          <div className="lg:flex-1 lg:ml-1 lg:max-w-1/2">
             <DonutChart
               title={topUsersByNumNativeBuysDataSet.name}
               subTitle={''}
@@ -185,7 +185,7 @@ export function BuyStats() {
 
       <div className={twMerge('space-y-4 mt-6 pb-6 mb-16')}>
         <div className="flex flex-col lg:flex-row mb-2 mx-2">
-          <div className="mb-2 lg:mb-0 lg:flex-1 lg:mr-1 lg:max-w-[50%]">
+          <div className="mb-2 lg:mb-0 lg:flex-1 lg:mr-1 lg:max-w-1/2">
             <LineChart dataSets={volumeDataSets} xAxisType="DATE" title="Buy Volume" subTitle="Last 30 days">
               <div className="flex gap-5 items-center mt-6">
                 {AllVolumeDataSetIds.map((id) => {
@@ -210,7 +210,7 @@ export function BuyStats() {
               </div>
             </LineChart>
           </div>
-          <div className="lg:flex-1 lg:ml-1 lg:max-w-[50%]">
+          <div className="lg:flex-1 lg:ml-1 lg:max-w-1/2">
             <LineChart dataSets={buyDataSets} xAxisType="DATE" title="Buys" subTitle="Last 30 days">
               <div className="flex gap-5 items-center mt-6">
                 {AllBuyDataSetIds.map((id) => {

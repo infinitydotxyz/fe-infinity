@@ -16,7 +16,8 @@ export { CopyClipBoardIcon } from './CopyClipBoardIcon';
 export { ArrowSmallIcon } from './ArrowSmallIcon';
 export { ClearBrushIcon } from './ClearBrushIcon';
 export { TickMarkIcon } from './TickMarkIcon';
-
+export { CheckedIcon } from './CheckedIcon';
+export { SearchIcon } from './SearchIcon';
 export interface IconProps {
   className?: string;
 }

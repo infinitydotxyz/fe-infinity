@@ -9,7 +9,7 @@ import { AnimatedPie } from './animated-pie';
 import { ChartBox } from './chart-box';
 import { ChartDimensions } from './chart-utils';
 import { useTheme } from 'next-themes';
-
+import tailwindConfig from '../../settings/tailwind/elements/foundations';
 export type PieProps = {
   width: number;
   height: number;
@@ -96,7 +96,7 @@ function Chart({
   const { theme } = useTheme();
   const darkMode = theme === 'dark';
 
-  const pieDefaultColor = darkMode ? '#979156' : '#E3E3D9';
+  const pieDefaultColor = darkMode ? tailwindConfig.colors['amber'][700] : tailwindConfig.colors['yellow'][100];
 
   const getTopThree = (arkData: ArkDataInterface[]): ArkDataInterface[] => {
     const sortedArkData = [...arkData.filter((arkItem) => arkItem.data.label !== 'Rest')];
@@ -104,7 +104,13 @@ function Chart({
     const topThree = sortedArkData.slice(0, 3).map((selectedArkData) => selectedArkData.data.label);
     return arkData?.map((arc) =>
       topThree.includes(arc.data.label)
-        ? { ...arc, data: { ...arc.data, color: topThree[0] === arc.data.label ? '#E7D60E' : pieDefaultColor } }
+        ? {
+            ...arc,
+            data: {
+              ...arc.data,
+              color: topThree[0] === arc.data.label ? tailwindConfig.colors['yellow'][800] : pieDefaultColor
+            }
+          }
         : { ...arc, data: { ...arc.data, label: '', color: pieDefaultColor } }
     );
   };
@@ -122,7 +128,6 @@ function Chart({
             pieValue={(point) => point.value}
             outerRadius={radius}
             innerRadius={radius - donutThickness}
-            // cornerRadius={3}
             padAngle={0.01}
           >
             {(pie) => (
@@ -139,15 +144,6 @@ function Chart({
               />
             )}
           </Pie>
-          {/* {selectedDataPoint ? (
-            <Text width={width} fill="gray" textAnchor="middle" verticalAnchor="middle">
-              {`${nFormatter(selectedDataPoint.value, 2)} ${dataSet.showUnits ? dataSet.units : ''}`}
-            </Text>
-          ) : (
-            <Text width={width} fill="gray" textAnchor="middle" verticalAnchor="middle">
-              {`${nFormatter(dataSet.total, 2)} ${dataSet.showUnits ? dataSet.units : ''}`}
-            </Text>
-          )} */}
         </Group>
       </svg>
     </div>

@@ -7,7 +7,7 @@ export const purgeCSSHack = 'h-14 w-14';
 export const collectionIconHeight = `h-${collectionIconRem}`;
 export const collectionIconWidth = `w-${collectionIconRem}`;
 export const collectionIconStyle = `${collectionIconHeight} ${collectionIconWidth} rounded-lg overflow-clip`;
-
+export const heroSectionWidth = 'w-[calc(100%_-_180px)]';
 export const collectionIconWidthInPx = (): number => {
   return pixelsPerRem() * collectionIconRem;
 };
@@ -39,7 +39,7 @@ export const chartAxisLabelLightColor = '#444444';
 // these include both dark and light
 export const bgColor = 'dark:bg-dark-bg bg-light-bg';
 export const brandBgColor = 'dark:bg-brand-darkPrimary bg-brand-primary';
-export const brandBgCustomColor = 'dark:bg-[#FFEB00] bg-[#675D1E]';
+export const brandBgCustomColor = `dark:${saleDataPointDarkColor} bg-amber-500`;
 export const inverseBgColor = 'dark:bg-light-bg bg-dark-bg';
 export const secondaryBgColor = 'dark:bg-dark-card bg-light-card';
 export const secondaryBgColorDarker = 'dark:bg-dark-card bg-gray-200 bg-opacity-60';
@@ -68,7 +68,7 @@ export const hoverColor = `dark:hover:bg-gray-200 dark:hover:bg-opacity-10 hover
 export const selectedColor = `dark:bg-gray-200 dark:bg-opacity-10 bg-gray-200 bg-opacity-40 ${brandTextColor}`;
 export const activeColor =
   'dark:active:bg-gray-200 dark:active:bg-opacity-10 active:bg-gray-300 active:bg-opacity-50 active:text-brand-primary dark:active:text-brand-darkPrimary';
-export const selectionBorder = `border-[1px] ${brandBorderColor}`;
+export const selectionBorder = `outline-6 outline outline-neutral-700`;
 export const dropShadow = 'shadow-lightDropdown dark:shadow-darkDropdown';
 export const sidebarIconColors = 'dark:text-neutral-100 text-neutral-700';
 export const checkboxBgColor = 'bg-white dark:text-neutral-700';

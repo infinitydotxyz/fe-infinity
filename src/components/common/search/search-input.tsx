@@ -64,7 +64,6 @@ export function SearchInput({
   };
 
   const handleFocus = () => {
-    console.log('show short cuts : ');
     setShowShortCut(false);
   };
 
@@ -99,8 +98,6 @@ export function SearchInput({
     }
   }, [expanded]);
 
-  console.log('is active : ', isActive, selected);
-
   return (
     <div
       className={twMerge(
@@ -110,11 +107,11 @@ export function SearchInput({
       )}
     >
       <div className="w-content h-content  hover:cursor-pointer" onClick={activate}>
-        <MagnifyingGlassIcon className={twMerge('flex-[1] w-2.5 h-2.5 max-h-full')}></MagnifyingGlassIcon>
+        <MagnifyingGlassIcon className={twMerge('flex-1 w-2.5 h-2.5 max-h-full')}></MagnifyingGlassIcon>
       </div>
       <Combobox
         as="div"
-        className={`w-full h-full max-h-full flex-[10] outline-none  ${isActive ? 'visible' : 'hidden'}`}
+        className={`w-full h-full max-h-full flex-10 outline-none  ${isActive ? 'visible' : 'hidden'}`}
         value={selected}
         onChange={setSelected}
       >

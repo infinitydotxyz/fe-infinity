@@ -3,6 +3,14 @@ const nextConfig = {
   swcMinify: false, // running prod build fails with swcMinify: true
   reactStrictMode: true,
   distDir: process.env.NODE_ENV === 'development' ? 'build-dev' : 'build',
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos'
+      }
+    ]
+  },
   // eslint-disable-next-line require-await
   async redirects() {
     return [];

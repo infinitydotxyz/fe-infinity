@@ -10,7 +10,6 @@ import { numStr } from 'src/utils';
 import { borderColor, secondaryBgColor, secondaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import tailwindConfig from '../../settings/tailwind/elements/foundations';
-// import { ChartBox } from './chart-box';
 import { BarChartType } from './types';
 import { useBidsChartTheme, useListingsChartTheme } from './use-theme';
 import useScreenSize from 'src/hooks/useScreenSize';
@@ -118,8 +117,8 @@ export const ResponsiveBarChart = ({ data, graphType, displayDetails }: Responsi
           </div>
         </div>
 
-        <div className="items-center flex gap-[10px]">
-          <div className="flex items-center space-x-[10px]">
+        <div className="items-center flex gap-2.5">
+          <div className="flex items-center space-x-2.5">
             <span className={twMerge('text-sm font-medium !text-neutral-200 dark:!text-white')}>Outliers</span>
 
             <ASwitchButton
@@ -133,12 +132,12 @@ export const ResponsiveBarChart = ({ data, graphType, displayDetails }: Responsi
           <ADropdown
             hasBorder={false}
             alignMenuRight
-            innerClassName="w-[100px]"
+            innerClassName="w-25"
             menuItemClassName="py-1 px-2"
-            menuButtonClassName="py-1 px-[10px]"
+            menuButtonClassName="py-1 px-2.5"
             label={selectedPriceBucket + ' ' + EthSymbol}
             className="py-0 px-0"
-            menuParentButtonClassName="px-0 py-0 border border-light-customBorder dark:border-dark-customBorder rounded h-[32px]"
+            menuParentButtonClassName="px-0 py-0 border border-light-customBorder dark:border-dark-customBorder rounded h-8"
             items={priceBuckets.map((bucket) => ({
               label: numStr(bucket),
               onClick: () => setSelectedPriceBucket(bucket)

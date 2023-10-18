@@ -42,7 +42,7 @@ export const AButton = ({
       primary={primary}
       highlighted={highlighted}
       tooltip={tooltip}
-      className={twMerge(small ? 'text-sm px-2 py-0.5' : 'px-2.5 py-[5px]', primary ? btnBgColorText : '', className)}
+      className={twMerge(small ? 'text-sm px-2 py-0.5' : 'px-2.5 py-1.25', primary ? btnBgColorText : '', className)}
       onClick={onClick}
     >
       {children}
@@ -247,7 +247,7 @@ export const ASwitchButton = ({ checked, onChange }: Props5) => {
         className={twMerge(
           'bg-gray-300',
           checked ? 'translate-x-full bg-white dark:bg-black' : 'translate-x-0',
-          'h-[22px] w-[22px] rounded-[3px]'
+          'h-5.5 w-5.5 rounded-3'
         )}
       />
     </Switch>

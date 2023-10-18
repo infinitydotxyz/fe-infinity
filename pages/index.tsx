@@ -12,7 +12,7 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { ERC721CollectionCartItem } from 'src/utils/types';
 import useScreenSize from 'src/hooks/useScreenSize';
-import { borderColor, heroSectionBGImage } from 'src/utils/ui-constants';
+import { borderColor, heroSectionBGImage, heroSectionWidth } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import ChainSwitch from 'src/components/common/ChainSwitch';
 import { AButton } from 'src/components/astra/astra-button';
@@ -82,10 +82,10 @@ const HomePage = () => {
         {/* home top section */}
         <div className="relative overflow-hidden dark:bg-neutral-200">
           <div className={twMerge('absolute h-full ', heroSectionBGImage)}>
-            <ChevronDown className="text-yellow-900 -rotate-90 h-[1200px] w-[900px]" />
+            <ChevronDown className="text-yellow-900 -rotate-90 h-300 w-225" />
           </div>
           <div className="bg-radial-back-no-image-light dark:bg-radial-back-no-image-dark absolute top-0 left-0 h-full w-full"></div>
-          <div className="w-[calc(100%_-_180px)] grid grid-cols-2 mx-auto">
+          <div className={twMerge('grid grid-cols-2 mx-auto', heroSectionWidth)}>
             {/* Aggregator */}
             <div className="rounded-xl w-max border overflow-hidden dark:border-yellow-900/20 border-neutral-700/10 my-14">
               <div className="bg-card-header-90 p-2.5 dark:bg-none dark:bg-gray-500/70 backdrop-blur-2xl">
@@ -101,7 +101,7 @@ const HomePage = () => {
                   {homeFeaturesList.map((featureItems) => (
                     <div className="flex gap-2.5 py-2.5 px-5 items-center" key={featureItems.id}>
                       <ChevronDown className="-rotate-90 text-yellow-900 w-4.5 h-2.5 mb-0.5" />
-                      <p className="text-17 font-normal font-supply-mono dark:text-white text-neutral-700">
+                      <p className="text-17 font-normal font-supply dark:text-white text-neutral-700">
                         {featureItems.feature}
                       </p>
                     </div>
@@ -122,7 +122,7 @@ const HomePage = () => {
         {/* home trending section */}
         <div className="px-5 mt-15">
           <div className="flex justify-between items-center">
-            <h3 className="text-35 text-neutral-700 dark:text-white font-extrabold border-b-[5px] border-yellow-900 w-max font-body">
+            <h3 className="text-35 text-neutral-700 dark:text-white font-extrabold border-b-5 border-yellow-900 w-max font-body">
               Trending
             </h3>
             <ChainSwitch />
@@ -240,7 +240,7 @@ export const TrendingGridItem = ({ collection, period, index }: Props) => {
             href={`/chain/${getNetworkName(collection?.chainId)}/collection/${collection?.slug || collection?.address}`}
             className="rounded-xl border border-gray-300 dark:border-neutral-900"
           >
-            <EZImage className="w-[42px] rounded-xl h-[42px] overflow-clip" src={collection?.metadata?.profileImage} />
+            <EZImage className="w-10.5 rounded-xl h-10.5 overflow-clip" src={collection?.metadata?.profileImage} />
           </NextLink>
 
           <NextLink

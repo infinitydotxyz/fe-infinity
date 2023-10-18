@@ -58,7 +58,6 @@ function Chart({
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const lineDarkColors = [tailwindConfig.colors['white'], tailwindConfig.colors['yellow'][800]];
   const lineLightColors = [tailwindConfig.colors['neutral'][700], tailwindConfig.colors['yellow'][800]];
-  // const [lineColors, setLineColors] = useState<string[]>(lineLightColors);
   const { theme } = useTheme();
   const darkMode = theme === 'dark';
   const lineColors = useMemo(() => {
