@@ -34,7 +34,7 @@ export const Checkbox = ({
           <Spacer />
         </>
       )}
-      <div className="relative flex gap-2">
+      <div className="relative overflow-hidden flex rounded-3 gap-2">
         <input
           checked={checked}
           onChange={(e) => {
