@@ -8,8 +8,6 @@ import { twMerge } from 'tailwind-merge';
 import { AOutlineButton } from '../astra-button';
 import { ErrorOrLoading } from '../error-or-loading';
 import { TokenCardModal } from './token-card-modal';
-import { CardNFT } from 'src/components/common/CardNFT';
-
 interface Props {
   listMode: boolean;
   className?: string;
