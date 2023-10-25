@@ -3,6 +3,7 @@ import { BlueCheckInline, ConnectButton, EZImage, EthPrice, NextLink } from 'src
 import { ChevronDown } from 'src/icons';
 import NFTCards from 'src/images/nftcardstack.png';
 import NFTCardsLight from 'src/images/nftcardstackwhite.png';
+import NFTCardsLightMobile from 'src/images/nftcardswhitemobile.png';
 import Image from 'next/image';
 import { apiGet, formatNumber, getNetworkName, nFormatter } from 'src/utils';
 import { useEffect, useState } from 'react';
@@ -16,6 +17,7 @@ import { borderColor, heroSectionBGImage, heroSectionWidth } from 'src/utils/ui-
 import { twMerge } from 'tailwind-merge';
 import ChainSwitch from 'src/components/common/ChainSwitch';
 import { AButton } from 'src/components/astra/astra-button';
+import { ADropdown } from 'src/components/astra/astra-dropdown';
 
 const homeFeaturesList: { id: number; feature: string }[] = [
   { id: 1, feature: 'Listings from over 100 NFT marketplaces for instant buys.' },
@@ -25,7 +27,8 @@ const homeFeaturesList: { id: number; feature: string }[] = [
   { id: 5, feature: 'Built on battle tested infra & audited contracts.' },
   { id: 6, feature: 'Mega gas optimized.' }
 ];
-
+type Tabs = 'Polygon' | 'Ethereum';
+const tabs = ['Polygon', 'Ethereum'] as Tabs[];
 const HomePage = () => {
   const queryBy = 'by_sales_volume';
   const options = [
@@ -37,11 +40,12 @@ const HomePage = () => {
   const [data, setData] = useState<Collection[]>([]);
   const [period] = useState(options[0]);
   const [isLoading, setIsLoading] = useState(false);
+  const [selected, setSelected] = useState<Tabs>(tabs[0]);
   const isMounted = useIsMounted();
   const { isCollSelected, isCollSelectable, toggleCollSelection } = useAppContext();
   const { setCartType } = useCartContext();
   const { selectedChain } = useAppContext();
-
+  const { isDesktop } = useScreenSize();
   const fetchData = async (refresh = false) => {
     const chainId = selectedChain;
     setIsLoading(true);
@@ -81,11 +85,12 @@ const HomePage = () => {
       <div>
         {/* home top section */}
         <div className="relative overflow-hidden dark:bg-neutral-200">
-          <div className={twMerge('absolute h-full ', heroSectionBGImage)}>
+          <div className={twMerge('hidden sm:block absolute h-full ', heroSectionBGImage)}>
             <ChevronDown className="text-yellow-900 -rotate-90 h-300 w-225" />
           </div>
-          <div className="bg-radial-back-no-image-light dark:bg-radial-back-no-image-dark absolute top-0 left-0 h-full w-full"></div>
-          <div className={twMerge('grid grid-cols-2 mx-auto', heroSectionWidth)}>
+          <div className="hidden sm:block bg-radial-back-no-image-light dark:bg-radial-back-no-image-dark absolute top-0 left-0 h-full w-full"></div>
+
+          <div className={twMerge('hidden sm:grid grid-cols-2 mx-auto', heroSectionWidth)}>
             {/* Aggregator */}
             <div className="rounded-xl w-max border overflow-hidden dark:border-yellow-900/20 border-neutral-700/10 my-14">
               <div className="bg-card-header-90 p-2.5 dark:bg-none dark:bg-gray-500/70 backdrop-blur-2xl">
@@ -118,18 +123,56 @@ const HomePage = () => {
               <Image src={NFTCardsLight} className="block dark:hidden" alt="nft cards" height={565} width={808} />
             </div>
           </div>
+          {/* home top section mobile view*/}
+          <div className="flex sm:hidden flex-col gap-5 mt-5">
+            <div className="p-2.5 flex flex-col items-center">
+              <p className="text-[29px] tracking-[-2.32px] font-supply font-normal dark:text-white text-neutral-700">
+                The Last
+              </p>
+              <h3 className="w-max text-[39px] font-extrabold dark:text-white text-neutral-700 -mt-5 font-body">
+                Aggregator
+              </h3>
+            </div>
+            <div className="flex justify-center">
+              <Image src={NFTCardsLightMobile} alt="nft cards light mobile" width={393} height={579} />
+            </div>
+            <div>
+              {homeFeaturesList.map((featureItems) => (
+                <div className="flex gap-2.5 py-2.5 px-5 items-start" key={featureItems.id}>
+                  <div className="w-4.5">
+                    <ChevronDown className="-rotate-90 text-yellow-900 w-4.5 h-2.5 mt-2" />
+                  </div>
+                  <p className="text-17 font-normal font-supply dark:text-white text-neutral-700">
+                    {featureItems.feature}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
         {/* home trending section */}
-        <div className="px-5 mt-15">
+        <div className="px-5 mt-10 sm:mt-15">
           <div className="flex justify-between items-center">
             <h3 className="text-35 text-neutral-700 dark:text-white font-extrabold border-b-5 border-yellow-900 w-max font-body">
               Trending
             </h3>
-            <ChainSwitch />
+            {isDesktop ? (
+              <ChainSwitch />
+            ) : (
+              <ADropdown
+                label={selected}
+                menuParentButtonClassName="py-1 px-2.5 rounded border-gray-300 dark:border-neutral-200"
+                innerClassName="w-30"
+                items={tabs.map((option) => ({
+                  label: option,
+                  onClick: () => setSelected(option as Tabs)
+                }))}
+              />
+            )}
           </div>
-          <div className="rounded-5 overflow-hidden mt-8">
+          <div className="rounded-5 overflow-hidden mt-5">
             <div
-              className="md:grid gap-2 justify-between items-center w-full bg-zinc-200 dark:bg-zinc-700 px-5 py-3.5 text-neutral-700 dark:text-neutral-300"
+              className="hidden md:grid gap-2 justify-between items-center w-full bg-zinc-200 dark:bg-zinc-700 px-5 py-3.5 text-neutral-700 dark:text-neutral-300"
               style={{ gridTemplateColumns: 'minmax(0, 3fr) repeat(auto-fit, minmax(0, 1fr))' }}
             >
               <div className="pl-10">
@@ -206,7 +249,7 @@ interface Props {
   isCollSelectable: (data: ERC721CollectionCartItem) => boolean;
 }
 
-const propertyClassname = 'md:flex-col flex text-amber-700 justify-between font-supply md:mt-0 mt-2';
+const propertyClassname = 'md:flex-col hidden sm:flex text-amber-700 justify-between font-supply md:mt-0 mt-2';
 
 export const TrendingGridItem = ({ collection, period, index }: Props) => {
   const { isDesktop } = useScreenSize();
@@ -231,7 +274,7 @@ export const TrendingGridItem = ({ collection, period, index }: Props) => {
         className="md:grid gap-2 justify-between items-center w-full"
         style={{ gridTemplateColumns: 'minmax(0, 3fr) repeat(auto-fit, minmax(0, 1fr))' }}
       >
-        <div className="flex items-center font-bold font-heading">
+        <div className="flex sm:items-center items-start font-bold">
           {isDesktop && (
             <div className="text-base font-semibold text-neutral-700 font-body mr-8 text-right">{index + 1}</div>
           )}
@@ -242,14 +285,31 @@ export const TrendingGridItem = ({ collection, period, index }: Props) => {
           >
             <EZImage className="w-10.5 rounded-xl h-10.5 overflow-clip" src={collection?.metadata?.profileImage} />
           </NextLink>
-
-          <NextLink
-            href={`/chain/${getNetworkName(collection?.chainId)}/collection/${collection?.slug || collection?.address}`}
-            className="ml-2 whitespace-normal text-base font-semibold dark:text-white"
-          >
-            {collection?.metadata?.name}
-            {collection?.hasBlueCheck && <BlueCheckInline />}
-          </NextLink>
+          <div className="ml-2">
+            <NextLink
+              href={`/chain/${getNetworkName(collection?.chainId)}/collection/${
+                collection?.slug || collection?.address
+              }`}
+              className="whitespace-normal text-base font-semibold dark:text-white"
+            >
+              {collection?.metadata?.name}
+              {collection?.hasBlueCheck && <BlueCheckInline />}
+            </NextLink>
+            <div className="flex gap-3.75 sm:hidden text-sm font-medium font-body text-neutral-700 dark:text-white">
+              <div className="flex items-center">
+                Floor
+                <span className="text-amber-700 ml-1">
+                  <EthPrice label={floorPrice > 0 ? formatNumber(floorPrice, 2) : '-'} />
+                </span>
+              </div>
+              <div className="flex items-center">
+                Volume
+                <span className="text-amber-700 ml-1">
+                  <EthPrice label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`} />
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className={propertyClassname}>

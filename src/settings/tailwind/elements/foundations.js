@@ -119,6 +119,7 @@ module.exports = {
   },
   backgroundImage: {
     'card-header-90': 'linear-gradient(90deg, rgba(255, 255, 255, 0.70) 0%, rgba(241, 241, 235, 0.70) 100%)',
+    'linear-back-dark': 'linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.25) 100%)',
     'radial-back-light':
       "radial-gradient(100% 100% at 0% 0%, #F1F1EB 5.65%, rgba(241, 241, 235, 0.00) 100%), url('/images/IconChevronDown.png'), lightgray -68.235px -103.192px / 25.515% 142.643% no-repeat, #F1F1EB",
     'radial-back-no-image-light': 'radial-gradient(100% 100% at 0% 0%, #F1F1EB 5.65%, rgba(241, 241, 235, 0.00) 100%)',
@@ -275,11 +276,19 @@ module.exports = {
     225: '900px'
   },
   height: {
+    0.25: '1px',
     0.75: '3px',
+    3.75: '15px',
+    5.25: '21px',
     5.5: '22px',
+    6.5: '26px',
     4.5: '18px',
+    8.25: '33px',
+    9.25: '37px',
     10.5: '42px',
     19.5: '78px',
+    21.25: '85px',
+    25: '100px',
     51.25: '205px',
     154.5: '618px',
     300: '1200px'
@@ -292,6 +301,9 @@ module.exports = {
     7.5: '30px',
     15: '60px',
     18: '72px'
+  },
+  gap: {
+    3.75: '15px'
   },
   fontSize: {
     '6xl': '4rem',
@@ -317,6 +329,7 @@ module.exports = {
     1.25: '5px',
     2.75: '11px',
     3.25: '13px',
+    6.25: '25px',
     7.5: '30px'
   },
   outlineWidth: {
