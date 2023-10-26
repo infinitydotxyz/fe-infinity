@@ -92,21 +92,21 @@ export const Layout = ({ children }: Props) => {
       />
     </NonSsrWrapper>
   );
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const footer = (
     <div className="flex flex-col gap-2.5">
-      <div className="h-0.25 bg-gray-100 dark:bg-neutral-400 w-full"> </div>
-      <div className="h-0.5 bg-gray-100 dark:bg-neutral-400 w-full"> </div>
-      <div className="h-1 bg-gray-100 dark:bg-neutral-400 w-full"> </div>
-      <div className="h-1.5 bg-gray-100 dark:bg-neutral-400 w-full"> </div>
-      <div className="h-2.5 bg-gray-100 dark:bg-neutral-400 w-full"> </div>
-      <div className="h-3.75 bg-gray-100 dark:bg-neutral-400 w-full"> </div>
-      <div className="h-3.75 bg-gray-100 dark:bg-neutral-400 w-full"> </div>
-      <div className="h-5.25 bg-gray-100 dark:bg-neutral-400 w-full"> </div>
-      <div className="h-6.5 bg-gray-100 dark:bg-neutral-400 w-full"> </div>
-      <div className="h-8.25 bg-gray-100 dark:bg-neutral-400 w-full"> </div>
-      <div className="h-9.25 bg-gray-100 dark:bg-neutral-400 w-full"> </div>
-      <div className="flex flex-col items-center jusitfy-center bg-gray-100 dark:bg-neutral-400 w-full pt-6.25 pb-2.5 px-5">
+      <div className="h-0.25 bg-zinc-300 dark:bg-neutral-400 w-full"> </div>
+      <div className="h-0.5 bg-zinc-300 dark:bg-neutral-400 w-full"> </div>
+      <div className="h-1 bg-zinc-300 dark:bg-neutral-400 w-full"> </div>
+      <div className="h-1.5 bg-zinc-300 dark:bg-neutral-400 w-full"> </div>
+      <div className="h-2.5 bg-zinc-300 dark:bg-neutral-400 w-full"> </div>
+      <div className="h-3.75 bg-zinc-300 dark:bg-neutral-400 w-full"> </div>
+      <div className="h-3.75 bg-zinc-300 dark:bg-neutral-400 w-full"> </div>
+      <div className="h-5.25 bg-zinc-300 dark:bg-neutral-400 w-full"> </div>
+      <div className="h-6.5 bg-zinc-300 dark:bg-neutral-400 w-full"> </div>
+      <div className="h-8.25 bg-zinc-300 dark:bg-neutral-400 w-full"> </div>
+      <div className="h-9.25 bg-zinc-300 dark:bg-neutral-400 w-full"> </div>
+      <div className="flex flex-col items-center jusitfy-center bg-zinc-300 dark:bg-[#141406] w-full pt-6.25 pb-2.5 px-5">
         <NextLink className="mb-5" href="/">
           <EZImage src={lightLogo.src} className="w-25 h-25" />
         </NextLink>
@@ -200,7 +200,7 @@ export const Layout = ({ children }: Props) => {
   );
 
   return Grid(
-    <ANavbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />,
+    <ANavbar setSidebarOpen={setSidebarOpen} />,
     <SidebarNav sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />,
     <>{children}</>,
     cart,

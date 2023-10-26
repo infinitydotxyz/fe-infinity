@@ -12,7 +12,6 @@ import lightLogo from 'src/images/light-logo.png';
 import darkLogo from 'src/images/dark-logo.png';
 import {
   AnalyticsBoxIcon,
-  ArrowSmallIcon,
   ChevronDown,
   ExploreBoxIcon,
   ItemsBoxIcon,
@@ -23,8 +22,11 @@ import {
 } from 'src/icons';
 import { FaDiscord } from 'react-icons/fa';
 import { Dialog, Transition } from '@headlessui/react';
-
-export const SidebarNav = ({ sidebarOpen, setSidebarOpen }) => {
+type SidebarNavPropType = {
+  sidebarOpen: boolean;
+  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) => {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
   const { address: user } = useAccount();
@@ -190,10 +192,10 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }) => {
       {/* Sidebar for desktop */}
       <div
         className={twMerge(
-          'hidden sm:flex pb-3 h-full w-19.5 flex-col items-center border-r border-gray-300 dark:border-neutral-200 bg-zinc-500 dark:bg-neutral-800'
+          'hidden overflow-auto sm:flex pb-3 h-full w-19.5 flex-col items-center border-r border-gray-300 dark:border-neutral-200 bg-zinc-500 dark:bg-neutral-800'
         )}
       >
-        <div className="border-b border-gray-300 dark:border-neutral-200 w-full pb-1 h-19.5 flex justify-center items-center">
+        <div className="border-b border-gray-300 dark:border-neutral-200 w-full !max-h-19 h-full flex justify-center items-center">
           <NextLink href="/">
             <EZImage src={logoSrc} className="w-14 h-14" />
           </NextLink>

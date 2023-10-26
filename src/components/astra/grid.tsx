@@ -16,7 +16,7 @@ export const Grid = (
 
   return (
     <div className={twMerge(bgColor, 'flex')}>
-      <div className="sticky top-0 left-0">{sideBar}</div>
+      <div className="sticky max-h-screen top-0 left-0">{sideBar}</div>
       <div
         ref={containerRef}
         className="h-max min-h-screen w-screen grid grid-rows-[auto_1fr] grid-cols-[auto_1fr_auto]"

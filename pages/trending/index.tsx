@@ -2,7 +2,6 @@ import { Collection, CollectionPeriodStatsContent, StatsPeriod } from '@infinity
 import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { AButton } from 'src/components/astra/astra-button';
-import { ADropdown } from 'src/components/astra/astra-dropdown';
 import { APageBox } from 'src/components/astra/astra-page-box';
 import {
   BlueCheckInline,
@@ -37,7 +36,6 @@ const TrendingPage = () => {
   const isMounted = useIsMounted();
   const { isCollSelected, isCollSelectable, toggleCollSelection } = useAppContext();
   const { setCartType } = useCartContext();
-  const { isDesktop } = useScreenSize();
   const { selectedChain } = useAppContext();
 
   const fetchData = async (refresh = false) => {
@@ -76,27 +74,27 @@ const TrendingPage = () => {
   return (
     <APageBox title="Trending Collections" showTitle={true}>
       <div className="overflow-y-auto overflow-x-clip text-sm scrollbar-hide">
-        {isDesktop ? (
-          <ToggleTab
-            className="font-heading"
-            options={options.map((option) => option.label)}
-            defaultOption={DEFAULT_TAB}
-            onChange={(label) => setPeriod(options.find((option) => option.label === label) || options[0])}
-            border={true}
-          />
-        ) : (
-          <ADropdown
-            label={period.label}
-            className="w-30"
-            innerClassName="w-30"
-            items={options.map((option) => ({
-              label: option.label,
-              onClick: () => setPeriod(option)
-            }))}
-          />
-        )}
+        {/* {isDesktop ? ( */}
+        <ToggleTab
+          className="font-heading"
+          options={options.map((option) => option.label)}
+          defaultOption={DEFAULT_TAB}
+          onChange={(label) => setPeriod(options.find((option) => option.label === label) || options[0])}
+          border={true}
+        />
+        {/* ) : (
+           <ADropdown
+             label={period.label}
+             className="w-30"
+             innerClassName="w-30"
+             items={options.map((option) => ({
+               label: option.label,
+               onClick: () => setPeriod(option)
+             }))}
+           />
+         )} */}
 
-        <div className="space-y-3 mt-8 pb-20">
+        <div className="space-y-0.25 p-5 pb-20">
           {data.map((coll, index) => {
             return (
               <TrendingPageCard
@@ -140,7 +138,7 @@ interface Props {
   isCollSelectable: (data: ERC721CollectionCartItem) => boolean;
 }
 
-const propertyClassname = 'md:flex-col flex justify-between md:mt-0 mt-2';
+const propertyClassname = 'flex-col flex justify-between md:mt-0 mt-2';
 
 const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelectable, period, index }: Props) => {
   const { isDesktop } = useScreenSize();
@@ -160,56 +158,85 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
   const salesVolumeChange = Number(nFormatter(periodStat?.salesVolumeChange ?? 0));
 
   return (
-    <div className={twMerge(borderColor, 'rounded-lg border p-2 md:flex items-center')}>
+    <div
+      className={twMerge(
+        borderColor,
+        'first:rounded-t-xl last:rounded-b-xl py-3.75 px-5 md:flex items-center bg-zinc-300 dark:bg-neutral-800'
+      )}
+    >
       <div
         className="md:grid gap-2 justify-between items-center w-full"
         style={{ gridTemplateColumns: 'minmax(0, 3fr) repeat(auto-fit, minmax(0, 1fr))' }}
       >
-        <div className="flex items-center font-bold font-heading">
-          {isDesktop && <div className="text-lg mr-8 text-right">{index + 1}</div>}
+        <div className={twMerge('flex items-center justify-between  font-bold', isDesktop && 'justify-start')}>
+          {isDesktop && <div className="text-base mr-8 text-right">{index + 1}</div>}
+          <div className="flex items-center">
+            <NextLink
+              href={`/chain/${getNetworkName(collection?.chainId)}/collection/${
+                collection?.slug || collection?.address
+              }`}
+            >
+              <EZImage className="w-10.5 h-10.5 rounded-lg overflow-clip" src={collection?.metadata?.profileImage} />
+            </NextLink>
 
-          <NextLink
-            href={`/chain/${getNetworkName(collection?.chainId)}/collection/${collection?.slug || collection?.address}`}
-          >
-            <EZImage className="w-14 h-14 rounded-lg overflow-clip" src={collection?.metadata?.profileImage} />
-          </NextLink>
-
-          <NextLink
-            href={`/chain/${getNetworkName(collection?.chainId)}/collection/${collection?.slug || collection?.address}`}
-            className="ml-2 whitespace-normal"
-          >
-            {collection?.metadata?.name}
-            {collection?.hasBlueCheck && <BlueCheckInline />}
-          </NextLink>
+            <NextLink
+              href={`/chain/${getNetworkName(collection?.chainId)}/collection/${
+                collection?.slug || collection?.address
+              }`}
+              className="ml-2 whitespace-normal"
+            >
+              {collection?.metadata?.name}
+              {collection?.hasBlueCheck && <BlueCheckInline />}
+            </NextLink>
+          </div>
+          {!isDesktop && <div className="text-base text-right">{index + 1}</div>}
         </div>
 
         <div className={propertyClassname}>
-          <div className="text-sm font-bold">Vol</div>
-          <EthPrice label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`} />
+          <div className="text-sm text-gray-800 font-medium">Volume</div>
+          <EthPrice
+            ethClassName="font-normal font-body"
+            className="font-supply text-amber-700 font-normal"
+            label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`}
+          />
         </div>
 
         <div className={propertyClassname}>
-          <div className="text-sm font-bold">Vol Change</div>
+          <div className="text-sm text-gray-800 font-medium">Volume Change</div>
           {Number.isNaN(salesVolumeChange) ? (
             '-'
           ) : (
-            <div className={twMerge(salesVolumeChange >= 0 ? 'text-green-600' : 'text-red-600')}>
+            <div
+              className={twMerge(
+                'font-supply text-amber-700 font-normal'
+                // salesVolumeChange >= 0 ? 'text-green-600' : 'text-red-600'
+              )}
+            >
               {salesVolumeChange} %
             </div>
           )}
         </div>
 
         <div className={propertyClassname}>
-          <div className="text-sm font-bold">Floor</div>
-          <EthPrice label={floorPrice > 0 ? formatNumber(floorPrice, 2) : '-'} />
+          <div className="text-sm text-gray-800 font-medium">Floor</div>
+          <EthPrice
+            ethClassName="font-normal font-body"
+            className="font-supply text-amber-700 font-normal"
+            label={floorPrice > 0 ? formatNumber(floorPrice, 2) : '-'}
+          />
         </div>
 
         <div className={propertyClassname}>
-          <div className="font-bold">Floor Change</div>
+          <div className="text-sm text-gray-800 font-medium">Floor Change</div>
           {Number.isNaN(floorPriceChange) ? (
             '-'
           ) : (
-            <div className={twMerge(floorPriceChange >= 0 ? 'text-green-600' : 'text-red-600')}>
+            <div
+              className={twMerge(
+                'font-supply text-amber-700 font-normal'
+                // floorPriceChange >= 0 ? 'text-green-600' : 'text-red-600'
+              )}
+            >
               {floorPriceChange} %
             </div>
           )}
@@ -217,15 +244,15 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
 
         {isDesktop ? (
           <div className={propertyClassname}>
-            <div className=" text-sm font-bold ">Tokens</div>
-            <div>{nFormatter(periodStat?.tokenCount ?? 0)}</div>
+            <div className="text-sm text-gray-800 font-medium">Tokens</div>
+            <div className="font-supply text-amber-700 font-normal">{nFormatter(periodStat?.tokenCount ?? 0)}</div>
           </div>
         ) : null}
 
-        <div className="flex gap-2">
+        <div className="flex justify-end gap-2">
           <AButton
             primary
-            className="px-9 py-3 md:w-auto w-full md:mt-0 mt-2 flex justify-center"
+            className="px-5 py-2.5 rounded-6 md:w-auto w-full md:mt-0 mt-2 flex justify-center leading-3.5 dark:border-transparent"
             onClick={() => {
               if (isCollSelectable(collection as ERC721CollectionCartItem)) {
                 onClickBuy(collection as ERC721CollectionCartItem);

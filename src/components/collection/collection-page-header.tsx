@@ -9,7 +9,6 @@ import {
   borderColor,
   golderBorderColor,
   hoverColor,
-  secondaryBgColor,
   secondaryTextColor,
   smallIconButtonStyle
 } from 'src/utils/ui-constants';
@@ -61,17 +60,17 @@ export const CollectionPageHeader = ({
   // );
 
   return (
-    <div className={twMerge(borderColor, secondaryBgColor, 'border-b px-6')}>
+    <div className={twMerge(borderColor, 'border-b')}>
       {expanded && (
-        <div className="flex flex-col space-y-3">
+        <div className="flex flex-col space-y-3 py-7.5 px-5">
           <div className="flex w-full items-center text-center md:flex-row flex-col mt-2">
             <EZImage
               src={avatarUrl}
-              className="md:mr-4 h-14 w-14 rounded-lg cursor-pointer hover:scale-90 duration-100"
+              className="md:mr-4 h-25 w-25 rounded-lg cursor-pointer hover:scale-90 duration-100"
               onClick={() => window.open(collection?.metadata?.links?.external)}
             />
             <div className="md:flex w-full items-center space-x-2">
-              <div className="font-bold font-heading text-xl">{title}</div>
+              <div className="font-bold text-xl">{title}</div>
 
               {isDesktop && (
                 <>

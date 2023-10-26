@@ -28,7 +28,7 @@ export const APageBox = ({
     <div
       className={twMerge(
         textColor,
-        'transition px-6 w-full h-full flex flex-col overflow-y-clip overflow-x-clip',
+        'transition w-full h-full flex flex-col overflow-y-clip overflow-x-clip',
         className
       )}
     >
@@ -51,10 +51,8 @@ type Props2 = {
 
 export const APageHeader = ({ title, rightToolbar }: Props2): JSX.Element => {
   return (
-    <div className="flex flex-row items-center">
-      <div className={twMerge(textColor, 'font-heading font-bold md:text-3xl text-xl tracking-tight mt-4 mb-8')}>
-        {title}
-      </div>
+    <div className="flex flex-row items-center py-15 px-5">
+      <div className={twMerge(textColor, 'font-bold md:text-3xl text-xl tracking-tight')}>{title}</div>
 
       {rightToolbar && (
         <>

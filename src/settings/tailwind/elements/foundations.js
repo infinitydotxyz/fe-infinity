@@ -185,17 +185,18 @@ module.exports = {
       900: '#FFEE00'
     },
     dark: {
-      bg: '#141416',
+      bg: '#16160F',
       body: '#dcdcdc',
       disabled: '#777E90',
       disabledFade: '#777E9080',
       border: '#353945',
       card: '#23262f',
       gridLine: '#222222',
-      borderDark: '#2A2A26'
+      borderDark: '#2A2A26',
+      borderUnderline: '#222222'
     },
     light: {
-      bg: '#FFFFFF',
+      bg: '#F7F7F3',
       body: '#23262f',
       disabled: '#777E90',
       disabledFade: '#777E9080',
@@ -203,7 +204,8 @@ module.exports = {
       border: '#e6e8ec',
       gridLine: '#E7E7E7',
       divider: '#ECECEC',
-      borderLight: '#E6E6DC'
+      borderLight: '#E6E6DC',
+      borderUnderline: '#F0F0F0'
     },
     brand: {
       primary: '#edc100',
@@ -253,10 +255,12 @@ module.exports = {
     3: '3px',
     4: '4px',
     5: '5px',
+    6: '6px',
     10: '10px',
     11: '11px'
   },
   borderWidth: {
+    3: '3px',
     5: '5px'
   },
   maxWidth: {
@@ -293,6 +297,10 @@ module.exports = {
     154.5: '618px',
     300: '1200px'
   },
+  maxHeight: {
+    19: '76px',
+    19.5: '78px'
+  },
   spacing: {
     0.25: '1px',
     7: '7px',
@@ -317,18 +325,21 @@ module.exports = {
   },
   lineHeight: {
     2.5: '10px',
+    3.5: '14px',
     4.25: '17px',
     4.5: '18px'
   },
   margin: {
     0.75: '3px',
     3.75: '15px',
-    6.25: '25px'
+    6.25: '25px',
+    19.5: '78px'
   },
   padding: {
     1.25: '5px',
     2.75: '11px',
     3.25: '13px',
+    3.75: '15px',
     6.25: '25px',
     7.5: '30px'
   },

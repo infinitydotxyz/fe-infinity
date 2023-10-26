@@ -9,7 +9,10 @@ import lightLogo from 'src/images/light-logo.png';
 import { AiOutlineMenu } from 'react-icons/ai';
 import { SearchIcon } from 'src/icons';
 
-export const ANavbar = ({ setSidebarOpen }) => {
+type ANavbarPropType = {
+  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+export const ANavbar = ({ setSidebarOpen }: ANavbarPropType) => {
   const { isWalletNetworkSupported } = useAppContext();
 
   return (
@@ -19,9 +22,12 @@ export const ANavbar = ({ setSidebarOpen }) => {
       </div>
       <div
         className={twMerge(
-          'h-21.25 sm:h-full md:flex px-5 py-3.5 md:space-x-4 bg-zinc-500 dark:bg-neutral-800 items-center border-b border-gray-300 dark:border-neutral-200'
+          'sm:max-h-19 sm:h-full sm:flex px-5 py-3.75 md:space-x-4 bg-zinc-500 dark:bg-neutral-800 items-center border-b border-gray-300 dark:border-neutral-200'
         )}
       >
+        <div className="hidden sm:block md:w-1/3 sm:w-1/2">
+          <CollectionSearchInput shortCuts={true} expanded />
+        </div>
         <div className="sm:hidden flex h-full items-center justify-between">
           <div className="flex items-center">
             <NextLink className="-ml-3" href="/">
@@ -35,11 +41,6 @@ export const ANavbar = ({ setSidebarOpen }) => {
             <SearchIcon className="h-5 w-5" />
           </div>
         </div>
-
-        <div className="hidden md:w-1/3 sm:w-full">
-          <CollectionSearchInput shortCuts={true} expanded />
-        </div>
-
         <Spacer />
 
         {/* <ADropdown
@@ -70,7 +71,7 @@ export const ANavbar = ({ setSidebarOpen }) => {
           ]}
         /> */}
 
-        <div className="hidden sm:flex items-center justify-between md:mt-0 mt-2">
+        <div className="hidden sm:flex items-center sm:mt-0 mt-2">
           <ConnectButton half />
           <ShoppingBagButton />
         </div>
