@@ -88,14 +88,14 @@ const SingleCollectionCell = ({ order, image, title, canShowAssetModal, isCollBi
   }, [router.query]);
 
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex gap-5 items-center">
       {canShowAssetModal && modalOpen && basicTokenInfo && (
         <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} />
       )}
 
-      <div className="flex justify-center shrink-0 h-14 w-14 mr-2">
+      <div className="flex items-center justify-center shrink-0 ">
         <EZImage
-          className={twMerge('h-14 w-14 rounded-lg overflow-clip', canShowAssetModal ? 'cursor-pointer' : '')}
+          className={twMerge('h-10.5 w-10.5 rounded-lg overflow-clip', canShowAssetModal ? 'cursor-pointer' : '')}
           src={image}
           onClick={() => {
             if (basicTokenInfo && canShowAssetModal) {
@@ -110,13 +110,19 @@ const SingleCollectionCell = ({ order, image, title, canShowAssetModal, isCollBi
 
       <div className={`flex flex-col truncate`}>
         {collectionAddress && chainId ? (
-          <div className={twMerge(secondaryTextColor, 'font-medium')}>
+          <div
+            className={twMerge(secondaryTextColor, 'font-medium text-sm text-gray-800 dark:text-gray-800 capitalize')}
+          >
             {title}
             {hasBlueCheck === true && <BlueCheckInline />}
           </div>
         ) : null}
 
-        {tokenIdOrAttribute && <div className={twMerge('whitespace-pre-wrap')}>{tokenIdOrAttribute}</div>}
+        {tokenIdOrAttribute && (
+          <div className={twMerge('whitespace-pre-wrap text-base font-semibold text-neutral-700 dark:text-white')}>
+            {tokenIdOrAttribute}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -90,10 +90,10 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
 
   return (
     <div className={twMerge('min-h-[50vh] pb-20', className)}>
-      <div className={twMerge('flex py-2 md:px-4')}>
+      <div className={twMerge('flex py-5')}>
         <div className="flex flex-col space-y-2 w-full">
           <div className="md:flex justify-between">
-            <div className="flex">
+            <div className="flex items-center gap-2.5">
               <CollectionSearchInput
                 expanded
                 orderSearch
@@ -106,13 +106,25 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
                   handleCollectionSearchResult(selectedColl);
                 }}
               />
+              <div className="flex text-sm items-cente p-2.5 border border-gray-300 rounded-4">
+                <StatusIcon status="pending-indefinite" label={isDesktop ? 'Live' : ''} />
+              </div>
             </div>
 
             <div className="flex space-x-2 md:mt-0 mt-2">
-              <div className="flex text-sm items-cente md:px-4">
-                <StatusIcon status="pending-indefinite" label={isDesktop ? 'Live' : ''} />
-              </div>
-
+              {selectedOrderType === 'offers-received' && (
+                <div className={twMerge('flex items-center w-fit')}>
+                  <div className="flex items-center space-x-2">
+                    <div className="text-sm font-medium">
+                      <span className="text-amber-700">{numTokensWithOffers}</span> offers totaling to
+                      <span className="text-amber-700 font-normal">
+                        <span className="mx-0.5">{EthSymbol}</span>
+                        {totalOffersValue}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
               <AOutlineButton
                 className={twMerge(
                   'font-medium text-sm px-4',
@@ -201,19 +213,6 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
               </div>
             </div>
           ) : null}
-
-          {selectedOrderType === 'offers-received' && (
-            <div className={twMerge('flex items-center w-fit')}>
-              <div className="flex items-center space-x-2">
-                <div className={twMerge('text-sm rounded-lg border p-2', borderColor)}>
-                  # Tokens with offers: {numTokensWithOffers}
-                </div>
-                <div className={twMerge('text-sm rounded-lg border p-2', borderColor)}>
-                  Total value of offers: {totalOffersValue} {EthSymbol}
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 

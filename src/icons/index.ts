@@ -19,6 +19,7 @@ export { TickMarkIcon } from './TickMarkIcon';
 export { CheckedIcon } from './CheckedIcon';
 export { SearchIcon } from './SearchIcon';
 export { BookIcon } from './BookIcon';
+export { EditIcon } from './EditIcon';
 export interface IconProps {
   className?: string;
 }

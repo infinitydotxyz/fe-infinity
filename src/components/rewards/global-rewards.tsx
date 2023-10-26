@@ -37,12 +37,13 @@ const GlobalRewards = ({ showCount }: Props) => {
   const [orderBy, setOrderBy] = useState<LeaderboardQuery['orderBy']>('total');
 
   return (
-    <div className={twMerge('space-y-4 mt-6 pb-6 mb-16')}>
-      <div className="flex flex-col md:flex-row align-center md:space-x-5">
-        <div className="text-2xl font-medium">Leaderboard</div>
+    <div className={twMerge('space-y-4 mt-6 px-5 pb-6 mb-16')}>
+      <div className="flex flex-col md:flex-row align-center md:space-x-2.5">
+        <div className="text-22 font-semibold dark:text-white ">Leaderboard</div>
         <ADropdown
           label={OrderByValueToName[orderBy]}
-          innerClassName="w-24"
+          innerClassName="w-24 "
+          menuParentButtonClassName="px-2.5 py-1 rounded border-gray-300 dark:border-neutral-200"
           items={Object.keys(OrderByValueToName).map((option) => ({
             label: OrderByValueToName[option as LeaderboardQuery['orderBy']],
             onClick: () => setOrderBy(option as LeaderboardQuery['orderBy'])

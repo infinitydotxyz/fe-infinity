@@ -11,13 +11,14 @@ interface Props {
   border?: boolean;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const ToggleTab = ({ options, onChange, defaultOption, className = '', small = false, border }: Props) => {
   const [selected, setSelected] = useState(defaultOption);
 
   return (
     <div
       className={twMerge(
-        'flex space-x-3 text-base overflow-auto scrollbar-hide border-b border-light-borderUnderline dark:border-dark-borderUnderline px-5',
+        'flex space-x-7.5 text-base overflow-auto scrollbar-hide border-b border-light-borderUnderline dark:border-dark-borderUnderline px-5',
         className
       )}
     >

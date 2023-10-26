@@ -6,6 +6,7 @@ import { twMerge } from 'tailwind-merge';
 interface Props {
   children?: React.ReactNode;
   title: string;
+  subTitle?: string;
   showTitle?: boolean;
   className?: string;
   fullWidth?: boolean;
@@ -19,6 +20,7 @@ export const pageStyles = 'mx-auto desktop:w-5/6 desktop-sm:w-[95%] tabloid:w-[9
 export const APageBox = ({
   children,
   title,
+  subTitle = '',
   showTitle = true,
   className = '',
   rightToolbar,
@@ -34,7 +36,7 @@ export const APageBox = ({
     >
       <Header title={title} />
 
-      {showTitle ? <APageHeader title={title} rightToolbar={rightToolbar} /> : null}
+      {showTitle ? <APageHeader subTitle={subTitle} title={title} rightToolbar={rightToolbar} /> : null}
 
       {children}
       {footer}
@@ -46,13 +48,21 @@ export const APageBox = ({
 
 type Props2 = {
   title?: string;
+  subTitle?: string;
   rightToolbar?: JSX.Element;
 };
 
-export const APageHeader = ({ title, rightToolbar }: Props2): JSX.Element => {
+export const APageHeader = ({ title, rightToolbar, subTitle }: Props2): JSX.Element => {
   return (
     <div className="flex flex-row items-center py-15 px-5">
-      <div className={twMerge(textColor, 'font-bold md:text-3xl text-xl tracking-tight')}>{title}</div>
+      {subTitle ? (
+        <div className="flex flex-col justify-center w-full text-center md:text-left">
+          <div className={twMerge(textColor, 'font-bold  text-35 h-10.5 tracking-tight dark:text-white')}>{title}</div>
+          <div className="text-neutral-300 text-base font-medium">{subTitle}</div>
+        </div>
+      ) : (
+        <div className={twMerge(textColor, 'font-bold  text-35 h-10.5 tracking-tight dark:text-white')}>{title}</div>
+      )}
 
       {rightToolbar && (
         <>
