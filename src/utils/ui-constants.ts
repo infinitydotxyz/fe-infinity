@@ -66,7 +66,7 @@ export const secondaryBtnBgColorText = `dark:bg-gray-400 dark:bg-opacity-10 bg-g
 export const hoverColorBrandText = 'hover:text-brand-primary dark:hover:text-brand-darkPrimary';
 export const hoverColorNewBrandText = 'hover:text-yellow-700 dark:hover:text-yellow-700';
 export const hoverColor = `dark:hover:bg-gray-200 dark:hover:bg-opacity-10 hover:bg-gray-200 hover:bg-opacity-40 ${hoverColorBrandText}`;
-export const selectedColor = `dark:bg-gray-200 dark:bg-opacity-10 bg-gray-200 bg-opacity-40 ${brandTextColor}`;
+export const selectedColor = `bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-neutral-200`;
 export const activeColor =
   'dark:active:bg-gray-200 dark:active:bg-opacity-10 active:bg-gray-300 active:bg-opacity-50 active:text-brand-primary dark:active:text-brand-darkPrimary';
 export const selectionBorder = `outline-6 outline outline-neutral-700`;
@@ -78,3 +78,5 @@ export const golderBorderColor = 'border-yellow-700';
 export const tabItemBGColor = 'bg-zinc-300 dark:bg-zinc-900';
 export const containerBGColor = 'bg-zinc-300 dark:bg-neutral-800';
 export const heroSectionBGImage = '-top-[267px] -left-[272px]';
+export const rewardSectionItemLabel = 'text-sm font-medium text-neutral-700 dark:text-white';
+export const rewardSectionItemValue = 'md:text-31 font-supply font-normal text-amber-700 leading-9 text-center';

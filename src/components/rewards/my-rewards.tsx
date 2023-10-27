@@ -65,8 +65,8 @@ const MyRewards = () => {
   }
 
   return (
-    <div className="space-y-10 mt-6 pb-6 mb-16 mr-4">
-      <PixlRewards isDesktop={isDesktop} />
+    <div className="space-y-5 mt-5 pb-6 mb-16 px-5">
+      <PixlRewards />
 
       {address && <TokenBalances isDesktop={isDesktop} address={address} chainId="1" />}
 

@@ -9,6 +9,7 @@ import { ProfilePageHeader } from 'src/components/profile/profile-page-header';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
 import { ProfileTabs } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { twMerge } from 'tailwind-merge';
 import { useAccount } from 'wagmi';
 
 export default function ProfileItemsPage() {
@@ -47,13 +48,13 @@ export default function ProfileItemsPage() {
         <div className="flex flex-col h-full w-full">
           <ProfilePageHeader expanded={expanded} tabs={tabs} />
 
-          <div ref={setRef} className="lg:flex lg:flex-row-reverse gap-5 px-5">
+          <div ref={setRef} className="lg:flex lg:flex-row-reverse gap-5 lg:px-5">
             {!showCart && (
               <div className="flex w-full lg:w-1/3 mt-2 lg:mb-[90px]">
                 <ProfileCollections userAddress={addressFromPath} key={addressFromPath} />
               </div>
             )}
-            <div className={showCart ? 'w-full' : 'lg:w-2/3'}>
+            <div className={twMerge('px-5 lg:px-0', showCart ? 'w-full' : 'lg:w-2/3')}>
               {selectedProfileTab === ProfileTabs.Items && (
                 <ProfileNFTs userAddress={addressFromPath} key={addressFromPath} isOwner={isOwner} />
               )}

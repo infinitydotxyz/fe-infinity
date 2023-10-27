@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
 import { useUserPixlRewards } from 'src/hooks/api/useUserRewards';
 import { nFormatter } from 'src/utils';
-import { borderColor, buttonBorderColor, primaryShadow, secondaryBgColor } from 'src/utils/ui-constants';
+import { rewardSectionItemLabel, rewardSectionItemValue } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useAccount } from 'wagmi';
 import chad from '../../images/chad.png';
@@ -16,6 +16,7 @@ import { ClipboardButton, EZImage, Spacer } from '../common';
 import { SignInButton } from '../common/sign-in-button';
 import { RewardsSection } from './rewards-section';
 import { TwitterLink } from './twitter-link';
+import { UnlockIcon } from 'src/icons/UnlockIcon';
 
 const tokenItemClassname = 'lg:w-1/6 sm:w-full gap-1 flex md:flex-col items-center justify-between text-sm mt-1';
 
@@ -57,7 +58,7 @@ function airdropTierMapper(tier: string) {
   }
 }
 
-export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
+export const PixlRewards = () => {
   // save referrals based on query params
   useSaveReferral();
   const { address: user } = useAccount();
@@ -75,7 +76,13 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
   }
 
   const mappedAirdropTier = airdropTierMapper(rewards.airdropTier);
-
+  const airDropTiers = [
+    { title: 'NGMI', img: ngmi.src },
+    { title: 'VIRGIN', img: virgin.src },
+    { title: 'ROOKIE', img: rookie.src },
+    { title: 'CHAD', img: chad.src },
+    { title: 'DEGEN', img: pepe.src }
+  ];
   return (
     <>
       <RewardsSection
@@ -84,7 +91,7 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
           <div className="flex flex-col">
             <div className="flex flex-col text-sm space-y-2">
               <div>
-                Airdrop tier is based on your past NFT activity on Ethereum. Your tier is {mappedAirdropTier}. See{' '}
+                Airdrop tier is based on your past NFT activity on Ethereum. Your tier is NGMI. See{' '}
                 <a
                   target="_blank"
                   href="https://docs.pixl.so/reward-points#airdrop"
@@ -92,7 +99,16 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
                 >
                   docs
                 </a>{' '}
-                for more info.
+                for more info. Share on twitter to boost your airdrop tier!
+                {/* Airdrop tier is based on your past NFT activity on Ethereum. Your tier is {mappedAirdropTier}. See{' '}
+                <a
+                  target="_blank"
+                  href="https://docs.pixl.so/reward-points#airdrop"
+                  className="underline cursor-pointer"
+                >
+                  docs
+                </a>{' '}
+                for more info. */}
               </div>
             </div>
             {isUnlocked && !rewards.airdropBoosted && (
@@ -110,102 +126,42 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
           </div>
         }
         sideInfo={
-          <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
-            <div className="md:flex flex-wrap">
-              <div className={twMerge(tokenItemClassname)}>
-                {isUnlocked ? (
+          <div className={twMerge(' h-full md:p-5')}>
+            {isUnlocked ? (
+              <div className="md:flex items-center space-x-0.25 justify-between flex-wrap h-full">
+                {airDropTiers.map((tier) => (
                   <div
                     className={twMerge(
-                      'flex flex-col items-center p-2 space-y-2',
-                      mappedAirdropTier === 'NGMI' ? `border ${primaryShadow}` : ''
+                      tokenItemClassname,
+                      'flex-1 justify-center',
+                      mappedAirdropTier === tier.title
+                        ? 'bg-zinc-200 dark:bg-dark-tier'
+                        : 'bg-zinc-300 dark:bg-dark-disabledTier'
                     )}
                   >
-                    <div>Tier</div>
-                    <div className="flex flex-col space-y-2 items-center">
-                      <EZImage src={ngmi.src} className="w-24 h-24" />
-                      <div className="md:text-lg font-heading font-bold text-center">NGMI</div>
+                    <div
+                      className={twMerge(
+                        'flex flex-col items-center p-2 space-y-2',
+                        mappedAirdropTier === tier.title ? `` : 'mix-blend-soft-light '
+                      )}
+                    >
+                      <div className="flex flex-col items-center">
+                        <EZImage src={tier.img} className="w-24 h-24" />
+                        <div className="md:text-lg font-heading font-bold text-center">{tier.title}</div>
+                      </div>
                     </div>
                   </div>
-                ) : (
-                  <AButton primary onClick={unlock} className="my-8">
-                    Unlock Airdrop
-                  </AButton>
-                )}
+                ))}
               </div>
-              <Spacer />
-
-              <div className={twMerge(tokenItemClassname)}>
-                {isUnlocked ? (
-                  <div
-                    className={twMerge(
-                      'flex flex-col items-center p-2 space-y-2',
-                      mappedAirdropTier === 'VIRGIN' ? `border ${primaryShadow}` : ''
-                    )}
-                  >
-                    <div>Tier</div>
-                    <div className="flex flex-col space-y-2 items-center">
-                      <EZImage src={virgin.src} className="w-24 h-24" />
-                      <div className="md:text-lg font-heading font-bold text-center">VIRGIN</div>
-                    </div>
+            ) : (
+              <div className="flex items-center justify-center">
+                <AButton primary className="flex items-center rounded px-5 py-2.5 border-0" onClick={unlock}>
+                  <div className="flex items-center space-x-2.5 text-base leading-5 font-medium">
+                    <UnlockIcon /> <span>Unlock Airdrop</span>
                   </div>
-                ) : null}
+                </AButton>
               </div>
-              <Spacer />
-
-              <div className={twMerge(tokenItemClassname)}>
-                {isUnlocked ? (
-                  <div
-                    className={twMerge(
-                      'flex flex-col items-center p-2 space-y-2',
-                      mappedAirdropTier === 'ROOKIE' ? `border ${primaryShadow}` : ''
-                    )}
-                  >
-                    <div>Tier</div>
-                    <div className="flex flex-col space-y-2 items-center">
-                      <EZImage src={rookie.src} className="w-24 h-24" />
-                      <div className="md:text-lg font-heading font-bold text-center">ROOKIE</div>
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-              <Spacer />
-
-              <div className={twMerge(tokenItemClassname)}>
-                {isUnlocked ? (
-                  <div
-                    className={twMerge(
-                      'flex flex-col items-center p-2 space-y-2',
-                      mappedAirdropTier === 'CHAD' ? `border ${primaryShadow}` : ''
-                    )}
-                  >
-                    <div>Tier</div>
-                    <div className="flex flex-col space-y-2 items-center">
-                      <EZImage src={chad.src} className="w-[5.5rem] h-24" />
-                      <div className="md:text-lg font-heading font-bold text-center">CHAD</div>
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-              <Spacer />
-
-              <div className={twMerge(tokenItemClassname)}>
-                {isUnlocked ? (
-                  <div
-                    className={twMerge(
-                      'flex flex-col items-center p-2 space-y-2',
-                      mappedAirdropTier === 'DEGEN' ? `border ${primaryShadow}` : ''
-                    )}
-                  >
-                    <div>Tier</div>
-                    <div className="flex flex-col space-y-2 items-center">
-                      <EZImage src={pepe.src} className="w-24 h-24" />
-                      <div className="md:text-lg font-heading font-bold text-center">DEGEN</div>
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-              <Spacer />
-            </div>
+            )}
           </div>
         }
       />
@@ -227,37 +183,41 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
                 </a>{' '}
                 for more info.
               </div>
-              <div className="min-w-fit mt-2">Referral link:</div>
-              <div
-                className={twMerge(secondaryBgColor, borderColor, 'flex flex-row mt-1 p-2 font-bold rounded-lg border')}
-              >
-                {`https://pixl.so/rewards?referrer=${rewards.referralCode}`}
-                <ClipboardButton
-                  className="ml-2 mt-[0.5rem] w-6 h-6"
-                  textToCopy={`https://pixl.so/rewards?referrer=${rewards.referralCode}`}
-                />
+              <div className="flex flex-wrap-reverse items-center mt-2.5">
+                <div
+                  className={twMerge(
+                    'flex flex-row items-center border-light-borderLight dark:border-zinc-700 bg-zinc-300 dark:bg-neutral-800  font-bold rounded-lg border mr-2 overflow-hidden'
+                  )}
+                >
+                  <p className="p-2.5 bg-light-borderLight my-[0.5px] dark:bg-zinc-700">
+                    https://pixl.so/rewards?referrer={rewards.referralCode}
+                  </p>
+                  <div className="p-2.5 flex items-center gap-1.25 bg-zinc-300 dark:bg-neutral-800 rounded-r-lg">
+                    <div className="text-base font-medium text-neutral-700 dark:text-white">Copy</div>
+                    <ClipboardButton
+                      className="mt-0.5 w-3.5 h-3.5"
+                      textToCopy={`https://pixl.so/rewards?referrer=${rewards.referralCode}`}
+                    />
+                  </div>
+                </div>
+                <div className="text-amber-700 text-sm font-medium">Referral link:</div>
               </div>
             </div>
           </div>
         }
         sideInfo={
-          <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
-            <div className="md:flex flex-wrap">
-              <div className={tokenItemClassname}>
-                <div>Earned</div>
-                <div className="md:text-lg font-heading font-bold text-center">
-                  {nFormatter(rewards.referralPoints, 2)}
-                </div>
+          <div className={twMerge(' h-full md:p-5')}>
+            <div className="md:flex items-center flex-wrap h-full">
+              <div className={twMerge(tokenItemClassname, 'flex-1')}>
+                <div className={rewardSectionItemLabel}>Earned</div>
+                <div className={rewardSectionItemValue}>{nFormatter(rewards.referralPoints, 2)}</div>
               </div>
-              <Spacer />
-
-              <div className={tokenItemClassname}>
-                <div>Num referrals</div>
-                <div className="md:text-lg font-heading font-bold text-center">
-                  {nFormatter(rewards.numReferrals, 2)}
-                </div>
+              {/* <Spacer /> */}
+              <div className={twMerge(tokenItemClassname, 'flex-1')}>
+                <div className={rewardSectionItemLabel}>Num referrals</div>
+                <div className={rewardSectionItemValue}>{nFormatter(rewards.numReferrals, 2)}</div>
               </div>
-              <Spacer />
+              {/* <Spacer /> */}
             </div>
           </div>
         }
@@ -285,39 +245,35 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
           </div>
         }
         sideInfo={
-          <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
-            <div className="md:flex flex-wrap">
+          <div className={twMerge(' h-full md:p-5')}>
+            <div className="md:flex items-center flex-wrap h-full">
               <div className={tokenItemClassname}>
-                <div>Earned</div>
-                <div className="md:text-lg font-heading font-bold text-center">{nFormatter(rewards.buyPoints, 2)}</div>
+                <div className={rewardSectionItemLabel}>Earned</div>
+                <div className={rewardSectionItemValue}>{nFormatter(rewards.buyPoints, 2)}</div>
               </div>
               <Spacer />
 
               <div className={tokenItemClassname}>
-                <div>Volume (USD)</div>
-                <div className="md:text-lg font-heading font-bold text-center">{nFormatter(rewards.volume, 2)}</div>
+                <div className={rewardSectionItemLabel}>Volume (USD)</div>
+                <div className={rewardSectionItemValue}>{nFormatter(rewards.volume, 2)}</div>
               </div>
               <Spacer />
 
               <div className={tokenItemClassname}>
-                <div>Native volume (USD)</div>
-                <div className="md:text-lg font-heading font-bold text-center">
-                  {nFormatter(rewards.nativeVolume, 2)}
-                </div>
+                <div className={rewardSectionItemLabel}>Native volume (USD)</div>
+                <div className={rewardSectionItemValue}>{nFormatter(rewards.nativeVolume, 2)}</div>
               </div>
               <Spacer />
 
               <div className={tokenItemClassname}>
-                <div>Num buys</div>
-                <div className="md:text-lg font-heading font-bold text-center">{nFormatter(rewards.numBuys, 2)}</div>
+                <div className={rewardSectionItemLabel}>Num buys</div>
+                <div className={rewardSectionItemValue}>{nFormatter(rewards.numBuys, 2)}</div>
               </div>
               <Spacer />
 
               <div className={tokenItemClassname}>
-                <div>Num native buys</div>
-                <div className="md:text-lg font-heading font-bold text-center">
-                  {nFormatter(rewards.numNativeBuys, 2)}
-                </div>
+                <div className={rewardSectionItemLabel}>Num native buys</div>
+                <div className={rewardSectionItemValue}>{nFormatter(rewards.numNativeBuys, 2)}</div>
               </div>
               <Spacer />
             </div>
@@ -346,45 +302,35 @@ export const PixlRewards = ({ isDesktop }: { isDesktop: boolean }) => {
           </div>
         }
         sideInfo={
-          <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
-            <div className="md:flex flex-wrap">
+          <div className={twMerge(' h-full md:p-5')}>
+            <div className="md:flex items-center flex-wrap h-full">
               <div className={tokenItemClassname}>
-                <div>Earned</div>
-                <div className="md:text-lg font-heading font-bold text-center">
-                  {nFormatter(rewards.listingPoints, 2)}
-                </div>
+                <div className={rewardSectionItemLabel}>Earned</div>
+                <div className={rewardSectionItemValue}>{nFormatter(rewards.listingPoints, 2)}</div>
               </div>
               <Spacer />
 
               <div className={tokenItemClassname}>
-                <div>Listings</div>
-                <div className="md:text-lg font-heading font-bold text-center">
-                  {nFormatter(rewards.numListings, 2)}
-                </div>
+                <div className={rewardSectionItemLabel}>Listings</div>
+                <div className={rewardSectionItemValue}>{nFormatter(rewards.numListings, 2)}</div>
               </div>
               <Spacer />
 
               <div className={tokenItemClassname}>
-                <div>Listings below floor</div>
-                <div className="md:text-lg font-heading font-bold text-center">
-                  {nFormatter(rewards.numListingsBelowFloor, 2)}
-                </div>
+                <div className={rewardSectionItemLabel}>Listings below floor</div>
+                <div className={rewardSectionItemValue}>{nFormatter(rewards.numListingsBelowFloor, 2)}</div>
               </div>
               <Spacer />
 
               <div className={tokenItemClassname}>
-                <div>Active</div>
-                <div className="md:text-lg font-heading font-bold text-center">
-                  {nFormatter(rewards.numActiveListings, 2)}
-                </div>
+                <div className={rewardSectionItemLabel}>Active</div>
+                <div className={rewardSectionItemValue}>{nFormatter(rewards.numActiveListings, 2)}</div>
               </div>
               <Spacer />
 
               <div className={tokenItemClassname}>
-                <div>Active below floor</div>
-                <div className="md:text-lg font-heading font-bold text-center">
-                  {nFormatter(rewards.numActiveListingsBelowFloor, 2)}
-                </div>
+                <div className={rewardSectionItemLabel}>Active below floor</div>
+                <div className={rewardSectionItemValue}>{nFormatter(rewards.numActiveListingsBelowFloor, 2)}</div>
               </div>
               <Spacer />
             </div>

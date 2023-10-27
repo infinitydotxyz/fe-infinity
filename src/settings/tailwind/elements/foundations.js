@@ -193,7 +193,9 @@ module.exports = {
       card: '#23262f',
       gridLine: '#222222',
       borderDark: '#2A2A26',
-      borderUnderline: '#222222'
+      borderUnderline: '#222222',
+      disabledTier: '#1B1B11',
+      tier: '#14140C'
     },
     light: {
       bg: '#F7F7F3',
@@ -205,7 +207,9 @@ module.exports = {
       gridLine: '#E7E7E7',
       divider: '#ECECEC',
       borderLight: '#E6E6DC',
-      borderUnderline: '#F0F0F0'
+      borderUnderline: '#F0F0F0',
+      disabledTier: '#e4e4ee',
+      tier: '#ebebf3'
     },
     brand: {
       primary: '#edc100',
@@ -257,7 +261,8 @@ module.exports = {
     5: '5px',
     6: '6px',
     10: '10px',
-    11: '11px'
+    11: '11px',
+    39: '39px'
   },
   borderWidth: {
     3: '3px',
@@ -317,11 +322,13 @@ module.exports = {
     18: '72px'
   },
   gap: {
+    1.25: '5px',
     3.75: '15px'
   },
   fontSize: {
     '6xl': '4rem',
     54: '54px',
+    31: '31px',
     35: '35px',
     17: '17px',
     22: '22px'
@@ -350,7 +357,8 @@ module.exports = {
     3.25: '13px',
     3.75: '15px',
     6.25: '25px',
-    7.5: '30px'
+    7.5: '30px',
+    19.5: '78px'
   },
   outlineWidth: {
     6: '6px'

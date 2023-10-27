@@ -1,0 +1,10 @@
+import React from 'react';
+
+export const UnlockIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="17" height="18" viewBox="0 0 17 18" fill="currentColor">
+    <path
+      d="M0 0.5H17V17.5H0V0.5ZM15.1111 15.6111V2.38889H1.88889V15.6111H15.1111ZM7.55556 4.27778H9.44444V9.94444H11.3333V11.8333H9.44444V13.7222H7.55556V11.8333H5.66667V9.94444H7.55556V4.27778ZM5.66667 8.05556V9.94444H3.77778V8.05556H5.66667ZM13.2222 8.05556H11.3333V9.94444H13.2222V8.05556Z"
+      fill="currentColor"
+    />
+  </svg>
+);

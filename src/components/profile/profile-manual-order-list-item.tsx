@@ -69,8 +69,8 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
         'flex md:mx-4 text-sm bg-zinc-300 dark:bg-neutral-800 p-3.75 my-0.25 !mx-0 border-0 rounded-none first:rounded-t-xl last:rounded-b-xl'
       )}
     >
-      <div className="md:flex justify-between items-center w-full">
-        <div className="md:w-1/3">
+      <div className="flex flex-wrap justify-between items-center w-full">
+        <div className="w-full sm:w-1/3">
           <ManualOrderbookItem
             isCollBid={isCollBid}
             canShowAssetModal={isTokenBid}
@@ -80,7 +80,7 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
           />
         </div>
 
-        <div className="md:w-1/6 md:flex-col flex justify-between md:mt-0 mt-2">
+        <div className="w-1/2 sm:w-1/6 flex-col flex justify-between sm:mt-0 mt-3.75">
           <div
             className={twMerge(secondaryTextColor, 'font-medium text-sm text-gray-800 dark:text-gray-800 capitalize')}
           >
@@ -100,7 +100,7 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
           ) : null} */}
         </div>
 
-        <div className="md:w-1/6 md:flex-col flex justify-between md:mt-0 mt-2">
+        <div className="w-1/2 sm:w-1/6 flex-col flex justify-between sm:mt-0 mt-3.75">
           <div
             className={twMerge(secondaryTextColor, 'font-medium text-sm text-gray-800 dark:text-gray-800 capitalize')}
           >
@@ -112,7 +112,7 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
         </div>
 
         {orderType === 'listings' || orderType === 'bids-placed' ? (
-          <div className="w-1/8 flex justify-center md:justify-end">
+          <div className="sm:w-auto flex w-full justify-center mt-3.75 sm:mt-0 sm:justify-end">
             <Button
               variant={
                 addedToEditCart &&
@@ -172,7 +172,7 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
         ) : null}
 
         {orderType === 'offers-received' ? (
-          <div className="flex items-center gap-2.5 justify-end">
+          <div className="flex w-full sm:w-auto mt-3.75 sm:mt-0 items-center gap-2.5 justify-end">
             {order.validUntil ? (
               <div
                 className={twMerge(

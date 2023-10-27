@@ -1,5 +1,5 @@
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
-import { hoverColor, selectedColor, tabItemBGColor } from 'src/utils/ui-constants';
+import { selectedColor, tabItemBGColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { TextInputBox } from './input-box';
 import { ClearBrushIcon } from 'src/icons';
@@ -27,10 +27,10 @@ const TabSelector = ({
 }) => {
   const { cartType } = useCartContext();
   return (
-    <div className="flex items-center gap-2.5">
+    <div className="flex w-full items-center gap-2.5">
       <div
         className={twMerge(
-          'flex flex-row md:m-0 my-2 h-10 cursor-pointer rounded-4 overflow-hidden gap-0.25',
+          'flex flex-row md:m-0 my-2 h-10 flex-1 cursor-pointer rounded-4 overflow-hidden gap-0.25',
           cartType === CartType.CollectionBid ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300'
         )}
       >
@@ -38,9 +38,8 @@ const TabSelector = ({
           <div
             key={tabItem}
             className={twMerge(
-              'flex items-center p-2.5 min-w-8.5 justify-center cursor-pointer',
+              'flex items-center grow p-2.5 min-w-8.5 justify-center cursor-pointer first:rounded-l-6 last:rounded-r-6',
               tabItemBGColor,
-              hoverColor,
               value === tabItem && selectedColor
             )}
             onClick={() => {

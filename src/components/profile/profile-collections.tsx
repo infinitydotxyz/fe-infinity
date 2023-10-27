@@ -41,9 +41,9 @@ export const ProfileCollections = ({ userAddress }: Props) => {
 
   return (
     <div className={twMerge('rounded-lg overflow-y-scroll scrollbar-hide text-sm w-full', borderColor)}>
-      <div className={twMerge('py-5 !text-22 text-lg font-semibold mb-1.25')}>Owned Collections</div>
+      <div className={twMerge('py-5 !text-22 text-lg font-semibold mb-1.25 px-5 lg:px-0')}>Owned Collections</div>
       {/* <div className={twMerge('mx-3 border-b-[1px] mb-1', borderColor)}></div> */}
-      <div className="flex flex-col">
+      <div className="flex flex-col sm:px-5 lg:px-0">
         {ownedColls.map((item) => {
           return (
             <div
@@ -63,7 +63,7 @@ export const ProfileCollections = ({ userAddress }: Props) => {
             >
               <EZImage src={item.imageUrl} className="w-25 h-25 rounded" />
               <div className="">
-                <div className={twMerge('!text-22 leading-7 font-semibold', secondaryTextColor)}>{item.name}</div>
+                <div className={twMerge('!text-22 leading-7 font-medium', secondaryTextColor)}>{item.name}</div>
                 <div className={twMerge('!text-17 leading-6 font-medium', secondaryTextColor)}>
                   Floor{' '}
                   <span className="text-amber-700">

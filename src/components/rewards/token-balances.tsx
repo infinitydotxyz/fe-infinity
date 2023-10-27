@@ -1,6 +1,6 @@
 import { twMerge } from 'tailwind-merge';
 import { RewardsSection } from './rewards-section';
-import { borderColor, buttonBorderColor, primaryShadow } from 'src/utils/ui-constants';
+import { borderColor, primaryShadow, rewardSectionItemLabel, rewardSectionItemValue } from 'src/utils/ui-constants';
 import { FLOW_TOKEN, nFormatter } from 'src/utils';
 import { AButton } from '../astra/astra-button';
 import { UniswapModal } from '../common/uniswap-model';
@@ -12,11 +12,11 @@ import { Spacer } from '../common';
 import { StakeTokensModal } from './stake-tokens-modal';
 import { UnstakeTokensModal } from './unstake-tokens-modal';
 
-const tokenItemClassname = 'lg:w-1/6 sm:w-full gap-1 flex md:flex-col items-center justify-between text-sm mt-1';
+const tokenItemClassname =
+  'lg:w-1/6 sm:w-full gap-1 flex md:flex-col items-center justify-between text-sm mt-2.5 md:mt-1';
 
 export const TokenBalances = ({
   address,
-  isDesktop,
   chainId
 }: {
   address: `0x${string}`;
@@ -165,7 +165,7 @@ export const TokenBalances = ({
       <RewardsSection
         title="Token Balances"
         subTitle={
-          <div className="flex flex-col items-center space-y-3">
+          <div className="flex flex-col items-start space-y-2.5">
             <div className="text-sm">
               Balances of the top NFT exchange tokens. Min balance required (any one of the tokens) for 0 fees and
               royalties: {nFormatter(minStakeAmountForFeeWaiverAndBoost, 2)}
@@ -194,27 +194,48 @@ export const TokenBalances = ({
           </div>
         }
         sideInfo={
-          <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:p-4 md:px-6')}>
-            <div className="md:flex flex-wrap">
+          <div className={twMerge(' h-full md:p-5')}>
+            <div className="md:flex items-center flex-wrap h-full">
               <div className={tokenItemClassname}>
-                <div>${FLOW_TOKEN.symbol}</div>
-                <div className="md:text-lg font-heading font-bold">{nFormatter(xflBalance, 2)}</div>
-                <div
-                  className="underline text-sm cursor-pointer"
-                  onClick={() => {
-                    setTokenInfo(FLOW_TOKEN.symbol);
-                    setShowBuyTokensModal(true);
-                  }}
-                >
-                  Buy ${FLOW_TOKEN.symbol}
+                <div className={rewardSectionItemLabel}>${FLOW_TOKEN.symbol}</div>
+                <div className={twMerge(rewardSectionItemValue, 'hidden md:block')}>{nFormatter(xflBalance, 2)}</div>
+                <div className="flex items-center">
+                  <div className={twMerge(rewardSectionItemValue, 'md:hidden block leading-5 mr-2.5')}>
+                    {nFormatter(sudoBalance, 2)}
+                  </div>
+                  <AButton
+                    primary
+                    onClick={() => {
+                      setTokenInfo(FLOW_TOKEN.symbol);
+                      setShowBuyTokensModal(true);
+                    }}
+                    className={twMerge('text-base p-2.5 border-0 rounded-4 md:mt-3.75')}
+                  >
+                    Buy
+                  </AButton>
                 </div>
               </div>
               <Spacer />
 
               <div className={tokenItemClassname}>
-                <div>$BLUR</div>
-                <div className="md:text-lg font-heading font-bold">{nFormatter(blurBalance, 2)}</div>
-                <div
+                <div className={rewardSectionItemLabel}>$BLUR</div>
+                <div className={twMerge(rewardSectionItemValue, 'hidden md:block')}>{nFormatter(blurBalance, 2)}</div>
+                <div className="flex items-center">
+                  <div className={twMerge(rewardSectionItemValue, 'md:hidden block leading-5 mr-2.5')}>
+                    {nFormatter(sudoBalance, 2)}
+                  </div>
+                  <AButton
+                    primary
+                    onClick={() => {
+                      setTokenInfo('BLUR');
+                      setShowBuyTokensModal(true);
+                    }}
+                    className={twMerge('text-base p-2.5 border-0 rounded-4 md:mt-3.75')}
+                  >
+                    Buy
+                  </AButton>
+                </div>
+                {/* <div
                   className="underline text-sm cursor-pointer"
                   onClick={() => {
                     setTokenInfo('BLUR');
@@ -222,14 +243,29 @@ export const TokenBalances = ({
                   }}
                 >
                   Buy $BLUR
-                </div>
+                </div> */}
               </div>
               <Spacer />
 
               <div className={tokenItemClassname}>
-                <div>$LOOKS</div>
-                <div className="md:text-lg font-heading font-bold">{nFormatter(looksBalance, 2)}</div>
-                <div
+                <div className={rewardSectionItemLabel}>$LOOKS</div>
+                <div className={twMerge(rewardSectionItemValue, 'hidden md:block')}>{nFormatter(looksBalance, 2)}</div>
+                <div className="flex items-center">
+                  <div className={twMerge(rewardSectionItemValue, 'md:hidden block leading-5 mr-2.5')}>
+                    {nFormatter(sudoBalance, 2)}
+                  </div>
+                  <AButton
+                    primary
+                    onClick={() => {
+                      setTokenInfo('LOOKS');
+                      setShowBuyTokensModal(true);
+                    }}
+                    className={twMerge('text-base p-2.5 border-0 rounded-4 md:mt-3.75')}
+                  >
+                    Buy
+                  </AButton>
+                </div>
+                {/* <div
                   className="underline text-sm cursor-pointer"
                   onClick={() => {
                     setTokenInfo('LOOKS');
@@ -237,14 +273,29 @@ export const TokenBalances = ({
                   }}
                 >
                   Buy $LOOKS
-                </div>
+                </div> */}
               </div>
               <Spacer />
 
               <div className={tokenItemClassname}>
-                <div>$X2Y2</div>
-                <div className="md:text-lg font-heading font-bold">{nFormatter(x2y2Balance, 2)}</div>
-                <div
+                <div className={rewardSectionItemLabel}>$X2Y2</div>
+                <div className={twMerge(rewardSectionItemValue, 'hidden md:block')}>{nFormatter(x2y2Balance, 2)}</div>
+                <div className="flex items-center">
+                  <div className={twMerge(rewardSectionItemValue, 'md:hidden block leading-5 mr-2.5')}>
+                    {nFormatter(sudoBalance, 2)}
+                  </div>
+                  <AButton
+                    primary
+                    onClick={() => {
+                      setTokenInfo('X2Y2');
+                      setShowBuyTokensModal(true);
+                    }}
+                    className={twMerge('text-base p-2.5 border-0 rounded-4 md:mt-3.75')}
+                  >
+                    Buy
+                  </AButton>
+                </div>
+                {/* <div
                   className="underline text-sm cursor-pointer"
                   onClick={() => {
                     setTokenInfo('X2Y2');
@@ -252,14 +303,29 @@ export const TokenBalances = ({
                   }}
                 >
                   Buy $X2Y2
-                </div>
+                </div> */}
               </div>
               <Spacer />
 
               <div className={tokenItemClassname}>
-                <div>$SUDO</div>
-                <div className="md:text-lg font-heading font-bold">{nFormatter(sudoBalance, 2)}</div>
-                <div
+                <div className={rewardSectionItemLabel}>$SUDO</div>
+                <div className={twMerge(rewardSectionItemValue, 'hidden md:block')}>{nFormatter(sudoBalance, 2)}</div>
+                <div className="flex items-center">
+                  <div className={twMerge(rewardSectionItemValue, 'md:hidden block leading-5 mr-2.5')}>
+                    {nFormatter(sudoBalance, 2)}
+                  </div>
+                  <AButton
+                    primary
+                    onClick={() => {
+                      setTokenInfo('SUDO');
+                      setShowBuyTokensModal(true);
+                    }}
+                    className={twMerge('text-base p-2.5 border-0 rounded-4 md:mt-3.75')}
+                  >
+                    Buy
+                  </AButton>
+                </div>
+                {/* <div
                   className="underline text-sm cursor-pointer"
                   onClick={() => {
                     setTokenInfo('SUDO');
@@ -267,7 +333,7 @@ export const TokenBalances = ({
                   }}
                 >
                   Buy $SUDO
-                </div>
+                </div> */}
               </div>
               <Spacer />
 

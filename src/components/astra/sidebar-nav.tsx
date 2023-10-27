@@ -16,6 +16,7 @@ import {
   ExploreBoxIcon,
   ItemsBoxIcon,
   OrdersBoxIcon,
+  RewardsBoxIcon,
   SendBoxIcon,
   SocialXIcon,
   ThemeSwitcherIcon
@@ -157,6 +158,20 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
                         />
                       </SidebarNavItem>
                       <SidebarNavItem
+                        title="Rewards"
+                        highlighted={router.asPath.startsWith(`/rewards`)}
+                        onClick={() => {
+                          router.push(`/rewards`);
+                        }}
+                      >
+                        <RewardsBoxIcon
+                          className={twMerge(
+                            'group-hover:text-white',
+                            router.asPath.startsWith(`/rewards`) && 'text-white dark:text-white'
+                          )}
+                        />
+                      </SidebarNavItem>
+                      <SidebarNavItem
                         title="Analytics"
                         highlighted={router.asPath.startsWith(`/analytics`)}
                         onClick={() => {
@@ -266,6 +281,20 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
                 router.asPath.startsWith(`/profile`) &&
                   selectedProfileTab === ProfileTabs.Send &&
                   'text-white dark:text-white'
+              )}
+            />
+          </SidebarNavItem>
+          <SidebarNavItem
+            title="Rewards"
+            highlighted={router.asPath.startsWith(`/rewards`)}
+            onClick={() => {
+              router.push(`/rewards`);
+            }}
+          >
+            <RewardsBoxIcon
+              className={twMerge(
+                'group-hover:text-white',
+                router.asPath.startsWith(`/rewards`) && 'text-white dark:text-white'
               )}
             />
           </SidebarNavItem>
