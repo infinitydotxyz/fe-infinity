@@ -18,6 +18,7 @@ export const pixelsPerRem = () => {
 
 export const iconButtonStyle = 'h-6 w-6';
 export const smallIconButtonStyle = 'h-5 w-5';
+export const mediumIconButtonStyle = 'h-3.5 w-3.5';
 export const extraSmallIconButtonStyle = 'h-3 w-3';
 export const largeIconButtonStyle = 'h-8 w-8';
 

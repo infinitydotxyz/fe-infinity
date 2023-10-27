@@ -20,6 +20,8 @@ export { CheckedIcon } from './CheckedIcon';
 export { SearchIcon } from './SearchIcon';
 export { BookIcon } from './BookIcon';
 export { EditIcon } from './EditIcon';
+export { ETHCoinOutline } from './ETHCoinOutline';
+export { FilterListIcon } from './FilterListIcon';
 export interface IconProps {
   className?: string;
 }

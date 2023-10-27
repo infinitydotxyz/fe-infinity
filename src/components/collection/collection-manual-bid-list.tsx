@@ -3,9 +3,11 @@ import { useEffect, useState } from 'react';
 import { useCollectionBidsFetcher } from 'src/hooks/api/useTokenFetcher';
 import { CartType } from 'src/utils/context/CartContext';
 import { twMerge } from 'tailwind-merge';
-import { BouncingLogo, CenteredContent, Checkbox, ScrollLoader, Spacer } from '../common';
+import { BouncingLogo, CenteredContent, ScrollLoader, Spacer } from '../common';
 import { StatusIcon } from '../common/status-icon';
 import { CollectionManualBidListItem } from './collection-manual-bid-list-item';
+import { ASwitchButton } from '../astra/astra-button';
+import { secondaryTextColor } from 'src/utils/ui-constants';
 
 interface Props {
   collectionAddress: string;
@@ -35,18 +37,20 @@ export const CollectionManualBidList = ({ collectionAddress, collectionSlug, col
 
   return (
     <div className={twMerge('min-h-[50vh] pb-20', className)}>
-      <div className={twMerge('w-full flex py-2 px-4 space-x-2')}>
-        <Spacer />
-        <div className="flex text-sm items-cente px-4">
+      <div className={twMerge('w-full flex py-5 px-4 space-x-2')}>
+        <div className="flex text-sm items-center">
           <StatusIcon status="pending-indefinite" label="Live" />
         </div>
-        <Checkbox
-          label="Only collections bids"
-          checked={onlyCollectionBids}
-          onChange={() => {
-            setOnlyCollectionBids(!onlyCollectionBids);
-          }}
-        />
+        <Spacer />
+        <div className="flex items-center gap-2.5">
+          <p className={twMerge('text-sm font-semibold', secondaryTextColor)}>Only show collection bids</p>
+          <ASwitchButton
+            checked={onlyCollectionBids}
+            onChange={() => {
+              setOnlyCollectionBids(!onlyCollectionBids);
+            }}
+          />
+        </div>
       </div>
 
       <div className="flex">

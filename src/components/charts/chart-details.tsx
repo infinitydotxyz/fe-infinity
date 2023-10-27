@@ -43,8 +43,7 @@ export const OrdersChartDetails = ({
     return (
       <div
         className={twMerge(
-          borderColor,
-          'border rounded-lg pb-2.5 flex-1 h-full flex flex-col justify-between items-center'
+          'border border-neutral-300 dark:border-neutral-800 rounded-lg pb-2.5 flex-1 h-full flex flex-col justify-between items-center'
         )}
       >
         <div className="w-full" />
@@ -206,7 +205,9 @@ export const SalesChartDetails = ({ data }: Props3) => {
         Most Recent Sale
       </div>
       <div
-        className={twMerge(borderColor, 'border-1 rounded-lg pb-7.5 flex-1 h-full justify-center items-center flex')}
+        className={twMerge(
+          'border border-neutral-300 dark:border-neutral-800 rounded-lg pb-7.5 flex-1 h-full justify-center items-center flex'
+        )}
       >
         <div className={twMerge('flex flex-col text-sm mt-4 items-center')}>
           <div

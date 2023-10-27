@@ -3,24 +3,14 @@ import { defaultStyles, TooltipWithBounds, useTooltip } from '@visx/tooltip';
 import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { FiShoppingCart } from 'react-icons/fi';
-import { HiOutlineTag } from 'react-icons/hi';
-import { VscMegaphone } from 'react-icons/vsc';
 import { ellipsisString, nFormatter, timeAgo } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { BasicTokenInfo } from 'src/utils/types';
-import {
-  borderColor,
-  divideColor,
-  secondaryBgColor,
-  secondaryTextColor,
-  smallIconButtonStyle,
-  textColor
-} from 'src/utils/ui-constants';
+import { containerBGColor, secondaryBgColor, secondaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
 import { TokenCardModal } from '../astra/token-grid/token-card-modal';
-import { Checkbox, EthSymbol, EZImage, HelpToolTip, Spacer } from '../common';
+import { Checkbox, EthSymbol, EZImage, Spacer } from '../common';
 import { StatusIcon } from '../common/status-icon';
 
 interface Props {
@@ -88,72 +78,59 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress, collectio
   });
 
   return (
-    <div className={twMerge('w-full flex flex-col p-3 border rounded-lg text-sm space-y-3', borderColor)}>
-      <div className={twMerge('flex space-x-4 px-3')}>
-        <div className={twMerge('flex text-lg font-medium font-heading mt-3')}>Sales, Listings & Bids</div>
+    <div className={twMerge('w-full flex flex-col rounded-lg text-sm space-y-6 pt-6')}>
+      <div className={twMerge('flex space-x-4 items-center')}>
+        <div className="flex flex-col gap-2.5">
+          <div className={twMerge('flex text-lg font-medium font-heading')}>Sales, Listings & Bids</div>
+          <div className={twMerge('flex space-x-4')}>
+            <Checkbox
+              label="Sales"
+              checked={salesSelected}
+              onChange={() => {
+                setSalesSelected(!salesSelected);
+              }}
+              className={twMerge('text-sm font-semibold', secondaryTextColor)}
+              tickMarkClassName="bg-neutral-700 dark:bg-white peer-checked:text-white dark:peer-checked:text-neutral-700"
+            />
+            <Checkbox
+              label="Listings"
+              checked={listingsSelected}
+              onChange={() => {
+                setListingsSelected(!listingsSelected);
+              }}
+              className={twMerge('text-sm font-semibold', secondaryTextColor)}
+              tickMarkClassName="bg-neutral-700 dark:bg-white peer-checked:text-white dark:peer-checked:text-neutral-700"
+            />
+            <Checkbox
+              label="Bids"
+              checked={bidsSelected}
+              onChange={() => {
+                setBidsSelected(!bidsSelected);
+              }}
+              className={twMerge('text-sm font-semibold', secondaryTextColor)}
+              tickMarkClassName="bg-neutral-700 dark:bg-white peer-checked:text-white dark:peer-checked:text-neutral-700"
+            />
+          </div>
+        </div>
         <Spacer />
-
         <StatusIcon status="pending-indefinite" label="Live" />
       </div>
-      <div className={twMerge('flex space-x-4 px-3')}>
-        <Checkbox
-          label="Sales"
-          checked={salesSelected}
-          onChange={() => {
-            setSalesSelected(!salesSelected);
-          }}
-        />
-        <Checkbox
-          label="Listings"
-          checked={listingsSelected}
-          onChange={() => {
-            setListingsSelected(!listingsSelected);
-          }}
-        />
-        <Checkbox
-          label="Bids"
-          checked={bidsSelected}
-          onChange={() => {
-            setBidsSelected(!bidsSelected);
-          }}
-        />
-      </div>
 
-      <div className={twMerge('divide-y', divideColor)}>
+      {/* <div className={twMerge('divide-y', divideColor)}> */}
+      <div className={twMerge('rounded-10 p-2.5', containerBGColor)}>
         {dataToShow.map((item) => {
           const isNonTokenBid = item.tokenId === 'Collection Bid' || item.tokenId === 'Trait Bid';
           return (
             <div
               key={item.id}
-              className="grid p-3 justify-between items-center w-full"
+              className="grid py-2.5 px-3.5 justify-between items-center w-full"
               style={{
                 gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)'
               }}
             >
-              <div className="flex">
-                <div className="flex space-x-1 items-center w-10">
-                  <div>
-                    {item.dataType === 'Sale' ? (
-                      <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Sale</div>}>
-                        <FiShoppingCart className={smallIconButtonStyle} />
-                      </HelpToolTip>
-                    ) : item.dataType === 'Listing' ? (
-                      <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Listing</div>}>
-                        <HiOutlineTag
-                          style={{ transform: 'rotate(90deg)' }}
-                          className={twMerge(smallIconButtonStyle)}
-                        />
-                      </HelpToolTip>
-                    ) : (
-                      <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Offer</div>}>
-                        <VscMegaphone className={smallIconButtonStyle} />
-                      </HelpToolTip>
-                    )}
-                  </div>
-                  <div className="text-xs">{timeAgo(new Date(item.timestamp))}</div>
-                </div>
+              <div className="flex gap-2.5 items-center">
                 <div
-                  className={twMerge('flex space-x-3 items-center ml-4', !isNonTokenBid ? 'cursor-pointer' : '')}
+                  className={twMerge('flex space-x-2.5 items-center', !isNonTokenBid ? 'cursor-pointer' : '')}
                   onMouseMove={(event) => {
                     const coords = event.currentTarget.getBoundingClientRect();
                     showTooltip({
@@ -176,15 +153,22 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress, collectio
                     router.replace({ pathname, query }, undefined, { shallow: true });
                   }}
                 >
-                  <EZImage src={item.tokenImage} className="w-6 h-6 rounded" />
+                  <EZImage src={item.tokenImage} className="w-7.5 h-7.5" />
                   <div className="flex-col">
-                    <span className="">{ellipsisString(item.tokenId)}</span>
+                    <span className={twMerge('text-base font-semibold font-body', secondaryTextColor)}>
+                      {ellipsisString(item.tokenId)}
+                    </span>
                   </div>
                 </div>
+                <div className="flex space-x-1 items-center">
+                  <p className="text-base font-semibold font-body text-neutral-300">
+                    Collection bid {timeAgo(new Date(item.timestamp))} ago
+                  </p>
+                </div>
               </div>
-              <div className={twMerge('text-right')}>
+              <p className={twMerge('text-right text-17 font-normal font-body')}>
                 {nFormatter(item.priceEth, 2)} {EthSymbol}
-              </div>
+              </p>
 
               <ToolTip isTooltipOpen={tooltipOpen} left={tooltipLeft} top={tooltipTop} data={tooltipData} />
             </div>

@@ -6,20 +6,24 @@ import { ClearBrushIcon } from 'src/icons';
 
 const TabSelector = ({
   tabItems,
-  numSweep,
-  customSweep,
-  setNumSweep,
-  setCustomSweep,
+  value,
+  customValue = '',
+  setValue,
+  setCustomValue,
+  suffix,
+  prefix,
   showCustom = false,
   showClear = false
 }: {
   tabItems: string[];
-  numSweep: string;
-  customSweep: string;
-  setNumSweep: (sweep: string) => void;
-  setCustomSweep: (sweep: string) => void;
+  value: string;
+  customValue?: string;
+  setValue: (sweep: string) => void;
+  setCustomValue?: (sweep: string) => void;
   showCustom?: boolean;
   showClear?: boolean;
+  prefix?: string;
+  suffix?: string;
 }) => {
   const { cartType } = useCartContext();
   return (
@@ -34,16 +38,18 @@ const TabSelector = ({
           <div
             key={tabItem}
             className={twMerge(
-              'flex items-center p-5 cursor-pointer',
+              'flex items-center p-2.5 min-w-8.5 justify-center cursor-pointer',
               tabItemBGColor,
               hoverColor,
-              numSweep === tabItem && selectedColor
+              value === tabItem && selectedColor
             )}
             onClick={() => {
-              numSweep === tabItem ? setNumSweep('') : setNumSweep(tabItem);
+              value === tabItem ? setValue('') : setValue(tabItem);
             }}
           >
+            {prefix}
             {tabItem}
+            {suffix}
           </div>
         ))}
         {showCustom && (
@@ -57,17 +63,17 @@ const TabSelector = ({
               className={twMerge('border-0 w-14 p-0 text-sm', tabItemBGColor)}
               type="number"
               placeholder="Custom"
-              value={customSweep}
+              value={customValue}
               onChange={(value) => {
-                setNumSweep(value);
-                setCustomSweep(value);
+                setValue(value);
+                setCustomValue?.(value);
               }}
             />
           </div>
         )}
       </div>
       {showClear && (
-        <div className="cursor-pointer" onClick={() => setNumSweep('')}>
+        <div className="cursor-pointer" onClick={() => setValue('')}>
           <ClearBrushIcon />
         </div>
       )}

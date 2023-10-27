@@ -70,7 +70,7 @@ export const TokenGrid = ({
         <>
           <div
             className="md:pb-20 pb-5 grid grid-flow-row-dense gap-5 3xl:grid-cols-[repeat(auto-fill,_minmax(258px,_1fr))]
-                          sm:grid-cols-[repeat(auto-fill,_minmax(225px,_1fr))] grid-cols-[repeat(auto-fit,_minmax(169px,_1fr))]"
+                          sm:grid-cols-[repeat(auto-fill,_minmax(205px,_1fr))] grid-cols-[repeat(auto-fit,_minmax(169px,_1fr))]"
           >
             {cardData.map((data) => {
               return (
