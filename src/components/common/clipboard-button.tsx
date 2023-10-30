@@ -36,7 +36,7 @@ export const ClipboardButton: React.FC<ClipboardButtonProps> = ({ textToCopy, cl
         <AiOutlineCheckCircle className={className} />
       ) : (
         <div onClick={copyToClipboard}>
-          <CopyClipBoardIcon className={twMerge(className, 'cursor-pointer')} />
+          <CopyClipBoardIcon className={twMerge(className, 'cursor-pointer h-3.75 w-3.75')} />
         </div>
       )}
     </>

@@ -74,10 +74,10 @@ export const CollectionPageHeader = ({
                     <h4 className="font-extrabold text-35 text-neutral-700 dark:text-white font-body">{title}</h4>
                     <div className="flex text-17 space-x-5 items-center justify-center">
                       {hasBlueCheck ? <BlueCheck /> : null}
-                      <div className="flex items-center gap-1">
-                        <div className="text-17 font-supply text-neutral-700 dark:text-white">
+                      <div className="flex items-start gap-1">
+                        <p className="text-17 font-supply text-neutral-700 dark:text-white leading-5">
                           {ellipsisAddress(collection?.address).toLowerCase()}
-                        </div>
+                        </p>
                         <ClipboardButton
                           textToCopy={collection?.address ?? ''}
                           className={twMerge(mediumIconButtonStyle)}
@@ -218,11 +218,11 @@ export const CollectionPageHeader = ({
         </div>
       </div> */}
 
-      <div className="flex mt-4 text-sm gap-3 px-5">
+      <div className="flex text-sm gap-3 px-5">
         <div className="flex space-x-7.5 overflow-auto scrollbar-hide">
           {tabs.map((e) => {
             return (
-              <div key={e} className={twMerge('pb-2', selectedTab === e ? `border-b-3 ${golderBorderColor}` : '')}>
+              <div key={e} className={twMerge('py-2.5', selectedTab === e ? `border-b-3 ${golderBorderColor}` : '')}>
                 <div
                   className={twMerge(
                     selectedTab === e ? 'text-amber-900' : secondaryTextColor,
@@ -243,26 +243,26 @@ export const CollectionPageHeader = ({
         <Spacer />
         <div className="md:flex hidden text-sm divide-x divide-light-border dark:divide-dark-border items-center">
           {Number(floorPrice) > 0 && (
-            <div className="flex pr-4 gap-2 whitespace-nowrap font-medium">
+            <div className="flex items-end pr-4 gap-2 whitespace-nowrap font-medium">
               <span className={secondaryTextColor}>Floor </span>
-              <span className="text-amber-700 font-normal font-supply">
+              <span className="text-amber-700 leading-4.5 font-normal font-supply">
                 {floorPrice ?? '-'} {EthSymbol}
               </span>
             </div>
           )}
-          <div className="flex items-center px-4 gap-2 whitespace-nowrap font-medium">
+          <div className="flex items-end items-center px-4 gap-2 whitespace-nowrap font-medium">
             <span className={secondaryTextColor}>Total Vol </span>
-            <span className="text-amber-700 font-normal font-supply">
+            <span className="text-amber-700 leading-4.5 font-normal font-supply">
               {totalVol ?? '-'} {EthSymbol}
             </span>
           </div>
-          <div className="flex px-4 gap-2 whitespace-nowrap font-medium">
+          <div className="flex items-end px-4 gap-2 whitespace-nowrap font-medium">
             <span className={secondaryTextColor}>Owners </span>
-            <span className="text-amber-700 font-normal font-supply">{numOwners ?? '-'}</span>
+            <span className="text-amber-700 leading-4.5 font-normal font-supply">{numOwners ?? '-'}</span>
           </div>
-          <div className="flex pl-4 gap-2 whitespace-nowrap font-medium">
+          <div className="flex items-end pl-4 gap-2 whitespace-nowrap font-medium">
             <span className={secondaryTextColor}>Items </span>
-            <span className="text-amber-700 font-normal font-supply">{numNfts ?? '-'}</span>
+            <span className="text-amber-700 leading-4.5 font-normal font-supply">{numNfts ?? '-'}</span>
           </div>
         </div>
       </div>

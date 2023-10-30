@@ -20,7 +20,7 @@ export const ConnectButton = ({
             primary
             onClick={show}
             className={twMerge(
-              'text-base py-3.5 border-0 border-r-2 border-black/40 dark:border-white px-5',
+              'text-base py-3.5 border-0 border-r-2 border-black/40 dark:bg-white dark:border-white px-5',
               half ? 'rounded-tl-4 rounded-bl-4' : 'rounded-4',
               fullWidth && 'w-full'
             )}

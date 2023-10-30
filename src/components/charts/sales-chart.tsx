@@ -100,7 +100,9 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
     <div className="h-full">
       <div className="flex justify-between py-5 items-center">
         <div className="flex items-end gap-1">
-          <div className={twMerge('font-bold text-[22px] text-neutral-700 dark:text-white')}>{graphType}</div>
+          <div className={twMerge('font-bold text-[22px] text-neutral-700 leading-6.5 dark:text-white')}>
+            {graphType}
+          </div>
           <div className={twMerge(secondaryTextColor, 'font-medium text-sm dark:text-neutral-300 text-neutral-300')}>
             {numSales} sales
           </div>

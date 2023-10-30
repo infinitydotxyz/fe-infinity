@@ -9,8 +9,9 @@ import { CollectionCharts } from 'src/components/collection/collection-charts';
 import { CollectionItemsPageSidebar } from 'src/components/collection/collection-items-page-sidebar';
 import { CollectionManualBidList } from 'src/components/collection/collection-manual-bid-list';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
-import { Spacer, ToggleTab } from 'src/components/common';
+import { Spacer } from 'src/components/common';
 import TabSelector from 'src/components/common/TabSelecter';
+import MultiSwitch from 'src/components/common/multi-switch';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
 import { useCollectionListingsFetcher } from 'src/hooks/api/useTokenFetcher';
 import useScreenSize from 'src/hooks/useScreenSize';
@@ -74,13 +75,16 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     CollectionPageTabs.Analytics.toString()
   ];
 
-  const viewTypes = ['Items', 'Charts'];
+  const viewTypes = [
+    { id: '1', name: 'Items' },
+    { id: '2', name: 'Charts' }
+  ];
 
   const { cartType, setCartType } = useCartContext();
   const [numSweep, setNumSweep] = useState('');
   const [bidBelowPct, setBidBelowPct] = useState('');
   const [customSweep, setCustomSweep] = useState('');
-  const [viewType, setViewType] = useState(viewTypes[0]);
+  const [viewType, setViewType] = useState(viewTypes[0].id);
   const { showCart } = useAppContext();
 
   const MAX_NUM_SWEEP_ITEMS = 50;
@@ -277,15 +281,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 </AButton>
               )}
 
-              <div className="md:hidden flex justify-between">
-                <ToggleTab
-                  className="text-sm ml-4"
-                  options={viewTypes}
-                  defaultOption={viewTypes[0]}
-                  onChange={setViewType}
-                  border
-                  small
-                />
+              <div className="md:hidden flex justify-between pt-3.5 px-5">
+                <MultiSwitch handleClick={setViewType} options={viewTypes} selectedOption={viewType} fullWidth />
               </div>
 
               <div className="flex md:flex-row flex-col">

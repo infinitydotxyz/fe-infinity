@@ -242,9 +242,10 @@ export const ASwitchButton = ({ checked, onChange }: Props5) => {
       )}
     >
       <span className="sr-only">Use setting</span>
+      {/* bg-gray-300 */}
       <span
         className={twMerge(
-          'bg-gray-300',
+          'border border-zinc-100 bg-zinc-200',
           checked ? 'translate-x-full bg-white dark:bg-black' : 'translate-x-0',
           'h-5.5 w-5.5 rounded-3'
         )}

@@ -84,7 +84,7 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress, collectio
           <div className={twMerge('flex text-[22px] font-bold text-neutral-700 dark:text-white')}>
             Sales, Listings & Bids
           </div>
-          <div className={twMerge('flex space-x-5 mt-2.5')}>
+          <div className={twMerge('flex space-x-5')}>
             <Checkbox
               label="Sales"
               checked={salesSelected}

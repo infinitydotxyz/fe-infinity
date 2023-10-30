@@ -7,7 +7,7 @@ import { CollectionSearchInput } from '../common/search/collection-search-input'
 import { ShoppingBagButton } from '../common/shoping-bag-button';
 import lightLogo from 'src/images/light-logo.png';
 import { AiOutlineMenu } from 'react-icons/ai';
-import { SearchIcon } from 'src/icons';
+import { MagnifyingGlassIcon } from 'src/icons';
 
 type ANavbarPropType = {
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -37,8 +37,9 @@ export const ANavbar = ({ setSidebarOpen }: ANavbarPropType) => {
               <AiOutlineMenu size={27} />
             </div>
           </div>
-          <div className="p-2.5 dark:border rounded-full flex items-center jusitfy-center bg-zinc-300 dark:bg-neutral-800 text-amber-700 dark:text-white">
-            <SearchIcon className="h-5 w-5" />
+          <div className="p-2.5 dark:border-none rounded-full flex items-center jusitfy-center bg-gray-100 dark:bg-gray-600 text-amber-700 dark:text-white">
+            {/* <SearchIcon className="h-5 w-5" /> */}
+            <MagnifyingGlassIcon className={twMerge('flex-1 w-5 h-5 max-h-full text-amber-700')}></MagnifyingGlassIcon>
           </div>
         </div>
         <Spacer />

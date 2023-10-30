@@ -3,7 +3,8 @@ import { BlueCheckInline, ConnectButton, EZImage, EthPrice, NextLink } from 'src
 import { ChevronDown } from 'src/icons';
 import NFTCards from 'src/images/nftcardstack.png';
 import NFTCardsLight from 'src/images/nftcardstackwhite.png';
-import NFTCardsLightMobile from 'src/images/nftcardswhitemobile.png';
+// import NFTCardsLightMobile from 'src/images/nftcardswhitemobile.png';
+import NFTCardsLightMobile from 'src/images/nftcardstackwhitemobile.png';
 import Image from 'next/image';
 import { apiGet, formatNumber, getNetworkName, nFormatter } from 'src/utils';
 import { useEffect, useState } from 'react';
@@ -92,7 +93,7 @@ const HomePage = () => {
 
           <div className={twMerge('hidden sm:grid grid-cols-2 mx-auto', heroSectionWidth)}>
             {/* Aggregator */}
-            <div className="rounded-xl w-max border overflow-hidden dark:border-[#4F4F00] border-neutral-700/10 my-14">
+            <div className="rounded-xl w-max border overflow-hidden dark:border-amber-300 border-neutral-700/10 my-14 z-10">
               <div className="bg-card-header-90 p-2.5 dark:bg-none dark:bg-gray-500/70 backdrop-blur-2xl">
                 <p className="text-4xl w-max font-supply font-normal dark:text-white text-neutral-700 skew-x-14 h-4.5">
                   The Last
@@ -124,8 +125,8 @@ const HomePage = () => {
             </div>
           </div>
           {/* home top section mobile view*/}
-          <div className="flex sm:hidden flex-col mt-5">
-            <div className="p-2.5 flex flex-col items-center">
+          <div className="flex sm:hidden flex-col gap-5 mt-5">
+            <div className="md:p-2.5 p-0 flex flex-col items-center">
               <p className="text-[29px] tracking-[-2.32px] font-supply font-normal dark:text-white text-neutral-700">
                 The Last
               </p>
@@ -133,7 +134,7 @@ const HomePage = () => {
                 Aggregator
               </h3>
             </div>
-            <div className="flex justify-center">
+            <div className="flex justify-center max-w-[250px] mx-auto md:mx-none md:max-w-[393px]">
               <Image src={NFTCardsLightMobile} alt="nft cards light mobile" width={393} height={579} />
             </div>
             <div>
@@ -161,7 +162,7 @@ const HomePage = () => {
             ) : (
               <ADropdown
                 label={selected}
-                menuParentButtonClassName="py-1 px-2.5 border-gray-300 dark:border-neutral-200"
+                menuParentButtonClassName="py-1 px-2.5 bg-gray-100 border-gray-300 dark:border-neutral-200 rounded-4"
                 menuButtonClassName="font-semibold text-neutral-700"
                 innerClassName="w-30"
                 items={tabs.map((option) => ({

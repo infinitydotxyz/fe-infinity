@@ -108,7 +108,7 @@ export const Layout = ({ children }: Props) => {
       <div className="h-9.25 bg-zinc-300 dark:bg-neutral-400 w-full"> </div>
       <div className="flex flex-col items-center jusitfy-center bg-zinc-300 dark:bg-[#141406] w-full pt-6.25 pb-2.5 px-5">
         <NextLink className="mb-5" href="/">
-          <EZImage src={lightLogo.src} className="w-25 h-25 bg-[#E6E6DC] dark:bg-neutral-200 rounded" />
+          <EZImage src={lightLogo.src} className="w-25 h-25 bg-[#E6E6DC] dark:bg-neutral-200 rounded-5" />
         </NextLink>
         <div className="flex flex-col sm:flex-row items-center gap-3.75">
           <FooterNavItem

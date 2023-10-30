@@ -101,8 +101,8 @@ export const ReadMoreText: React.FC<ReadMoreTextPropType> = (props) => {
     displayText = (
       <div className="leading-6">
         <span>{`${primaryText} ${secondaryText}`}</span>
-        <span className="ml-2 underline underline-offset-2 cursor-pointer" onClick={setStatus}>
-          Less
+        <span className="ml-2 cursor-pointer" onClick={setStatus}>
+          [Less]
         </span>
       </div>
     );
@@ -112,8 +112,8 @@ export const ReadMoreText: React.FC<ReadMoreTextPropType> = (props) => {
         <span className="">
           {primaryText}
           <span style={{ display: 'none' }}>{secondaryText}</span>
-          <span className={'ml-2 underline whitespace-nowrap underline-offset-2 cursor-pointer'} onClick={setStatus}>
-            Read more
+          <span className={'ml-2 whitespace-nowrap cursor-pointer'} onClick={setStatus}>
+            [Read more]
           </span>
         </span>
       </div>

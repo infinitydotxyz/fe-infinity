@@ -120,7 +120,7 @@ export const GridCard = ({
           <div className="mt-3.75">
             <div
               className={
-                'px-2.75 py-2.5 rounded-11 border border-light-borderLight group-hover/nft:border-transparent dark:border-dark-borderDark dark:bg-transparent bg-zinc-300'
+                'px-2.75 py-2.5 rounded-9 border border-light-borderLight group-hover/nft:border-transparent dark:border-dark-borderDark dark:bg-transparent bg-zinc-300'
               }
             >
               <div className="flex items-center w-full justify-between">
@@ -143,7 +143,7 @@ export const GridCard = ({
                   'rounded-md mt-2.5 p-2.5 !leading-2.5 w-full text-xs sm:text-sm',
                   selected
                     ? 'block border-neutral-700 text-neutral-700 font-medium'
-                    : 'hidden group-hover/nft:block group-hover/nft:animate-in group-hover/nft:slide-in-from-bottom bg-neutral-700 text-white font-semibold dark:bg-white dark:text-neutral-200'
+                    : 'hidden group-hover/nft:block group-hover/nft:animate-in group-hover/nft:slide-in-from-bottom bg-neutral-700 text-white font-semibold dark:bg-white dark:text-neutral-700'
                 )}
               >
                 {selected ? 'Remove from Cart' : 'Add to Cart'}
