@@ -276,18 +276,18 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   )}
                 </AButton>
               )}
-              {!isDesktop && (
-                <div className="flex justify-between">
-                  <ToggleTab
-                    className="text-sm ml-4"
-                    options={viewTypes}
-                    defaultOption={viewTypes[0]}
-                    onChange={setViewType}
-                    border
-                    small
-                  />
-                </div>
-              )}
+
+              <div className="md:hidden flex justify-between">
+                <ToggleTab
+                  className="text-sm ml-4"
+                  options={viewTypes}
+                  defaultOption={viewTypes[0]}
+                  onChange={setViewType}
+                  border
+                  small
+                />
+              </div>
+
               <div className="flex md:flex-row flex-col">
                 {(isDesktop || viewType === 'Items') && (
                   <div className={(twMerge('flex'), showCart ? 'w-full' : 'md:w-2/3')}>
@@ -360,7 +360,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                               </AButton>
                             )}
                           </div>
-                          <div className="rounded-4 cursor-pointer border dark:border-neutral-200 border-gray-300 w-28 h-7.5 flex justify-center items-center">
+                          <div className="hidden md:flex rounded-4 cursor-pointer border dark:border-neutral-200 border-gray-300 w-28 h-7.5 justify-center items-center">
                             <ChevronDown className="-rotate-90" />
                           </div>
                         </div>

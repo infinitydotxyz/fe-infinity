@@ -2,10 +2,10 @@ import React from 'react';
 import { IconProps } from '.';
 
 export const SearchIcon = ({ className }: IconProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="31" height="30" viewBox="0 0 31 30" fill="none" className={className}>
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 20 20" className={className}>
     <path
-      d="M18.5 0.366211H6.5V3.29304H3.5V6.21987H0.5V17.9272H3.5V20.854H6.5V23.7808H18.5V20.854H21.5V23.7808H24.5V26.7077H27.5V29.6345H30.5V26.7077H27.5V23.7808H24.5V20.854H21.5V17.9272H24.5V6.21987H21.5V3.29304H18.5V0.366211ZM18.5 3.29304V6.21987H21.5V17.9272H18.5V20.854H6.5V17.9272H3.5V6.21987H6.5V3.29304H18.5ZM11 6.21987H14V10.6101H18.5V13.5369H14V17.9272H11V13.5369H6.5V10.6101H11V6.21987Z"
-      fill="currentColor"
-    />
+      fill="#979156"
+      d="M4 0h8v2H4V0zM2 4V2h2v2H2zm0 8H0V4h2v8zm2 2H2v-2h2v2zm8 0v2H4v-2h8zm2-2h-2v2h2v2h2v2h2v2h2v-2h-2v-2h-2v-2h-2v-2zm0-8h2v8h-2V4zm0 0V2h-2v2h2z"
+    ></path>
   </svg>
 );

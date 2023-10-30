@@ -92,16 +92,16 @@ const HomePage = () => {
 
           <div className={twMerge('hidden sm:grid grid-cols-2 mx-auto', heroSectionWidth)}>
             {/* Aggregator */}
-            <div className="rounded-xl w-max border overflow-hidden dark:border-yellow-900/20 border-neutral-700/10 my-14">
+            <div className="rounded-xl w-max border overflow-hidden dark:border-[#4F4F00] border-neutral-700/10 my-14">
               <div className="bg-card-header-90 p-2.5 dark:bg-none dark:bg-gray-500/70 backdrop-blur-2xl">
-                <p className="text-4xl w-max font-supply font-semibold dark:text-white text-neutral-700 skew-x-14 h-4.5">
+                <p className="text-4xl w-max font-supply font-normal dark:text-white text-neutral-700 skew-x-14 h-4.5">
                   The Last
                 </p>
-                <h3 className="pl-1.5 w-max text-54 font-bold dark:text-white text-neutral-700 font-body">
+                <h3 className="pl-1.5 w-max text-54 font-extrabold dark:text-white text-neutral-700 font-body">
                   Aggregator
                 </h3>
               </div>
-              <div className="pt-2.5 backdrop-blur-2xl">
+              <div className="pt-2.5 backdrop-blur-2xl bg-white/70 dark:bg-gray-500/70">
                 <div>
                   {homeFeaturesList.map((featureItems) => (
                     <div className="flex gap-2.5 py-2.5 px-5 items-center" key={featureItems.id}>
@@ -113,7 +113,7 @@ const HomePage = () => {
                   ))}
                 </div>
                 <div className="p-5">
-                  <ConnectButton iconClassName="text-yellow-900 dark:text-yellow-900" />
+                  <ConnectButton iconClassName="text-yellow-900 dark:text-yellow-700" />
                 </div>
               </div>
             </div>
@@ -124,7 +124,7 @@ const HomePage = () => {
             </div>
           </div>
           {/* home top section mobile view*/}
-          <div className="flex sm:hidden flex-col gap-5 mt-5">
+          <div className="flex sm:hidden flex-col mt-5">
             <div className="p-2.5 flex flex-col items-center">
               <p className="text-[29px] tracking-[-2.32px] font-supply font-normal dark:text-white text-neutral-700">
                 The Last
@@ -161,7 +161,8 @@ const HomePage = () => {
             ) : (
               <ADropdown
                 label={selected}
-                menuParentButtonClassName="py-1 px-2.5 rounded border-gray-300 dark:border-neutral-200"
+                menuParentButtonClassName="py-1 px-2.5 border-gray-300 dark:border-neutral-200"
+                menuButtonClassName="font-semibold text-neutral-700"
                 innerClassName="w-30"
                 items={tabs.map((option) => ({
                   label: option,
@@ -172,7 +173,7 @@ const HomePage = () => {
           </div>
           <div className="rounded-5 overflow-hidden mt-5">
             <div
-              className="hidden md:grid gap-2 justify-between items-center w-full bg-zinc-200 dark:bg-zinc-700 px-5 py-3.5 text-neutral-700 dark:text-neutral-300"
+              className="hidden md:grid gap-2 justify-between items-center w-full bg-zinc-200 dark:bg-zinc-700 px-5 py-3.5 text-neutral-700 dark:text-neutral-300 font-medium"
               style={{ gridTemplateColumns: 'minmax(0, 3fr) repeat(auto-fit, minmax(0, 1fr))' }}
             >
               <div className="pl-10">
@@ -249,7 +250,7 @@ interface Props {
   isCollSelectable: (data: ERC721CollectionCartItem) => boolean;
 }
 
-const propertyClassname = 'md:flex-col hidden sm:flex text-amber-700 justify-between font-supply md:mt-0 mt-2';
+const propertyClassname = 'md:flex-col text-17 hidden sm:flex text-amber-700 justify-between font-supply md:mt-0 mt-2';
 
 export const TrendingGridItem = ({ collection, period, index }: Props) => {
   const { isDesktop } = useScreenSize();
@@ -274,10 +275,8 @@ export const TrendingGridItem = ({ collection, period, index }: Props) => {
         className="md:grid gap-2 justify-between items-center w-full"
         style={{ gridTemplateColumns: 'minmax(0, 3fr) repeat(auto-fit, minmax(0, 1fr))' }}
       >
-        <div className="flex sm:items-center items-start font-bold">
-          {isDesktop && (
-            <div className="text-base font-semibold text-neutral-700 font-body mr-8 text-right">{index + 1}</div>
-          )}
+        <div className="flex items-center font-bold">
+          <div className="text-base font-semibold text-neutral-700 font-body mr-8 text-right">{index + 1}</div>
 
           <NextLink
             href={`/chain/${getNetworkName(collection?.chainId)}/collection/${collection?.slug || collection?.address}`}
@@ -290,7 +289,7 @@ export const TrendingGridItem = ({ collection, period, index }: Props) => {
               href={`/chain/${getNetworkName(collection?.chainId)}/collection/${
                 collection?.slug || collection?.address
               }`}
-              className="whitespace-normal text-base font-semibold dark:text-white"
+              className="whitespace-normal text-base font-semibold text-neutral-700 dark:text-white"
             >
               {collection?.metadata?.name}
               {collection?.hasBlueCheck && <BlueCheckInline />}
@@ -313,20 +312,21 @@ export const TrendingGridItem = ({ collection, period, index }: Props) => {
         </div>
 
         <div className={propertyClassname}>
-          <EthPrice label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`} />
+          <EthPrice
+            labelClassName="text-17"
+            label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`}
+          />
         </div>
 
         <div className={propertyClassname}>
-          {Number.isNaN(salesVolumeChange) ? '-' : <div className="">{salesVolumeChange} %</div>}
+          {Number.isNaN(salesVolumeChange) ? '-' : <div>{salesVolumeChange}%</div>}
         </div>
 
         <div className={propertyClassname}>
-          <EthPrice label={floorPrice > 0 ? formatNumber(floorPrice, 2) : '-'} />
+          <EthPrice labelClassName="text-17" label={floorPrice > 0 ? formatNumber(floorPrice, 2) : '-'} />
         </div>
 
-        <div className={propertyClassname}>
-          {Number.isNaN(floorPriceChange) ? '-' : <div className="">{floorPriceChange} %</div>}
-        </div>
+        <div className={propertyClassname}>{Number.isNaN(floorPriceChange) ? '-' : <div>{floorPriceChange}%</div>}</div>
 
         {isDesktop ? (
           <div className={propertyClassname}>

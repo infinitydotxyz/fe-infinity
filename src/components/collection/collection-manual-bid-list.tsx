@@ -43,7 +43,9 @@ export const CollectionManualBidList = ({ collectionAddress, collectionSlug, col
         </div>
         <Spacer />
         <div className="flex items-center gap-2.5">
-          <p className={twMerge('text-sm font-semibold', secondaryTextColor)}>Only show collection bids</p>
+          <p className={twMerge('text-sm font-semibold text-neutral-700', secondaryTextColor)}>
+            Only show collection bids
+          </p>
           <ASwitchButton
             checked={onlyCollectionBids}
             onChange={() => {
@@ -69,28 +71,30 @@ export const CollectionManualBidList = ({ collectionAddress, collectionSlug, col
             </CenteredContent>
           ) : null}
 
-          {orders?.map((order) => {
-            const orderKind = order.criteria?.kind;
-            let orderType = 'Collection Bid' as 'Collection Bid' | 'Token Bid' | 'Trait Bid';
-            if (orderKind === 'collection') {
-              order.cartType = CartType.CollectionBid;
-            } else if (orderKind === 'token') {
-              orderType = 'Token Bid';
-              order.cartType = CartType.TokenBid;
-            } else if (orderKind === 'attribute') {
-              // future-todo support in the future
-              orderType = 'Trait Bid';
-              order.cartType = CartType.None;
-            }
-            return (
-              <CollectionManualBidListItem
-                key={order.id}
-                order={order}
-                orderType={orderType}
-                collectionSlug={collectionSlug}
-              />
-            );
-          })}
+          <div className="space-y-0.5">
+            {orders?.map((order) => {
+              const orderKind = order.criteria?.kind;
+              let orderType = 'Collection Bid' as 'Collection Bid' | 'Token Bid' | 'Trait Bid';
+              if (orderKind === 'collection') {
+                order.cartType = CartType.CollectionBid;
+              } else if (orderKind === 'token') {
+                orderType = 'Token Bid';
+                order.cartType = CartType.TokenBid;
+              } else if (orderKind === 'attribute') {
+                // future-todo support in the future
+                orderType = 'Trait Bid';
+                order.cartType = CartType.None;
+              }
+              return (
+                <CollectionManualBidListItem
+                  key={order.id}
+                  order={order}
+                  orderType={orderType}
+                  collectionSlug={collectionSlug}
+                />
+              );
+            })}
+          </div>
 
           {hasNextPage === true ? (
             <ScrollLoader

@@ -65,9 +65,6 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
   const [chartData, setChartData] = useState<SalesChartData[]>(data);
   const { isDesktop } = useScreenSize();
 
-  const { theme } = useTheme();
-  const darkMode = theme === 'dark';
-
   useEffect(() => {
     const nowTimestamp = Date.now();
     let prevTimestamp = nowTimestamp;
@@ -101,11 +98,9 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
 
   return (
     <div className="h-full">
-      <div className="xl:flex justify-between py-5 items-center">
+      <div className="flex justify-between py-5 items-center">
         <div className="flex items-end gap-1">
-          <div className={twMerge('font-medium font-heading text-xl', darkMode ? 'text-white' : 'text-neutral-200')}>
-            {graphType}
-          </div>
+          <div className={twMerge('font-bold text-[22px] text-neutral-700 dark:text-white')}>{graphType}</div>
           <div className={twMerge(secondaryTextColor, 'font-medium text-sm dark:text-neutral-300 text-neutral-300')}>
             {numSales} sales
           </div>
@@ -113,7 +108,7 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
 
         <div className="items-center flex gap-2.5">
           <div className="flex items-center space-x-2.5">
-            <span className={twMerge('text-sm font-medium !text-neutral-200 dark:!text-white')}>Outliers</span>
+            <span className={twMerge('text-sm font-semibold !text-neutral-700 dark:!text-white')}>Outliers</span>
 
             <ASwitchButton
               checked={showOutliers}
@@ -124,14 +119,13 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
           </div>
 
           <ADropdown
-            hasBorder={false}
             alignMenuRight
             innerClassName="w-25"
             menuItemClassName="py-1 px-2"
             menuButtonClassName="py-1 px-2.5"
             label={selectedTimeBucket}
             className="py-0 px-0"
-            menuParentButtonClassName="px-0 py-0 border border-light-customBorder dark:border-dark-customBorder rounded h-8"
+            menuParentButtonClassName="px-0 py-0 border border-gray-300 dark:border-neutral-200 rounded h-8"
             items={Object.values(HistoricalSalesTimeBucket).map((bucket) => ({
               label: bucket,
               onClick: () => setSelectedTimeBucket(bucket)
@@ -140,7 +134,7 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
         </div>
       </div>
 
-      <div className="rounded-lg bg-zinc-300 dark:bg-neutral-800 pt-5 px-2.5">
+      <div className="rounded-lg bg-zinc-300 dark:bg-neutral-800 py-5 px-2.5">
         <ParentSize debounceTime={10}>
           {({ width }) => (
             <SalesChart

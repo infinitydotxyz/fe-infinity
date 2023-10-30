@@ -57,11 +57,15 @@ export const APageHeader = ({ title, rightToolbar, subTitle }: Props2): JSX.Elem
     <div className="flex flex-row items-center py-15 px-5">
       {subTitle ? (
         <div className="flex flex-col justify-center w-full text-center md:text-left">
-          <div className={twMerge(textColor, 'font-bold  text-35 h-10.5 tracking-tight dark:text-white')}>{title}</div>
+          <div className={twMerge(textColor, 'font-extrabold  text-35 h-10.5 tracking-tight dark:text-white')}>
+            {title}
+          </div>
           <div className="text-neutral-300 text-base font-medium">{subTitle}</div>
         </div>
       ) : (
-        <div className={twMerge(textColor, 'font-bold  text-35 h-10.5 tracking-tight dark:text-white')}>{title}</div>
+        <div className={twMerge(textColor, 'font-extrabold  text-35 h-10.5 tracking-tight dark:text-white')}>
+          {title}
+        </div>
       )}
 
       {rightToolbar && (

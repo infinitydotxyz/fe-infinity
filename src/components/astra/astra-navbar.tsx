@@ -76,7 +76,7 @@ export const ANavbar = ({ setSidebarOpen }: ANavbarPropType) => {
           <ShoppingBagButton />
         </div>
         <div className="p-5 flex sm:hidden items-center justify-center bg-linear-back-dark fixed z-50 bottom-0 w-full left-0">
-          <ConnectButton half />
+          <ConnectButton half fullWidth />
           <ShoppingBagButton />
         </div>
       </div>

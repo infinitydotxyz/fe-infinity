@@ -140,10 +140,10 @@ export const GridCard = ({
 
               <ARoundOutlineButton
                 className={twMerge(
-                  'rounded-md mt-2.5 p-2.5 !leading-2.5 w-full text-xs sm:text-sm ',
+                  'rounded-md mt-2.5 p-2.5 !leading-2.5 w-full text-xs sm:text-sm',
                   selected
-                    ? 'block'
-                    : 'hidden group-hover/nft:block group-hover/nft:animate-in group-hover/nft:slide-in-from-bottom bg-neutral-700 dark:bg-white dark:text-neutral-200 text-zinc-300'
+                    ? 'block border-neutral-700 text-neutral-700 font-medium'
+                    : 'hidden group-hover/nft:block group-hover/nft:animate-in group-hover/nft:slide-in-from-bottom bg-neutral-700 text-white font-semibold dark:bg-white dark:text-neutral-200'
                 )}
               >
                 {selected ? 'Remove from Cart' : 'Add to Cart'}

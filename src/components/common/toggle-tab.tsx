@@ -29,7 +29,7 @@ export const ToggleTab = ({ options, onChange, defaultOption, className = '', sm
               className={twMerge(
                 selected === e ? 'text-amber-900' : secondaryTextColor,
                 'hover:text-yellow-700 dark:hover:text-yellow-700',
-                'font-medium font-body cursor-pointer'
+                'font-semibold font-body cursor-pointer'
               )}
               onClick={() => {
                 setSelected(e);

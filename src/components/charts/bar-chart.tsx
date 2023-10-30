@@ -100,18 +100,13 @@ export const ResponsiveBarChart = ({ data, graphType, displayDetails }: Responsi
   const [selectedPriceBucket, setSelectedPriceBucket] = useState(1);
   const [showOutliers, setShowOutliers] = useState(false);
 
-  const { theme } = useTheme();
-  const darkMode = theme === 'dark';
-
   const { isDesktop } = useScreenSize();
 
   return (
     <div className="h-full">
-      <div className="xl:flex justify-between py-5 items-center">
+      <div className="flex justify-between py-5 items-center">
         <div className="flex items-end gap-1">
-          <div className={twMerge('font-medium font-heading text-xl', darkMode ? 'text-white' : 'text-neutral-200')}>
-            {graphType}
-          </div>
+          <div className={twMerge('font-bold font-body text-xl text-neutral-700 dark:text-white')}>{graphType}</div>
           <div className={twMerge(secondaryTextColor, 'font-medium text-sm dark:text-neutral-300 text-neutral-300')}>
             {data.length} {graphType}
           </div>

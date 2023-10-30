@@ -3,7 +3,15 @@ import { AButton } from '../astra/astra-button';
 import { Wallet } from 'src/icons';
 import { twMerge } from 'tailwind-merge';
 
-export const ConnectButton = ({ half = false, iconClassName }: { half?: boolean; iconClassName?: string }) => {
+export const ConnectButton = ({
+  half = false,
+  fullWidth = false,
+  iconClassName
+}: {
+  half?: boolean;
+  fullWidth?: boolean;
+  iconClassName?: string;
+}) => {
   return (
     <ConnectKitButton.Custom>
       {({ isConnected, show, truncatedAddress, ensName }) => {
@@ -12,8 +20,9 @@ export const ConnectButton = ({ half = false, iconClassName }: { half?: boolean;
             primary
             onClick={show}
             className={twMerge(
-              'text-base py-3.5 border-0 border-r-2 border-black/40 dark:border-black/40 px-5',
-              half ? 'rounded-tl-4 rounded-bl-4' : 'rounded-4'
+              'text-base py-3.5 border-0 border-r-2 border-black/40 dark:border-white px-5',
+              half ? 'rounded-tl-4 rounded-bl-4' : 'rounded-4',
+              fullWidth && 'w-full'
             )}
           >
             <div className="flex items-center gap-2.5">

@@ -44,7 +44,7 @@ export const CollectionSearchInput = ({
       shortCuts={shortCuts}
       setQuery={setQuery}
       data={result.data}
-      placeholder="Search by collection"
+      placeholder="Search collection, NFTs or users"
     />
   );
 };

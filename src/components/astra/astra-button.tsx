@@ -237,8 +237,7 @@ export const ASwitchButton = ({ checked, onChange }: Props5) => {
       checked={checked}
       onChange={onChange}
       className={twMerge(
-        'border border-light-customBorder dark:border-dark-customBorder relative inline-flex p-1 w-13 shrink-0 cursor-pointer rounded \
-             transition-colors duration-100 ease-in-out',
+        'border border-gray-300 dark:border-neutral-200 relative inline-flex p-1 w-13 shrink-0 cursor-pointer rounded transition-colors duration-100 ease-in-out',
         checked ? brandBgCustomColor : ''
       )}
     >

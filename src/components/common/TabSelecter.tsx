@@ -38,7 +38,7 @@ const TabSelector = ({
           <div
             key={tabItem}
             className={twMerge(
-              'flex items-center grow p-2.5 min-w-8.5 justify-center cursor-pointer first:rounded-l-6 last:rounded-r-6',
+              'flex items-center grow p-2.5 min-w-8.5 justify-center cursor-pointer first:rounded-l-6 last:rounded-r-6 text-neutral-700 dark:text-white font-medium text-sm',
               tabItemBGColor,
               value === tabItem && selectedColor
             )}

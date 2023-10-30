@@ -133,7 +133,7 @@ const GridItem = ({ data, onClick, selected, isSelectable, collectionFloorPrice 
     <div
       className={twMerge(
         hoverColor,
-        'w-full relative flex flex-col  px-3 py-2 transition-all duration-200',
+        'w-full relative flex flex-col px-3 py-2 transition-all duration-200',
         notSelectable ? 'animate-wiggle' : ''
       )}
       onClick={() => {
@@ -145,7 +145,7 @@ const GridItem = ({ data, onClick, selected, isSelectable, collectionFloorPrice 
       }}
       onAnimationEnd={() => setNotSelectable(false)}
     >
-      <div className="h-full flex items-center  text-2xl lg:text-sm">
+      <div className="h-full flex items-center text-2xl lg:text-sm">
         <Checkbox
           label=""
           checked={selected}

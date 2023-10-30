@@ -13,19 +13,16 @@ type Props = {
 
 const OrderDepthChart = ({ data }: Props) => {
   const showOutliers = true;
-  const { theme } = useTheme();
-  const darkMode = theme === 'dark';
+
   return (
     <div className="h-full">
       <div className="xl:flex justify-between py-5 items-center">
         <div className="flex items-end gap-1">
-          <div className={twMerge('font-medium font-heading text-xl', darkMode ? 'text-white' : 'text-neutral-200')}>
-            Order Depth
-          </div>
+          <div className={twMerge('font-bold text-[22px] text-neutral-700 dark:text-white')}>Order Depth</div>
         </div>
       </div>
 
-      <div className="rounded-lg h-154.5 bg-zinc-300 dark:bg-neutral-800 pt-5 px-2.5">
+      <div className="rounded-lg h-154.5 bg-zinc-300 dark:bg-neutral-800 py-5 px-2.5">
         <OrderDepthChartSub data={data} hideOutliers={!showOutliers} key={String(showOutliers)} />
       </div>
     </div>

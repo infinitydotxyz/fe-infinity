@@ -130,7 +130,7 @@ export function SearchInput({
             'focus-visible:outline-none focus:ring-transparent focus:border-transparent focus:shadow-none',
             'active:outline-none active:ring-transparent active:border-transparent active:shadow-none',
             'outline-none ring-transparent border-transparent shadow-none',
-            'text-sm align-middle p-2.5 placeholder:text-neutral-500 dark:placeholder:text-amber-600 caret-cyan-400',
+            'text-sm align-middle p-2.5 font-medium placeholder:text-amber-600 dark:placeholder:text-amber-600 caret-cyan-400',
             inputClassName
           )}
           placeholder={placeholder}

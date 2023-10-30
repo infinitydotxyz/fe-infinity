@@ -188,7 +188,7 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
                       </SidebarNavItem>
 
                       <AButton
-                        className="w-full flex items-center justify-center  h-[177px] border border-light-borderLight dark:border-dark-borderDark"
+                        className="w-full flex items-center justify-center  h-[177px]"
                         onClick={() => {
                           setTheme(theme === 'dark' ? 'light' : 'dark');
                           setSidebarOpen(false);
@@ -401,13 +401,13 @@ export const FooterNavItem = ({
   onClick?: () => void;
 }) => {
   return (
-    <div className="group flex flex-col items-center">
+    <div className="flex flex-col items-center">
       {children && (
         <HelpToolTip placement="right" content={<div className="whitespace-nowrap">{title}</div>}>
           <AButton
             highlighted={highlighted}
             onClick={onClick}
-            className={twMerge('rounded-lg group-hover:bg-yellow-700 w-max p-0', highlighted && 'bg-yellow-700')}
+            className={twMerge('rounded-lg hover:bg-yellow-700 w-max p-0', highlighted && 'bg-yellow-700')}
           >
             {children}
           </AButton>
@@ -417,7 +417,7 @@ export const FooterNavItem = ({
         <div
           onClick={onClick}
           className={twMerge(
-            'font-medium text-base cursor-pointer group-hover:text-yellow-700 text-amber-700 text-center',
+            'font-semibold text-base cursor-pointer hover:text-yellow-700 text-amber-700 text-center',
             highlighted && 'text-yellow-700 dark:text-yellow-700'
           )}
         >
