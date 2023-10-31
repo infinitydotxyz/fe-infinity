@@ -151,7 +151,7 @@ export const CollectionCharts = ({
   }, [collectionAddress, collectionChainId]);
 
   return (
-    <div className={twMerge('w-full h-full relative flex flex-col p-5', className)}>
+    <div className={twMerge('w-full gap-2.5 h-full relative flex flex-col p-5', className)}>
       <div className="md:flex gap-5">
         <div className="md:w-3/4">
           {salesChartData.length > 0 && (

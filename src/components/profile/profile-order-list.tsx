@@ -199,7 +199,7 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
         </div>
       </div>
 
-      <div className="flex" key={selectedOrderType}>
+      <div className="flex px-5" key={selectedOrderType}>
         <div className="w-full pointer-events-auto">
           {isLoading && (
             <div className="">

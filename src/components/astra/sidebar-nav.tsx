@@ -104,7 +104,7 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
                         />
                       </SidebarNavItem>
                       <SidebarNavItem
-                        title="Profile"
+                        title="Items"
                         highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Items}
                         onClick={() => {
                           setSidebarOpen(false);
@@ -234,7 +234,7 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
             />
           </SidebarNavItem>
           <SidebarNavItem
-            title="Profile"
+            title="Items"
             highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Items}
             onClick={() => {
               setSelectedProfileTab(ProfileTabs.Items);

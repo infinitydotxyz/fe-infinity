@@ -37,7 +37,7 @@ export const CollectionManualBidList = ({ collectionAddress, collectionSlug, col
 
   return (
     <div className={twMerge('min-h-[50vh] pb-20', className)}>
-      <div className={twMerge('w-full flex py-5 px-4 space-x-2')}>
+      <div className={twMerge('w-full flex p-5 space-x-2')}>
         <div className="flex text-sm items-center">
           <StatusIcon status="pending-indefinite" label="Live" />
         </div>
@@ -55,7 +55,7 @@ export const CollectionManualBidList = ({ collectionAddress, collectionSlug, col
         </div>
       </div>
 
-      <div className="flex">
+      <div className="flex px-5">
         <div className="w-full pointer-events-auto">
           {isLoading && (
             <div className="">

@@ -24,7 +24,7 @@ export const ToggleTab = ({ options, onChange, defaultOption, className = '', sm
     >
       {options.map((e) => {
         return (
-          <div key={e} className={twMerge('pb-2', selected === e ? `border-b-3 ${golderBorderColor}` : '')}>
+          <div key={e} className={twMerge('py-2.5', selected === e ? `border-b-3 ${golderBorderColor}` : '')}>
             <div
               className={twMerge(
                 selected === e ? 'text-amber-900' : secondaryTextColor,

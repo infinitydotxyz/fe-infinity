@@ -32,7 +32,7 @@ const NextPrev = ({ index, numItems }: Props2) => {
   return (
     <div className="flex w-full items-center rounded-lg">
       <div className="flex select-none">
-        <div className="text-lg font-semibold">{progress}</div>
+        <div className="text-lg text-neutral-700 dark:text-white font-body font-semibold">{progress}</div>
       </div>
     </div>
   );

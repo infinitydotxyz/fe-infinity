@@ -63,7 +63,12 @@ export const APageHeader = ({ title, rightToolbar, subTitle }: Props2): JSX.Elem
           <div className="text-neutral-300 text-base font-medium">{subTitle}</div>
         </div>
       ) : (
-        <div className={twMerge(textColor, 'font-extrabold  text-35 h-10.5 tracking-tight dark:text-white')}>
+        <div
+          className={twMerge(
+            textColor,
+            'font-extrabold mt-5 md:mt-0 text-35 max-w-[178px] md:max-w-none text-center md:text-left mx-auto md:mx-0 md:h-10.5 tracking-tight dark:text-white'
+          )}
+        >
           {title}
         </div>
       )}

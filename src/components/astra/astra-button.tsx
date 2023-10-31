@@ -22,6 +22,7 @@ interface Props {
   primary?: boolean;
   submit?: boolean;
   tooltip?: string;
+  customDisabledClassName?: string;
 }
 
 export const AButton = ({
@@ -32,6 +33,7 @@ export const AButton = ({
   children,
   className = '',
   tooltip = '',
+  customDisabledClassName = '',
   highlighted = false,
   onClick
 }: Props): JSX.Element => {
@@ -42,6 +44,7 @@ export const AButton = ({
       primary={primary}
       highlighted={highlighted}
       tooltip={tooltip}
+      customDisabledClassName={customDisabledClassName}
       className={twMerge(small ? 'text-sm px-2 py-0.5' : 'px-2.5 py-1.25', primary ? btnBgColorText : '', className)}
       onClick={onClick}
     >
@@ -61,6 +64,7 @@ interface BaseProps {
   highlighted?: boolean;
   submit?: boolean;
   tooltip?: string;
+  customDisabledClassName?: string;
 }
 
 const ButtonBase = ({
@@ -71,6 +75,7 @@ const ButtonBase = ({
   className = '',
   highlighted = false,
   tooltip = '',
+  customDisabledClassName = '',
   onClick
 }: BaseProps): JSX.Element => {
   const disabledClass = 'opacity-30 cursor-not-allowed';
@@ -86,7 +91,7 @@ const ButtonBase = ({
         activeColor,
         'select-none transition ease-in-out duration-300',
         'focus:outline-none focus-visible:ring focus:ring-dark-bg focus:ring-opacity-50',
-        disabled ? disabledClass : '',
+        disabled ? customDisabledClassName ?? disabledClass : '',
         className
       )}
       title={tooltip}

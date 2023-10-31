@@ -2,20 +2,18 @@ import { CollectionOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
-import { ellipsisString } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { BasicTokenInfo } from 'src/utils/types';
-import { borderColor, secondaryBgColorDarker, secondaryTextColor } from 'src/utils/ui-constants';
+import { BasicTokenInfo, ERC721TokenCartItem } from 'src/utils/types';
 import { twMerge } from 'tailwind-merge';
-import { format } from 'timeago.js';
 import { useNetwork } from 'wagmi';
-import { Button, EthSymbol, EZImage } from '../common';
+import { Button } from '../common';
 import { ChartBox } from './chart-box';
-import { OrderbookRowButton } from './chart-detail-button';
 import { clamp } from './chart-utils';
 import { NextPrevArrows } from './next-prev-arrows';
 import { SalesChartData } from './sales-chart';
 import { ArrowSmallIcon } from 'src/icons';
+import { GridCard } from '../common/card';
+import { CartType } from 'src/utils/context/CartContext';
 
 interface Props {
   orders: CollectionOrder[];
@@ -47,11 +45,11 @@ export const OrdersChartDetails = ({
         )}
       >
         <div className="w-full" />
-        <div className="flex justify-between items-center">
+        <div className="flex w-full justify-between items-center">
           <Button
             disabled={orders.length < 2}
             variant="round"
-            className=""
+            className="pl-7.5"
             onClick={() => {
               let x = index - 1;
 
@@ -75,7 +73,7 @@ export const OrdersChartDetails = ({
           <Button
             disabled={orders.length < 2}
             variant="round"
-            className="transform rotate-180"
+            className="transform rotate-180 pr-7.5"
             onClick={() => {
               let x = index + 1;
 
@@ -140,34 +138,26 @@ const OrderDetailViewer = ({ order, collectionAddress, collectionName, collectio
 
   return (
     <div className={twMerge('flex flex-col text-sm mt-4 items-center')}>
-      <div
-        className={twMerge(
-          'cursor-pointer flex flex-col space-y-4 items-center w-62 p-2 rounded-lg',
-          secondaryBgColorDarker
-        )}
-        onClick={() => {
-          const { pathname, query } = router;
-          query['tokenId'] = order.tokenId;
-          query['collectionAddress'] = collectionAddress;
-          router.replace({ pathname, query }, undefined, { shallow: true });
-        }}
-      >
-        <EZImage src={order.tokenImage} className="w-60 h-60 shrink-0 overflow-clip rounded-lg" />
-
-        <div className={twMerge('flex justify-between border-0 rounded-lg w-60', borderColor)}>
-          <div className="flex flex-col">
-            <div className="flex truncate font-bold">{ellipsisString(order.tokenId)}</div>
-            <div>
-              {order.priceEth} {EthSymbol}
-            </div>
-          </div>
-          <OrderbookRowButton
-            order={order}
-            outlineButtons={false}
-            collectionName={collectionName}
-            collectionAddress={collectionAddress}
-          />
-        </div>
+      <div className="w-[225px]">
+        <GridCard
+          data={{
+            ...order,
+            image: order.tokenImage,
+            price: order.priceEth,
+            cartType: CartType.TokenList,
+            title: collectionName ?? order.maker
+          }}
+          selected={false}
+          collectionFloorPrice={order.priceEth}
+          collectionCreator={collectionName}
+          isSelectable={(data: ERC721TokenCartItem) => !!data}
+          onClick={() => {
+            const { pathname, query } = router;
+            query['tokenId'] = order.tokenId;
+            query['collectionAddress'] = collectionAddress;
+            router.replace({ pathname, query }, undefined, { shallow: true });
+          }}
+        />
       </div>
       {modalOpen && <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} />}
     </div>
@@ -209,36 +199,28 @@ export const SalesChartDetails = ({ data }: Props3) => {
           'border border-gray-300 dark:border-neutral-200 rounded-lg pb-7.5 flex-1 h-full justify-center items-center flex'
         )}
       >
-        <div className={twMerge('flex flex-col text-sm mt-4 items-center')}>
-          <div
-            className={twMerge(
-              'cursor-pointer flex flex-col space-y-4 items-center w-62 p-2 rounded-lg',
-              secondaryBgColorDarker
-            )}
+        <div className="w-[225px]">
+          <GridCard
+            data={{
+              ...data,
+              image: data.tokenImage,
+              price: data.salePrice,
+              cartType: CartType.TokenList,
+              title: data.collectionSlug
+            }}
+            selected={false}
+            collectionFloorPrice={data.salePrice}
+            collectionCreator={data.collectionName}
+            isSelectable={(data: ERC721TokenCartItem) => !!data}
             onClick={() => {
               const { pathname, query } = router;
               query['tokenId'] = data.tokenId;
               query['collectionAddress'] = data.collectionAddress;
               router.replace({ pathname, query }, undefined, { shallow: true });
             }}
-          >
-            <EZImage src={data.tokenImage} className="w-60 h-60 shrink-0 overflow-clip rounded-lg" />
-
-            <div className={twMerge('flex justify-between border-0 rounded-lg w-60', borderColor)}>
-              <div className="flex flex-col">
-                <div className="flex truncate font-bold">{ellipsisString(data.tokenId)}</div>
-                <div>
-                  {data.salePrice} {EthSymbol}
-                </div>
-              </div>
-              <div className="flex flex-col space-y-1">
-                <div className={twMerge('font-medium text-xs', secondaryTextColor)}>Date</div>
-                <div className="truncate">{format(data?.timestamp ?? 0)}</div>
-              </div>
-            </div>
-          </div>
-          {modalOpen && <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} />}
+          />
         </div>
+        {modalOpen && <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} />}
       </div>
     </div>
   );

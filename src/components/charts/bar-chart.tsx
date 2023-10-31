@@ -130,7 +130,7 @@ export const ResponsiveBarChart = ({ data, graphType, displayDetails }: Responsi
             innerClassName="w-25"
             menuItemClassName="py-1 px-2"
             menuButtonClassName="py-1 px-2.5"
-            label={selectedPriceBucket + ' ' + EthSymbol}
+            label={EthSymbol + ' ' + selectedPriceBucket}
             className="py-0 px-0"
             menuParentButtonClassName="px-0 py-0 border border-light-customBorder dark:border-dark-customBorder rounded h-8"
             items={priceBuckets.map((bucket) => ({

@@ -11,7 +11,7 @@ import { CollectionManualBidList } from 'src/components/collection/collection-ma
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
 import { Spacer } from 'src/components/common';
 import TabSelector from 'src/components/common/TabSelecter';
-import MultiSwitch from 'src/components/common/multi-switch';
+import MultiSwitch, { optionItemInterface } from 'src/components/common/multi-switch';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
 import { useCollectionListingsFetcher } from 'src/hooks/api/useTokenFetcher';
 import useScreenSize from 'src/hooks/useScreenSize';
@@ -75,7 +75,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     CollectionPageTabs.Analytics.toString()
   ];
 
-  const viewTypes = [
+  const viewTypes: optionItemInterface[] = [
     { id: '1', name: 'Items' },
     { id: '2', name: 'Charts' }
   ];
@@ -286,7 +286,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               </div>
 
               <div className="flex md:flex-row flex-col">
-                {(isDesktop || viewType === 'Items') && (
+                {(isDesktop || viewType === '1') && (
                   <div className={(twMerge('flex'), showCart ? 'w-full' : 'md:w-2/3')}>
                     <div className={twMerge('mt-5 px-5')}>
                       <div className="flex justify-between items-center">
@@ -386,7 +386,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   </div>
                 )}
 
-                {(isDesktop || viewType === 'Charts') && (
+                {(isDesktop || viewType === '2') && (
                   <div className={`${showCart ? 'w-0' : 'flex md:w-1/3'} transition-width duration-100`}>
                     <CollectionItemsPageSidebar
                       key={collectionAddress}

@@ -111,7 +111,10 @@ const SingleCollectionCell = ({ order, image, title, canShowAssetModal, isCollBi
       <div className={`flex flex-col truncate`}>
         {collectionAddress && chainId ? (
           <div
-            className={twMerge(secondaryTextColor, 'font-medium text-sm text-gray-800 dark:text-gray-800 capitalize')}
+            className={twMerge(
+              tokenIdOrAttribute ? 'text-gray-800 dark:text-gray-800' : secondaryTextColor,
+              'font-semibold text-base capitalize'
+            )}
           >
             {title}
             {hasBlueCheck === true && <BlueCheckInline />}
@@ -119,7 +122,7 @@ const SingleCollectionCell = ({ order, image, title, canShowAssetModal, isCollBi
         ) : null}
 
         {tokenIdOrAttribute && (
-          <div className={twMerge('whitespace-pre-wrap text-base font-semibold text-neutral-700 dark:text-white')}>
+          <div className={twMerge('whitespace-pre-wrap text-base font-semibold ', secondaryTextColor)}>
             {tokenIdOrAttribute}
           </div>
         )}
