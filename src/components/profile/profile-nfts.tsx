@@ -70,7 +70,13 @@ export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
 
   const multiSelect = () => {
     return (
-      <TabSelector value={numSweep} setValue={setNumSweep} tabItems={['5', '10', '20', '50']} showCustom />
+      <TabSelector
+        className="mb-0 mt-2.5"
+        value={numSweep}
+        setValue={setNumSweep}
+        tabItems={['5', '10', '20', '50']}
+        showCustom
+      />
       // <div className={twMerge('flex md:my-0 my-2 h-10 gap-0.25 rounded-lg cursor-pointer text-sm', borderColor)}>
       //   {/* <div className={twMerge('md:flex hidden items-center border-r-[1px] px-6 cursor-default', borderColor)}>
       //     Select
@@ -149,7 +155,7 @@ export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
     <>
       <div className="flex flex-col my-3.75 md:my-5 space-y-2 text-sm">
         <div className="md:flex items-center justify-between">
-          <div className="flex items-center justify-between md:justify-start gap-2.5">
+          <div className="flex items-center flex-1 justify-between md:justify-start gap-2.5">
             <CollectionSearchInput
               expanded
               profileSearch
@@ -164,12 +170,26 @@ export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
             />
             <div className="hidden md:block">{isOwner && multiSelect()}</div>
             <div className="block md:hidden">
-              <Checkbox boxOnLeft={false} label="Hide spam" checked={hideSpam} onChange={setHideSpam} />
+              <Checkbox
+                inputClassName="border border-gray-300 dark:border-neutral-200"
+                tickMarkClassName="border border-gray-300 dark:peer-checked:text-yellow-700 dark:peer-checked:border-neutral-200 dark:peer-checked:bg-dark-bg"
+                boxOnLeft={false}
+                label="Hide spam"
+                checked={hideSpam}
+                onChange={setHideSpam}
+              />
             </div>
           </div>
           {/* <Spacer /> */}
           <div className="hidden md:block">
-            <Checkbox boxOnLeft={false} label="Hide spam" checked={hideSpam} onChange={setHideSpam} />
+            <Checkbox
+              boxOnLeft={false}
+              inputClassName="border border-gray-300 dark:border-neutral-200"
+              tickMarkClassName="border border-gray-300 dark:peer-checked:text-yellow-700 dark:peer-checked:border-neutral-200 dark:peer-checked:bg-dark-bg"
+              label="Hide spam"
+              checked={hideSpam}
+              onChange={setHideSpam}
+            />
           </div>
           <div className="md:hidden block">{isOwner && multiSelect()}</div>
         </div>

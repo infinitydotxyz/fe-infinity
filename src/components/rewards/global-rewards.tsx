@@ -37,12 +37,12 @@ const GlobalRewards = ({ showCount }: Props) => {
   const [orderBy, setOrderBy] = useState<LeaderboardQuery['orderBy']>('total');
 
   return (
-    <div className={twMerge('space-y-4 mt-6 px-5 pb-6 mb-16')}>
-      <div className="flex flex-col md:flex-row align-center md:space-x-2.5">
+    <div className={twMerge('space-y-4 mt-5 md:mt-6 px-5 pb-6 mb-16')}>
+      <div className="flex space-x-2.5 justify-between md:justify-start align-center md:space-x-2.5">
         <div className="text-22 font-semibold dark:text-white ">Leaderboard</div>
         <ADropdown
           label={OrderByValueToName[orderBy]}
-          innerClassName="w-24 "
+          innerClassName="w-24"
           menuParentButtonClassName="px-2.5 py-1 rounded border-gray-300 dark:border-neutral-200"
           items={Object.keys(OrderByValueToName).map((option) => ({
             label: OrderByValueToName[option as LeaderboardQuery['orderBy']],
@@ -50,7 +50,7 @@ const GlobalRewards = ({ showCount }: Props) => {
           }))}
         />
       </div>
-      <div className="flex space-x-4 justify-between">
+      <div className="flex space-x-4 justify-between mt-5">
         <Leaderboard orderBy={orderBy} />
         {/* <div className={twMerge(secondaryBgColor, 'flex-1 rounded-lg px-10 py-4 space-y-3')}>
           <div className="text-2xl font-medium underline">Buy Rewards</div>

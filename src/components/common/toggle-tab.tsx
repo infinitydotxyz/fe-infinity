@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { golderBorderColor, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
@@ -14,7 +14,9 @@ interface Props {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const ToggleTab = ({ options, onChange, defaultOption, className = '', small = false, border }: Props) => {
   const [selected, setSelected] = useState(defaultOption);
-
+  useEffect(() => {
+    setSelected(defaultOption);
+  }, [defaultOption]);
   return (
     <div
       className={twMerge(

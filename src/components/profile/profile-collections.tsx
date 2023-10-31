@@ -41,7 +41,9 @@ export const ProfileCollections = ({ userAddress }: Props) => {
 
   return (
     <div className={twMerge('rounded-lg overflow-y-scroll scrollbar-hide text-sm w-full', borderColor)}>
-      <div className={twMerge('py-5 !text-22 text-lg font-semibold mb-1.25 px-5 lg:px-0')}>Owned Collections</div>
+      <div className={twMerge('py-5 !text-22 text-lg font-semibold  px-5 lg:px-0 text-neutral-700 dark:text-white')}>
+        Owned Collections
+      </div>
       {/* <div className={twMerge('mx-3 border-b-[1px] mb-1', borderColor)}></div> */}
       <div className="flex flex-col sm:px-5 lg:px-0">
         {ownedColls.map((item) => {
@@ -49,7 +51,7 @@ export const ProfileCollections = ({ userAddress }: Props) => {
             <div
               key={item.address}
               className={twMerge(
-                'flex space-x-5 items-center cursor-pointer w-full first:rounded-t-10 last:rounded-b-10 px-3.75 py-2.5 bg-zinc-300 dark:bg-neutral-800',
+                'flex space-x-5 items-center cursor-pointer w-full first:rounded-t-10 first:pt-3.75 last:rounded-b-10 px-3.75 py-2.5 bg-zinc-300 dark:bg-neutral-800',
                 hoverColorBrandText,
                 hoverColor
               )}
@@ -63,16 +65,17 @@ export const ProfileCollections = ({ userAddress }: Props) => {
             >
               <EZImage src={item.imageUrl} className="w-25 h-25 rounded" />
               <div className="">
-                <div className={twMerge('!text-22 leading-7 font-medium', secondaryTextColor)}>{item.name}</div>
-                <div className={twMerge('!text-17 leading-6 font-medium', secondaryTextColor)}>
+                <div className={twMerge('!text-22 leading-7 font-bold', secondaryTextColor)}>{item.name}</div>
+                <div className={twMerge('text-lg leading-6 font-semibold', secondaryTextColor)}>
                   Floor{' '}
-                  <span className="text-amber-700">
-                    {item.floorPrice} {EthSymbol}
+                  <span className="text-17 text-amber-700 ml-1.25 font-normal">
+                    <span className="font-supply">{item.floorPrice}</span>
+                    {EthSymbol}
                   </span>
                 </div>
               </div>
               <Spacer />
-              <span className={twMerge('!text-17 font-medium px-2.5', secondaryTextColor)}>{item.numNFTs}</span>
+              <span className={twMerge('!text-22 font-bold px-2.5', secondaryTextColor)}>{item.numNFTs}</span>
             </div>
             // </div>
           );

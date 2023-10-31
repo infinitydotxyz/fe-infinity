@@ -166,19 +166,19 @@ export const TokenBalances = ({
         title="Token Balances"
         subTitle={
           <div className="flex flex-col items-start space-y-2.5">
-            <div className="text-sm">
+            <div className="text-sm font-semibold">
               Balances of the top NFT exchange tokens. Min balance required (any one of the tokens) for 0 fees and
               royalties: {nFormatter(minStakeAmountForFeeWaiverAndBoost, 2)}
             </div>
             {xflBalance > 0 ? (
-              <div className="text-sm">
+              <div className="text-base font-semibold">
                 Your current reward boost for holding {nFormatter(xflBalance, 2)} ${FLOW_TOKEN.symbol} tokens:{' '}
                 <span className={twMerge(primaryShadow, borderColor, 'font-bold text-lg border p-1')}>
                   {rewardBoost}x
                 </span>
               </div>
             ) : (
-              <div className="text-sm">
+              <div className="text-base font-semibold">
                 You are not earning a reward boost as your ${FLOW_TOKEN.symbol} balance is 0. You can earn upto a 10x
                 boost on rewards for holding ${FLOW_TOKEN.symbol} tokens. See{' '}
                 <a
@@ -209,7 +209,7 @@ export const TokenBalances = ({
                       setTokenInfo(FLOW_TOKEN.symbol);
                       setShowBuyTokensModal(true);
                     }}
-                    className={twMerge('text-base p-2.5 border-0 rounded-4 md:mt-3.75')}
+                    className={twMerge('text-base p-2.5 border-0 rounded-4 md:mt-3.75 font-semibold')}
                   >
                     Buy
                   </AButton>
@@ -230,7 +230,7 @@ export const TokenBalances = ({
                       setTokenInfo('BLUR');
                       setShowBuyTokensModal(true);
                     }}
-                    className={twMerge('text-base p-2.5 border-0 rounded-4 md:mt-3.75')}
+                    className={twMerge('text-base p-2.5 border-0 rounded-4 md:mt-3.75 font-semibold')}
                   >
                     Buy
                   </AButton>
@@ -260,7 +260,7 @@ export const TokenBalances = ({
                       setTokenInfo('LOOKS');
                       setShowBuyTokensModal(true);
                     }}
-                    className={twMerge('text-base p-2.5 border-0 rounded-4 md:mt-3.75')}
+                    className={twMerge('text-base p-2.5 border-0 rounded-4 md:mt-3.75 font-semibold')}
                   >
                     Buy
                   </AButton>
@@ -290,7 +290,7 @@ export const TokenBalances = ({
                       setTokenInfo('X2Y2');
                       setShowBuyTokensModal(true);
                     }}
-                    className={twMerge('text-base p-2.5 border-0 rounded-4 md:mt-3.75')}
+                    className={twMerge('text-base p-2.5 border-0 rounded-4 md:mt-3.75 font-semibold')}
                   >
                     Buy
                   </AButton>
@@ -320,7 +320,7 @@ export const TokenBalances = ({
                       setTokenInfo('SUDO');
                       setShowBuyTokensModal(true);
                     }}
-                    className={twMerge('text-base p-2.5 border-0 rounded-4 md:mt-3.75')}
+                    className={twMerge('text-base p-2.5 border-0 rounded-4 md:mt-3.75 font-semibold')}
                   >
                     Buy
                   </AButton>

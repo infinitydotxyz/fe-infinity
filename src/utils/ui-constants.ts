@@ -75,8 +75,13 @@ export const sidebarIconColors = 'dark:text-neutral-100 text-neutral-700';
 export const checkboxBgColor = 'bg-white dark:text-neutral-700';
 export const darkWhiteIconColor = 'text-neutral-700 dark:text-white';
 export const golderBorderColor = 'border-yellow-700';
-export const tabItemBGColor = '!bg-zinc-300 dark:!bg-zinc-900';
+export const tabItemBGColor = 'bg-zinc-300 dark:bg-zinc-900';
 export const containerBGColor = 'bg-zinc-300 dark:bg-neutral-800';
 export const heroSectionBGImage = '-top-[267px] -left-[272px]';
-export const rewardSectionItemLabel = 'text-sm font-medium text-neutral-700 dark:text-white';
+export const rewardSectionItemLabel = 'text-sm font-medium text-neutral-700 dark:text-white whitespace-nowrap';
 export const rewardSectionItemValue = 'md:text-31 font-supply font-normal text-amber-700 leading-9 text-center';
+export const analyticsSectionItemValue =
+  'text-17 md:text-31 font-supply font-normal text-amber-700 leading-5 md:leading-9 text-center';
+export const analyticsSectionItemLabel =
+  'text-base leading-5 font-medium text-neutral-700 dark:text-white line-clamp-1 whitespace-nowrap';
+export const referralLink = 'max-w-[calc(100vw_-_90px)]';

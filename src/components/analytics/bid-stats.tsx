@@ -1,10 +1,8 @@
 import { OrderStats } from 'src/hooks/api/useOrderRewardStats';
 import { RewardsSection } from '../rewards/rewards-section';
 import { twMerge } from 'tailwind-merge';
-import { buttonBorderColor, primaryShadow } from 'src/utils/ui-constants';
-import useScreenSize from 'src/hooks/useScreenSize';
+import { analyticsSectionItemLabel, analyticsSectionItemValue } from 'src/utils/ui-constants';
 import { nFormatter } from 'src/utils';
-import { Spacer } from '../common';
 import { useTopUsersByBidsDataSets } from 'src/hooks/api/useTopUsersByBidsDataSets';
 import { DonutChart, DonutDataPoint } from '../charts/donut-chart';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -15,14 +13,15 @@ interface Props {
   showUserStats: boolean;
 }
 export function BidStats({ stats, userStats, showUserStats }: Props) {
-  const { isDesktop } = useScreenSize();
-
   const {
     topUsersByNumBidsDataSet,
     topUsersByNumBidsNearFloorDataSet,
     topUsersByNumActiveBidsDataSet,
     topUsersByNumActiveBidsNearFloorDataSet
   } = useTopUsersByBidsDataSets();
+
+  const tokenItemClassname =
+    'lg:w-1/6 sm:w-full gap-1 flex flex-1  flex-row-reverse w-full md:flex-col items-center justify-between text-sm mt-2.5 first:mt-0 md:mt-0';
 
   const [selectedUserByNumBids, setSelectedUserByNumBids] = useState<null | DonutDataPoint>(null);
   const [selectedUserByNumActiveBids, setSelectedUserByNumActiveBids] = useState<null | DonutDataPoint>(null);
@@ -42,33 +41,27 @@ export function BidStats({ stats, userStats, showUserStats }: Props) {
         <RewardsSection
           title="Bid totals"
           sideInfo={
-            <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
-              <div className="md:flex flex-wrap mt-4">
-                <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                  <div className="md:text-2xl font-heading font-bold">{nFormatter(stats.numBids, 2)}</div>
-                  <div className="text-sm mt-1">Bids</div>
+            <div className={twMerge(' h-full md:p-5')}>
+              <div className="md:flex items-center flex-wrap h-full justify-center xl:justify-between gap-3 xl:gap-1">
+                <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                  <div className={analyticsSectionItemValue}>{nFormatter(stats.numBids, 2)}</div>
+                  <div className={analyticsSectionItemLabel}>Bids</div>
                 </div>
-                <Spacer />
 
-                <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                  <div className="md:text-2xl font-heading font-bold">{nFormatter(stats.numActiveBids, 2)}</div>
-                  <div className="text-sm mt-1">Active bids</div>
+                <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                  <div className={analyticsSectionItemValue}>{nFormatter(stats.numActiveBids, 2)}</div>
+                  <div className={analyticsSectionItemLabel}>Active bids</div>
                 </div>
-                <Spacer />
 
-                <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                  <div className="md:text-2xl font-heading font-bold">
-                    {nFormatter(stats.numActiveBidsNearFloor, 2)}
-                  </div>
-                  <div className="text-sm mt-1">Active bids near floor</div>
+                <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                  <div className={analyticsSectionItemValue}>{nFormatter(stats.numActiveBidsNearFloor, 2)}</div>
+                  <div className={analyticsSectionItemLabel}>Active bids near floor</div>
                 </div>
-                <Spacer />
 
-                <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                  <div className="md:text-2xl font-heading font-bold">{nFormatter(stats.numCancelledBids, 2)}</div>
-                  <div className="text-sm mt-1">Cancelled bids</div>
+                <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                  <div className={analyticsSectionItemValue}>{nFormatter(stats.numCancelledBids, 2)}</div>
+                  <div className={analyticsSectionItemLabel}>Cancelled bids</div>
                 </div>
-                <Spacer />
               </div>
             </div>
           }
@@ -80,35 +73,27 @@ export function BidStats({ stats, userStats, showUserStats }: Props) {
           <RewardsSection
             title="Your bid totals"
             sideInfo={
-              <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
-                <div className="md:flex flex-wrap mt-4">
-                  <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                    <div className="md:text-2xl font-heading font-bold">{nFormatter(userStats.numBids, 2)}</div>
-                    <div className="text-sm mt-1">Bids</div>
+              <div className={twMerge(' h-full md:p-5')}>
+                <div className="md:flex items-center flex-wrap h-full justify-center xl:justify-between gap-3 xl:gap-1">
+                  <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                    <div className={analyticsSectionItemValue}>{nFormatter(userStats.numBids, 2)}</div>
+                    <div className={analyticsSectionItemLabel}>Bids</div>
                   </div>
-                  <Spacer />
 
-                  <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                    <div className="md:text-2xl font-heading font-bold">{nFormatter(userStats.numActiveBids, 2)}</div>
-                    <div className="text-sm mt-1">Active bids</div>
+                  <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                    <div className={analyticsSectionItemValue}>{nFormatter(userStats.numActiveBids, 2)}</div>
+                    <div className={analyticsSectionItemLabel}>Active bids</div>
                   </div>
-                  <Spacer />
 
-                  <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                    <div className="md:text-2xl font-heading font-bold">
-                      {nFormatter(userStats.numActiveBidsNearFloor, 2)}
-                    </div>
-                    <div className="text-sm mt-1">Active bids near floor</div>
+                  <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                    <div className={analyticsSectionItemValue}>{nFormatter(userStats.numActiveBidsNearFloor, 2)}</div>
+                    <div className={analyticsSectionItemLabel}>Active bids near floor</div>
                   </div>
-                  <Spacer />
 
-                  <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                    <div className="md:text-2xl font-heading font-bold">
-                      {nFormatter(userStats.numCancelledBids, 2)}
-                    </div>
-                    <div className="text-sm mt-1">Cancelled bids</div>
+                  <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                    <div className={analyticsSectionItemValue}>{nFormatter(userStats.numCancelledBids, 2)}</div>
+                    <div className={analyticsSectionItemLabel}>Cancelled bids</div>
                   </div>
-                  <Spacer />
                 </div>
               </div>
             }

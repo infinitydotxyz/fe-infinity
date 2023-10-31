@@ -94,12 +94,13 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
   };
   return (
     <div className={twMerge('min-h-[50vh] pb-20', className)}>
-      <div className={twMerge('flex py-2.5 md:py-5')}>
+      <div className={twMerge('flex py-3.75 md:py-5')}>
         <div className="flex flex-col space-y-2.5 w-full">
           <div className="md:flex justify-between">
             <div className="md:hidden block">
               <TabSelector
                 value={orderType}
+                className="mb-2.5 mt-0"
                 setValue={(e) => {
                   setOrderType(e);
                   onClickOrderType(orderTypes[e]);
@@ -107,7 +108,7 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
                 tabItems={Object.keys(orderTypes)}
               />
             </div>
-            <div className="flex items-center justify-between md:justify-start gap-2.5">
+            <div className="flex items-center flex-1 justify-between md:justify-start gap-2.5 mr-0 md:mr-2.5">
               <CollectionSearchInput
                 expanded
                 orderSearch
@@ -125,9 +126,9 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
               {/* </div> */}
             </div>
 
-            <div className="flex justify-center space-x-2 md:mt-0 mt-2.5">
+            <div className="flex justify-center space-x-2">
               {selectedOrderType === 'offers-received' && (
-                <div className={twMerge('flex items-center w-fit')}>
+                <div className={twMerge('flex items-center w-fit md:mt-0 mt-2.5')}>
                   <div className="flex items-center space-x-2">
                     <div className="text-sm font-medium">
                       <span className="text-amber-700">{numTokensWithOffers}</span> offers totaling to
@@ -199,7 +200,7 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
         </div>
       </div>
 
-      <div className="flex px-5" key={selectedOrderType}>
+      <div className="flex" key={selectedOrderType}>
         <div className="w-full pointer-events-auto">
           {isLoading && (
             <div className="">

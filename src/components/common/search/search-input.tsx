@@ -108,13 +108,15 @@ export function SearchInput({
     <div
       className={twMerge(
         textColor,
-        'w-full max-w-xs px-2.5 rounded-lg text-center h-10 flex place-items-center bg-black bg-opacity-3 dark:bg-gray-600 peer-focus-within:ring-1 peer-focus-within:ring-cyan-500',
+        'w-full max-w-300 px-2.5 rounded-lg text-center h-10 flex place-items-center bg-black bg-opacity-3 dark:bg-gray-600 peer-focus-within:ring-1 peer-focus-within:ring-cyan-500',
         showShortCut ? 'ring-0' : 'ring-1 ring-cyan-500',
         containerClassName
       )}
     >
       <div className="w-content h-content  hover:cursor-pointer" onClick={activate}>
-        {customIcon ?? <MagnifyingGlassIcon className={twMerge('flex-1 w-2.5 h-2.5 max-h-full')}></MagnifyingGlassIcon>}
+        {customIcon ?? (
+          <MagnifyingGlassIcon className={twMerge('flex-1 w-3.75 h-3.75 max-h-full')}></MagnifyingGlassIcon>
+        )}
       </div>
       <Combobox
         as="div"
@@ -130,7 +132,7 @@ export function SearchInput({
             'focus-visible:outline-none focus:ring-transparent focus:border-transparent focus:shadow-none',
             'active:outline-none active:ring-transparent active:border-transparent active:shadow-none',
             'outline-none ring-transparent border-transparent shadow-none',
-            'text-sm align-middle p-2.5 text-neutral-700 font-medium placeholder:text-neutral-500 dark:placeholder:text-amber-600 caret-cyan-400',
+            'text-sm align-middle p-2.5 text-neutral-700 font-medium dark:placeholder:text-neutral-500 placeholder:text-amber-600 caret-cyan-400',
             inputClassName
           )}
           placeholder={placeholder}

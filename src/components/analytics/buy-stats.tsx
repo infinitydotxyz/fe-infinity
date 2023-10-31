@@ -1,9 +1,8 @@
 import { nFormatter } from 'src/utils';
-import { Checkbox, Spacer } from '../common';
+import { Checkbox } from '../common';
 import { RewardsSection } from '../rewards/rewards-section';
-import { buttonBorderColor, primaryShadow } from 'src/utils/ui-constants';
+import { analyticsSectionItemLabel, analyticsSectionItemValue } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import useScreenSize from 'src/hooks/useScreenSize';
 import { DonutChart, DonutDataPoint } from '../charts/donut-chart';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { LineChart } from '../charts/line-chart';
@@ -31,8 +30,6 @@ const VolumeDataSetIdsToNames: Record<VolumeDataSetIds, string> = {
 };
 
 export function BuyStats() {
-  const { isDesktop } = useScreenSize();
-
   const {
     aggregated: stats,
     userAvailable: showUserStats,
@@ -53,7 +50,8 @@ export function BuyStats() {
     topUsersByNumBuysDataSet,
     topUsersByNumNativeBuysDataSet
   } = useTopBuyersDataSets();
-
+  const tokenItemClassname =
+    'lg:w-1/6 sm:w-full gap-1 flex flex-1  flex-row-reverse w-full md:flex-col items-center justify-between text-sm mt-2.5 first:mt-0 md:mt-0';
   const [selectedUserByBuys, setSelectedUserByBuys] = useState<null | DonutDataPoint>(null);
   const [selectedUserByNativeBuys, setSelectedUserByNativeBuys] = useState<null | DonutDataPoint>(null);
   const [selectedUserByVolume, setSelectedUserByVolume] = useState<null | DonutDataPoint>(null);
@@ -70,31 +68,27 @@ export function BuyStats() {
         <RewardsSection
           title="Buy totals"
           sideInfo={
-            <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
-              <div className="md:flex flex-wrap mt-4">
-                <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                  <div className="md:text-2xl font-heading font-bold">{nFormatter(stats.volume, 2)}</div>
-                  <div className="text-sm mt-1">Buy volume USD</div>
+            <div className={twMerge(' h-full md:p-5')}>
+              <div className="md:flex items-center flex-wrap h-full justify-center xl:justify-between gap-3 xl:gap-1">
+                <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                  <div className={analyticsSectionItemValue}>{nFormatter(stats.volume, 2)}</div>
+                  <div className={analyticsSectionItemLabel}>Buy volume USD</div>
                 </div>
-                <Spacer />
 
-                <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                  <div className="md:text-2xl font-heading font-bold">{nFormatter(stats.nativeVolume, 2)}</div>
-                  <div className="text-sm mt-1">Native buy volume USD</div>
+                <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                  <div className={analyticsSectionItemValue}>{nFormatter(stats.nativeVolume, 2)}</div>
+                  <div className={analyticsSectionItemLabel}>Native buy volume USD</div>
                 </div>
-                <Spacer />
 
-                <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                  <div className="md:text-2xl font-heading font-bold">{nFormatter(stats.numBuys, 2)}</div>
-                  <div className="text-sm mt-1">Buys</div>
+                <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                  <div className={analyticsSectionItemValue}>{nFormatter(stats.numBuys, 2)}</div>
+                  <div className={analyticsSectionItemLabel}>Buys</div>
                 </div>
-                <Spacer />
 
-                <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                  <div className="md:text-2xl font-heading font-bold">{nFormatter(stats.numNativeBuys, 2)}</div>
-                  <div className="text-sm mt-1">Native buys</div>
+                <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                  <div className={analyticsSectionItemValue}>{nFormatter(stats.numNativeBuys, 2)}</div>
+                  <div className={analyticsSectionItemLabel}>Native buys</div>
                 </div>
-                <Spacer />
               </div>
             </div>
           }
@@ -105,31 +99,27 @@ export function BuyStats() {
           <RewardsSection
             title="Your buy totals"
             sideInfo={
-              <div className={twMerge(buttonBorderColor, isDesktop && primaryShadow, 'md:border md:py-4 md:px-6')}>
-                <div className="md:flex flex-wrap mt-4">
-                  <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                    <div className="md:text-2xl font-heading font-bold">{nFormatter(userStats.volume, 2)}</div>
-                    <div className="text-sm mt-1">Buy volume USD</div>
+              <div className={twMerge(' h-full md:p-5')}>
+                <div className="md:flex items-center flex-wrap h-full justify-center xl:justify-between gap-3 xl:gap-1">
+                  <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                    <div className={analyticsSectionItemValue}>{nFormatter(userStats.volume, 2)}</div>
+                    <div className={analyticsSectionItemLabel}>Buy volume USD</div>
                   </div>
-                  <Spacer />
 
-                  <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                    <div className="md:text-2xl font-heading font-bold">{nFormatter(userStats.nativeVolume, 2)}</div>
-                    <div className="text-sm mt-1">Native buy volume USD</div>
+                  <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                    <div className={analyticsSectionItemValue}>{nFormatter(userStats.nativeVolume, 2)}</div>
+                    <div className={analyticsSectionItemLabel}>Native buy volume USD</div>
                   </div>
-                  <Spacer />
 
-                  <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                    <div className="md:text-2xl font-heading font-bold">{nFormatter(userStats.numBuys, 2)}</div>
-                    <div className="text-sm mt-1">Buys</div>
+                  <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                    <div className={analyticsSectionItemValue}>{nFormatter(userStats.numBuys, 2)}</div>
+                    <div className={analyticsSectionItemLabel}>Buys</div>
                   </div>
-                  <Spacer />
 
-                  <div className="lg:w-1/4 sm:w-full md:block flex justify-between">
-                    <div className="md:text-2xl font-heading font-bold">{nFormatter(userStats.numNativeBuys, 2)}</div>
-                    <div className="text-sm mt-1">Native buys</div>
+                  <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                    <div className={analyticsSectionItemValue}>{nFormatter(userStats.numNativeBuys, 2)}</div>
+                    <div className={analyticsSectionItemLabel}>Native buys</div>
                   </div>
-                  <Spacer />
                 </div>
               </div>
             }

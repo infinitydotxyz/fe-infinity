@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, EthPrice } from 'src/components/common';
+import { Button, EthSymbol } from 'src/components/common';
 import { erc721TokenCartItemToCollectionCartItem, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
@@ -107,7 +107,8 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
             Price
           </div>
           <div className="text-amber-700 text-17 font-supply font-normal">
-            <EthPrice ethClassName="font-body font-normal" label={`${nFormatter(startPriceEth, 2)}`} />
+            <span className="font-body font-normal mr-0.5">{EthSymbol}</span>
+            {nFormatter(startPriceEth, 2)}
           </div>
         </div>
 

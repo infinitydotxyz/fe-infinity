@@ -13,7 +13,8 @@ const TabSelector = ({
   suffix,
   prefix,
   showCustom = false,
-  showClear = false
+  showClear = false,
+  className = ''
 }: {
   tabItems: string[];
   value: string;
@@ -24,6 +25,7 @@ const TabSelector = ({
   showClear?: boolean;
   prefix?: string;
   suffix?: string;
+  className?: string;
 }) => {
   const { cartType } = useCartContext();
   return (
@@ -31,7 +33,8 @@ const TabSelector = ({
       <div
         className={twMerge(
           'flex flex-row md:m-0 my-2 h-10 flex-1 cursor-pointer rounded-4 overflow-hidden gap-0.25',
-          cartType === CartType.CollectionBid ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300'
+          cartType === CartType.CollectionBid ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300',
+          className
         )}
       >
         {tabItems?.map((tabItem) => (

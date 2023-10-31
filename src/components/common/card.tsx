@@ -105,7 +105,7 @@ export const GridCard = ({
           <div className={twMerge('group-hover/nft:mt-6.25', selected ? 'mt-6.25' : 'mt-3.75')}>
             <p className="text-gray-800 text-sm not-italic font-medium leading-4.25 truncate">{title}</p>
             <div
-              className={'text-neutral-700 dark:text-white text-lg not-italic font-semibold leading-5'}
+              className={'text-neutral-700 dark:text-white text-lg not-italic font-semibold leading-5 mt-0.5'}
               onClick={(e) => {
                 e.stopPropagation();
                 const { pathname, query } = router;

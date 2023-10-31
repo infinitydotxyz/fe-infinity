@@ -13,18 +13,18 @@ export const RewardsSection = (props: RewardsSectionProps) => {
     <div
       className={twMerge(
         buttonBorderColor,
-        'rounded-10 flex-col  py-4 px-5 md:pr-3.75 bg-zinc-300 dark:bg-neutral-800 w-full  shadow-sm'
+        'rounded-10 flex-col  py-5 md:pr-3.75 bg-zinc-300 dark:bg-neutral-800 w-full  shadow-sm'
       )}
     >
       <div className="md:flex w-full">
-        <div className="md:w-1/2 px-5 md:px-7.5 flex flex-col justify-center">
-          <div className="text-22 text-neutral-700 dark:text-white font-semibold leading-7">{props.title}</div>
+        <div className="md:w-1/2 md:px-7.5 flex flex-col justify-center">
+          <div className="text-22 text-neutral-700 dark:text-white font-bold leading-7">{props.title}</div>
           {props.subTitle && (
             <div className=" my-2.5 text-base text-neutral-700 dark:text-white font-medium">{props.subTitle}</div>
           )}
         </div>
         {props?.sideInfo && (
-          <div className="md:w-1/2 md:mt-0 mt-4 p-5 bg-light-borderLight dark:bg-zinc-700  rounded-lg">
+          <div className="md:w-1/2 md:mt-0 mt-4 p-5 bg-light-borderLight dark:bg-zinc-700 md:min-h-[200px] rounded-lg">
             {props.sideInfo}
           </div>
         )}
