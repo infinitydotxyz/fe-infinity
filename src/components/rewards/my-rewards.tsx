@@ -108,7 +108,7 @@ const MyRewards = () => {
           }
         ></RewardsSection>
       )}
-      <div className="py-9 text-neutral-700 text-base font-semibold text-center dark:text-white">
+      <div className="py-10 text-neutral-700 text-base font-semibold text-center dark:text-white">
         More rewards dropping soon.
       </div>
     </div>

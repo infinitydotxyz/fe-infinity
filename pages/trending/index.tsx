@@ -3,17 +3,10 @@ import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { AButton } from 'src/components/astra/astra-button';
 import { APageBox } from 'src/components/astra/astra-page-box';
-import {
-  BlueCheckInline,
-  BouncingLogo,
-  CenterFixed,
-  EZImage,
-  EthPrice,
-  NextLink,
-  ToggleTab
-} from 'src/components/common';
+import { BouncingLogo, CenterFixed, EZImage, EthPrice, NextLink, ToggleTab } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
+import { BlueCheckIcon } from 'src/icons';
 import { apiGet, formatNumber, getNetworkName, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
@@ -163,13 +156,10 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
         className="md:grid gap-2 justify-between items-center w-full"
         style={{ gridTemplateColumns: 'minmax(0, 3fr) repeat(auto-fit, minmax(0, 1fr))' }}
       >
-        <div
-          className={twMerge(
-            'flex items-center justify-between md:mb-0 mb-3.5 font-bold',
-            isDesktop && 'justify-start'
-          )}
-        >
-          {isDesktop && <div className="text-base mr-8 text-right">{index + 1}</div>}
+        <div className={twMerge('flex items-center md:justify-start justify-between md:mb-0 mb-3.5 font-bold')}>
+          <div className="hidden md:block text-base mr-8 text-right text-neutral-700 dark:text-neutral-700">
+            {index + 1}
+          </div>
           <div className="flex items-center">
             <NextLink
               href={`/chain/${getNetworkName(collection?.chainId)}/collection/${
@@ -183,26 +173,26 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
               href={`/chain/${getNetworkName(collection?.chainId)}/collection/${
                 collection?.slug || collection?.address
               }`}
-              className="ml-2 text-lg md:text-base font-semibold text-neutral-700 dark:text-white whitespace-normal"
+              className="ml-2.5 text-lg md:text-base font-semibold text-neutral-700 dark:text-white whitespace-normal"
             >
               {collection?.metadata?.name}
-              {collection?.hasBlueCheck && <BlueCheckInline />}
+              {collection?.hasBlueCheck && <BlueCheckIcon className="inline ml-1.25 mb-0.5" />}
             </NextLink>
           </div>
-          {!isDesktop && <div className="text-base text-right">{index + 1}</div>}
+          <div className="md:hidden block text-base text-right text-neutral-700 dark:text-neutral-700">{index + 1}</div>
         </div>
 
-        <div className={propertyClassname}>
+        <div className={twMerge(propertyClassname, 'mt-0')}>
           <div className="text-sm text-gray-800 font-medium">Volume</div>
           <EthPrice
-            ethClassName="font-normal text-17 md:text-sm font-body leading-4.5 mb-1 mr-0.5"
+            ethClassName="font-normal text-17 md:text-sm font-body leading-4.5 mr-0.5"
             className="font-supply md:leading-5 text-amber-700 font-normal text-sm md:text-17"
             label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`}
           />
         </div>
 
-        <div className={propertyClassname}>
-          <div className="text-sm text-gray-800 font-medium">Volume Change</div>
+        <div className={twMerge(propertyClassname, 'mt-0')}>
+          <div className="text-sm text-gray-800 line-clamp-1 font-medium">Volume Change</div>
           {Number.isNaN(salesVolumeChange) ? (
             '-'
           ) : (
@@ -215,14 +205,14 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
         <div className={propertyClassname}>
           <div className="text-sm text-gray-800 font-medium">Floor</div>
           <EthPrice
-            ethClassName="font-normal text-17 md:text-sm font-body leading-4.5 mb-1 mr-0.5"
+            ethClassName="font-normal text-17 md:text-sm font-body leading-4.5 mr-0.5"
             className="font-supply md:leading-5 text-amber-700 font-normal text-sm md:text-17"
             label={floorPrice > 0 ? formatNumber(floorPrice, 2) : '-'}
           />
         </div>
 
         <div className={propertyClassname}>
-          <div className="text-sm text-gray-800 font-medium">Floor Change</div>
+          <div className="text-sm text-gray-800 line-clamp-1 font-medium">Floor Change</div>
           {Number.isNaN(floorPriceChange) ? (
             '-'
           ) : (

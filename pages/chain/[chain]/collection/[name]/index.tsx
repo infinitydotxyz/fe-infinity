@@ -262,7 +262,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               {selectedCollectionTab === CollectionPageTabs.Bid.toString() && !isDesktop && (
                 <AButton
                   primary
-                  className="fixed bottom-18 left-5 right-5 rounded z-10 bg-neutral-200"
+                  className="fixed sm:hidden border-0 text-base font-semibold bottom-18 left-5 right-5 rounded z-10 bg-neutral-200"
                   onClick={() => {
                     setCartType(CartType.CollectionBid);
                     if (isCollSelectable(collection as ERC721CollectionCartItem)) {

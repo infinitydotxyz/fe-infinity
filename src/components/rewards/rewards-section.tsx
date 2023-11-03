@@ -6,6 +6,7 @@ interface RewardsSectionProps {
   subTitle?: React.ReactNode | string;
   sideInfo?: React.ReactNode;
   children?: React.ReactNode;
+  sideInfoClassName?: string;
 }
 
 export const RewardsSection = (props: RewardsSectionProps) => {
@@ -24,7 +25,12 @@ export const RewardsSection = (props: RewardsSectionProps) => {
           )}
         </div>
         {props?.sideInfo && (
-          <div className="md:w-1/2 md:mt-0 mt-4 p-5 bg-light-borderLight dark:bg-zinc-700 md:min-h-[200px] rounded-lg">
+          <div
+            className={twMerge(
+              'md:w-1/2 md:mt-0 mt-4 px-8 py-6 md:py-0 sm:px-10 bg-light-borderLight dark:bg-zinc-700 md:min-h-[10px] rounded-lg',
+              props.sideInfoClassName
+            )}
+          >
             {props.sideInfo}
           </div>
         )}

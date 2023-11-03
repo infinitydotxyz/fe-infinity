@@ -65,7 +65,7 @@ export const APageHeader = ({ title, rightToolbar, subTitle }: Props2): JSX.Elem
           >
             {title}
           </div>
-          <div className="text-neutral-300 text-base font-medium">{subTitle}</div>
+          <div className="text-neutral-300 text-base font-semibold">{subTitle}</div>
         </div>
       ) : (
         <div

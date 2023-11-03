@@ -402,7 +402,7 @@ export const AstraCart = ({
     } else {
       cartItemList = (
         <div key={Math.random()} className={twMerge(textColor, 'flex items-center justify-center uppercase flex-1')}>
-          <div className={twMerge('font-medium font-heading', secondaryTextColor)}>Cart empty</div>
+          <div className={twMerge('font-medium font-body', secondaryTextColor)}>Cart empty</div>
         </div>
       );
     }
@@ -515,7 +515,7 @@ export const AstraCart = ({
   return (
     <div className={twMerge('h-full flex flex-col border-l-[1px]', borderColor)}>
       <div className="m-4 flex items-center">
-        <div className={twMerge(textColor, 'md:text-3xl lg:text-2xl font-bold font-heading mr-3')}>{cartTitle}</div>
+        <div className={twMerge(textColor, 'md:text-3xl lg:text-2xl font-bold font-body mr-3')}>{cartTitle}</div>
 
         <div className="flex items-center">
           {currentCartItems.length > 0 && (
@@ -566,7 +566,7 @@ export const AstraCart = ({
       {cartType !== CartType.Send && cartType !== CartType.Cancel && (
         <div className={twMerge('m-4 flex flex-col text-sm space-y-2 rounded-lg p-3', secondaryBgColor)}>
           <ToggleTab
-            className="font-heading mb-2"
+            className="mb-2"
             options={cartTabOptions}
             defaultOption={cartTabOptions[0]}
             onChange={onCartTabOptionsChange}
@@ -577,8 +577,8 @@ export const AstraCart = ({
               <div className={twMerge('border-b-[1px] pb-2 space-y-2', borderColor)}>
                 <div className={twMerge('flex justify-between')}>
                   <div className={twMerge(secondaryTextColor, 'font-medium')}>Cart total: </div>
-                  <div className="font-heading">
-                    {nFormatter(Number(cartTotal))} {EthSymbol}
+                  <div className="font-supply">
+                    {nFormatter(Number(cartTotal))} <span className="font-body">{EthSymbol}</span>
                   </div>
                 </div>
 

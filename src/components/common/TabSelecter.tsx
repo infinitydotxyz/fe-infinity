@@ -75,7 +75,7 @@ const TabSelector = ({
         )}
       </div>
       {showClear && (
-        <div className="cursor-pointer" onClick={() => setValue('')}>
+        <div className="cursor-pointer mt-2.5 md:mt-0" onClick={() => setValue('')}>
           <ClearBrushIcon />
         </div>
       )}

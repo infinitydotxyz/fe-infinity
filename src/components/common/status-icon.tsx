@@ -261,7 +261,7 @@ export const StatusIcon = ({
   const isValid = status != 'invalid';
 
   return (
-    <div className="flex items-center h-max p-2.5 border rounded-4 dark:border-neutral-200 border-gray-300 space-x-1.5">
+    <div className="flex items-center h-max px-2.5 py-1.75 border rounded-4 dark:border-neutral-200 border-gray-300 space-x-1.5">
       <span className="text-base leading-5 font-semibold">
         {label}
         {duration != null && (

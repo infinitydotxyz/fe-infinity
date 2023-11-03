@@ -302,6 +302,10 @@ module.exports = {
     70.5: '282px',
     225: '900px'
   },
+  minHeight: {
+    25: '100px',
+    50: '200px'
+  },
   height: {
     0.25: '1px',
     0.75: '3px',

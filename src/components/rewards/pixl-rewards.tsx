@@ -129,14 +129,16 @@ export const PixlRewards = () => {
           <div className={twMerge('h-full md:p-2')}>
             {isUnlocked ? (
               <div className="md:flex items-center space-x-0.25 justify-between flex-wrap h-full">
-                {airDropTiers.map((tier) => (
+                {airDropTiers.map((tier, index) => (
                   <div
                     className={twMerge(
                       tokenItemClassname,
                       'flex-1 justify-center',
                       mappedAirdropTier === tier.title
                         ? 'bg-zinc-200 dark:bg-dark-tier'
-                        : 'bg-zinc-300 dark:bg-dark-disabledTier'
+                        : 'bg-zinc-300 dark:bg-dark-disabledTier',
+                      index === 0 ? 'rounded-t sm:rounded-t-none sm:rounded-l' : '',
+                      index + 1 === airDropTiers?.length ? 'rounded-b sm:rounded-b-none sm:rounded-r' : ''
                     )}
                   >
                     <div

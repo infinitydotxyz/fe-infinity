@@ -132,7 +132,7 @@ export const ResponsiveBarChart = ({ data, graphType, displayDetails }: Responsi
             menuButtonClassName="py-1 px-2.5"
             label={EthSymbol + ' ' + selectedPriceBucket}
             className="py-0 px-0"
-            menuParentButtonClassName="px-0 py-0 border border-light-customBorder dark:border-dark-customBorder rounded h-8"
+            menuParentButtonClassName="px-0 py-0 border border-light-borderLight dark:border-dark-borderDark rounded h-8"
             items={priceBuckets.map((bucket) => ({
               label: numStr(bucket),
               onClick: () => setSelectedPriceBucket(bucket)

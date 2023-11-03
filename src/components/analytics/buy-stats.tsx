@@ -1,7 +1,7 @@
 import { nFormatter } from 'src/utils';
-import { Checkbox } from '../common';
+import { Checkbox, Spacer } from '../common';
 import { RewardsSection } from '../rewards/rewards-section';
-import { analyticsSectionItemLabel, analyticsSectionItemValue } from 'src/utils/ui-constants';
+import { analyticsSectionItemLabel, analyticsSectionItemValue, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { DonutChart, DonutDataPoint } from '../charts/donut-chart';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -51,7 +51,7 @@ export function BuyStats() {
     topUsersByNumNativeBuysDataSet
   } = useTopBuyersDataSets();
   const tokenItemClassname =
-    'lg:w-1/6 sm:w-full gap-1 flex flex-1  flex-row-reverse w-full md:flex-col items-center justify-between text-sm mt-2.5 first:mt-0 md:mt-0';
+    'lg:w-1/6 sm:w-full gap-1 flex flex-1  flex-row-reverse w-full md:flex-col items-start justify-between text-sm mt-2.5 first:mt-0 md:mt-0';
   const [selectedUserByBuys, setSelectedUserByBuys] = useState<null | DonutDataPoint>(null);
   const [selectedUserByNativeBuys, setSelectedUserByNativeBuys] = useState<null | DonutDataPoint>(null);
   const [selectedUserByVolume, setSelectedUserByVolume] = useState<null | DonutDataPoint>(null);
@@ -67,24 +67,25 @@ export function BuyStats() {
       <div className="mb-4">
         <RewardsSection
           title="Buy totals"
+          sideInfoClassName="md:min-h-25"
           sideInfo={
-            <div className={twMerge(' h-full md:p-5')}>
-              <div className="md:flex items-center flex-wrap h-full justify-center xl:justify-between gap-3 xl:gap-1">
+            <div className={twMerge(' h-full md:px-5')}>
+              <div className="md:flex md:flex-col lg:flex-row md:items-start lg:items-center flex-wrap h-full justify-center xl:justify-between gap-3 xl:gap-1">
                 <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
                   <div className={analyticsSectionItemValue}>{nFormatter(stats.volume, 2)}</div>
                   <div className={analyticsSectionItemLabel}>Buy volume USD</div>
                 </div>
-
+                <Spacer />
                 <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
                   <div className={analyticsSectionItemValue}>{nFormatter(stats.nativeVolume, 2)}</div>
                   <div className={analyticsSectionItemLabel}>Native buy volume USD</div>
                 </div>
-
+                <Spacer />
                 <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
                   <div className={analyticsSectionItemValue}>{nFormatter(stats.numBuys, 2)}</div>
                   <div className={analyticsSectionItemLabel}>Buys</div>
                 </div>
-
+                <Spacer />
                 <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
                   <div className={analyticsSectionItemValue}>{nFormatter(stats.numNativeBuys, 2)}</div>
                   <div className={analyticsSectionItemLabel}>Native buys</div>
@@ -98,24 +99,25 @@ export function BuyStats() {
         <div className="mb-4">
           <RewardsSection
             title="Your buy totals"
+            sideInfoClassName="md:min-h-25"
             sideInfo={
-              <div className={twMerge(' h-full md:p-5')}>
-                <div className="md:flex items-center flex-wrap h-full justify-center xl:justify-between gap-3 xl:gap-1">
+              <div className={twMerge(' h-full md:px-5')}>
+                <div className="md:flex md:flex-col lg:flex-row md:items-start lg:items-center flex-wrap h-full justify-center xl:justify-between gap-3 xl:gap-1">
                   <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
                     <div className={analyticsSectionItemValue}>{nFormatter(userStats.volume, 2)}</div>
                     <div className={analyticsSectionItemLabel}>Buy volume USD</div>
                   </div>
-
+                  <Spacer />
                   <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
                     <div className={analyticsSectionItemValue}>{nFormatter(userStats.nativeVolume, 2)}</div>
                     <div className={analyticsSectionItemLabel}>Native buy volume USD</div>
                   </div>
-
+                  <Spacer />
                   <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
                     <div className={analyticsSectionItemValue}>{nFormatter(userStats.numBuys, 2)}</div>
                     <div className={analyticsSectionItemLabel}>Buys</div>
                   </div>
-
+                  <Spacer />
                   <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
                     <div className={analyticsSectionItemValue}>{nFormatter(userStats.numNativeBuys, 2)}</div>
                     <div className={analyticsSectionItemLabel}>Native buys</div>
@@ -127,9 +129,9 @@ export function BuyStats() {
         </div>
       )}
 
-      <div className={twMerge('space-y-4 mt-6 pb-6')}>
-        <div className="flex flex-col lg:flex-row mb-2 mx-2">
-          <div className="mb-2 lg:mb-0 lg:flex-1 lg:mr-1 lg:max-w-1/2">
+      <div className={twMerge('space-y-4 pb-5')}>
+        <div className="flex flex-col lg:flex-row">
+          <div className="mb-4 lg:mb-0 lg:flex-1 lg:mr-2 lg:max-w-[50%]">
             <DonutChart
               title={topUsersByVolumeDataSet.name}
               subTitle={''}
@@ -138,7 +140,7 @@ export function BuyStats() {
               onClick={handleDonutSelect(setSelectedUserByVolume)}
             />
           </div>
-          <div className="lg:flex-1 lg:ml-1 lg:max-w-1/2">
+          <div className="lg:flex-1 lg:ml-2 lg:max-w-[50%]">
             <DonutChart
               title={topUsersByNativeVolumeDataSet.name}
               subTitle={''}
@@ -150,9 +152,9 @@ export function BuyStats() {
         </div>
       </div>
 
-      <div className={twMerge('space-y-4 mt-6 pb-6')}>
-        <div className="flex flex-col lg:flex-row mb-2 mx-2">
-          <div className="mb-2 lg:mb-0 lg:flex-1 lg:mr-1 lg:max-w-1/2">
+      <div className={twMerge('space-y-4 pb-5')}>
+        <div className="flex flex-col lg:flex-row">
+          <div className="mb-4 lg:mb-0 lg:flex-1 lg:mr-2 lg:max-w-[50%]">
             <DonutChart
               title={topUsersByNumBuysDataSet.name}
               subTitle={''}
@@ -161,7 +163,7 @@ export function BuyStats() {
               onClick={handleDonutSelect(setSelectedUserByBuys)}
             />
           </div>
-          <div className="lg:flex-1 lg:ml-1 lg:max-w-1/2">
+          <div className="lg:flex-1 lg:ml-2 lg:max-w-[50%]">
             <DonutChart
               title={topUsersByNumNativeBuysDataSet.name}
               subTitle={''}
@@ -173,9 +175,9 @@ export function BuyStats() {
         </div>
       </div>
 
-      <div className={twMerge('space-y-4 mt-6 pb-6 mb-16')}>
-        <div className="flex flex-col lg:flex-row mb-2 mx-2">
-          <div className="mb-2 lg:mb-0 lg:flex-1 lg:mr-1 lg:max-w-1/2">
+      <div className={twMerge('space-y-4 pb-5')}>
+        <div className="flex flex-col lg:flex-row">
+          <div className="mb-4 lg:mb-0 lg:flex-1 lg:mr-2 lg:max-w-[50%]">
             <LineChart dataSets={volumeDataSets} xAxisType="DATE" title="Buy Volume" subTitle="Last 30 days">
               <div className="flex gap-5 items-center mt-6">
                 {AllVolumeDataSetIds.map((id) => {
@@ -192,6 +194,9 @@ export function BuyStats() {
                             return [...prev, id];
                           });
                         }}
+                        inputClassName="!bg-neutral-700 dark:!bg-white"
+                        className={twMerge('text-sm font-semibold text-neutral-700', secondaryTextColor)}
+                        tickMarkClassName="bg-neutral-700 dark:bg-white peer-checked:text-white dark:peer-checked:text-neutral-700"
                         disabled={!availableVolumeDataSets.includes(id)}
                       />
                     </div>
@@ -200,7 +205,7 @@ export function BuyStats() {
               </div>
             </LineChart>
           </div>
-          <div className="lg:flex-1 lg:ml-1 lg:max-w-1/2">
+          <div className="lg:flex-1 lg:ml-2 lg:max-w-[50%]">
             <LineChart dataSets={buyDataSets} xAxisType="DATE" title="Buys" subTitle="Last 30 days">
               <div className="flex gap-5 items-center mt-6">
                 {AllBuyDataSetIds.map((id) => {
@@ -217,6 +222,9 @@ export function BuyStats() {
                             return [...prev, id];
                           });
                         }}
+                        inputClassName="!bg-neutral-700 dark:!bg-white"
+                        className={twMerge('text-sm font-semibold text-neutral-700', secondaryTextColor)}
+                        tickMarkClassName="bg-neutral-700 dark:bg-white peer-checked:text-white dark:peer-checked:text-neutral-700"
                         disabled={!availableBuyDataSets.includes(id)}
                       />
                     </div>

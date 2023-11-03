@@ -384,7 +384,7 @@ export const SidebarNavItem = ({
       </HelpToolTip>
       <div
         className={twMerge(
-          'font-medium text-lg mb-2 sm:mb-0 sm:text-sm cursor-pointer group-hover:text-yellow-700 text-dark-border dark:text-light-border text-center',
+          'font-medium text-lg mb-2 sm:mb-0 sm:text-sm cursor-pointer group-hover:text-yellow-700 text-neutral-300 dark:text-gray-900 text-center',
           highlighted && 'text-yellow-700 dark:text-yellow-700'
         )}
       >

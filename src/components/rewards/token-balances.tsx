@@ -209,7 +209,7 @@ export const TokenBalances = ({
                       setTokenInfo(FLOW_TOKEN.symbol);
                       setShowBuyTokensModal(true);
                     }}
-                    className={twMerge('text-base p-2.5 border-0 rounded-4 md:mt-3.75 font-semibold')}
+                    className={twMerge('text-sm p-2.5 border-0 rounded-4 md:mt-3.75 font-semibold')}
                   >
                     Buy
                   </AButton>
@@ -230,7 +230,7 @@ export const TokenBalances = ({
                       setTokenInfo('BLUR');
                       setShowBuyTokensModal(true);
                     }}
-                    className={twMerge('text-base p-2.5 border-0 rounded-4 md:mt-3.75 font-semibold')}
+                    className={twMerge('text-sm p-2.5 border-0 rounded-4 md:mt-3.75 font-semibold')}
                   >
                     Buy
                   </AButton>
@@ -260,7 +260,7 @@ export const TokenBalances = ({
                       setTokenInfo('LOOKS');
                       setShowBuyTokensModal(true);
                     }}
-                    className={twMerge('text-base p-2.5 border-0 rounded-4 md:mt-3.75 font-semibold')}
+                    className={twMerge('text-sm p-2.5 border-0 rounded-4 md:mt-3.75 font-semibold')}
                   >
                     Buy
                   </AButton>
@@ -290,7 +290,7 @@ export const TokenBalances = ({
                       setTokenInfo('X2Y2');
                       setShowBuyTokensModal(true);
                     }}
-                    className={twMerge('text-base p-2.5 border-0 rounded-4 md:mt-3.75 font-semibold')}
+                    className={twMerge('text-sm p-2.5 border-0 rounded-4 md:mt-3.75 font-semibold')}
                   >
                     Buy
                   </AButton>
@@ -320,7 +320,7 @@ export const TokenBalances = ({
                       setTokenInfo('SUDO');
                       setShowBuyTokensModal(true);
                     }}
-                    className={twMerge('text-base p-2.5 border-0 rounded-4 md:mt-3.75 font-semibold')}
+                    className={twMerge('text-sm p-2.5 border-0 rounded-4 md:mt-3.75 font-semibold')}
                   >
                     Buy
                   </AButton>

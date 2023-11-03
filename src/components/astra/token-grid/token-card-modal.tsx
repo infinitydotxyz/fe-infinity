@@ -186,7 +186,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
   const addToCartBtn = () => {
     return (
       <AButton
-        className="px-5 py-2.5 font-semibold text-base md:text-sm dark:text-neutral-200 text-white rounded-6 w-full md:w-fit"
+        className="px-5 py-2.5 font-semibold text-base md:text-sm dark:text-neutral-200 text-white rounded-6 w-full md:w-fit border-0"
         primary
         onClick={() => {
           if (isNFTSelectable(cartToken)) {
@@ -226,7 +226,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
           <div className="shadow-buttonDropdown w-full flex flex-col space-y-0.75 rounded-4">
             <div className="relative md:flex justify-end w-full">{addToCartBtn()}</div>
             <div className="w-full">
-              <AButton className="w-full bg-neutral-200 dark:bg-white py-2.5 !font-semibold text-base dark:text-neutral-200 text-white rounded-4 overflow-hidden leading-5">
+              <AButton className="w-full border-0 bg-neutral-200 dark:bg-white py-2.5 !font-semibold text-base dark:text-neutral-200 text-white rounded-4 overflow-hidden leading-5">
                 Close
               </AButton>
             </div>
@@ -242,7 +242,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
         <div className="flex md:hidden justify-center pb-2.5">
           <div className="w-18.75 h-1.25 bg-neutral-100 rounded-3"></div>
         </div>
-        <div className="flex lg:flex-row flex-col gap-5 md:gap-7.5 text-sm">
+        <div className="flex lg:flex-row flex-col gap-5 lg:gap-7.5 text-sm pb-20 md:pb-0">
           <div className="flex-1">
             <div className="flex flex-col gap-10 mr-auto lg:flex-row md:items-start">
               <div className="w-full lg:flex-1 space-y-5">
@@ -400,7 +400,8 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                           </div>
                           {offerPrice ? (
                             <div className="!text-amber-700 text-17 font-normal font-supply">
-                              {offerPrice} <span className="font-body">{EthSymbol}</span>
+                              <span className="font-body mr-0.5">{EthSymbol}</span>
+                              {offerPrice}
                             </div>
                           ) : (
                             <div>-</div>
@@ -410,7 +411,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                     </div>
                   </div>
                 ) : null}
-                <div className="w-full py-2">
+                <div className="w-full lg:py-2">
                   {salesAndOrdersChartData.length > 0 && (
                     <ResponsiveSalesAndOrdersChart
                       graphType={ScatterChartType.SalesAndOrders}
@@ -433,7 +434,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
             <ATraitList
               traits={token.token?.attributes ?? []}
               totalTokenCount={collectionFloorAndTokenCount.tokenCount}
-              className="bg-light-borderLight mt-5 lg:mt-7.5 py-5 px-5 dark:bg-zinc-700 rounded-9"
+              className="bg-light-borderLight lg:mt-7.5 py-5 px-5 dark:bg-zinc-700 rounded-9"
             />
           </div>
         </div>

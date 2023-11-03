@@ -108,7 +108,7 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
                 tabItems={Object.keys(orderTypes)}
               />
             </div>
-            <div className="flex items-center flex-1 justify-between md:justify-start gap-2.5 mr-0 md:mr-2.5">
+            <div className="flex items-center flex-1 justify-between md:justify-start gap-5 md:gap-2.5 mr-0 md:mr-2.5">
               <CollectionSearchInput
                 expanded
                 orderSearch

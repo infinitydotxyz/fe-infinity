@@ -1,6 +1,6 @@
 import NonSsrWrapper from 'src/components/astra/non-ssr-wrapper';
-import { BlueCheckInline, ConnectButton, EZImage, EthPrice, NextLink } from 'src/components/common';
-import { ChevronDown } from 'src/icons';
+import { ConnectButton, EZImage, EthPrice, NextLink } from 'src/components/common';
+import { BlueCheckIcon, ChevronDown } from 'src/icons';
 import NFTCards from 'src/images/nftcardstack.png';
 import NFTCardsLight from 'src/images/nftcardstackwhite.png';
 // import NFTCardsLightMobile from 'src/images/nftcardswhitemobile.png';
@@ -95,10 +95,10 @@ const HomePage = () => {
             {/* Aggregator */}
             <div className="rounded-xl w-max border overflow-hidden dark:border-amber-300 border-neutral-700/10 my-14 z-10">
               <div className="bg-card-header-90 p-2.5 dark:bg-none dark:bg-gray-500/70 backdrop-blur-2xl">
-                <p className="text-4xl w-max font-supply font-normal dark:text-white text-neutral-700 skew-x-14 h-4.5">
+                <p className="text-4xl w-max font-supply font-normal dark:text-white text-neutral-700 skew-x-14">
                   The Last
                 </p>
-                <h3 className="pl-1.5 w-max text-54 font-extrabold dark:text-white text-neutral-700 font-body">
+                <h3 className="pl-1.5 w-max text-54 font-extrabold dark:text-white text-neutral-700 -mt-5 font-body">
                   Aggregator
                 </h3>
               </div>
@@ -139,7 +139,7 @@ const HomePage = () => {
             </div>
             <div>
               {homeFeaturesList.map((featureItems) => (
-                <div className="flex gap-2.5 py-2.5 px-5 items-start" key={featureItems.id}>
+                <div className="flex gap-2.5 py-2.5 px-10 items-start" key={featureItems.id}>
                   <div className="w-4.5">
                     <ChevronDown className="-rotate-90 text-yellow-900 w-4.5 h-2.5 mt-2" />
                   </div>
@@ -174,7 +174,7 @@ const HomePage = () => {
           </div>
           <div className="rounded-5 overflow-hidden mt-5">
             <div
-              className="hidden md:grid gap-2 justify-between items-center w-full bg-zinc-200 dark:bg-zinc-700 px-5 py-3.5 text-neutral-700 dark:text-neutral-300 font-medium"
+              className="hidden md:grid gap-2 justify-between items-start md:items-center w-full text-sm bg-zinc-200 dark:bg-zinc-700 px-5 py-3.75 leading-3 text-neutral-700 dark:text-neutral-300 font-medium"
               style={{ gridTemplateColumns: 'minmax(0, 3fr) repeat(auto-fit, minmax(0, 1fr))' }}
             >
               <div className="pl-10">
@@ -186,7 +186,7 @@ const HomePage = () => {
               <div>
                 <p>Volume Change</p>
               </div>
-              <div>
+              <div className="hidden lg:block">
                 <p>Floor</p>
               </div>
               <div>
@@ -218,14 +218,14 @@ const HomePage = () => {
                 })}
               </div>
             )}
-            <div className="pt-5 pb-20">
+            <div className="pt-5 text-center sm:text-left pb-20">
               <AButton
                 primary
                 className={twMerge(
                   'text-base py-3.5 border-0 border-r-2 border-black/40 dark:border-black/40 px-5 rounded-4 !bg-neutral-200 !text-white'
                 )}
               >
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center  gap-2.5">
                   <ChevronDown className={twMerge('w-4.5 leading h-4.5 text-yellow-700 -rotate-90')} />
                   <p className="leading-4.5 text-base font-semibold">See What’s Trending</p>
                 </div>
@@ -285,7 +285,7 @@ export const TrendingGridItem = ({ collection, period, index }: Props) => {
           >
             <EZImage className="w-10.5 rounded-xl h-10.5 overflow-clip" src={collection?.metadata?.profileImage} />
           </NextLink>
-          <div className="ml-2">
+          <div className="ml-2.5">
             <NextLink
               href={`/chain/${getNetworkName(collection?.chainId)}/collection/${
                 collection?.slug || collection?.address
@@ -293,13 +293,13 @@ export const TrendingGridItem = ({ collection, period, index }: Props) => {
               className="whitespace-normal text-base font-semibold text-neutral-700 dark:text-white"
             >
               {collection?.metadata?.name}
-              {collection?.hasBlueCheck && <BlueCheckInline />}
+              {collection?.hasBlueCheck && <BlueCheckIcon className="inline ml-1.25 mb-0.5" />}
             </NextLink>
             <div className="flex gap-3.75 sm:hidden text-sm font-medium font-body text-neutral-700 dark:text-white">
               <div className="flex items-center">
                 Floor
                 <span className="text-amber-700 ml-1">
-                  <EthPrice label={floorPrice > 0 ? formatNumber(floorPrice, 2) : '-'} />
+                  <EthPrice ethClassName="font-body" label={floorPrice > 0 ? formatNumber(floorPrice, 2) : '-'} />
                 </span>
               </div>
               <div className="flex items-center">
@@ -313,21 +313,34 @@ export const TrendingGridItem = ({ collection, period, index }: Props) => {
         </div>
 
         <div className={propertyClassname}>
+          <p className="md:hidden text-sm font-body font-medium text-neutral-700 dark:text-neutral-300">Floor</p>
           <EthPrice
+            ethClassName="font-body text-sm font-normal"
             labelClassName="text-17"
             label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`}
           />
         </div>
 
         <div className={propertyClassname}>
+          <p className="md:hidden text-sm font-body font-medium text-neutral-700 dark:text-neutral-300">
+            Volume change
+          </p>
           {Number.isNaN(salesVolumeChange) ? '-' : <div>{salesVolumeChange}%</div>}
         </div>
 
         <div className={propertyClassname}>
-          <EthPrice labelClassName="text-17" label={floorPrice > 0 ? formatNumber(floorPrice, 2) : '-'} />
+          <p className="md:hidden text-sm font-body font-medium text-neutral-700 dark:text-neutral-300">Floor change</p>
+          <EthPrice
+            ethClassName="font-body text-sm font-normal"
+            labelClassName="text-17"
+            label={floorPrice > 0 ? formatNumber(floorPrice, 2) : '-'}
+          />
         </div>
 
-        <div className={propertyClassname}>{Number.isNaN(floorPriceChange) ? '-' : <div>{floorPriceChange}%</div>}</div>
+        <div className={propertyClassname}>
+          <p className="md:hidden text-sm font-body font-medium text-neutral-700 dark:text-neutral-300">Tokens</p>
+          {Number.isNaN(floorPriceChange) ? '-' : <div>{floorPriceChange}%</div>}
+        </div>
 
         {isDesktop ? (
           <div className={propertyClassname}>

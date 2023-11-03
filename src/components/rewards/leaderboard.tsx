@@ -142,7 +142,7 @@ export const Leaderboard = ({ orderBy }: { orderBy: LeaderboardQuery['orderBy'] 
               <div className={twMerge(propertyClassname, '')}>
                 <div className="text-sm font-medium text-gray-800">Address</div>
                 <div className="flex items-center space-x-2">
-                  <div className="text-17 text-black dark:text-white font-supply ">
+                  <div className="text-17 text-black dark:text-white whitespace-nowrap md:whitespace-normal font-supply ">
                     {isUser ? 'You' : ellipsisAddress(data.user)}
                   </div>
                   <ClipboardButton

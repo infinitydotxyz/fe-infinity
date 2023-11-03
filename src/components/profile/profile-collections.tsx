@@ -41,7 +41,11 @@ export const ProfileCollections = ({ userAddress }: Props) => {
 
   return (
     <div className={twMerge('rounded-lg overflow-y-scroll scrollbar-hide text-sm w-full', borderColor)}>
-      <div className={twMerge('py-5 !text-22 text-lg font-semibold  px-5 lg:px-0 text-neutral-700 dark:text-white')}>
+      <div
+        className={twMerge(
+          'py-5 !text-22 text-lg font-semibold lg:leading-9 px-5 lg:px-0 text-neutral-700 dark:text-white'
+        )}
+      >
         Owned Collections
       </div>
       {/* <div className={twMerge('mx-3 border-b-[1px] mb-1', borderColor)}></div> */}

@@ -25,7 +25,7 @@ export const ProfilePageHeader = ({ expanded, tabs }: ProfileHeaderProps) => {
     <div className={twMerge(borderColor)}>
       {expanded && (
         <>
-          <div className="flex flex-col items-start px-5 ">
+          <div className="flex flex-col items-start pl-5 ">
             <div className="flex flex-col-reverse sm:flex-row w-full items-center sm:items-start justify-between">
               {/* <EZImage src={person.src} className="mr-4 h-12 w-12 rounded-full overflow-clip" /> */}
 
