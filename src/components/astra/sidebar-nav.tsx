@@ -189,7 +189,7 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
                       </SidebarNavItem>
 
                       <AButton
-                        className="w-full flex items-center justify-center  h-[177px]"
+                        className="w-full flex items-center justify-center h-44.25"
                         onClick={() => {
                           setTheme(theme === 'dark' ? 'light' : 'dark');
                           setSidebarOpen(false);
@@ -211,7 +211,7 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
           'hidden overflow-auto sm:flex pb-3 h-full w-19.5 flex-col items-center border-r border-gray-300 dark:border-neutral-200 bg-zinc-500 dark:bg-neutral-800'
         )}
       >
-        <div className="border-b border-gray-300 dark:border-neutral-200 w-full !max-h-19 h-full flex justify-center items-center">
+        <div className="border-b border-gray-300 dark:border-neutral-200 w-full !min-h-19 h-full flex justify-center items-center">
           <NextLink href="/">
             <EZImage src={logoSrc} className="w-14 h-14" />
           </NextLink>

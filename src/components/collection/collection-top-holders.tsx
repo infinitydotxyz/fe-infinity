@@ -57,7 +57,7 @@ export const TopHolderList = ({ collection }: Props) => {
   return (
     <>
       <div className="text-2xl font-heading font-medium">Top holders</div>
-      <div className={twMerge(standardBorderCard, divideColor, 'text-sm divide-y-[1px]')}>
+      <div className={twMerge(standardBorderCard, divideColor, 'text-sm divide-y-1')}>
         {tweetList.map((e, index) => {
           return <TopHolder topOwner={e} index={index} key={e.ownerAddress} />;
         })}

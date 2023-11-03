@@ -120,7 +120,7 @@ const CollectionTraits = ({ traits, filter, setFilter }: Props) => {
 
   return (
     <div className="w-full h-full">
-      <div className={twMerge('border-b-[1px] px-2 py-4', borderColor)}>
+      <div className={twMerge('border-b px-2 py-4', borderColor)}>
         <TextInputBox
           type="text"
           value={searchText}
@@ -136,8 +136,8 @@ const CollectionTraits = ({ traits, filter, setFilter }: Props) => {
         ></TextInputBox>
       </div>
 
-      <div className={twMerge('h-full flex border-b-[1px]', borderColor)}>
-        <div className={twMerge('w-1/3 border-r-[1px] overflow-y-scroll text-sm px-2', secondaryBgColor, borderColor)}>
+      <div className={twMerge('h-full flex border-b', borderColor)}>
+        <div className={twMerge('w-1/3 border-r overflow-y-scroll text-sm px-2', secondaryBgColor, borderColor)}>
           {traitTypeAndNumValues?.map((item) => {
             return (
               <div

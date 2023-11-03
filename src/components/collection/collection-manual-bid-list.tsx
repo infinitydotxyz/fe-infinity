@@ -36,7 +36,7 @@ export const CollectionManualBidList = ({ collectionAddress, collectionSlug, col
   }, [onlyCollectionBids]);
 
   return (
-    <div className={twMerge('min-h-[50vh] pb-20', className)}>
+    <div className={twMerge('min-h-50vh pb-20', className)}>
       <div className={twMerge('w-full flex p-5 space-x-2')}>
         <div className="flex text-sm items-center">
           <StatusIcon status="pending-indefinite" label="Live" />

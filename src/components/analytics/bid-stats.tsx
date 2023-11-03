@@ -106,7 +106,7 @@ export function BidStats({ stats, userStats, showUserStats }: Props) {
 
       <div className={twMerge('space-y-4 pb-5')}>
         <div className="flex flex-col lg:flex-row">
-          <div className="mb-4 lg:mb-0 lg:flex-1 lg:mr-2 lg:max-w-[50%]">
+          <div className="mb-4 lg:mb-0 lg:flex-1 lg:mr-2 lg:max-w-1/2">
             <DonutChart
               title={topUsersByNumBidsDataSet.name}
               subTitle={''}
@@ -115,7 +115,7 @@ export function BidStats({ stats, userStats, showUserStats }: Props) {
               onClick={handleDonutSelect(setSelectedUserByNumBids)}
             />
           </div>
-          <div className="lg:flex-1 lg:ml-2 lg:max-w-[50%]">
+          <div className="lg:flex-1 lg:ml-2 lg:max-w-1/2">
             <DonutChart
               title={topUsersByNumActiveBidsDataSet.name}
               subTitle={''}
@@ -129,7 +129,7 @@ export function BidStats({ stats, userStats, showUserStats }: Props) {
 
       <div className={twMerge('space-y-4 pb-6')}>
         <div className="flex flex-col lg:flex-row">
-          <div className="mb-4 lg:mb-0 lg:flex-1 lg:mr-2 lg:max-w-[50%]">
+          <div className="mb-4 lg:mb-0 lg:flex-1 lg:mr-2 lg:max-w-1/2">
             <DonutChart
               title={topUsersByNumBidsNearFloorDataSet.name}
               subTitle={''}
@@ -138,7 +138,7 @@ export function BidStats({ stats, userStats, showUserStats }: Props) {
               onClick={handleDonutSelect(setSelectedUserByNumBidsNearFloor)}
             />
           </div>
-          <div className="lg:flex-1 lg:ml-2 lg:max-w-[50%]">
+          <div className="lg:flex-1 lg:ml-2 lg:max-w-1/2">
             <DonutChart
               title={topUsersByNumActiveBidsNearFloorDataSet.name}
               subTitle={''}

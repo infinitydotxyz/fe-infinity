@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { BlueCheck, Checkbox, EZImage, ScrollLoader, Spacer } from 'src/components/common';
 import { GridCard } from 'src/components/common/card';
 import { BasicTokenInfo, ERC721TokenCartItem } from 'src/utils/types';
-import { hoverColor, textColor } from 'src/utils/ui-constants';
+import { hoverColor, textColor, tokenCardGridCols } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AOutlineButton } from '../astra-button';
 import { ErrorOrLoading } from '../error-or-loading';
@@ -68,10 +68,7 @@ export const TokenGrid = ({
     } else {
       contents = (
         <>
-          <div
-            className="md:pb-20 pb-5 grid grid-flow-row-dense gap-5 3xl:grid-cols-[repeat(auto-fill,_minmax(258px,_1fr))]
-                          sm:grid-cols-[repeat(auto-fill,_minmax(205px,_1fr))] grid-cols-[repeat(auto-fit,_minmax(169px,_1fr))]"
-          >
+          <div className={twMerge('md:pb-20 pb-5', tokenCardGridCols)}>
             {cardData.map((data) => {
               return (
                 <GridCard

@@ -388,7 +388,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                       collectionFloorPrice={floorPrice}
                       listMode={listMode}
                       className={twMerge(
-                        'px-5 py-3.75 md:py-5 min-h-[600px]',
+                        'px-5 py-3.75 md:py-5 min-h-150',
                         cartType === CartType.CollectionBid
                           ? 'opacity-30 duration-300 pointer-events-none'
                           : 'duration-300'

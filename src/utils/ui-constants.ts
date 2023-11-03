@@ -85,3 +85,6 @@ export const analyticsSectionItemValue =
 export const analyticsSectionItemLabel =
   'text-base leading-5 font-medium text-neutral-700 dark:text-white line-clamp-1 whitespace-nowrap';
 export const referralLink = 'max-w-[calc(100vw_-_90px)]';
+export const cardShadow = 'shadow-[0px_4px_10px_0px_rgba(0,0,0,0.12)] hover:shadow-[0px_4px_10px_0px_rgba(0,0,0,0.2)]';
+export const tokenCardGridCols =
+  'grid grid-flow-row-dense gap-5 3xl:grid-cols-[repeat(auto-fill,_minmax(258px,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(205px,_1fr))] grid-cols-[repeat(auto-fit,_minmax(169px,_1fr))]';

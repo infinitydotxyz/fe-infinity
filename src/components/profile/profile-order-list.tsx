@@ -93,7 +93,7 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
     Bids: 'bids-placed'
   };
   return (
-    <div className={twMerge('min-h-[50vh] pb-20', className)}>
+    <div className={twMerge('min-h-50vh pb-20', className)}>
       <div className={twMerge('flex py-3.75 md:py-5')}>
         <div className="flex flex-col space-y-2.5 w-full">
           <div className="md:flex justify-between">

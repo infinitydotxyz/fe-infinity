@@ -49,22 +49,24 @@ export const CollectionManualBidListItem = ({ order, orderType, collectionSlug }
 
   return (
     <div className={twMerge('flex text-sm bg-zinc-300 dark:bg-neutral-800 p-4')}>
-      <div className="md:flex justify-between items-center w-full">
-        <div className="md:w-1/3">
+      <div className="flex flex-wrap items-center w-full gap-3.75 md:gap-0 md:justify-between">
+        <div className="w-full md:w-1/5 lg:w-1/3">
           <ManualOrderbookItem
+            className="!gap-2.5 md:!gap-5"
             canShowAssetModal={isTokenBid}
             order={editableCartItem}
             isCollBid={isCollBid}
             collectionSlug={collectionSlug}
+            tokenIdClassName="text-lg md:text-base"
           />
         </div>
 
-        <div className="md:w-1/6 md:flex-col flex justify-between md:mt-0 mt-2">
-          <div className={twMerge('font-medium text-gray-800 dark:text-gray-800')}>Orderf type</div>
+        <div className="w-1/2 md:w-1/6 flex-col flex justify-between">
+          <div className={twMerge('font-medium text-gray-800 dark:text-gray-800')}>Order type</div>
           <div className={twMerge('font-semibold text-base', secondaryTextColor)}>{orderType}</div>
         </div>
 
-        <div className="md:w-1/6 md:flex-col flex justify-between md:mt-0 mt-2">
+        <div className="w-1/6 md:w-1/6 flex-col flex justify-between">
           <div className={twMerge('font-medium text-gray-800 dark:text-gray-800')}>Price</div>
           <div>
             <EthPrice
@@ -75,17 +77,21 @@ export const CollectionManualBidListItem = ({ order, orderType, collectionSlug }
           </div>
         </div>
 
-        <div className="md:w-1/4 flex justify-end items-center gap-2.5">
+        <div className="w-full md:w-1/4 flex justify-end items-center gap-2.5">
           {order.validUntil ? (
             <div className={twMerge('hidden md:inline-flex bg-[#E6E6DC] dark:bg-zinc-700 rounded-5 py-0.5 px-7')}>
-              <p className={twMerge('leading-4.5 h-4.5 whitespace-nowrap text-sm font-medium text-gray-800')}>
+              <p
+                className={twMerge(
+                  'leading-4.5 h-4.5 whitespace-nowrap text-sm font-medium dark:!text-gray-800 !text-neutral-700'
+                )}
+              >
                 Expires {format(order.validUntil)}
               </p>
             </div>
           ) : null}
           <AButton
             primary
-            className="dark:!text-neutral-200 !text-white px-5 py-2.5 rounded-6 md:w-auto w-full md:mt-0 mt-2 flex justify-center leading-3.5 dark:border-transparent font-semibold"
+            className="dark:!text-neutral-200 !text-white px-5 py-2.5 rounded-6 md:w-auto w-full md:mt-0 mt-2 flex justify-center leading-3.5 dark:border-transparent !font-semibold text-base"
             disabled={!isActionable}
             customDisabledClassName="!font-normal"
             onClick={() => {
@@ -107,7 +113,7 @@ export const CollectionManualBidListItem = ({ order, orderType, collectionSlug }
               <div
                 className={twMerge(
                   secondaryTextColor,
-                  'md:hidden text-xs font-medium text-right text-gray-300 dark:text-neutral-700'
+                  'md:hidden text-sm font-medium text-right text-gray-300 dark:text-neutral-700'
                 )}
               >
                 Expires {format(order.validUntil)}

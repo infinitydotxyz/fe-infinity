@@ -24,7 +24,7 @@ import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { useAccount } from 'wagmi';
-import { BlueCheck, ClipboardButton, EZImage, EthSymbol, Modal, NextLink, ShortAddress } from '../../common';
+import { BlueCheckInline, ClipboardButton, EZImage, EthSymbol, Modal, NextLink, ShortAddress } from '../../common';
 import { AButton } from '../astra-button';
 import { ATraitList } from '../astra-trait-list';
 import { ErrorOrLoading } from '../error-or-loading';
@@ -222,7 +222,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
         removeViewParams();
       }}
       modalButton={
-        <div className="h-fit md:hidden items-center justify-center fixed z-[80] bottom-4 w-full left-0 px-3.5 mt-19 md:mt-0">
+        <div className="h-fit md:hidden items-center justify-center fixed z-80 bottom-4 w-full left-0 px-3.5 mt-19 md:mt-0">
           <div className="shadow-buttonDropdown w-full flex flex-col space-y-0.75 rounded-4">
             <div className="relative md:flex justify-end w-full">{addToCartBtn()}</div>
             <div className="w-full">
@@ -273,11 +273,13 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                               className="block tracking-tight mr-2 !text-22 leading-7 dark:text-gray-800 font-bold
                       text-neutral-700 line-clamp-1 !whitespace-normal "
                             >
-                              <div className="truncate max-w-[calc(100vw-230px)] sm:max-w-none sm:w-fit">
+                              <div className="line-clamp-1">
                                 {token.token.collection.name || ellipsisAddress(token.token.contract) || 'Collection'}
                               </div>
                             </NextLink>
-                            <BlueCheck />
+                            <div>
+                              <BlueCheckInline />
+                            </div>
                           </div>
 
                           <ShortAddress
@@ -333,7 +335,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                       'rounded-xl  border dark:border-zinc-700 dark:!bg-zinc-700 mt-5 lg:!mt-10 px-0.5 bg-light-borderLight'
                     )}
                   >
-                    <div className="flex justify-between  md:grid  md:grid-cols-3 py-2.5 px-5 md:px-[26px]">
+                    <div className="flex justify-between  md:grid  md:grid-cols-3 py-2.5 px-5 md:px-6.5">
                       <div className="flex flex-col gap-1 py-2.5">
                         <div className="text-sm text-neutral-700 dark:text-gray-800 font-medium leading-tight">
                           Owner Address
@@ -368,7 +370,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                       <div className="hidden md:relative md:flex justify-end py-2.5">{addToCartBtn()}</div>
                     </div>
                     <div className="hidden md:block h-px w-full dark:bg-dark-bg bg-zinc-300"></div>
-                    <div className="flex flex-col-reverse md:grid  grid-cols-3 md:pt-2.5 px-5 md:px-[26px] gap-5 md:gap-0 pb-5 md:pb-2.5">
+                    <div className="flex flex-col-reverse md:grid  grid-cols-3 md:pt-2.5 px-5 md:px-6.5 gap-5 md:gap-0 pb-5 md:pb-2.5">
                       <div className="flex md:flex-col md:py-2.5  justify-between gap-0.5">
                         <div
                           className={twMerge('text-sm text-neutral-700 dark:text-gray-800 font-medium leading-tight')}

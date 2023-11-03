@@ -63,7 +63,7 @@ export const PopoverButton = ({ title, children, alignMenuRight }: Props) => {
               >
                 <div
                   className={twMerge(
-                    'h-4 w-4 rotate-45 absolute top-[-6px]',
+                    'h-4 w-4 rotate-45 absolute -top-1.5',
                     secondaryBgColor,
                     alignMenuRight ? 'right-8' : 'left-8'
                   )}

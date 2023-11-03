@@ -17,7 +17,10 @@
   },
   "svgPreview.autoOpen": true,
   "scss.lint.unknownAtRules": "ignore",
-  "css.lint.unknownAtRules": "ignore"
+  "css.lint.unknownAtRules": "ignore",
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  }
 
   // fixes auto complete outside of jsx for class names
   // "tailwindCSS.lint.cssConflict": "ignore",

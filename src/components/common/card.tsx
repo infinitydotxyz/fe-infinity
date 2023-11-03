@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { CollectionPageTabs, ellipsisString } from 'src/utils';
 import { BasicTokenInfo, ERC721TokenCartItem } from 'src/utils/types';
-import { iconButtonStyle, secondaryBgColor, selectionBorder } from 'src/utils/ui-constants';
+import { cardShadow, iconButtonStyle, secondaryBgColor, selectionBorder } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { ARoundOutlineButton } from '../astra/astra-button';
 import { TokenCardModal } from '../astra/token-grid/token-card-modal';
@@ -61,9 +61,9 @@ export const GridCard = ({
     <div
       className={twMerge(
         secondaryBgColor,
-        'rounded-lg w-full relative flex flex-col shadow-[0px_4px_10px_0px_rgba(0,0,0,0.12)] \
-             hover:shadow-[0px_4px_10px_0px_rgba(0,0,0,0.2)] cursor-pointer group/nft transition-all duration-300 transform ease-in-out  bg-zinc-300 hover:bg-gray-100 dark:bg-neutral-800 dark:hover:bg-neutral-900 p-2.5',
+        'rounded-lg w-full relative flex flex-col cursor-pointer group/nft transition-all duration-300 transform ease-in-out  bg-zinc-300 hover:bg-gray-100 dark:bg-neutral-800 dark:hover:bg-neutral-900 p-2.5',
         selected ? selectionBorder : ``,
+        cardShadow,
         notSelectable ? 'animate-wiggle' : ''
       )}
       style={{ aspectRatio: '3.5/5' }}

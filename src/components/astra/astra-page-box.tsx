@@ -15,7 +15,7 @@ interface Props {
 }
 
 // used in the Header
-export const pageStyles = 'mx-auto desktop:w-5/6 desktop-sm:w-[95%] tabloid:w-[95%] mobile:w-[98%]';
+export const pageStyles = 'mx-auto desktop:w-5/6 desktop-sm:w-95% tabloid:w-95% mobile:w-98%';
 
 export const APageBox = ({
   children,
@@ -71,7 +71,7 @@ export const APageHeader = ({ title, rightToolbar, subTitle }: Props2): JSX.Elem
         <div
           className={twMerge(
             textColor,
-            'font-extrabold mt-5 md:mt-0 text-35 max-w-[178px] md:max-w-none text-center md:text-left mx-auto md:mx-0 md:h-10.5 tracking-tight !text-neutral-700 dark:!text-white'
+            'font-extrabold mt-5 md:mt-0 text-35 max-w-44.5 md:max-w-none text-center md:text-left mx-auto md:mx-0 md:h-10.5 tracking-tight !text-neutral-700 dark:!text-white'
           )}
         >
           {title}

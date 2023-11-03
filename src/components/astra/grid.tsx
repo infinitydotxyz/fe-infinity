@@ -30,7 +30,7 @@ export const Grid = (
           <div
             className={twMerge(
               'h-full',
-              showCart ? 'md:w-[22rem] w-[calc(100vw-4rem)]' : 'w-0',
+              showCart ? 'md:w-88 w-[calc(100vw-4rem)]' : 'w-0',
               'transition-width duration-100 z-50'
             )}
           >

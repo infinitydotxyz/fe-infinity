@@ -305,7 +305,7 @@ export const AstraCart = ({
           <div
             className={twMerge(
               'w-full font-bold font-heading truncate',
-              cartType === CartType.TokenList ? 'min-h-[25px]' : 'min-h-[25px]'
+              cartType === CartType.TokenList ? 'min-h-6.25' : 'min-h-6.25'
             )}
             key={`header-${first.id}`}
           >
@@ -330,7 +330,7 @@ export const AstraCart = ({
             />
           );
         }
-        divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
+        divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b', borderColor)} />);
       });
 
       // min-w-0 is important otherwise text doesn't truncate
@@ -357,7 +357,7 @@ export const AstraCart = ({
           );
         }
 
-        divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
+        divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b', borderColor)} />);
       });
 
       // min-w-0 is important otherwise text doesn't truncate
@@ -375,7 +375,7 @@ export const AstraCart = ({
         const firstCollName = isCollBid ? first.criteria?.data?.collection?.name : first.collectionName;
 
         divList.push(
-          <div className="w-full rounded-md truncate font-bold font-heading min-h-[25px]" key={`header-${orderId}`}>
+          <div className="w-full rounded-md truncate font-bold font-heading min-h-6.25" key={`header-${orderId}`}>
             {firstCollName}
           </div>
         );
@@ -390,7 +390,7 @@ export const AstraCart = ({
           );
         }
 
-        divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
+        divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b', borderColor)} />);
       });
 
       // min-w-0 is important otherwise text doesn't truncate
@@ -513,7 +513,7 @@ export const AstraCart = ({
   }, [cartType, cartItems, tokenMap.size, collMap.size, orderMap.size]);
 
   return (
-    <div className={twMerge('h-full flex flex-col border-l-[1px]', borderColor)}>
+    <div className={twMerge('h-full flex flex-col border-l', borderColor)}>
       <div className="m-4 flex items-center">
         <div className={twMerge(textColor, 'md:text-3xl lg:text-2xl font-bold font-body mr-3')}>{cartTitle}</div>
 
@@ -574,7 +574,7 @@ export const AstraCart = ({
 
           {selectedTab === 'Totals' && (
             <div className="space-y-3 px-1">
-              <div className={twMerge('border-b-[1px] pb-2 space-y-2', borderColor)}>
+              <div className={twMerge('border-b pb-2 space-y-2', borderColor)}>
                 <div className={twMerge('flex justify-between')}>
                   <div className={twMerge(secondaryTextColor, 'font-medium')}>Cart total: </div>
                   <div className="font-supply">
@@ -637,7 +637,7 @@ export const AstraCart = ({
                               {currentCartItems.length > 1 ? ' listings ' : ' listing '} will also be shown first,
                               before other similarly priced listings.
                               <span
-                                className={twMerge('underline cursor-pointer ml-[2px]', brandTextColor)}
+                                className={twMerge('underline cursor-pointer ml-0.5', brandTextColor)}
                                 onClick={() => {
                                   setTokenInfo(FLOW_TOKEN.symbol);
                                   setShowBuyTokensModal(true);
@@ -778,7 +778,7 @@ const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
     <div key={getTokenCartItemKey(token)} className="flex items-center w-full">
       <div className="relative">
         <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={token.image} />
-        <div className={twMerge('absolute top-[-5px] right-[-5px] rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
+        <div className={twMerge('absolute -top-1.25 -right-1.25 rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
           <MdClose
             className={twMerge(extraSmallIconButtonStyle, inverseTextColor)}
             onClick={() => {
@@ -830,7 +830,7 @@ const AstraCollectionCartItem = ({ collection, onRemove, updateCartTotal }: Prop
     <div key={getCollectionKeyId(collection)} className="flex items-center w-full mt-3">
       <div className="relative">
         <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={collection.metadata.profileImage} />
-        <div className={twMerge('absolute top-[-5px] right-[-5px] rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
+        <div className={twMerge('absolute -top-1.25 -right-1.25 rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
           <MdClose
             className={twMerge(extraSmallIconButtonStyle, inverseTextColor)}
             onClick={() => {
@@ -879,7 +879,7 @@ const AstraCancelCartItem = ({ order, onTokenRemove, onCollectionRemove }: Props
     <div key={order.id} className="flex items-center w-full">
       <div className="relative">
         <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={image} />
-        <div className={twMerge('absolute top-[-5px] right-[-5px] rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
+        <div className={twMerge('absolute -top-1.25 -right-1.25 rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
           <MdClose
             className={twMerge(extraSmallIconButtonStyle, inverseTextColor)}
             onClick={() => {
@@ -1035,7 +1035,7 @@ const PriceAndExpiry = ({
       ) : (
         <TextInputBox
           inputClassName="text-sm text-right mr-2 font-body"
-          className="p-[6.5px]"
+          className="p-1.625"
           autoFocus={true}
           addEthSymbol={true}
           type="number"

@@ -192,7 +192,7 @@ export const PixlRewards = () => {
                     referralLink
                   )}
                 >
-                  <p className="p-2.5 bg-light-borderLight my-[0.5px] dark:bg-zinc-700 overflow-hidden whitespace-nowrap text-sm">
+                  <p className="p-2.5 bg-light-borderLight my-0.125 dark:bg-zinc-700 overflow-hidden whitespace-nowrap text-sm">
                     https://pixl.so/rewards?referrer={rewards.referralCode}
                   </p>
                   <div className="p-2.5 flex items-center gap-1.25 bg-zinc-300 dark:bg-neutral-800 rounded-r-lg">

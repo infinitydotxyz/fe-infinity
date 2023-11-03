@@ -27,7 +27,7 @@ export const RewardsSection = (props: RewardsSectionProps) => {
         {props?.sideInfo && (
           <div
             className={twMerge(
-              'md:w-1/2 md:mt-0 mt-4 px-8 py-6 md:py-0 sm:px-10 bg-light-borderLight dark:bg-zinc-700 md:min-h-[10px] rounded-lg',
+              'md:w-1/2 md:mt-0 mt-4 px-8 py-6 md:py-0 sm:px-10 bg-light-borderLight dark:bg-zinc-700 md:min-h-2.5 rounded-lg',
               props.sideInfoClassName
             )}
           >

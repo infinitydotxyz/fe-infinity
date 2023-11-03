@@ -81,7 +81,7 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress, collectio
     <div className={twMerge('w-full flex flex-col rounded-lg text-sm space-y-6 pt-6')}>
       <div className={twMerge('flex space-x-4 items-center')}>
         <div className="flex flex-col gap-2.5">
-          <div className={twMerge('flex text-[22px] font-bold text-neutral-700 dark:text-white')}>
+          <div className={twMerge('flex text-22 font-bold text-neutral-700 dark:text-white')}>
             Sales, Listings & Bids
           </div>
           <div className={twMerge('flex space-x-5')}>

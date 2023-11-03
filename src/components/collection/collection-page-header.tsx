@@ -221,7 +221,7 @@ export const CollectionPageHeader = ({
       </div> */}
 
       <div className="flex text-sm gap-3 px-5">
-        <div className="flex space-x-7.5 overflow-auto scrollbar-hide">
+        <div className="flex space-x-6 sm:space-x-7.5 overflow-auto scrollbar-hide">
           {tabs.map((e) => {
             return (
               <div key={e} className={twMerge('py-2.5', selectedTab === e ? `border-b-3 ${golderBorderColor}` : '')}>
@@ -243,28 +243,28 @@ export const CollectionPageHeader = ({
           })}
         </div>
         <Spacer />
-        <div className="md:flex hidden text-sm divide-x divide-light-border dark:divide-dark-border items-center">
+        <div className="lg:flex hidden text-sm divide-x divide-light-border dark:divide-dark-border items-center">
           {Number(floorPrice) > 0 && (
             <div className="flex items-end pr-4 gap-2 whitespace-nowrap font-medium">
               <span className={secondaryTextColor}>Floor </span>
-              <span className="text-amber-700 leading-4.5 font-normal font-supply">
+              <span className="text-amber-700 leading-4 font-normal font-supply">
                 {floorPrice ?? '-'} <span className="font-body">{EthSymbol}</span>
               </span>
             </div>
           )}
           <div className="flex items-end px-4 gap-2 whitespace-nowrap font-medium">
             <span className={secondaryTextColor}>Total Vol </span>
-            <span className="text-amber-700 leading-4.5 font-normal font-supply">
+            <span className="text-amber-700 leading-4 font-normal font-supply">
               {totalVol ?? '-'} <span className="font-body">{EthSymbol}</span>
             </span>
           </div>
           <div className="flex items-end px-4 gap-2 whitespace-nowrap font-medium">
             <span className={secondaryTextColor}>Owners </span>
-            <span className="text-amber-700 leading-4.5 font-normal font-supply">{numOwners ?? '-'}</span>
+            <span className="text-amber-700 leading-4 font-normal font-supply">{numOwners ?? '-'}</span>
           </div>
           <div className="flex items-end pl-4 gap-2 whitespace-nowrap font-medium">
             <span className={secondaryTextColor}>Items </span>
-            <span className="text-amber-700 leading-4.5 font-normal font-supply">{numNfts ?? '-'}</span>
+            <span className="text-amber-700 leading-4 font-normal font-supply">{numNfts ?? '-'}</span>
           </div>
         </div>
       </div>

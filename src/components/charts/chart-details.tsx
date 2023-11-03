@@ -138,7 +138,7 @@ const OrderDetailViewer = ({ order, collectionAddress, collectionName, collectio
 
   return (
     <div className={twMerge('flex flex-col text-sm mt-4 items-center')}>
-      <div className="w-[225px]">
+      <div className="w-56.25">
         <GridCard
           data={{
             ...order,
@@ -199,7 +199,7 @@ export const SalesChartDetails = ({ data }: Props3) => {
           'border border-gray-300 dark:border-neutral-200 rounded-lg pb-7.5 flex-1 h-full justify-center items-center flex'
         )}
       >
-        <div className="w-[225px]">
+        <div className="w-56.25">
           <GridCard
             data={{
               ...data,

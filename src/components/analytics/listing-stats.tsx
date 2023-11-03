@@ -109,7 +109,7 @@ export function ListingStats({ stats, userStats, showUserStats }: Props) {
 
       <div className={twMerge('space-y-4 pb-5')}>
         <div className="flex flex-col lg:flex-row">
-          <div className="mb-4 lg:mb-0 lg:flex-1 lg:mr-2 lg:max-w-[50%]">
+          <div className="mb-4 lg:mb-0 lg:flex-1 lg:mr-2 lg:max-w-1/2">
             <DonutChart
               title={topUsersByNumListingsDataSet.name}
               subTitle={''}
@@ -118,7 +118,7 @@ export function ListingStats({ stats, userStats, showUserStats }: Props) {
               onClick={handleDonutSelect(setSelectedUserByNumListings)}
             />
           </div>
-          <div className="lg:flex-1 lg:ml-2 lg:max-w-[50%]">
+          <div className="lg:flex-1 lg:ml-2 lg:max-w-1/2">
             <DonutChart
               title={topUsersByNumActiveListingsDataSet.name}
               subTitle={''}
@@ -132,7 +132,7 @@ export function ListingStats({ stats, userStats, showUserStats }: Props) {
 
       <div className={twMerge('space-y-4 pb-6')}>
         <div className="flex flex-col lg:flex-row">
-          <div className="mb-4 lg:mb-0 lg:flex-1 lg:mr-2 lg:max-w-[50%]">
+          <div className="mb-4 lg:mb-0 lg:flex-1 lg:mr-2 lg:max-w-1/2">
             <DonutChart
               title={topUsersByNumListingsBelowFloorDataSet.name}
               subTitle={''}
@@ -141,7 +141,7 @@ export function ListingStats({ stats, userStats, showUserStats }: Props) {
               onClick={handleDonutSelect(setSelectedUserByNumListingsBelowFloor)}
             />
           </div>
-          <div className="lg:flex-1 lg:ml-2 lg:max-w-[50%]">
+          <div className="lg:flex-1 lg:ml-2 lg:max-w-1/2">
             <DonutChart
               title={topUsersByNumActiveListingsBelowFloorDataSet.name}
               subTitle={''}

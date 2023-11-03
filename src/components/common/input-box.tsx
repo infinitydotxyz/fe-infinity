@@ -51,7 +51,7 @@ export const InputBox = ({
             )}
 
             {/* NOTE: this centered positioning of the input field using % is kind of a hack, we should look into a better approach when more than one component needs to render a left icon */}
-            <div className={twMerge('flex items-center w-full', renderLeftIcon ? 'ml-[40%]' : '')}>{children}</div>
+            <div className={twMerge('flex items-center w-full', renderLeftIcon ? 'ml-40%' : '')}>{children}</div>
 
             {tooltip ? (
               <Tooltip

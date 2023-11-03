@@ -361,7 +361,7 @@ function ToolTip({ left, top, data, saleColor, listingColor, bidColor, isTooltip
       top={top}
     >
       <div className={twMerge(secondaryBgColor, textColor, 'flex flex-col p-2 space-y-2 rounded-lg')}>
-        <div className={twMerge('flex flex-row space-x-1 items-center ml-[-5px]')}>
+        <div className={twMerge('flex flex-row space-x-1 items-center -ml-1.25')}>
           <svg width={20} height={20}>
             <Circle fill={circleColor()} r={5} cx={10} cy={10} />
           </svg>

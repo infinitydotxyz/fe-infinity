@@ -91,9 +91,9 @@ const HomePage = () => {
           </div>
           <div className="hidden sm:block bg-radial-back-no-image-light dark:bg-radial-back-no-image-dark absolute top-0 left-0 h-full w-full"></div>
 
-          <div className={twMerge('hidden sm:grid grid-cols-2 mx-auto', heroSectionWidth)}>
+          <div className={twMerge('hidden sm:grid grid-cols-1 lg:grid-cols-2 mx-auto', heroSectionWidth)}>
             {/* Aggregator */}
-            <div className="rounded-xl w-max border overflow-hidden dark:border-amber-300 border-neutral-700/10 my-14 z-10">
+            <div className="rounded-xl lg:w-max border overflow-hidden dark:border-amber-300 border-neutral-700/10 my-14 z-10">
               <div className="bg-card-header-90 p-2.5 dark:bg-none dark:bg-gray-500/70 backdrop-blur-2xl">
                 <p className="text-4xl w-max font-supply font-normal dark:text-white text-neutral-700 skew-x-14">
                   The Last
@@ -119,22 +119,22 @@ const HomePage = () => {
               </div>
             </div>
             {/* cards stack */}
-            <div className="flex">
-              <Image src={NFTCards} className="dark:block hidden" alt="nft cards" height={565} width={808} />
+            <div className="hidden lg:flex">
+              <Image src={NFTCards} className="dark:block hidden bg-contain" alt="nft cards" height={565} width={808} />
               <Image src={NFTCardsLight} className="block dark:hidden" alt="nft cards" height={565} width={808} />
             </div>
           </div>
           {/* home top section mobile view*/}
           <div className="flex sm:hidden flex-col gap-5 mt-5">
             <div className="md:p-2.5 p-0 flex flex-col items-center">
-              <p className="text-[29px] tracking-[-2.32px] font-supply font-normal dark:text-white text-neutral-700">
+              <p className="text-29 -tracking-2.32 font-supply font-normal dark:text-white text-neutral-700">
                 The Last
               </p>
-              <h3 className="w-max text-[39px] font-extrabold dark:text-white text-neutral-700 -mt-5 font-body">
+              <h3 className="w-max text-39 font-extrabold dark:text-white text-neutral-700 -mt-5 font-body">
                 Aggregator
               </h3>
             </div>
-            <div className="flex justify-center max-w-[250px] mx-auto md:mx-none md:max-w-[393px]">
+            <div className="flex justify-center max-w-250 mx-auto md:mx-none md:max-w-393">
               <Image src={NFTCardsLightMobile} alt="nft cards light mobile" width={393} height={579} />
             </div>
             <div>

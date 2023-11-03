@@ -50,7 +50,7 @@ export default function ProfileItemsPage() {
 
           <div ref={setRef} className="lg:flex lg:flex-row-reverse gap-5 lg:px-5">
             {!showCart && (
-              <div className="flex w-full lg:w-1/3 lg:mb-[90px]">
+              <div className="flex w-full lg:w-1/3 lg:mb-22.5">
                 <ProfileCollections userAddress={addressFromPath} key={addressFromPath} />
               </div>
             )}

@@ -48,7 +48,6 @@ export const ProfileCollections = ({ userAddress }: Props) => {
       >
         Owned Collections
       </div>
-      {/* <div className={twMerge('mx-3 border-b-[1px] mb-1', borderColor)}></div> */}
       <div className="flex flex-col sm:px-5 lg:px-0">
         {ownedColls.map((item) => {
           return (
