@@ -85,7 +85,7 @@ const HomePage = () => {
     <NonSsrWrapper>
       <div>
         {/* home top section */}
-        <div className="relative overflow-hidden dark:bg-neutral-200">
+        <div className="relative overflow-hidden bg-gray-100 sm:bg-zinc-300 dark:bg-dark-bg sm:dark:bg-neutral-200">
           <div className={twMerge('hidden sm:block absolute h-full ', heroSectionBGImage)}>
             <ChevronDown className="text-yellow-900 -rotate-90 h-300 w-225" />
           </div>
@@ -162,7 +162,7 @@ const HomePage = () => {
             ) : (
               <ADropdown
                 label={selected}
-                menuParentButtonClassName="py-1 px-2.5 bg-gray-100 border-gray-300 dark:border-neutral-200 rounded-4"
+                menuParentButtonClassName="py-1 px-2.5 bg-gray-100 border-gray-300 dark:bg-neutral-800 dark:border-neutral-200 rounded-4"
                 menuButtonClassName="font-semibold text-neutral-700"
                 innerClassName="w-30"
                 items={tabs.map((option) => ({

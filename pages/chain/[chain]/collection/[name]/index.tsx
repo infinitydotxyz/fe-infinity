@@ -262,7 +262,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               {selectedCollectionTab === CollectionPageTabs.Bid.toString() && !isDesktop && (
                 <AButton
                   primary
-                  className="absolute bottom-2 left-20 right-4 z-10 bg-black"
+                  className="fixed bottom-18 left-5 right-5 rounded z-10 bg-neutral-200"
                   onClick={() => {
                     setCartType(CartType.CollectionBid);
                     if (isCollSelectable(collection as ERC721CollectionCartItem)) {
@@ -281,19 +281,27 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 </AButton>
               )}
 
-              <div className="md:hidden flex justify-between pt-3.5 px-5">
+              <div className="md:hidden flex justify-between pt-3.75 px-5">
                 <MultiSwitch handleClick={setViewType} options={viewTypes} selectedOption={viewType} fullWidth />
               </div>
 
               <div className="flex md:flex-row flex-col">
                 {(isDesktop || viewType === '1') && (
-                  <div className={(twMerge('flex'), showCart ? 'w-full' : 'md:w-2/3')}>
-                    <div className={twMerge('mt-5 px-5')}>
-                      <div className="flex justify-between items-center">
-                        <div className={twMerge('md:flex text-sm items-center gap-2.5')}>
+                  <div className={(twMerge('flex'), showCart ? 'w-full' : 'lg:w-2/3')}>
+                    <div className={twMerge('mt-2.5 md:mt-5 px-5')}>
+                      <div
+                        className={twMerge(
+                          'flex flex-1 justify-between items-start flex-wrap md:gap-2.5 xl:items-center'
+                        )}
+                      >
+                        <div
+                          className={twMerge(
+                            'md:flex flex-1 md:flex-grow-0 w-full md:w-auto md:flex-auto text-sm items-center gap-2.5'
+                          )}
+                        >
                           <div
                             className={twMerge(
-                              'flex mr-1',
+                              'flex md:mr-1',
                               cartType === CartType.CollectionBid
                                 ? 'opacity-30 duration-300 pointer-events-none'
                                 : 'duration-300'
@@ -301,7 +309,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                           >
                             <CollectionNftSearchInput
                               inputClassName="dark:placeholder:!text-neutral-500 placeholder:!text-amber-600 min-w-300"
-                              containerClassName={twMerge(tabItemBGColor)}
+                              containerClassName={twMerge(tabItemBGColor, '!bg-zinc-300 dark:!bg-zinc-900')}
                               collectionAddress={collection.address}
                               expanded
                               collectionFloorPrice={floorPrice}
@@ -313,6 +321,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
                           <div className="flex space-x-2 text-sm items-center">
                             <TabSelector
+                              className="my-0 mt-2.5"
                               value={numSweep}
                               customValue={customSweep}
                               setCustomValue={setCustomSweep}
@@ -324,17 +333,27 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                             <Spacer />
                           </div>
                         </div>
-                        <div className="flex items-center gap-5">
-                          <div className="flex items-center gap-1.5">
+                        <div
+                          className={twMerge(
+                            'flex md:flex-grow-0 items-center gap-5',
+                            selectedCollectionTab === CollectionPageTabs.Bid.toString() && 'flex-1'
+                          )}
+                        >
+                          <div className="flex flex-1 md:flex-grow-0 items-center gap-1.5">
                             {selectedCollectionTab === CollectionPageTabs.Bid.toString() && (
-                              <div className="flex text-sm items-center gap-2.5">
-                                <p className="text-sm font-medium text-black dark:text-white">Bid below price</p>
+                              <div className="flex flex-1 md:flex-grow-0 text-sm items-center gap-2.5">
+                                <p className="hidden w-max shrink-0 md:block text-sm font-medium text-black dark:text-white">
+                                  {'Bid below price'}
+                                </p>
                                 <TabSelector
                                   value={bidBelowPct}
                                   setValue={setBidBelowPct}
                                   tabItems={['0', '1', '2', '5', '10']}
                                   suffix="%"
                                 />
+                                <p className="block w-max shrink-0 md:hidden text-sm font-medium text-black dark:text-white">
+                                  {'Bid below price'}
+                                </p>
                               </div>
                             )}
                             {selectedCollectionTab === CollectionPageTabs.Bid.toString() && isDesktop && (
@@ -348,11 +367,11 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                                 }}
                               >
                                 <div className="flex items-center space-x-2.5">
-                                  {isCollSelected(collection as ERC721CollectionCartItem) && (
-                                    <AiOutlineCheckCircle className={'h-4 w-4'} />
+                                  {!isCollSelected(collection as ERC721CollectionCartItem) && (
+                                    <AiOutlineCheckCircle className={'h-3.75 w-3.75'} />
                                   )}
-                                  <ETHCoinOutline className={'h-4 w-4'} />
-                                  <div className="flex">Bid Entire Collection</div>
+                                  <ETHCoinOutline className={'h-3.75 w-3.75'} />
+                                  <div className="flex leading-4">Bid Entire Collection</div>
                                 </div>
                               </AButton>
                             )}
@@ -369,7 +388,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                       collectionFloorPrice={floorPrice}
                       listMode={listMode}
                       className={twMerge(
-                        'px-5 py-5 min-h-[600px]',
+                        'px-5 py-3.75 md:py-5 min-h-[600px]',
                         cartType === CartType.CollectionBid
                           ? 'opacity-30 duration-300 pointer-events-none'
                           : 'duration-300'

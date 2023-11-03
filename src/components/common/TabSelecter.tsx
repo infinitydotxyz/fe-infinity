@@ -32,7 +32,7 @@ const TabSelector = ({
     <div className="flex w-full items-center gap-2.5">
       <div
         className={twMerge(
-          'flex flex-row md:m-0 my-2 h-10 flex-1 cursor-pointer rounded-4 overflow-hidden gap-0.25',
+          'flex flex-row md:m-0 my-2 h-9 flex-1 cursor-pointer rounded-4 overflow-hidden gap-0.25',
           cartType === CartType.CollectionBid ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300',
           className
         )}

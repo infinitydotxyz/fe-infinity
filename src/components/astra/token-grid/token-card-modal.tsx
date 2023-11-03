@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { ResponsiveSalesAndOrdersChart } from 'src/components/charts/sales-and-orders-chart';
 import { ScatterChartType } from 'src/components/charts/types';
 import { nftToCardDataWithOrderFields } from 'src/hooks/api/useTokenFetcher';
+import etherscanLogo from 'src/images/etherscan-logo.png';
 import {
   apiGet,
   ellipsisAddress,
@@ -23,7 +24,7 @@ import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { useAccount } from 'wagmi';
-import { ClipboardButton, EZImage, EthSymbol, Modal, NextLink, ShortAddress, Spacer } from '../../common';
+import { BlueCheck, ClipboardButton, EZImage, EthSymbol, Modal, NextLink, ShortAddress } from '../../common';
 import { AButton } from '../astra-button';
 import { ATraitList } from '../astra-trait-list';
 import { ErrorOrLoading } from '../error-or-loading';
@@ -125,7 +126,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
   const offerTime = bidValidFrom;
   const offerTimeStr = offerTime ? format(offerTime) : '-';
 
-  const collectionCreator = data.collectionCreator ?? '';
+  // const collectionCreator = data.collectionCreator ?? '';
 
   const floorPrice = data.collectionFloorPrice ?? collectionFloorAndTokenCount.floorPrice;
   const floorPriceDiff = listingPrice
@@ -137,7 +138,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
     floorPrice && Number(floorPrice) > 0 ? `${nFormatter((floorPriceDiff / Number(floorPrice)) * 100)}` : 0;
 
   const isOwner = user && trimLowerCase(user) === trimLowerCase(token?.token?.owner?.toString());
-  const isUserCollectionCreator = user && collectionCreator && trimLowerCase(user) === trimLowerCase(collectionCreator);
+  // const isUserCollectionCreator = user && collectionCreator && trimLowerCase(user) === trimLowerCase(collectionCreator);
 
   const preCartToken = reservoirTokenToERC721Token(token);
   const cartToken = nftToCardDataWithOrderFields(preCartToken);
@@ -185,7 +186,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
   const addToCartBtn = () => {
     return (
       <AButton
-        className="w-52 p-4"
+        className="px-5 py-2.5 font-semibold text-base md:text-sm dark:text-neutral-200 text-white rounded-6 w-full md:w-fit"
         primary
         onClick={() => {
           if (isNFTSelectable(cartToken)) {
@@ -210,6 +211,9 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
     <Modal
       isOpen={modalOpen}
       showActionButtons={false}
+      modalStyle="!p-0 md:!p-4 mt-19"
+      titleClassName="!mb-0 md:mb-5"
+      showButton={true}
       onClose={() => {
         if (event instanceof PointerEvent) {
           event.stopPropagation();
@@ -217,180 +221,223 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
         }
         removeViewParams();
       }}
-      panelClassName={twMerge('max-w-6xl rounded-3xl', dropShadow)}
-    >
-      <div className="flex md:flex-row flex-col gap-4 text-sm">
-        <div className="flex-1">
-          <div className="flex flex-col gap-10 mr-auto md:flex-row md:items-start">
-            <div className="md:flex-1 space-y-4">
-              <div className="md:block flex gap-2">
-                {!isDesktop && <EZImage src={token?.token?.image ?? ''} className="h-24 w-24 max-w-full rounded-lg" />}
-                <div className="flex flex-col justify-center truncate">
-                  <div className="md:flex items-center md:mb-2">
-                    <NextLink
-                      href={`/chain/${getNetworkName(token.token.chainId)}/collection/${
-                        (token.token.collection.slug as string | undefined) || token.token.contract
-                      }`}
-                      className="block font-heading tracking-tight mr-2"
-                    >
-                      <div className="truncate">
-                        {token.token.collection.name || ellipsisAddress(token.token.contract) || 'Collection'}
-                      </div>
-                    </NextLink>
-                    <ShortAddress
-                      className="md:ml-2"
-                      address={token.token.contract ?? ''}
-                      href={`${getChainScannerBase(chainId)}/address/${token.token.contract}`}
-                      tooltip={token.token.contract ?? ''}
-                    />
-                  </div>
-
-                  <div className="flex space-x-2">
-                    <h3 className="font-body text-2xl font-bold mb-2">{ellipsisString(token.token.tokenId)}</h3>
-                    <ClipboardButton textToCopy={token.token.tokenId} className={'h-4 w-4 mt-2.5'} />
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex space-x-6">
-                {collectionCreator ? (
-                  <div>
-                    <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Creator</div>
-                    <div>
-                      <ShortAddress
-                        address={isUserCollectionCreator ? 'You' : collectionCreator || ''}
-                        textToCopy={collectionCreator || ''}
-                        href={`https://pixl.so/profile/${collectionCreator || ''}`}
-                        tooltip={collectionCreator || ''}
-                      />
-                    </div>
-                  </div>
-                ) : null}
-
-                {token?.token?.owner ? (
-                  <div>
-                    <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Owner</div>
-                    <div>
-                      <ShortAddress
-                        address={isOwner ? 'You' : token?.token?.owner?.toString() || ''}
-                        textToCopy={token?.token?.owner?.toString() || ''}
-                        href={`https://pixl.so/profile/${token?.token?.owner?.toString() || ''}`}
-                        tooltip={token.token?.owner?.toString() || ''}
-                      />
-                    </div>
-                  </div>
-                ) : null}
-
-                {data.mintPriceEth ? (
-                  <div>
-                    <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Mint Price</div>
-                    <div>
-                      {nFormatter(parseFloat(String(data.mintPriceEth)), 2)} {EthSymbol}
-                    </div>
-                  </div>
-                ) : null}
-
-                {data.lastSalePriceEth ? (
-                  <div>
-                    <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Last Price</div>
-                    <div>
-                      {nFormatter(parseFloat(String(data.lastSalePriceEth)), 2)} {EthSymbol}
-                    </div>
-                  </div>
-                ) : null}
-
-                {Number(floorPrice) > 0 ? (
-                  <div>
-                    <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Collection Floor</div>
-                    <div>
-                      {nFormatter(parseFloat(String(floorPrice)), 2)} {EthSymbol}
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-
-              {listingPrice || offerPrice ? (
-                <div className={twMerge(secondaryBgColor, borderColor, 'rounded-xl p-[30px] border')}>
-                  <div className="flex flex-row items-center">
-                    <div className="space-y-1">
-                      <div className="text-lg font-medium">
-                        {listingPrice ? (
-                          <span>
-                            On sale for {listingPrice} {EthSymbol}
-                          </span>
-                        ) : null}
-                        {!listingPrice && offerPrice ? (
-                          <span>
-                            Has an offer for {offerPrice} {EthSymbol}
-                          </span>
-                        ) : null}
-                      </div>
-
-                      <div className={twMerge('text-xs font-medium', secondaryTextColor)}>
-                        {listingExpiry ? <span>Expires {listingExpiryStr}</span> : null}
-                        {!listingExpiry && offerExpiry ? <span>Expires {offerExpiryStr}</span> : null}
-                      </div>
-                    </div>
-                    <Spacer />
-                    {addToCartBtn()}
-                  </div>
-
-                  <div className="flex md:flex-row flex-col items-center justify-between mt-[26px]">
-                    <div className="gap-1 w-full flex md:flex-col flex-row justify-between">
-                      <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>
-                        {listingTime ? 'Listed' : null}
-                        {!listingTime && offerTime ? 'Offered' : null}
-                      </div>
-                      <div>
-                        {listingTime ? listingTimeStr : null}
-                        {!listingTime && offerTime ? offerTimeStr : null}
-                      </div>
-                    </div>
-
-                    <div className="gap-1 w-full flex md:flex-col flex-row justify-between md:mt-0 mt-1">
-                      <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>
-                        Floor difference
-                      </div>
-                      <div>{!isNaN(Number(floorPricePercentDiff)) ? floorPricePercentDiff + '%' : '-'}</div>
-                    </div>
-
-                    <div className="gap-1 w-full flex md:flex-col flex-row justify-between md:mt-0 mt-1">
-                      <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>Top bid</div>
-                      {offerPrice ? (
-                        <div>
-                          {offerPrice} {EthSymbol}
-                        </div>
-                      ) : (
-                        <div>-</div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ) : null}
-
-              <div className="w-full py-2">
-                {salesAndOrdersChartData.length > 0 && (
-                  <ResponsiveSalesAndOrdersChart
-                    graphType={ScatterChartType.SalesAndOrders}
-                    data={salesAndOrdersChartData}
-                  />
-                )}
-              </div>
+      modalButton={
+        <div className="h-fit md:hidden items-center justify-center fixed z-[80] bottom-4 w-full left-0 px-3.5 mt-19 md:mt-0">
+          <div className="shadow-buttonDropdown w-full flex flex-col space-y-0.75 rounded-4">
+            <div className="relative md:flex justify-end w-full">{addToCartBtn()}</div>
+            <div className="w-full">
+              <AButton className="w-full bg-neutral-200 dark:bg-white py-2.5 !font-semibold text-base dark:text-neutral-200 text-white rounded-4 overflow-hidden leading-5">
+                Close
+              </AButton>
             </div>
           </div>
         </div>
-
-        <div className="!md:m-0">
-          {isDesktop && (
-            <EZImage src={token?.token?.image ?? ''} className="md:h-80 md:w-80 h-40 w-40 max-w-full rounded-lg" />
-          )}
-
-          <ATraitList
-            traits={token.token?.attributes ?? []}
-            totalTokenCount={collectionFloorAndTokenCount.tokenCount}
-          />
+      }
+      panelClassName={twMerge(
+        'max-w-6xl  rounded-t-20   md:rounded-9 !p-2.5 md:!p-7.5 dark:!bg-dark-bg !bg-zinc-300',
+        dropShadow
+      )}
+    >
+      <>
+        <div className="flex md:hidden justify-center pb-2.5">
+          <div className="w-18.75 h-1.25 bg-neutral-100 rounded-3"></div>
         </div>
-      </div>
+        <div className="flex lg:flex-row flex-col gap-5 md:gap-7.5 text-sm">
+          <div className="flex-1">
+            <div className="flex flex-col gap-10 mr-auto lg:flex-row md:items-start">
+              <div className="w-full lg:flex-1 space-y-5">
+                <div className=" flex flex-col md:flex-row md:gap-3">
+                  <div className="block lg:hidden">
+                    <EZImage
+                      src={token?.token?.image ?? ''}
+                      className="h-96 w-full md:w-40 md:h-40 max-w-full md:rounded-lg rounded-2xl"
+                    />
+                  </div>
+                  <div className="flex flex-col  justify-center md:justify-start lg:justify-center truncate w-full">
+                    <div className="flex py-5 md:py-0 justify-between truncate w-full mobile-sm:gap-2 mobile-md:gap-2 gap-1 md:gap-0">
+                      <div className="flex flex-col w-fit">
+                        <div className="md:flex items-center md:mb-2">
+                          <div className="flex items-center">
+                            <div className="block md:hidden mr-1">
+                              <EZImage
+                                src={
+                                  'https://i.seadn.io/gae/H8jOCJuQokNqGBpkBN5wk1oZwO7LM8bNnrHCaekV2nKjnCqw6UB5oaH8XyNeBDj6bA_n1mjejzhFQUP3O1NfjFLHr3FOaeHcTOOT?w=500&auto=format'
+                                }
+                                className="h-5 w-5 rounded-3 cursor-pointer hover:scale-90 duration-100"
+                              />
+                            </div>
+                            <NextLink
+                              href={`/chain/${getNetworkName(token.token.chainId)}/collection/${
+                                (token.token.collection.slug as string | undefined) || token.token.contract
+                              }`}
+                              className="block tracking-tight mr-2 !text-22 leading-7 dark:text-gray-800 font-bold
+                      text-neutral-700 line-clamp-1 !whitespace-normal "
+                            >
+                              <div className="truncate max-w-[calc(100vw-230px)] sm:max-w-none sm:w-fit">
+                                {token.token.collection.name || ellipsisAddress(token.token.contract) || 'Collection'}
+                              </div>
+                            </NextLink>
+                            <BlueCheck />
+                          </div>
+
+                          <ShortAddress
+                            className="md:ml-2"
+                            address={token.token.contract ?? ''}
+                            hrefStyle="dark:text-gray-800 text-neutral-700 text-sm font-medium"
+                            href={`${getChainScannerBase(chainId)}/address/${token.token.contract}`}
+                            tooltip={token.token.contract ?? ''}
+                          />
+                        </div>
+                        <div className="hidden md:flex space-x-2.5 justify-center md:justify-start items-center w-fit">
+                          <h3 className="font-body text-35 leading-10 font-bold">
+                            {ellipsisString(token.token.tokenId)}
+                          </h3>
+                          <ClipboardButton textToCopy={token.token.tokenId} className={'h-4 w-4'} />
+                        </div>
+                      </div>
+                      <div className="flex gap-2.5 h-fit">
+                        <div className="flex flex-col">
+                          {Number(floorPrice) > 0 ? (
+                            <div>
+                              <div className={twMerge(secondaryTextColor, 'text-sm font-medium dark:!text-gray-800')}>
+                                Collection Floor
+                              </div>
+                              <div className="text-amber-700 font-medium text-right">
+                                {nFormatter(parseFloat(String(floorPrice)), 2)} {EthSymbol}
+                              </div>
+                            </div>
+                          ) : null}
+                        </div>
+                        <div className="hidden md:block">
+                          <EZImage
+                            src={
+                              'https://i.seadn.io/gae/H8jOCJuQokNqGBpkBN5wk1oZwO7LM8bNnrHCaekV2nKjnCqw6UB5oaH8XyNeBDj6bA_n1mjejzhFQUP3O1NfjFLHr3FOaeHcTOOT?w=500&auto=format'
+                            }
+                            className="h-18 w-18 rounded-lg cursor-pointer hover:scale-90 duration-100"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex md:hidden space-x-2 justify-center md:justify-start w-full">
+                      <h3 className="font-body text-35 font-bold mb-2">{ellipsisString(token.token.tokenId)}</h3>
+                      <ClipboardButton textToCopy={token.token.tokenId} className={'h-4 w-4'} />
+                    </div>
+                  </div>
+                </div>
+
+                {listingPrice || offerPrice ? (
+                  <div
+                    className={twMerge(
+                      secondaryBgColor,
+                      borderColor,
+                      'rounded-xl  border dark:border-zinc-700 dark:!bg-zinc-700 mt-5 lg:!mt-10 px-0.5 bg-light-borderLight'
+                    )}
+                  >
+                    <div className="flex justify-between  md:grid  md:grid-cols-3 py-2.5 px-5 md:px-[26px]">
+                      <div className="flex flex-col gap-1 py-2.5">
+                        <div className="text-sm text-neutral-700 dark:text-gray-800 font-medium leading-tight">
+                          Owner Address
+                        </div>
+                        {/* <div>{token?.token?.owner}</div> */}
+                        <div className="flex items-center space-x-2.5">
+                          <ShortAddress
+                            className=""
+                            address={token?.token?.owner ?? ''}
+                            hrefStyle="!text-neutral-700 dark:!text-white !text-base font-semibold"
+                            href={`${getChainScannerBase(chainId)}/address/${token?.token?.owner}`}
+                            tooltip={token?.token?.owner ?? ''}
+                          />{' '}
+                          <EZImage src={etherscanLogo.src} className="mr-2 h-3.75 w-3.75 dark:bg-white rounded-lg" />
+                        </div>
+                      </div>
+                      <div className="flex justify-center py-2.5">
+                        <div className="flex items-end md:items-start md:justify-center flex-col w-32 gap-1">
+                          <div className="text-sm text-neutral-700 dark:text-gray-800 font-medium leading-tight">
+                            List Date
+                          </div>
+                          <div className="dark:text-white text-neutral-700 text-base font-semibold">
+                            {listingTime ? listingTimeStr : null}
+                            {!listingTime && offerTime ? offerTimeStr : null}
+                          </div>
+                        </div>
+                      </div>
+                      <div className={twMerge('hidden text-xs font-medium', secondaryTextColor)}>
+                        {listingExpiry ? <span>Expires {listingExpiryStr}</span> : null}
+                        {!listingExpiry && offerExpiry ? <span>Expires {offerExpiryStr}</span> : null}
+                      </div>
+                      <div className="hidden md:relative md:flex justify-end py-2.5">{addToCartBtn()}</div>
+                    </div>
+                    <div className="hidden md:block h-px w-full dark:bg-dark-bg bg-zinc-300"></div>
+                    <div className="flex flex-col-reverse md:grid  grid-cols-3 md:pt-2.5 px-5 md:px-[26px] gap-5 md:gap-0 pb-5 md:pb-2.5">
+                      <div className="flex md:flex-col md:py-2.5  justify-between gap-0.5">
+                        <div
+                          className={twMerge('text-sm text-neutral-700 dark:text-gray-800 font-medium leading-tight')}
+                        >
+                          Top Bid
+                        </div>
+                        <div className="text-amber-700 text-17 font-normal font-supply">0</div>
+                      </div>
+
+                      <div className="gap-1  flex flex-col   md:mt-0 mt-1  md:items-center md:py-2.5">
+                        <div className="md:w-32 flex flex-row md:flex-col justify-between gap-0.5">
+                          <div
+                            className={twMerge('text-sm text-neutral-700 dark:text-gray-800 font-medium leading-tight')}
+                          >
+                            Floor difference
+                          </div>
+                          <div className="!text-amber-700 text-17 font-normal font-supply">
+                            {!isNaN(Number(floorPricePercentDiff)) ? floorPricePercentDiff + '%' : '-'}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="gap-1  flex md:flex-col  md:items-end md:justify-center justify-between">
+                        <div className="md:w-28.5 flex  flex-row md:flex-col justify-between w-full gap-0.5">
+                          <div
+                            className={twMerge('text-sm text-neutral-700 dark:text-gray-800 font-medium leading-tight')}
+                          >
+                            Sale Price
+                          </div>
+                          {offerPrice ? (
+                            <div className="!text-amber-700 text-17 font-normal font-supply">
+                              {offerPrice} <span className="font-body">{EthSymbol}</span>
+                            </div>
+                          ) : (
+                            <div>-</div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+                <div className="w-full py-2">
+                  {salesAndOrdersChartData.length > 0 && (
+                    <ResponsiveSalesAndOrdersChart
+                      graphType={ScatterChartType.SalesAndOrders}
+                      data={salesAndOrdersChartData}
+                      className="flex-col items-start !space-x-0"
+                      titleStyle="dark:text-white font-bold !text-22 leading-7 text-neutral-700 dark:text-white"
+                      subTitileStyle="dark:text-gray-800 text-16 font-semibold leading-5 text-neutral-700 dark:text-white"
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="!md:m-0">
+            {isDesktop && (
+              <EZImage src={token?.token?.image ?? ''} className="md:h-70.5 md:w-70.5 h-40 w-40 max-w-full rounded-9" />
+            )}
+
+            <ATraitList
+              traits={token.token?.attributes ?? []}
+              totalTokenCount={collectionFloorAndTokenCount.tokenCount}
+              className="bg-light-borderLight mt-5 lg:mt-7.5 py-5 px-5 dark:bg-zinc-700 rounded-9"
+            />
+          </div>
+        </div>
+      </>
     </Modal>
   );
 };

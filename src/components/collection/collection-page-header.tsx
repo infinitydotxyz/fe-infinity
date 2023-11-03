@@ -71,11 +71,13 @@ export const CollectionPageHeader = ({
                 />
                 <div>
                   <div className="flex flex-col md:flex-row items-center gap-1">
-                    <h4 className="font-extrabold text-35 text-neutral-700 dark:text-white font-body">{title}</h4>
+                    <h4 className="font-extrabold text-center md:text-left text-35 text-neutral-700 dark:text-white font-body line-clamp-1">
+                      {title}
+                    </h4>
                     <div className="flex text-17 space-x-5 items-center justify-center">
                       {hasBlueCheck ? <BlueCheck /> : null}
-                      <div className="flex items-start gap-1">
-                        <p className="text-17 font-supply text-neutral-700 dark:text-white leading-5">
+                      <div className="flex items-center gap-1.25">
+                        <p className="text-17 font-supply text-neutral-700 dark:text-white leading-5 whitespace-nowrap">
                           {ellipsisAddress(collection?.address).toLowerCase()}
                         </p>
                         <ClipboardButton
@@ -86,7 +88,7 @@ export const CollectionPageHeader = ({
                     </div>
                   </div>
                   {description ? (
-                    <div className="px-5 md:px-0 max-w-5xl font-body font-semibold text-neutral-700 dark:text-white md:text-left text-center">
+                    <div className="px-5 mt-3.75 md:mt-0 md:px-0 max-w-5xl font-body font-semibold text-neutral-700 dark:text-white md:text-left text-center">
                       <ReadMoreText text={description} min={30} ideal={60} max={100} />
                     </div>
                   ) : null}
@@ -246,14 +248,14 @@ export const CollectionPageHeader = ({
             <div className="flex items-end pr-4 gap-2 whitespace-nowrap font-medium">
               <span className={secondaryTextColor}>Floor </span>
               <span className="text-amber-700 leading-4.5 font-normal font-supply">
-                {floorPrice ?? '-'} {EthSymbol}
+                {floorPrice ?? '-'} <span className="font-body">{EthSymbol}</span>
               </span>
             </div>
           )}
-          <div className="flex items-end items-center px-4 gap-2 whitespace-nowrap font-medium">
+          <div className="flex items-end px-4 gap-2 whitespace-nowrap font-medium">
             <span className={secondaryTextColor}>Total Vol </span>
             <span className="text-amber-700 leading-4.5 font-normal font-supply">
-              {totalVol ?? '-'} {EthSymbol}
+              {totalVol ?? '-'} <span className="font-body">{EthSymbol}</span>
             </span>
           </div>
           <div className="flex items-end px-4 gap-2 whitespace-nowrap font-medium">

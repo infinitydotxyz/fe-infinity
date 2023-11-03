@@ -161,6 +161,7 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
                         title="Rewards"
                         highlighted={router.asPath.startsWith(`/rewards`)}
                         onClick={() => {
+                          setSidebarOpen(false);
                           router.push(`/rewards`);
                         }}
                       >
@@ -216,9 +217,9 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
           </NextLink>
         </div>
 
-        <div className="h-8" />
+        {/* <div className="h-8" /> */}
 
-        <div className="flex flex-col h-full justify-center items-center gap-6">
+        <div className="flex flex-col h-full justify-center items-center mt-7.5 gap-6">
           <SidebarNavItem
             title="Explore"
             highlighted={router.asPath.startsWith('/trending')}
@@ -368,11 +369,14 @@ export const SidebarNavItem = ({
   onClick?: () => void;
 }) => {
   return (
-    <div className="group flex flex-row gap-2.5 sm:gap-0 sm:flex-col items-center">
+    <div
+      onClick={onClick}
+      className="group w-full cursor-pointer flex flex-row gap-2.5 sm:gap-0 sm:flex-col items-center"
+    >
       <HelpToolTip placement="right" content={<div className="whitespace-nowrap">{title}</div>}>
         <AButton
           highlighted={highlighted}
-          onClick={onClick}
+          // onClick={onClick}
           className={twMerge('rounded-lg group-hover:bg-yellow-700 w-max p-0', highlighted && 'bg-yellow-700')}
         >
           {children}

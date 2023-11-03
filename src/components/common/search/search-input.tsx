@@ -108,7 +108,7 @@ export function SearchInput({
     <div
       className={twMerge(
         textColor,
-        'w-full max-w-300 px-2.5 rounded-lg text-center h-10 flex place-items-center bg-black bg-opacity-3 dark:bg-gray-600 peer-focus-within:ring-1 peer-focus-within:ring-cyan-500',
+        'w-full md:max-w-300 px-2.5 rounded-lg text-center h-9 flex place-items-center bg-black bg-opacity-3 dark:bg-gray-600 peer-focus-within:ring-1 peer-focus-within:ring-cyan-500',
         showShortCut ? 'ring-0' : 'ring-1 ring-cyan-500',
         containerClassName
       )}

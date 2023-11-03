@@ -14,14 +14,7 @@ import { format } from 'date-fns';
 import { useTheme } from 'next-themes';
 import { MouseEvent, TouchEvent, useCallback, useMemo } from 'react';
 import { EthSymbol } from 'src/components/common';
-import {
-  listingDataPointColor,
-  bidDataPointColor,
-  saleDataPointColor,
-  secondaryBgColor,
-  secondaryTextColor,
-  textColor
-} from 'src/utils/ui-constants';
+import { secondaryBgColor, secondaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import tailwindConfig from '../../settings/tailwind/elements/foundations';
 import { ChartBox } from './chart-box';
@@ -45,25 +38,57 @@ interface SalesAndOrdersChartProps {
   width: number;
   height: number;
   saleColor?: string;
+  className?: string;
   listingColor?: string;
+  titleStyle?: string;
+  subTitileStyle?: string;
   bidColor?: string;
   data: NftSaleAndOrder[];
 }
 
-export const ResponsiveSalesAndOrdersChart = ({ data, graphType }: ResponsiveSalesAndOrdersChartProps) => {
+export const ResponsiveSalesAndOrdersChart = ({
+  data,
+  graphType,
+  className = '',
+  titleStyle = '',
+  subTitileStyle = ''
+}: ResponsiveSalesAndOrdersChartProps) => {
+  const listingDataPointColor = '#0011FF';
+  const bidDataPointColor = '#EE00FF';
+  const saleDataPointColor = '#11FF00';
   const ordinalColorScale = scaleOrdinal({
     domain: ['Sale', 'Listing', 'Bid'],
     range: [saleDataPointColor, listingDataPointColor, bidDataPointColor]
   });
 
   return (
-    <ChartBox className="h-full">
-      <div className="flex items-center mb-4 space-x-2">
-        <div className={twMerge('font-medium')}>{graphType}</div>
-        <div className={twMerge('text-xs', secondaryTextColor)}>(Not all bids are shown to reduce noise)</div>
+    <ChartBox className="dark:bg-zinc-700 bg-light-borderLight pb-5" noCSSStyles>
+      <div className="flex justify-between">
+        <div className={twMerge('flex items-center mb-4 space-x-2', className)}>
+          <div className={twMerge('font-medium', titleStyle)}>{graphType}</div>
+          <div className={twMerge('text-xs', secondaryTextColor, subTitileStyle)}>
+            Not all bids are shown to reduce noise
+          </div>
+        </div>
+        <div className="flex flex-col justify-center w-fit">
+          <LegendOrdinal scale={ordinalColorScale} labelFormat={(label) => `${label}`}>
+            {(labels) => (
+              <div className="flex flex-col items-end">
+                {labels.map((label, i) => (
+                  <LegendItem key={`legend-ordinal-${i}`}>
+                    <LegendLabel>{label.text}</LegendLabel>
+                    <svg width={20} height={20}>
+                      <Circle fill={label.value} r={5} cx={10} cy={10} />
+                    </svg>
+                  </LegendItem>
+                ))}
+              </div>
+            )}
+          </LegendOrdinal>
+        </div>
       </div>
 
-      <ParentSize debounceTime={10} style={{ height: '95%' }}>
+      <ParentSize debounceTime={10} style={{ height: 310 }}>
         {({ width, height }) => (
           <SalesAndOrdersChart
             data={data}
@@ -75,23 +100,6 @@ export const ResponsiveSalesAndOrdersChart = ({ data, graphType }: ResponsiveSal
           />
         )}
       </ParentSize>
-
-      <div className="flex flex-row justify-center w-full mt-[-20px]">
-        <LegendOrdinal scale={ordinalColorScale} labelFormat={(label) => `${label}`}>
-          {(labels) => (
-            <div className="flex flex-row items-center">
-              {labels.map((label, i) => (
-                <LegendItem key={`legend-ordinal-${i}`} margin="0 5px">
-                  <svg width={20} height={20}>
-                    <Circle fill={label.value} r={5} cx={10} cy={10} />
-                  </svg>
-                  <LegendLabel margin="10px">{label.text}</LegendLabel>
-                </LegendItem>
-              ))}
-            </div>
-          )}
-        </LegendOrdinal>
-      </div>
     </ChartBox>
   );
 };

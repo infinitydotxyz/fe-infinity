@@ -13,7 +13,7 @@ export const RewardsSection = (props: RewardsSectionProps) => {
     <div
       className={twMerge(
         buttonBorderColor,
-        'rounded-10 flex-col  py-5 md:pr-3.75 bg-zinc-300 dark:bg-neutral-800 w-full  shadow-sm'
+        'rounded-10 flex-col px-5 md:px-0 py-5 md:pr-3.75 bg-zinc-300 dark:bg-neutral-800 w-full  shadow-sm'
       )}
     >
       <div className="md:flex w-full">
@@ -29,7 +29,7 @@ export const RewardsSection = (props: RewardsSectionProps) => {
           </div>
         )}
       </div>
-      {props.children && <div className="flex w-full mt-5 ">{props.children}</div>}
+      {props.children && <div className="flex w-full mt-5 px-7.5">{props.children}</div>}
     </div>
   );
 };

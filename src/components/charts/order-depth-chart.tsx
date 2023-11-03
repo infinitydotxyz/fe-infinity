@@ -18,7 +18,7 @@ const OrderDepthChart = ({ data }: Props) => {
     <div className="h-full">
       <div className="xl:flex justify-between py-5 items-center">
         <div className="flex items-end gap-1">
-          <div className={twMerge('font-bold text-[22px] text-neutral-700 dark:text-white')}>Order Depth</div>
+          <div className={twMerge('font-bold text-[22px] leading-9 text-neutral-700 dark:text-white')}>Order Depth</div>
         </div>
       </div>
 

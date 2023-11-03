@@ -82,6 +82,9 @@ module.exports = {
     invert: 'invert(1)',
     sepia: 'sepia(1)'
   },
+  zIndex: {
+    80: 80
+  },
   backdropFilter: {
     none: 'none',
     blur: 'blur(4px)',
@@ -134,7 +137,8 @@ module.exports = {
     drawer: '0 0 68px rgba(0, 0, 0, 0.3)',
     lightDropdown:
       '0 0 20px 4px rgb(154 161 177 / 15%), 0 4px 80px -8px rgb(36 40 47 / 25%), 0 4px 4px -2px rgb(91 94 105 / 15%)',
-    darkDropdown: '0 1px 3px 0 hsla(0,0%,100%,.1),0 1px 2px -1px hsla(0,0%,100%,.1)'
+    darkDropdown: '0 1px 3px 0 hsla(0,0%,100%,.1),0 1px 2px -1px hsla(0,0%,100%,.1)',
+    buttonDropdown: '0px -10px 20px 0px rgba(20, 20, 10, 0.30)'
   },
   skew: {
     14: '14deg',
@@ -228,7 +232,8 @@ module.exports = {
       500: '#1D1D00',
       600: '#282822',
       700: '#A3A3A3',
-      800: '#B1B1B1'
+      800: '#B1B1B1',
+      900: '#777'
     },
     zinc: {
       100: '#ECEAD5',
@@ -288,14 +293,19 @@ module.exports = {
     4.5: '18px',
     28: '28px',
     13: '52px',
+    18: '72px',
+    18.75: '75px',
     19.5: '78px',
     25: '100px',
+    28.5: '114px',
     51.25: '205px',
+    70.5: '282px',
     225: '900px'
   },
   height: {
     0.25: '1px',
     0.75: '3px',
+    1.25: '5px',
     3.75: '15px',
     5.25: '21px',
     5.5: '22px',
@@ -304,10 +314,12 @@ module.exports = {
     8.25: '33px',
     9.25: '37px',
     10.5: '42px',
+    18: '72px',
     19.5: '78px',
     21.25: '85px',
     25: '100px',
     51.25: '205px',
+    70.5: '282px',
     154.5: '618px',
     300: '1200px'
   },
@@ -317,12 +329,14 @@ module.exports = {
   },
   spacing: {
     0.25: '1px',
+    0.75: '3px',
     7: '7px',
     4.5: '18px',
     6.5: '26px',
     7.5: '30px',
     15: '60px',
-    18: '72px'
+    18: '72px',
+    19: '76px'
   },
   gap: {
     1.25: '5px',

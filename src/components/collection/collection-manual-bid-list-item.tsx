@@ -68,6 +68,7 @@ export const CollectionManualBidListItem = ({ order, orderType, collectionSlug }
           <div className={twMerge('font-medium text-gray-800 dark:text-gray-800')}>Price</div>
           <div>
             <EthPrice
+              ethClassName="font-body font-medium"
               className="text-amber-700 font-normal font-supply text-17"
               label={`${nFormatter(startPriceEth, 2)}`}
             />
