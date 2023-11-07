@@ -327,7 +327,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                               setCustomValue={setCustomSweep}
                               setValue={setNumSweep}
                               tabItems={['5', '10', '20', '50']}
-                              showClear
+                              // showClear
                               showCustom
                             />
                             <Spacer />

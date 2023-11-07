@@ -211,7 +211,7 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
           'hidden overflow-auto sm:flex pb-3 h-full w-19.5 flex-col items-center border-r border-gray-300 dark:border-neutral-200 bg-zinc-500 dark:bg-neutral-800'
         )}
       >
-        <div className="border-b border-gray-300 dark:border-neutral-200 w-full !min-h-19 h-full flex justify-center items-center">
+        <div className="border-b border-gray-300 dark:border-neutral-200 w-full flex py-2.25 justify-center items-center">
           <NextLink href="/">
             <EZImage src={logoSrc} className="w-14 h-14" />
           </NextLink>
@@ -219,7 +219,7 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
 
         {/* <div className="h-8" /> */}
 
-        <div className="flex flex-col h-full justify-center items-center mt-7.5 gap-6">
+        <div className="flex flex-col h-full justify-center items-center mt-5 gap-5">
           <SidebarNavItem
             title="Explore"
             highlighted={router.asPath.startsWith('/trending')}

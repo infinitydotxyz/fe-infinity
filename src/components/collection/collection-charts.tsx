@@ -152,15 +152,15 @@ export const CollectionCharts = ({
 
   return (
     <div className={twMerge('w-full gap-2.5 h-full relative flex flex-col p-5', className)}>
-      <div className="md:flex gap-5">
-        <div className="md:w-3/4">
+      <div className="md:grid md:grid-cols-4 gap-5">
+        <div className="md:col-span-3">
           {salesChartData.length > 0 && (
             <ResponsiveSalesChart graphType={ScatterChartType.Sales} data={salesChartData} />
           )}
 
           {isSalesLoading && <Loading graphType={ScatterChartType.Sales} />}
         </div>
-        <div className={twMerge('md:w-1/4', salesChartData.length <= 0 && 'mt-18')}>
+        <div className={`md:col-span-1 ${salesChartData.length <= 0 ? 'mt-18' : ''}`}>
           {salesChartData.length > 0 && <SalesChartDetails data={salesChartData[0]} />}
         </div>
       </div>

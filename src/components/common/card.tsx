@@ -79,13 +79,13 @@ export const GridCard = ({
         <div className="group/nft-card-image relative flex-1">
           {/* we can't overflow clip the whole card or the tooltips get clipped
               so we do this absolute image below the pillbadges */}
-          {selected && (
-            <div className="hidden rounded-5  group-hover/nft-card-image:flex cursor-pointer bg-black bg-opacity-30 absolute h-full text-white w-full  items-center justify-center z-10">
-              <SearchIcon />
+          {!selected && (
+            <div className="hidden rounded-5  group-hover/nft-card-image:flex cursor-pointer bg-black/30  absolute h-full text-white w-full  items-center justify-center z-10">
+              <SearchIcon className="text-current" />
             </div>
           )}
           <div className="absolute top-0 bottom-0 left-0 right-0 rounded-5 overflow-clip">
-            <EZImage src={data?.image} className="group-hover/nft:scale-110 transition-all" />
+            <EZImage src={data?.image} className="transition-all" />
             {selected && (
               <div className={twMerge('absolute top-2 right-2  rounded-5 bg-gray-900')}>
                 <CheckedIcon className={twMerge(iconButtonStyle, 'text-white')} />
@@ -143,7 +143,7 @@ export const GridCard = ({
                   'rounded-md mt-2.5 p-2.5 !leading-2.5 w-full text-xs sm:text-sm',
                   selected
                     ? 'block border-neutral-700 text-neutral-700 font-medium'
-                    : 'hidden group-hover/nft:block group-hover/nft:animate-in group-hover/nft:slide-in-from-bottom bg-neutral-700 text-white font-semibold dark:bg-white dark:text-neutral-700'
+                    : 'hidden group-hover/nft:block group-hover/nft:animate-in duration-800 group-hover/nft:slide-in-from-bottom bg-neutral-700 text-white font-semibold dark:bg-white dark:text-neutral-700'
                 )}
               >
                 {selected ? 'Remove from Cart' : 'Add to Cart'}

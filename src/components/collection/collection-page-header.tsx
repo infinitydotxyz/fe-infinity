@@ -74,7 +74,7 @@ export const CollectionPageHeader = ({
                     <h4 className="font-extrabold text-center md:text-left text-35 text-neutral-700 dark:text-white font-body line-clamp-1">
                       {title}
                     </h4>
-                    <div className="flex text-17 space-x-5 items-center justify-center">
+                    <div className="flex text-17 space-x-5 items-center justify-center mt-2">
                       {hasBlueCheck ? <BlueCheck /> : null}
                       <div className="flex items-center gap-1.25">
                         <p className="text-17 font-supply text-neutral-700 dark:text-white leading-5 whitespace-nowrap">

@@ -512,8 +512,37 @@ export const AstraCart = ({
     setCartContent(cartItemList);
   }, [cartType, cartItems, tokenMap.size, collMap.size, orderMap.size]);
 
+  const [isFixed, setIsFixed] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY >= 50) {
+        setIsFixed(true);
+      } else {
+        setIsFixed(false);
+      }
+    };
+
+    // Add the scroll event listener
+    window.addEventListener('scroll', handleScroll);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <div className={twMerge('h-full flex flex-col border-l', borderColor)}>
+    <div
+      className={twMerge(
+        ' w-fit min-h-screen h-screen flex flex-col border-l',
+        borderColor,
+        isFixed ? 'top-0 fixed' : 'relative'
+      )}
+      style={{
+        width: 'inherit'
+      }}
+    >
       <div className="m-4 flex items-center">
         <div className={twMerge(textColor, 'md:text-3xl lg:text-2xl font-bold font-body mr-3')}>{cartTitle}</div>
 
@@ -561,7 +590,9 @@ export const AstraCart = ({
         </div>
       )}
 
-      {cartContent}
+      <div className="overflow-y-auto overflow-hidden min-h-50 h-[calc(100vh-440px)] max-h-[calc(100vh-440px)]">
+        {cartContent}
+      </div>
 
       {cartType !== CartType.Send && cartType !== CartType.Cancel && (
         <div className={twMerge('m-4 flex flex-col text-sm space-y-2 rounded-lg p-3', secondaryBgColor)}>
@@ -586,21 +617,21 @@ export const AstraCart = ({
                   <div className="text-xs">
                     <div className={twMerge('flex justify-between')}>
                       <div className={twMerge(secondaryTextColor)}>Platform fees: </div>
-                      <div className="font-heading">
+                      <div>
                         {nFormatter(Number(fees))} {EthSymbol}
                       </div>
                     </div>
 
                     <div className={twMerge('flex justify-between')}>
                       <div className={twMerge(secondaryTextColor)}>Royalties: </div>
-                      <div className="font-heading">
+                      <div>
                         {nFormatter(Number(royalties))} {EthSymbol}
                       </div>
                     </div>
 
                     <div className={twMerge('flex justify-between text-sm mt-2')}>
                       <div className={twMerge(secondaryTextColor, 'font-medium')}>Net proceeds: </div>
-                      <div className="font-heading">
+                      <div>
                         {nFormatter(Number(netProceeds))} {EthSymbol}
                       </div>
                     </div>
@@ -608,12 +639,12 @@ export const AstraCart = ({
                     <div className={twMerge('mt-4 rounded-md space-y-1 text-xs')}>
                       {/* <div className={twMerge('flex justify-between')}>
                         <div className={twMerge(secondaryTextColor, 'font-medium')}>Staked ${FLOW_TOKEN.symbol}: </div>
-                        <div className="font-heading">{nFormatter(Number(xflStaked))}</div>
+                        <div >{nFormatter(Number(xflStaked))}</div>
                       </div> */}
 
                       {/* <div className={twMerge('flex justify-between')}>
                         <div className={twMerge(secondaryTextColor, 'font-medium')}>Reward boost: </div>
-                        <div className="font-heading">{xflStakeBoost}</div>
+                        <div >{xflStakeBoost}</div>
                       </div> */}
 
                       <div className={twMerge('flex')}>
@@ -664,7 +695,7 @@ export const AstraCart = ({
                       {isEthBalanceLoading ? (
                         <span>Loading...</span>
                       ) : (
-                        <span className="font-heading">
+                        <span>
                           {nFormatter(Number(ethBalance?.formatted))} {EthSymbol}
                         </span>
                       )}
@@ -678,7 +709,7 @@ export const AstraCart = ({
                           {isLoading ? (
                             <span>Loading...</span>
                           ) : (
-                            <span className="font-heading">
+                            <span>
                               {nFormatter(Number(wethBalance?.formatted))} {EthSymbol}
                             </span>
                           )}
@@ -1059,9 +1090,10 @@ const PriceAndExpiry = ({
           onEnter={() => {
             onEditComplete?.(price);
           }}
-          onMouseLeave={() => {
-            onEditComplete?.(price);
-          }}
+
+          // onMouseLeave={() => {
+          //   onEditComplete?.(price);
+          // }}
         />
       )}
     </div>
