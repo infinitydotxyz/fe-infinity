@@ -55,7 +55,7 @@ export const TwitterSupporterList = ({ collection }: Props) => {
   return (
     <>
       <div className="text-2xl font-heading font-medium">Top Twitter supporters</div>
-      <div className={twMerge(standardBorderCard, divideColor, 'text-sm divide-y-1')}>
+      <div className={twMerge(standardBorderCard, divideColor, 'text-sm divide-y')}>
         {tweetList.map((e) => {
           return <TwitterSupporter tweet={e} key={e.tweetId} />;
         })}

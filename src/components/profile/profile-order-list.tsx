@@ -121,9 +121,7 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
                   handleCollectionSearchResult(selectedColl);
                 }}
               />
-              {/* <div className="flex text-sm items-cente p-2.5 border border-gray-300 rounded-4"> */}
               <StatusIcon status="pending-indefinite" label="Live" iconClassName="mt-0.75" />
-              {/* </div> */}
             </div>
 
             <div className="flex justify-center space-x-2">

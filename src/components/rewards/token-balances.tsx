@@ -194,7 +194,7 @@ export const TokenBalances = ({
           </div>
         }
         sideInfo={
-          <div className={twMerge(' h-full md:p-5')}>
+          <div className="h-full md:p-5">
             <div className="md:flex items-center flex-wrap h-full">
               <div className={tokenItemClassname}>
                 <div className={rewardSectionItemLabel}>${FLOW_TOKEN.symbol}</div>
@@ -235,15 +235,6 @@ export const TokenBalances = ({
                     Buy
                   </AButton>
                 </div>
-                {/* <div
-                  className="underline text-sm cursor-pointer"
-                  onClick={() => {
-                    setTokenInfo('BLUR');
-                    setShowBuyTokensModal(true);
-                  }}
-                >
-                  Buy $BLUR
-                </div> */}
               </div>
               <Spacer />
 
@@ -265,15 +256,6 @@ export const TokenBalances = ({
                     Buy
                   </AButton>
                 </div>
-                {/* <div
-                  className="underline text-sm cursor-pointer"
-                  onClick={() => {
-                    setTokenInfo('LOOKS');
-                    setShowBuyTokensModal(true);
-                  }}
-                >
-                  Buy $LOOKS
-                </div> */}
               </div>
               <Spacer />
 
@@ -295,15 +277,6 @@ export const TokenBalances = ({
                     Buy
                   </AButton>
                 </div>
-                {/* <div
-                  className="underline text-sm cursor-pointer"
-                  onClick={() => {
-                    setTokenInfo('X2Y2');
-                    setShowBuyTokensModal(true);
-                  }}
-                >
-                  Buy $X2Y2
-                </div> */}
               </div>
               <Spacer />
 
@@ -325,15 +298,6 @@ export const TokenBalances = ({
                     Buy
                   </AButton>
                 </div>
-                {/* <div
-                  className="underline text-sm cursor-pointer"
-                  onClick={() => {
-                    setTokenInfo('SUDO');
-                    setShowBuyTokensModal(true);
-                  }}
-                >
-                  Buy $SUDO
-                </div> */}
               </div>
               <Spacer />
 

@@ -41,11 +41,7 @@ export const ProfileCollections = ({ userAddress }: Props) => {
 
   return (
     <div className={twMerge('rounded-lg overflow-y-scroll scrollbar-hide text-sm w-full', borderColor)}>
-      <div
-        className={twMerge(
-          'py-5 !text-22 text-lg font-semibold lg:leading-9 px-5 lg:px-0 text-neutral-700 dark:text-white'
-        )}
-      >
+      <div className="py-5 !text-22 text-lg font-semibold lg:leading-9 px-5 lg:px-0 text-neutral-700 dark:text-white">
         Owned Collections
       </div>
       <div className="flex flex-col sm:px-5 lg:px-0">
@@ -80,7 +76,6 @@ export const ProfileCollections = ({ userAddress }: Props) => {
               <Spacer />
               <span className={twMerge('!text-22 font-bold px-2.5', secondaryTextColor)}>{item.numNFTs}</span>
             </div>
-            // </div>
           );
         })}
       </div>

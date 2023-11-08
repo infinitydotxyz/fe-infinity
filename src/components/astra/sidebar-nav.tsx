@@ -42,8 +42,6 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
     }
   }, [theme]);
 
-  console.log('path : ', router.asPath.startsWith('/trending'));
-
   return (
     <>
       {/* Sidebar for mobile devices */}

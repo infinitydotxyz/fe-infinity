@@ -91,7 +91,7 @@ export const PixlRewards = () => {
           <div className="flex flex-col">
             <div className="flex flex-col text-base font-semibold space-y-2">
               <div>
-                Airdrop tier is based on your past NFT activity on Ethereum. Your tier is NGMI. See{' '}
+                Airdrop tier is based on your past NFT activity on Ethereum. Your tier is {mappedAirdropTier}. See{' '}
                 <a
                   target="_blank"
                   href="https://docs.pixl.so/reward-points#airdrop"
@@ -100,15 +100,6 @@ export const PixlRewards = () => {
                   docs
                 </a>{' '}
                 for more info. Share on twitter to boost your airdrop tier!
-                {/* Airdrop tier is based on your past NFT activity on Ethereum. Your tier is {mappedAirdropTier}. See{' '}
-                <a
-                  target="_blank"
-                  href="https://docs.pixl.so/reward-points#airdrop"
-                  className="underline cursor-pointer"
-                >
-                  docs
-                </a>{' '}
-                for more info. */}
               </div>
             </div>
             {isUnlocked && !rewards.airdropBoosted && (
@@ -126,7 +117,7 @@ export const PixlRewards = () => {
           </div>
         }
         sideInfo={
-          <div className={twMerge('h-full md:p-2')}>
+          <div className="h-full md:p-2">
             {isUnlocked ? (
               <div className="md:flex items-center space-x-0.25 justify-between flex-wrap h-full">
                 {airDropTiers.map((tier, index) => (
@@ -209,18 +200,16 @@ export const PixlRewards = () => {
           </div>
         }
         sideInfo={
-          <div className={twMerge(' h-full md:p-5')}>
+          <div className="h-full md:p-5">
             <div className="md:flex items-center flex-wrap h-full">
               <div className={twMerge(tokenItemClassname, 'flex-1')}>
                 <div className={rewardSectionItemLabel}>Earned</div>
                 <div className={rewardSectionItemValue}>{nFormatter(rewards.referralPoints, 2)}</div>
               </div>
-              {/* <Spacer /> */}
               <div className={twMerge(tokenItemClassname, 'flex-1')}>
                 <div className={rewardSectionItemLabel}>Num referrals</div>
                 <div className={rewardSectionItemValue}>{nFormatter(rewards.numReferrals, 2)}</div>
               </div>
-              {/* <Spacer /> */}
             </div>
           </div>
         }
@@ -248,7 +237,7 @@ export const PixlRewards = () => {
           </div>
         }
         sideInfo={
-          <div className={twMerge(' h-full md:p-5')}>
+          <div className="h-full md:p-5">
             <div className="md:flex items-center flex-wrap h-full justify-center xl:justify-between gap-3 xl:gap-1">
               <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
                 <div className={rewardSectionItemLabel}>Earned</div>
@@ -305,7 +294,7 @@ export const PixlRewards = () => {
           </div>
         }
         sideInfo={
-          <div className={twMerge(' h-full md:p-5')}>
+          <div className="h-full md:p-5">
             <div className="md:flex items-center flex-wrap h-full  justify-center xl:justify-between gap-3 xl:gap-1">
               <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
                 <div className={rewardSectionItemLabel}>Earned</div>

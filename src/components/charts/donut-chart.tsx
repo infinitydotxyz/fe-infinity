@@ -139,7 +139,7 @@ function Chart({
                 onClickDatum={({ data }) => {
                   onClick?.(data);
                 }}
-                labelColor="#444444"
+                labelColor={tailwindConfig.colors['neutral'][700]}
                 getColor={(arc) => arc.data.color}
               />
             )}

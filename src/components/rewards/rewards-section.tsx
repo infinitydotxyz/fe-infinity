@@ -20,7 +20,7 @@ export const RewardsSection = (props: RewardsSectionProps) => {
       <div className="md:flex w-full">
         <div className="md:w-1/2 md:px-7.5 flex flex-col justify-center">
           <div className="text-22 text-neutral-700 dark:text-white font-bold leading-7">{props.title}</div>
-          {props.subTitle && (
+          {props?.subTitle && (
             <div className=" my-2.5 text-base text-neutral-700 dark:text-white font-medium">{props.subTitle}</div>
           )}
         </div>
@@ -35,7 +35,7 @@ export const RewardsSection = (props: RewardsSectionProps) => {
           </div>
         )}
       </div>
-      {props.children && <div className="flex w-full mt-5 px-7.5">{props.children}</div>}
+      {props?.children && <div className="flex w-full mt-5 px-7.5">{props.children}</div>}
     </div>
   );
 };

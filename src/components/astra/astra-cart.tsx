@@ -515,18 +515,13 @@ export const AstraCart = ({
 
   useEffect(() => {
     const handleScroll = () => {
-      console.log(window.scrollY);
       if (window.scrollY >= 50) {
         setIsFixed(true);
       } else {
         setIsFixed(false);
       }
     };
-
-    // Add the scroll event listener
     window.addEventListener('scroll', handleScroll);
-
-    // Clean up the event listener when the component unmounts
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -537,9 +532,9 @@ export const AstraCart = ({
   return (
     <div
       className={twMerge(
-        'w-fit  min-h-screen h-full border-l border-t overflow-auto bg-[#F7F7F3] dark:bg-dark-bg',
+        'w-fit  min-h-screen h-full border-l border-t overflow-auto bg-gray-100 dark:bg-dark-bg',
         borderColor,
-        isFixed ? 'top-0 fixed' : 'fixed pb-20 md:top-[75px]'
+        isFixed ? 'top-0 fixed' : 'fixed pb-20 md:top-18.75'
       )}
       style={{
         width: 'inherit'
@@ -648,22 +643,8 @@ export const AstraCart = ({
                     </div>
 
                     <div className={twMerge('mt-4 rounded-md space-y-1 text-xs')}>
-                      {/* <div className={twMerge('flex justify-between')}>
-                        <div className={twMerge(secondaryTextColor, 'font-medium')}>Staked ${FLOW_TOKEN.symbol}: </div>
-                        <div >{nFormatter(Number(xflStaked))}</div>
-                      </div> */}
-
-                      {/* <div className={twMerge('flex justify-between')}>
-                        <div className={twMerge(secondaryTextColor, 'font-medium')}>Reward boost: </div>
-                        <div >{xflStakeBoost}</div>
-                      </div> */}
-
                       <div className={twMerge('flex')}>
                         {areFeesWaived ? (
-                          // <div className={twMerge(secondaryTextColor, 'mt-2')}>
-                          //   You are maximizing your net proceeds and will earn {xflStakeBoost} rewards. Buyer of your
-                          //   listing will save upto 40% on gas fees.
-                          // </div>
                           <div className={twMerge(secondaryTextColor, 'mt-2')}>
                             You are maximizing your net proceeds for holding {nFormatter(minBalForFeeWaiverAndBoost)} $
                             {holderOfToken} tokens. Buyers of your{' '}

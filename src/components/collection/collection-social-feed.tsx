@@ -105,7 +105,7 @@ export const CollectionSocialFeed = ({
             className={twMerge(
               standardBorderCard,
               divideColor,
-              'text-sm divide-y-1 max-h-screen overflow-y-scroll scrollbar-hide'
+              'text-sm divide-y max-h-screen overflow-y-scroll scrollbar-hide'
             )}
           >
             {activities.map((activity) => {

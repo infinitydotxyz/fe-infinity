@@ -31,7 +31,6 @@ export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
 
   const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(userAddress, selectedChain, filter);
   const [numSweep, setNumSweep] = useState('');
-  // const [customSweep, setCustomSweep] = useState('');
 
   useEffect(() => {
     const numToSelect = Math.min(data.length, parseInt(numSweep));
@@ -109,7 +108,6 @@ export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
               />
             </div>
           </div>
-          {/* <Spacer /> */}
           <div className="hidden md:block">
             <Checkbox
               boxOnLeft={false}
@@ -143,7 +141,6 @@ export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
 
       <TokenGrid
         listMode={listMode}
-        // className="md:px-4 py-4"
         onClick={toggleNFTSelection}
         isSelectable={isNFTSelectable}
         isSelected={isNFTSelected}

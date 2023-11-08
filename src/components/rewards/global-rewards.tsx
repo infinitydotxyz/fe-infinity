@@ -1,4 +1,3 @@
-import { twMerge } from 'tailwind-merge';
 import { Leaderboard, LeaderboardQuery } from './leaderboard';
 import { ADropdown } from '../astra/astra-dropdown';
 import { useState } from 'react';
@@ -37,7 +36,7 @@ const GlobalRewards = ({ showCount }: Props) => {
   const [orderBy, setOrderBy] = useState<LeaderboardQuery['orderBy']>('total');
 
   return (
-    <div className={twMerge('space-y-4 mt-5 md:mt-6 px-5 pb-6 mb-16')}>
+    <div className="space-y-4 mt-5 md:mt-6 px-5 pb-6 mb-16">
       <div className="flex space-x-2.5 justify-between md:justify-start align-center md:space-x-2.5">
         <div className="text-22 font-semibold dark:text-white ">Leaderboard</div>
         <ADropdown

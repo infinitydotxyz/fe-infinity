@@ -4,11 +4,11 @@ const PrivacyPolicyPage = () => {
   return (
     <APageBox title="Privacy Policy" className="overflow-x-clip overflow-y-auto">
       <div className="flex flex-col items-center justify-center space-y-2">
-        <div className="font-bold font-heading text-3xl">Pixl</div>
+        <div className="font-bold font-supply text-3xl">Pixl</div>
         <div className="underline">Privacy Policy</div>
       </div>
 
-      <div className="space-y-2 text-sm">
+      <div className="space-y-2 px-5 text-sm">
         <p dir="ltr">
           <span>Last Updated: </span>
           <span data-rich-links='{"dat_df":{"fres_frt":1,"dfie_ts":{"tv":{"tv_s":1654862400,"tv_n":0}},"dfie_l":"en","dfie_p":{"fres_frt":0,"tres_tv":"MMM d, y"},"dfie_dt":"Jun 10, 2022","dfie_pt":3},"type":"date"}'>

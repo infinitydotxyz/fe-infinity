@@ -67,7 +67,6 @@ const TrendingPage = () => {
   return (
     <APageBox title="Trending Collections" showTitle={true}>
       <div className="overflow-y-auto overflow-x-clip text-sm scrollbar-hide">
-        {/* {isDesktop ? ( */}
         <ToggleTab
           className="font-heading"
           options={options.map((option) => option.label)}
@@ -75,18 +74,6 @@ const TrendingPage = () => {
           onChange={(label) => setPeriod(options.find((option) => option.label === label) || options[0])}
           border={true}
         />
-        {/* ) : (
-           <ADropdown
-             label={period.label}
-             className="w-30"
-             innerClassName="w-30"
-             items={options.map((option) => ({
-               label: option.label,
-               onClick: () => setPeriod(option)
-             }))}
-           />
-         )} */}
-
         <div className="space-y-3.5 md:space-y-0.25 p-5 pb-20">
           {data.map((coll, index) => {
             return (
@@ -156,7 +143,7 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
         className="md:grid gap-2 justify-between items-center w-full"
         style={{ gridTemplateColumns: 'minmax(0, 3fr) repeat(auto-fit, minmax(0, 1fr))' }}
       >
-        <div className={twMerge('flex items-center md:justify-start justify-between md:mb-0 mb-3.5 font-bold')}>
+        <div className="flex items-center md:justify-start justify-between md:mb-0 mb-3.5 font-bold">
           <div className="hidden md:block text-base mr-8 text-right text-neutral-700 dark:text-neutral-700">
             {index + 1}
           </div>
@@ -196,9 +183,7 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
           {Number.isNaN(salesVolumeChange) ? (
             '-'
           ) : (
-            <div className={twMerge('font-supply !text-amber-700 font-normal  text-sm md:text-17')}>
-              {salesVolumeChange}%
-            </div>
+            <div className="font-supply !text-amber-700 font-normal  text-sm md:text-17">{salesVolumeChange}%</div>
           )}
         </div>
 
@@ -216,9 +201,7 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
           {Number.isNaN(floorPriceChange) ? (
             '-'
           ) : (
-            <div className={twMerge('font-supply !text-amber-700 font-normal text-sm md:text-17')}>
-              {floorPriceChange}%
-            </div>
+            <div className="font-supply !text-amber-700 font-normal text-sm md:text-17">{floorPriceChange}%</div>
           )}
         </div>
 

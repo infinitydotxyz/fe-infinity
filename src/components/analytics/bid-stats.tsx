@@ -43,7 +43,7 @@ export function BidStats({ stats, userStats, showUserStats }: Props) {
           title="Bid totals"
           sideInfoClassName="md:min-h-25"
           sideInfo={
-            <div className={twMerge(' h-full md:px-5')}>
+            <div className="h-full md:px-5">
               <div className="md:flex md:flex-col lg:flex-row md:items-start lg:items-center flex-wrap h-full justify-center xl:justify-between gap-3 xl:gap-1">
                 <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
                   <div className={analyticsSectionItemValue}>{nFormatter(stats.numBids, 2)}</div>
@@ -76,7 +76,7 @@ export function BidStats({ stats, userStats, showUserStats }: Props) {
             title="Your bid totals"
             sideInfoClassName="md:min-h-25"
             sideInfo={
-              <div className={twMerge(' h-full md:px-5')}>
+              <div className="h-full md:px-5">
                 <div className="md:flex md:flex-col lg:flex-row md:items-start lg:items-center flex-wrap h-full justify-center xl:justify-between gap-3 xl:gap-1">
                   <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
                     <div className={analyticsSectionItemValue}>{nFormatter(userStats.numBids, 2)}</div>
@@ -127,7 +127,7 @@ export function BidStats({ stats, userStats, showUserStats }: Props) {
         </div>
       </div>
 
-      <div className={twMerge('space-y-4 pb-6')}>
+      <div className="space-y-4 pb-6">
         <div className="flex flex-col lg:flex-row">
           <div className="mb-4 lg:mb-0 lg:flex-1 lg:mr-2 lg:max-w-1/2">
             <DonutChart

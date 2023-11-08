@@ -1,4 +1,3 @@
-// import { AstraCartButton } from 'src/components/astra/astra-cart-button';
 import { ConnectButton, EZImage, NextLink, Spacer } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { twMerge } from 'tailwind-merge';
@@ -22,11 +21,7 @@ export const ANavbar = ({ setSidebarOpen }: ANavbarPropType) => {
       <div className={isWalletNetworkSupported ? 'hidden' : 'block'}>
         <NetworkWarning />
       </div>
-      <div
-        className={twMerge(
-          'sm:max-h-19 sm:h-full sm:flex px-5 py-5 md:space-x-4 bg-zinc-500 dark:bg-neutral-800 items-center border-b border-gray-300 dark:border-neutral-200'
-        )}
-      >
+      <div className="sm:max-h-19 sm:h-full sm:flex px-5 py-5 md:space-x-4 bg-zinc-500 dark:bg-neutral-800 items-center border-b border-gray-300 dark:border-neutral-200">
         <div className="hidden sm:block md:w-1/3 sm:w-1/2">
           <CollectionSearchInput shortCuts={true} expanded />
         </div>
@@ -47,43 +42,14 @@ export const ANavbar = ({ setSidebarOpen }: ANavbarPropType) => {
                 ></MagnifyingGlassIcon>
               </div>
             ) : (
-              <div className={twMerge('block ')}>
+              <div className="block">
                 <CollectionSearchInput expanded iconStyle="flex-1 w-5 h-5 max-h-full text-amber-700" />
               </div>
             )}
           </div>
         </div>
         <Spacer />
-
-        {/* <ADropdown
-          hasBorder={true}
-          alignMenuRight={true}
-          label={labelVal}
-          innerClassName="w-40"
-          // items={Object.values(ChainId).map((chainId) => ({
-          //   label: chainIdToName(chainId),
-          //   onClick: () => {
-          //     setLabelVal(chainIdToName(chainId));
-          //     setSelectedChain(chainId);
-          //   }
-          // }))}
-          items={[
-            {
-              label: 'Ethereum (beta)',
-              onClick: () => {
-                setSelectedChain(ChainId.Mainnet);
-              }
-            },
-            {
-              label: 'Goerli',
-              onClick: () => {
-                setSelectedChain(ChainId.Goerli);
-              }
-            }
-          ]}
-        /> */}
-
-        <div className={twMerge('hidden sm:flex items-center sm:mt-0 mt-2')}>
+        <div className="hidden sm:flex items-center sm:mt-0 mt-2">
           <ConnectButton half />
           <ShoppingBagButton />
         </div>

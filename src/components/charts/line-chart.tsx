@@ -61,7 +61,6 @@ function Chart({
   const { theme } = useTheme();
   const darkMode = theme === 'dark';
   const lineColors = useMemo(() => {
-    console.log('theme: ', theme);
     return theme === 'dark' ? lineDarkColors : lineLightColors;
   }, [theme]);
 

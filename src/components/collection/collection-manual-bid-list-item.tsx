@@ -79,7 +79,9 @@ export const CollectionManualBidListItem = ({ order, orderType, collectionSlug }
 
         <div className="w-full md:w-1/4 flex justify-end items-center gap-2.5">
           {order.validUntil ? (
-            <div className={twMerge('hidden md:inline-flex bg-[#E6E6DC] dark:bg-zinc-700 rounded-5 py-0.5 px-7')}>
+            <div
+              className={twMerge('hidden md:inline-flex bg-light-borderLight dark:bg-zinc-700 rounded-5 py-0.5 px-7')}
+            >
               <p
                 className={twMerge(
                   'leading-4.5 h-4.5 whitespace-nowrap text-sm font-medium dark:!text-gray-800 !text-neutral-700'
