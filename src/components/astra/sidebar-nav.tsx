@@ -219,7 +219,7 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
 
         {/* <div className="h-8" /> */}
 
-        <div className="flex flex-col h-full justify-center items-center mt-5 gap-5">
+        <div className="flex flex-col h-full justify-center items-center mt-2 gap-3">
           <SidebarNavItem
             title="Explore"
             highlighted={router.asPath.startsWith('/trending')}
@@ -229,7 +229,7 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
           >
             <ExploreBoxIcon
               className={twMerge(
-                'group-hover:text-white',
+                'group-hover:text-white h-9 w-9',
                 router.asPath.startsWith('/trending') && 'text-white dark:text-white'
               )}
             />
@@ -244,7 +244,7 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
           >
             <ItemsBoxIcon
               className={twMerge(
-                'group-hover:text-white',
+                'group-hover:text-white h-9 w-9',
                 router.asPath.startsWith(`/profile`) &&
                   selectedProfileTab === ProfileTabs.Items &&
                   'text-white dark:text-white'
@@ -261,7 +261,7 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
           >
             <OrdersBoxIcon
               className={twMerge(
-                'group-hover:text-white',
+                'group-hover:text-white h-9 w-9',
                 router.asPath.startsWith(`/profile`) &&
                   selectedProfileTab === ProfileTabs.Orders &&
                   'text-white dark:text-white'
@@ -278,7 +278,7 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
           >
             <SendBoxIcon
               className={twMerge(
-                'group-hover:text-white',
+                'group-hover:text-white h-9 w-9',
                 router.asPath.startsWith(`/profile`) &&
                   selectedProfileTab === ProfileTabs.Send &&
                   'text-white dark:text-white'
@@ -294,7 +294,7 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
           >
             <RewardsBoxIcon
               className={twMerge(
-                'group-hover:text-white',
+                'group-hover:text-white h-9 w-9',
                 router.asPath.startsWith(`/rewards`) && 'text-white dark:text-white'
               )}
             />
@@ -308,7 +308,7 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
           >
             <AnalyticsBoxIcon
               className={twMerge(
-                'group-hover:text-white',
+                'group-hover:text-white h-9 w-9',
                 router.asPath.startsWith(`/analytics`) && 'text-white dark:text-white'
               )}
             />
@@ -384,7 +384,7 @@ export const SidebarNavItem = ({
       </HelpToolTip>
       <div
         className={twMerge(
-          'font-medium text-lg mb-2 sm:mb-0 sm:text-sm cursor-pointer group-hover:text-yellow-700 text-neutral-300 dark:text-gray-900 text-center',
+          'font-medium text-lg -mt-1 mb-2 sm:mb-0 sm:text-sm cursor-pointer group-hover:text-yellow-700 text-neutral-300 dark:text-gray-900 text-center',
           highlighted && 'text-yellow-700 dark:text-yellow-700'
         )}
       >

@@ -15,7 +15,7 @@ const RewardsPage = () => {
   }, [setIsClient]);
 
   return (
-    <APageBox subTitle="Earn points from referrals" title="Rewards">
+    <APageBox subTitle="Earn points from referrals" title="Rewards" pageHeaderClassName="!py-7.5">
       <ToggleTab
         className="font-heading pointer-events-auto"
         options={tabs}

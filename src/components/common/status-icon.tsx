@@ -215,11 +215,13 @@ export const MatchAndExecutionOrderStatus = ({
 export const StatusIcon = ({
   status,
   label,
-  duration
+  duration,
+  iconClassName
 }: {
   status: 'complete' | 'pending' | 'pending-indefinite' | 'error' | 'invalid';
   label: string;
   duration?: number | null;
+  iconClassName?: string;
 }) => {
   let iconClass = '';
   switch (status) {
@@ -268,7 +270,7 @@ export const StatusIcon = ({
           <span className={twMerge(secondaryTextColor, 'text-xs font-medium')}>({formatDuration(duration)})</span>
         )}
       </span>
-      <span className="flex w-2 h-2 relative">
+      <span className={twMerge('flex w-2 h-2 relative', iconClassName)}>
         <span
           className={`${isValid ? 'animate-ping' : ''} absolute w-full h-full rounded-full ${iconClass} opacity-75`}
         ></span>

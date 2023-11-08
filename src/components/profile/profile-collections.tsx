@@ -66,10 +66,10 @@ export const ProfileCollections = ({ userAddress }: Props) => {
                 setSelectedCollection({ address: item.address, name: item.name, imageUrl: item.imageUrl });
               }}
             >
-              <EZImage src={item.imageUrl} className="w-25 h-25 rounded" />
+              <EZImage src={item.imageUrl} className="w-20 h-20 rounded" />
               <div className="">
-                <div className={twMerge('!text-22 leading-7 font-bold', secondaryTextColor)}>{item.name}</div>
-                <div className={twMerge('text-lg leading-6 font-semibold', secondaryTextColor)}>
+                <div className={twMerge('!text-xl leading-7 font-bold', secondaryTextColor)}>{item.name}</div>
+                <div className={twMerge('text-base leading-6 font-semibold', secondaryTextColor)}>
                   Floor{' '}
                   <span className="text-17 text-amber-700 ml-1.25 font-normal">
                     <span className="font-supply">{item.floorPrice}</span>

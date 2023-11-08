@@ -385,6 +385,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     <TokenGrid
                       key={collectionAddress}
                       collectionCreator={collectionCreator}
+                      avatarUrl={collection.metadata.profileImage || collection.metadata.bannerImage}
                       collectionFloorPrice={floorPrice}
                       listMode={listMode}
                       className={twMerge(
@@ -405,17 +406,21 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   </div>
                 )}
 
-                {(isDesktop || viewType === '2') && (
-                  <div className={`${showCart ? 'w-0' : 'flex md:w-1/3'} transition-width duration-100`}>
-                    <CollectionItemsPageSidebar
-                      key={collectionAddress}
-                      collectionChainId={chainId}
-                      collectionAddress={collection.address}
-                      collectionImage={collection.metadata.profileImage}
-                      collectionSlug={collection.slug}
-                    />
-                  </div>
-                )}
+                <div
+                  className={twMerge(
+                    'transition-width duration-100',
+                    showCart ? 'w-0' : 'flex md:w-1/3',
+                    viewType === '2' ? 'block' : 'hidden lg:block'
+                  )}
+                >
+                  <CollectionItemsPageSidebar
+                    key={collectionAddress}
+                    collectionChainId={chainId}
+                    collectionAddress={collection.address}
+                    collectionImage={collection.metadata.profileImage}
+                    collectionSlug={collection.slug}
+                  />
+                </div>
               </div>
             </>
           )}

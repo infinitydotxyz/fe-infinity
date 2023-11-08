@@ -7,7 +7,7 @@ export const purgeCSSHack = 'h-14 w-14';
 export const collectionIconHeight = `h-${collectionIconRem}`;
 export const collectionIconWidth = `w-${collectionIconRem}`;
 export const collectionIconStyle = `${collectionIconHeight} ${collectionIconWidth} rounded-lg overflow-clip`;
-export const heroSectionWidth = 'w-[calc(100%_-_180px)]';
+export const heroSectionWidth = 'w-[calc(100%_-_100px)]';
 export const collectionIconWidthInPx = (): number => {
   return pixelsPerRem() * collectionIconRem;
 };
@@ -77,7 +77,7 @@ export const darkWhiteIconColor = 'text-neutral-700 dark:text-white';
 export const golderBorderColor = 'border-yellow-700';
 export const tabItemBGColor = 'bg-zinc-300 dark:bg-zinc-900';
 export const containerBGColor = 'bg-zinc-300 dark:bg-neutral-800';
-export const heroSectionBGImage = '-top-[267px] -left-[272px]';
+export const heroSectionBGImage = 'top-[81px] -left-[284px]';
 export const rewardSectionItemLabel = 'text-sm font-medium text-neutral-700 dark:text-white whitespace-nowrap';
 export const rewardSectionItemValue = 'md:text-31 font-supply font-normal text-amber-700 leading-9 text-center';
 export const analyticsSectionItemValue =

@@ -29,7 +29,7 @@ export const ProfilePageHeader = ({ expanded, tabs }: ProfileHeaderProps) => {
             <div className="flex flex-col-reverse sm:flex-row w-full items-center sm:items-start justify-between">
               {/* <EZImage src={person.src} className="mr-4 h-12 w-12 rounded-full overflow-clip" /> */}
 
-              <div className={twMerge('flex items-center my-5 sm:my-0 mr-2 py-19.5 sm:py-15 gap-2.5')}>
+              <div className={twMerge('flex items-center my-5 sm:my-0 mr-2 py-19.5 sm:py-7.5 gap-2.5')}>
                 <div className="text-35 text-neutral-700 font-extrabold dark:text-white">
                   {ellipsisAddress(addressFromPath).toLowerCase()}
                 </div>

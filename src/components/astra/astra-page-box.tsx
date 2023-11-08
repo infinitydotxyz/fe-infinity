@@ -12,6 +12,7 @@ interface Props {
   fullWidth?: boolean;
   rightToolbar?: JSX.Element;
   footer?: JSX.Element;
+  pageHeaderClassName?: string;
 }
 
 // used in the Header
@@ -24,6 +25,7 @@ export const APageBox = ({
   showTitle = true,
   className = '',
   rightToolbar,
+  pageHeaderClassName = '',
   footer
 }: Props): JSX.Element => {
   return (
@@ -36,7 +38,14 @@ export const APageBox = ({
     >
       <Header title={title} />
 
-      {showTitle ? <APageHeader subTitle={subTitle} title={title} rightToolbar={rightToolbar} /> : null}
+      {showTitle ? (
+        <APageHeader
+          subTitle={subTitle}
+          title={title}
+          rightToolbar={rightToolbar}
+          pageHeaderClassName={pageHeaderClassName}
+        />
+      ) : null}
 
       {children}
       {footer}
@@ -50,11 +59,12 @@ type Props2 = {
   title?: string;
   subTitle?: string;
   rightToolbar?: JSX.Element;
+  pageHeaderClassName?: string;
 };
 
-export const APageHeader = ({ title, rightToolbar, subTitle }: Props2): JSX.Element => {
+export const APageHeader = ({ title, rightToolbar, subTitle, pageHeaderClassName }: Props2): JSX.Element => {
   return (
-    <div className="flex flex-row items-center py-15 px-5">
+    <div className={twMerge('flex flex-row items-center py-7.5 px-5', pageHeaderClassName)}>
       {subTitle ? (
         <div className="flex flex-col justify-center w-full text-center md:text-left">
           <div

@@ -179,7 +179,7 @@ export function BuyStats() {
         <div className="flex flex-col lg:flex-row">
           <div className="mb-4 lg:mb-0 lg:flex-1 lg:mr-2 lg:max-w-1/2">
             <LineChart dataSets={volumeDataSets} xAxisType="DATE" title="Buy Volume" subTitle="Last 30 days">
-              <div className="flex gap-5 items-center mt-6">
+              <div className="flex flex-wrap gap-5 items-center mt-6">
                 {AllVolumeDataSetIds.map((id) => {
                   return (
                     <div key={id}>
@@ -207,7 +207,7 @@ export function BuyStats() {
           </div>
           <div className="lg:flex-1 lg:ml-2 lg:max-w-1/2">
             <LineChart dataSets={buyDataSets} xAxisType="DATE" title="Buys" subTitle="Last 30 days">
-              <div className="flex gap-5 items-center mt-6">
+              <div className="flex flex-wrap gap-5 items-center mt-6">
                 {AllBuyDataSetIds.map((id) => {
                   return (
                     <div key={id}>

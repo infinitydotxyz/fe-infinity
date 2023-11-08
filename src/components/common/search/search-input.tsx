@@ -26,6 +26,7 @@ interface Props {
   setSelectedCollection?: (collection: CollectionSearchDto) => void;
   setSelectedToken?: (basicTokenInfo: BasicTokenInfo) => void;
   customIcon?: React.ReactNode;
+  iconStyle?: string;
 }
 
 export function SearchInput({
@@ -42,6 +43,7 @@ export function SearchInput({
   setSelectedCollection,
   setSelectedToken,
   customIcon,
+  iconStyle = '',
   shortCuts = false
 }: Props): JSX.Element {
   const router = useRouter();
@@ -115,7 +117,7 @@ export function SearchInput({
     >
       <div className="w-content h-content  hover:cursor-pointer" onClick={activate}>
         {customIcon ?? (
-          <MagnifyingGlassIcon className={twMerge('flex-1 w-3.75 h-3.75 max-h-full')}></MagnifyingGlassIcon>
+          <MagnifyingGlassIcon className={twMerge('flex-1 w-3.75 h-3.75 max-h-full', iconStyle)}></MagnifyingGlassIcon>
         )}
       </div>
       <Combobox
@@ -151,7 +153,7 @@ export function SearchInput({
               secondaryBgColor,
               data.length === 0 ? 'opacity-0' : '', // without this, a thin line appears
               borderColor,
-              'absolute md:left-auto -left-8 md:right-auto -right-4 z-20 md:-mx-8 md:w-full md:top-2 top-2  w-content h-content max-h-content',
+              'absolute md:left-auto -left-8 md:right-auto -right-4 z-20 md:-mx-8 md:top-2 top-2  w-content h-content max-h-content',
               'py-2 border rounded-lg flex flex-col shadow-lg'
             )}
           >

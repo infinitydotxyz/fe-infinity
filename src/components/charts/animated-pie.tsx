@@ -64,7 +64,7 @@ export function AnimatedPie<Datum>({
               x={centroidX}
               y={centroidY}
               dy=".33em"
-              fontSize={14}
+              fontSize={11}
               fontWeight={400}
               fontFamily="Supply-Mono"
               textAnchor="middle"

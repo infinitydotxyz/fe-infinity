@@ -12,6 +12,7 @@ interface Props {
   orderSearch?: boolean;
   setSelectedCollection?: (collection: CollectionSearchDto) => void;
   shortCuts?: boolean;
+  iconStyle?: string;
 }
 
 export const CollectionSearchInput = ({
@@ -19,7 +20,8 @@ export const CollectionSearchInput = ({
   profileSearch,
   orderSearch,
   setSelectedCollection,
-  shortCuts = false
+  shortCuts = false,
+  iconStyle = ''
 }: Props) => {
   const { chain } = useNetwork();
   const { selectedChain } = useAppContext();
@@ -45,6 +47,7 @@ export const CollectionSearchInput = ({
       setQuery={setQuery}
       data={result.data}
       placeholder="Search collection, NFTs or users"
+      iconStyle={iconStyle}
     />
   );
 };

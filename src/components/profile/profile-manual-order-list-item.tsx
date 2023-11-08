@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, EthSymbol } from 'src/components/common';
+import { EthSymbol } from 'src/components/common';
 import { erc721TokenCartItemToCollectionCartItem, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
@@ -41,11 +41,11 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
       ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
       : isNFTSelected(editableCartItem as ERC721TokenCartItem)
   );
-  const [addedToCancelCart, setAddedToCancelCart] = useState(
-    isCollBid
-      ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
-      : isNFTSelected(editableCartItem as ERC721TokenCartItem)
-  );
+  // const [addedToCancelCart, setAddedToCancelCart] = useState(
+  //   isCollBid
+  //     ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
+  //     : isNFTSelected(editableCartItem as ERC721TokenCartItem)
+  // );
 
   const isActionable = isOwner;
 
@@ -55,11 +55,11 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
         ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
         : isNFTSelected(editableCartItem as ERC721TokenCartItem)
     );
-    setAddedToCancelCart(
-      isCollBid
-        ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
-        : isNFTSelected(editableCartItem as ERC721TokenCartItem)
-    );
+    // setAddedToCancelCart(
+    //   isCollBid
+    //     ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
+    //     : isNFTSelected(editableCartItem as ERC721TokenCartItem)
+    // );
   }, [cartType, cartItems]);
 
   return (
@@ -114,15 +114,7 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
 
         {orderType === 'listings' || orderType === 'bids-placed' ? (
           <div className="sm:w-auto flex w-full justify-center mt-3.75 sm:mt-0 sm:justify-end">
-            <Button
-              variant={
-                addedToEditCart &&
-                (cartType === CartType.TokenList ||
-                  cartType === CartType.TokenBid ||
-                  cartType === CartType.CollectionBid)
-                  ? 'primary'
-                  : 'outline'
-              }
+            <AButton
               disabled={!isActionable}
               className="text-white dark:text-neutral-200 dark:bg-white bg-neutral-200 px-5 py-2.5 rounded-l-6 mr-0.25"
               onClick={() => {
@@ -147,28 +139,27 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
               }}
             >
               <EditIcon />
-            </Button>
+            </AButton>
 
-            <Button
-              className="text-white dark:text-neutral-200 dark:bg-white bg-neutral-200 px-5 py-2.5 rounded-r-6"
-              variant={addedToCancelCart && cartType === CartType.Cancel ? 'primary' : 'outline'}
+            <AButton
+              className="text-white dark:text-neutral-200 dark:bg-white bg-neutral-200 px-5 py-2.5 rounded-r-6 group"
               disabled={!isActionable}
-              onClick={() => {
-                if (!isConnected) {
-                  return;
-                }
-                const newCartType = CartType.Cancel;
-                editableCartItem.cartType = newCartType;
-                setCartType(newCartType);
-                if (isCollBid) {
-                  toggleCollSelection(editableCartItem as ERC721CollectionCartItem);
-                } else {
-                  toggleNFTSelection(editableCartItem as ERC721TokenCartItem);
-                }
-              }}
+              // onClick={() => {
+              //   if (!isConnected) {
+              //     return;
+              //   }
+              //   const newCartType = CartType.Cancel;
+              //   editableCartItem.cartType = newCartType;
+              //   setCartType(newCartType);
+              //   if (isCollBid) {
+              //     toggleCollSelection(editableCartItem as ERC721CollectionCartItem);
+              //   } else {
+              //     toggleNFTSelection(editableCartItem as ERC721TokenCartItem);
+              //   }
+              // }}
             >
               <DeleteIcon />
-            </Button>
+            </AButton>
           </div>
         ) : null}
 

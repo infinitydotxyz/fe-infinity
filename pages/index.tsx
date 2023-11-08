@@ -87,41 +87,41 @@ const HomePage = () => {
         {/* home top section */}
         <div className="relative overflow-hidden bg-gray-100 sm:bg-zinc-300 dark:bg-dark-bg sm:dark:bg-neutral-200">
           <div className={twMerge('hidden sm:block absolute h-full ', heroSectionBGImage)}>
-            <ChevronDown className="text-yellow-900 -rotate-90 h-300 w-225" />
+            <ChevronDown className="text-yellow-900 -rotate-90 h-78 w-225" />
           </div>
           <div className="hidden sm:block bg-radial-back-no-image-light dark:bg-radial-back-no-image-dark absolute top-0 left-0 h-full w-full"></div>
 
           <div className={twMerge('hidden sm:grid grid-cols-1 lg:grid-cols-2 mx-auto', heroSectionWidth)}>
             {/* Aggregator */}
-            <div className="rounded-xl lg:w-max border overflow-hidden dark:border-amber-300 border-neutral-700/10 my-14 z-10">
-              <div className="bg-card-header-90 p-2.5 dark:bg-none dark:bg-gray-500/70 backdrop-blur-2xl">
-                <p className="text-4xl w-max font-supply font-normal dark:text-white text-neutral-700 skew-x-14">
+            <div className=" rounded-xl border overflow-hidden dark:border-amber-300 border-neutral-700/10 my-8 z-10">
+              <div className="bg-card-header-90  pt-2.5 dark:bg-none dark:bg-gray-500/70 backdrop-blur-2xl">
+                <p className="text-4xl w-max font-supply pl-3 font-normal dark:text-white text-neutral-700 skew-x-14">
                   The Last
                 </p>
-                <h3 className="pl-1.5 w-max text-54 font-extrabold dark:text-white text-neutral-700 -mt-5 font-body">
+                <h3 className="pl-4 w-max text-54 font-extrabold dark:text-white text-neutral-700 -mt-5 font-body">
                   Aggregator
                 </h3>
               </div>
-              <div className="pt-2.5 backdrop-blur-2xl bg-white/70 dark:bg-gray-500/70">
+              <div className=" backdrop-blur-2xl bg-white/70 h-full dark:bg-gray-500/70">
                 <div>
                   {homeFeaturesList.map((featureItems) => (
-                    <div className="flex gap-2.5 py-2.5 px-5 items-center" key={featureItems.id}>
+                    <div className="flex gap-2 py-1.5 px-2 items-center" key={featureItems.id}>
                       <ChevronDown className="-rotate-90 text-yellow-900 w-4.5 h-2.5 mb-0.5" />
-                      <p className="text-17 font-normal font-supply dark:text-white text-neutral-700">
+                      <p className="text-base font-normal font-supply dark:text-white text-neutral-700">
                         {featureItems.feature}
                       </p>
                     </div>
                   ))}
                 </div>
-                <div className="p-5">
+                <div className="px-5 pt-2 pb-4">
                   <ConnectButton iconClassName="text-yellow-900 dark:text-yellow-700" />
                 </div>
               </div>
             </div>
             {/* cards stack */}
-            <div className="hidden lg:flex">
-              <Image src={NFTCards} className="dark:block hidden bg-contain" alt="nft cards" height={565} width={808} />
-              <Image src={NFTCardsLight} className="block dark:hidden" alt="nft cards" height={565} width={808} />
+            <div className="hidden blur-none lg:flex flex-1 justify-center">
+              <Image src={NFTCards} className="dark:block hidden bg-contain" alt="nft cards" height={565} width={380} />
+              <Image src={NFTCardsLight} className="block dark:hidden" alt="nft cards" height={565} width={380} />
             </div>
           </div>
           {/* home top section mobile view*/}
@@ -152,7 +152,7 @@ const HomePage = () => {
           </div>
         </div>
         {/* home trending section */}
-        <div className="px-5 mt-10 sm:mt-15">
+        <div className="px-5 mt-4">
           <div className="flex justify-between items-center">
             <h3 className="text-35 text-neutral-700 dark:text-white font-extrabold border-b-5 border-yellow-900 w-max font-body">
               Trending

@@ -122,7 +122,7 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
                 }}
               />
               {/* <div className="flex text-sm items-cente p-2.5 border border-gray-300 rounded-4"> */}
-              <StatusIcon status="pending-indefinite" label="Live" />
+              <StatusIcon status="pending-indefinite" label="Live" iconClassName="mt-0.75" />
               {/* </div> */}
             </div>
 

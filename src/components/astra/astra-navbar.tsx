@@ -8,12 +8,14 @@ import { ShoppingBagButton } from '../common/shoping-bag-button';
 import lightLogo from 'src/images/light-logo.png';
 import { AiOutlineMenu } from 'react-icons/ai';
 import { MagnifyingGlassIcon } from 'src/icons';
+import { useState } from 'react';
 
 type ANavbarPropType = {
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export const ANavbar = ({ setSidebarOpen }: ANavbarPropType) => {
-  const { isWalletNetworkSupported } = useAppContext();
+  const { isWalletNetworkSupported, showCart } = useAppContext();
+  const [showSearchBar, setShowSearchBar] = useState(false);
 
   return (
     <div>
@@ -38,8 +40,17 @@ export const ANavbar = ({ setSidebarOpen }: ANavbarPropType) => {
             </div>
           </div>
           <div className="p-2.5 dark:border-none rounded-full flex items-center jusitfy-center bg-gray-100 dark:bg-gray-600 text-amber-700 dark:text-white">
-            {/* <SearchIcon className="h-5 w-5" /> */}
-            <MagnifyingGlassIcon className={twMerge('flex-1 w-5 h-5 max-h-full text-amber-700')}></MagnifyingGlassIcon>
+            {!showSearchBar ? (
+              <div onClick={() => setShowSearchBar(!showSearchBar)}>
+                <MagnifyingGlassIcon
+                  className={twMerge('flex-1 w-5 h-5 max-h-full text-amber-700')}
+                ></MagnifyingGlassIcon>
+              </div>
+            ) : (
+              <div className={twMerge('block ')}>
+                <CollectionSearchInput expanded iconStyle="flex-1 w-5 h-5 max-h-full text-amber-700" />
+              </div>
+            )}
           </div>
         </div>
         <Spacer />
@@ -72,11 +83,16 @@ export const ANavbar = ({ setSidebarOpen }: ANavbarPropType) => {
           ]}
         /> */}
 
-        <div className="hidden sm:flex items-center sm:mt-0 mt-2">
+        <div className={twMerge('hidden sm:flex items-center sm:mt-0 mt-2')}>
           <ConnectButton half />
           <ShoppingBagButton />
         </div>
-        <div className="p-5 flex sm:hidden items-center justify-center bg-linear-back-dark fixed z-50 bottom-0 w-full left-0">
+        <div
+          className={twMerge(
+            'p-5  sm:hidden items-center justify-center bg-linear-back-dark fixed z-50 bottom-0 w-full left-0',
+            showCart ? 'hidden' : 'flex'
+          )}
+        >
           <ConnectButton half fullWidth />
           <ShoppingBagButton />
         </div>

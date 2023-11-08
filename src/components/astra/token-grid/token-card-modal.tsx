@@ -34,6 +34,7 @@ interface Props {
   data: BasicTokenInfo;
   isNFTSelected?: boolean;
   modalOpen: boolean;
+  avatarUrl?: string;
 }
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
@@ -70,7 +71,7 @@ const useCollectionInfo = (chainId: string, collectionAddress: string, collectio
   };
 };
 
-export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.Element | null => {
+export const TokenCardModal = ({ data, modalOpen, isNFTSelected, avatarUrl }: Props): JSX.Element | null => {
   const { token, error, bestAsk, bestBid, askValidFrom, askValidUntil, bidValidFrom, bidValidUntil } =
     useFetchAssetInfo(data.chainId, data.collectionAddress, data.tokenId);
 
@@ -260,9 +261,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                           <div className="flex items-center">
                             <div className="block md:hidden mr-1">
                               <EZImage
-                                src={
-                                  'https://i.seadn.io/gae/H8jOCJuQokNqGBpkBN5wk1oZwO7LM8bNnrHCaekV2nKjnCqw6UB5oaH8XyNeBDj6bA_n1mjejzhFQUP3O1NfjFLHr3FOaeHcTOOT?w=500&auto=format'
-                                }
+                                src={avatarUrl}
                                 className="h-5 w-5 rounded-3 cursor-pointer hover:scale-90 duration-100"
                               />
                             </div>
@@ -310,12 +309,10 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                             </div>
                           ) : null}
                         </div>
-                        <div className="hidden md:block">
+                        <div className="hidden md:block group">
                           <EZImage
-                            src={
-                              'https://i.seadn.io/gae/H8jOCJuQokNqGBpkBN5wk1oZwO7LM8bNnrHCaekV2nKjnCqw6UB5oaH8XyNeBDj6bA_n1mjejzhFQUP3O1NfjFLHr3FOaeHcTOOT?w=500&auto=format'
-                            }
-                            className="h-18 w-18 rounded-lg cursor-pointer hover:scale-90 duration-100"
+                            src={avatarUrl}
+                            className="h-18 w-18 rounded-lg cursor-pointer group-hover:scale-90 duration-100"
                           />
                         </div>
                       </div>

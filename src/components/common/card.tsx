@@ -17,6 +17,7 @@ interface Props {
   onClick: (data: ERC721TokenCartItem) => void;
   collectionFloorPrice?: string | number | null | undefined;
   collectionCreator?: string;
+  avatarUrl?: string;
 }
 
 export const GridCard = ({
@@ -25,7 +26,8 @@ export const GridCard = ({
   selected,
   isSelectable,
   collectionFloorPrice,
-  collectionCreator
+  collectionCreator,
+  avatarUrl
 }: Props): JSX.Element => {
   const [notSelectable, setNotSelectable] = useState(false);
   const title = data?.title;
@@ -80,7 +82,16 @@ export const GridCard = ({
           {/* we can't overflow clip the whole card or the tooltips get clipped
               so we do this absolute image below the pillbadges */}
           {!selected && (
-            <div className="hidden rounded-5  group-hover/nft-card-image:flex cursor-pointer bg-black/30  absolute h-full text-white w-full  items-center justify-center z-10">
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+                const { pathname, query } = router;
+                query['tokenId'] = basicTokenInfo.tokenId;
+                query['collectionAddress'] = basicTokenInfo.collectionAddress;
+                router.replace({ pathname, query }, undefined, { shallow: true });
+              }}
+              className="hidden rounded-5  group-hover/nft-card-image:flex cursor-pointer bg-black/30  absolute h-full text-white w-full  items-center justify-center z-10"
+            >
               <SearchIcon className="text-current" />
             </div>
           )}
@@ -104,16 +115,7 @@ export const GridCard = ({
         <div>
           <div className={twMerge('group-hover/nft:mt-6.25', selected ? 'mt-6.25' : 'mt-3.75')}>
             <p className="text-gray-800 text-sm not-italic font-medium leading-4.25 truncate">{title}</p>
-            <div
-              className={'text-neutral-700 dark:text-white text-lg not-italic font-semibold leading-5 mt-0.5'}
-              onClick={(e) => {
-                e.stopPropagation();
-                const { pathname, query } = router;
-                query['tokenId'] = basicTokenInfo.tokenId;
-                query['collectionAddress'] = basicTokenInfo.collectionAddress;
-                router.replace({ pathname, query }, undefined, { shallow: true });
-              }}
-            >
+            <div className={'text-neutral-700 dark:text-white text-lg not-italic font-semibold leading-5 mt-0.5'}>
               {ellipsisString(tokenId)}
             </div>
           </div>
@@ -137,23 +139,26 @@ export const GridCard = ({
                   </div>
                 )}
               </div>
-
-              <ARoundOutlineButton
-                className={twMerge(
-                  'rounded-md mt-2.5 p-2.5 !leading-2.5 w-full text-xs sm:text-sm',
-                  selected
-                    ? 'block border-neutral-700 text-neutral-700 font-medium'
-                    : 'hidden group-hover/nft:block group-hover/nft:animate-in duration-800 group-hover/nft:slide-in-from-bottom bg-neutral-700 text-white font-semibold dark:bg-white dark:text-neutral-700'
-                )}
-              >
-                {selected ? 'Remove from Cart' : 'Add to Cart'}
-              </ARoundOutlineButton>
+              <div>
+                <ARoundOutlineButton
+                  className={twMerge(
+                    'rounded-md transition-all  !leading-2.5 w-full text-xs sm:text-sm',
+                    selected
+                      ? 'block mt-2.5 p-2.5 border-neutral-700 text-neutral-700 font-medium'
+                      : 'hidden h-0 group-hover/nft:h-full opacity-0 group-hover/nft:mt-2.5 group-hover/nft:p-2.5 group-hover/nft:block group-hover/nft:opacity-100 group-hover/nft:animate-in group-hover/nft:duration-300 group-hover/nft:slide-in-from-bottom bg-neutral-700 text-white font-semibold dark:bg-white dark:text-neutral-700'
+                  )}
+                >
+                  {selected ? 'Remove from Cart' : 'Add to Cart'}
+                </ARoundOutlineButton>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {modalOpen && <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} isNFTSelected={selected} />}
+      {modalOpen && (
+        <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} isNFTSelected={selected} avatarUrl={avatarUrl} />
+      )}
     </div>
   );
 };

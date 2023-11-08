@@ -27,6 +27,7 @@ import {
   borderColor,
   brandTextColor,
   extraSmallIconButtonStyle,
+  iconButtonStyle,
   inverseBgColor,
   inverseTextColor,
   secondaryBgColor,
@@ -304,7 +305,7 @@ export const AstraCart = ({
         divList.push(
           <div
             className={twMerge(
-              'w-full font-bold font-heading truncate',
+              'w-full font-bold truncate',
               cartType === CartType.TokenList ? 'min-h-6.25' : 'min-h-6.25'
             )}
             key={`header-${first.id}`}
@@ -335,9 +336,7 @@ export const AstraCart = ({
 
       // min-w-0 is important otherwise text doesn't truncate
       cartItemList = (
-        <div className={twMerge(textColor, 'min-w-0 flex px-4 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
-          {divList}
-        </div>
+        <div className={twMerge(textColor, 'min-w-0 flex px-4 flex-col space-y-2 items-start flex-1')}>{divList}</div>
       );
     } else if (cartType === CartType.CollectionBid && collMap.size > 0) {
       const divList: ReactNode[] = [];
@@ -362,7 +361,7 @@ export const AstraCart = ({
 
       // min-w-0 is important otherwise text doesn't truncate
       cartItemList = (
-        <div className={twMerge(textColor, 'min-w-0 flex px-4 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
+        <div className={twMerge(textColor, 'min-w-0 flex px-4 flex-col space-y-2 items-start flex-1 h-full')}>
           {divList}
         </div>
       );
@@ -375,7 +374,7 @@ export const AstraCart = ({
         const firstCollName = isCollBid ? first.criteria?.data?.collection?.name : first.collectionName;
 
         divList.push(
-          <div className="w-full rounded-md truncate font-bold font-heading min-h-6.25" key={`header-${orderId}`}>
+          <div className="w-full rounded-md truncate font-bold min-h-6.25" key={`header-${orderId}`}>
             {firstCollName}
           </div>
         );
@@ -395,7 +394,7 @@ export const AstraCart = ({
 
       // min-w-0 is important otherwise text doesn't truncate
       cartItemList = (
-        <div className={twMerge(textColor, 'min-w-0 flex px-4 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
+        <div className={twMerge(textColor, 'min-w-0 flex px-4 flex-col space-y-2 items-start flex-1 h-full')}>
           {divList}
         </div>
       );
@@ -516,6 +515,7 @@ export const AstraCart = ({
 
   useEffect(() => {
     const handleScroll = () => {
+      console.log(window.scrollY);
       if (window.scrollY >= 50) {
         setIsFixed(true);
       } else {
@@ -532,20 +532,23 @@ export const AstraCart = ({
     };
   }, []);
 
+  const { setShowCart } = useAppContext();
+
   return (
     <div
       className={twMerge(
-        ' w-fit min-h-screen h-screen flex flex-col border-l',
+        'w-fit  min-h-screen h-full border-l border-t overflow-auto bg-[#F7F7F3] dark:bg-dark-bg',
         borderColor,
-        isFixed ? 'top-0 fixed' : 'relative'
+        isFixed ? 'top-0 fixed' : 'fixed pb-20 md:top-[75px]'
       )}
       style={{
         width: 'inherit'
       }}
     >
-      <div className="m-4 flex items-center">
-        <div className={twMerge(textColor, 'md:text-3xl lg:text-2xl font-bold font-body mr-3')}>{cartTitle}</div>
-
+      <div className="m-4 flex items-center justify-between">
+        <div className={twMerge(textColor, 'md:text-3xl lg:text-2xl text-xl font-bold font-body mr-3')}>
+          {cartTitle}
+        </div>
         <div className="flex items-center">
           {currentCartItems.length > 0 && (
             <>
@@ -577,6 +580,16 @@ export const AstraCart = ({
             </>
           )}
         </div>
+        <MdClose
+          className={twMerge(
+            iconButtonStyle,
+            'dark:text-dark-body text-light-body cursor-pointer ',
+            isFixed ? 'block ' : 'md:hidden'
+          )}
+          onClick={() => {
+            setShowCart(false);
+          }}
+        />
       </div>
 
       {cartType === CartType.Send && tokenMap.size > 0 && (
@@ -590,9 +603,7 @@ export const AstraCart = ({
         </div>
       )}
 
-      <div className="overflow-y-auto overflow-hidden min-h-50 h-[calc(100vh-440px)] max-h-[calc(100vh-440px)]">
-        {cartContent}
-      </div>
+      <div className="overflow-auto no-scrollbar min-h-50">{cartContent}</div>
 
       {cartType !== CartType.Send && cartType !== CartType.Cancel && (
         <div className={twMerge('m-4 flex flex-col text-sm space-y-2 rounded-lg p-3', secondaryBgColor)}>
@@ -608,7 +619,7 @@ export const AstraCart = ({
               <div className={twMerge('border-b pb-2 space-y-2', borderColor)}>
                 <div className={twMerge('flex justify-between')}>
                   <div className={twMerge(secondaryTextColor, 'font-medium')}>Cart total: </div>
-                  <div className="font-supply">
+                  <div className="font-supply text-amber-700">
                     {nFormatter(Number(cartTotal))} <span className="font-body">{EthSymbol}</span>
                   </div>
                 </div>
@@ -617,22 +628,22 @@ export const AstraCart = ({
                   <div className="text-xs">
                     <div className={twMerge('flex justify-between')}>
                       <div className={twMerge(secondaryTextColor)}>Platform fees: </div>
-                      <div>
-                        {nFormatter(Number(fees))} {EthSymbol}
+                      <div className="text-amber-700">
+                        <span className="font-supply">{nFormatter(Number(fees))}</span> {EthSymbol}
                       </div>
                     </div>
 
                     <div className={twMerge('flex justify-between')}>
                       <div className={twMerge(secondaryTextColor)}>Royalties: </div>
-                      <div>
-                        {nFormatter(Number(royalties))} {EthSymbol}
+                      <div className="text-amber-700">
+                        <span className="font-supply">{nFormatter(Number(royalties))}</span> {EthSymbol}
                       </div>
                     </div>
 
                     <div className={twMerge('flex justify-between text-sm mt-2')}>
                       <div className={twMerge(secondaryTextColor, 'font-medium')}>Net proceeds: </div>
-                      <div>
-                        {nFormatter(Number(netProceeds))} {EthSymbol}
+                      <div className="text-amber-700">
+                        <span className="font-supply">{nFormatter(Number(netProceeds))}</span> {EthSymbol}
                       </div>
                     </div>
 
@@ -695,8 +706,8 @@ export const AstraCart = ({
                       {isEthBalanceLoading ? (
                         <span>Loading...</span>
                       ) : (
-                        <span>
-                          {nFormatter(Number(ethBalance?.formatted))} {EthSymbol}
+                        <span className="text-amber-700">
+                          <span className="font-supply">{nFormatter(Number(ethBalance?.formatted))}</span> {EthSymbol}
                         </span>
                       )}
                     </div>
@@ -709,8 +720,9 @@ export const AstraCart = ({
                           {isLoading ? (
                             <span>Loading...</span>
                           ) : (
-                            <span>
-                              {nFormatter(Number(wethBalance?.formatted))} {EthSymbol}
+                            <span className="text-amber-700">
+                              <span className="font-supply">{nFormatter(Number(wethBalance?.formatted))}</span>{' '}
+                              {EthSymbol}
                             </span>
                           )}
                           <AButton
@@ -754,7 +766,7 @@ export const AstraCart = ({
 
       <div className="m-6 flex flex-col">
         <AButton
-          className="p-3 z-30"
+          className="p-3 mb-5 z-30"
           primary={true}
           disabled={
             isCheckingOut ||
@@ -872,7 +884,7 @@ const AstraCollectionCartItem = ({ collection, onRemove, updateCartTotal }: Prop
       </div>
 
       <div className="ml-4 flex w-full flex-col space-y-2">
-        <div className={twMerge('font-bold font-heading text-sm truncate')}>{collection.metadata.name}</div>
+        <div className={twMerge('font-bold  text-sm truncate')}>{collection.metadata.name}</div>
         <div className="flex flex-row items-center">
           <PriceAndExpiry
             collection={collection}
@@ -922,7 +934,7 @@ const AstraCancelCartItem = ({ order, onTokenRemove, onCollectionRemove }: Props
         </div>
       </div>
 
-      <div className="ml-3 flex flex-col w-full text-sm font-bold font-heading">
+      <div className="ml-3 flex flex-col w-full text-sm font-bold">
         <div>{ellipsisString(tokenId)}</div>
         <PriceAndExpiry
           token={isCollBid ? undefined : (order as ERC721TokenCartItem)}
@@ -1056,8 +1068,8 @@ const PriceAndExpiry = ({
           )}
 
           <div className={twMerge('flex flex-col items-end')}>
-            <div className="flex flex-row">
-              <div className={twMerge('')}>{nFormatter(Number(price), 2)}</div>
+            <div className="flex flex-row text-amber-700">
+              <div className={twMerge('font-supply')}>{nFormatter(Number(price), 2)}</div>
               <div className={twMerge('ml-1')}>{EthSymbol}</div>
             </div>
             {!hideExpiry && <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>{expiry}</div>}

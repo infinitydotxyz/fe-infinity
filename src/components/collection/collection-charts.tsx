@@ -152,21 +152,21 @@ export const CollectionCharts = ({
 
   return (
     <div className={twMerge('w-full gap-2.5 h-full relative flex flex-col p-5', className)}>
-      <div className="md:grid md:grid-cols-4 gap-5">
-        <div className="md:col-span-3">
+      <div className="md:grid md:grid-cols-12 gap-5">
+        <div className="md:col-span-6 lg:col-span-7 xl:col-span-8">
           {salesChartData.length > 0 && (
             <ResponsiveSalesChart graphType={ScatterChartType.Sales} data={salesChartData} />
           )}
 
           {isSalesLoading && <Loading graphType={ScatterChartType.Sales} />}
         </div>
-        <div className={`md:col-span-1 ${salesChartData.length <= 0 ? 'mt-18' : ''}`}>
+        <div className={`md:col-span-6 lg:col-span-5 xl:col-span-4 ${salesChartData.length <= 0 ? 'mt-18' : ''}`}>
           {salesChartData.length > 0 && <SalesChartDetails data={salesChartData[0]} />}
         </div>
       </div>
 
-      <div className="md:flex gap-5">
-        <div className="md:w-3/4">
+      <div className="md:grid md:grid-cols-12 gap-5">
+        <div className="md:col-span-6 lg:col-span-7 xl:col-span-8">
           {listingsData.length > 5 && (
             <ResponsiveBarChart
               graphType={BarChartType.Listings}
@@ -177,7 +177,7 @@ export const CollectionCharts = ({
 
           {isListingsLoading && <Loading graphType={BarChartType.Listings} />}
         </div>
-        <div className="md:w-1/4 mt-18">
+        <div className="md:col-span-6 lg:col-span-5 xl:col-span-4 mt-18">
           {listingsData.length > 5 && (
             <OrdersChartDetails
               orders={selectedListings}
@@ -193,15 +193,15 @@ export const CollectionCharts = ({
         </div>
       </div>
 
-      <div className="md:flex gap-5">
-        <div className="md:w-3/4">
+      <div className="md:grid md:grid-cols-12 gap-5">
+        <div className="md:col-span-6 lg:col-span-7 xl:col-span-8">
           {bidsData.length > 5 && (
             <ResponsiveBarChart graphType={BarChartType.Bids} data={bidsData} displayDetails={displayBidDetails} />
           )}
 
           {isBidsLoading && <Loading graphType={BarChartType.Bids} />}
         </div>
-        <div className="md:w-1/4 mt-18">
+        <div className="md:col-span-6 lg:col-span-5 xl:col-span-4 mt-18">
           {bidsData.length > 5 && (
             <OrdersChartDetails
               orders={selectedBids}

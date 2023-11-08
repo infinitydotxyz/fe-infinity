@@ -21,6 +21,7 @@ interface Props {
   isLoading?: boolean;
   collectionFloorPrice?: string | number | null | undefined;
   collectionCreator?: string;
+  avatarUrl?: string;
 }
 
 export const TokenGrid = ({
@@ -35,7 +36,8 @@ export const TokenGrid = ({
   isError,
   isLoading,
   collectionFloorPrice,
-  collectionCreator
+  collectionCreator,
+  avatarUrl
 }: Props) => {
   let contents;
 
@@ -61,7 +63,6 @@ export const TokenGrid = ({
               );
             })}
           </div>
-
           {hasNextPage && onFetchMore && <ScrollLoader onFetchMore={onFetchMore} />}
         </>
       );
@@ -81,6 +82,7 @@ export const TokenGrid = ({
                   onClick={(data) => {
                     onClick?.(data);
                   }}
+                  avatarUrl={avatarUrl}
                 />
               );
             })}
