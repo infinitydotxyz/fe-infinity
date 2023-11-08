@@ -1102,7 +1102,9 @@ const PriceAndExpiry = ({
           onEnter={() => {
             onEditComplete?.(price);
           }}
-
+          onBlur={() => {
+            onEditComplete?.(price);
+          }}
           // onMouseLeave={() => {
           //   onEditComplete?.(price);
           // }}

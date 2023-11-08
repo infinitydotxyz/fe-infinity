@@ -91,6 +91,7 @@ interface Props4 {
   onEnter?: () => void;
   stopEnterSpacePropagation?: boolean;
   onMouseLeave?: () => void;
+  onBlur?: () => void;
 }
 
 export const TextInputBox = ({
