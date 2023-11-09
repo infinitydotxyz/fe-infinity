@@ -15,7 +15,7 @@ export const Grid = (
   const { showCart } = useAppContext();
 
   return (
-    <div className={twMerge(bgColor, 'flex relative', showCart ? 'overflow-hidden ' : '')}>
+    <div className={twMerge(bgColor, 'flex relative')}>
       <div className="sticky max-h-screen top-0 left-0">{sideBar}</div>
       <div
         ref={containerRef}

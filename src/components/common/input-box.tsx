@@ -112,7 +112,8 @@ export const TextInputBox = ({
   inputClassName = '',
   onEnter,
   stopEnterSpacePropagation = false,
-  onMouseLeave
+  onMouseLeave,
+  onBlur
 }: Props4) => {
   return (
     <InputBox
@@ -139,6 +140,7 @@ export const TextInputBox = ({
           className={twMerge(
             `p-0 bg-transparent border-none focus:ring-0 block w-full outline-none ring-transparent shadow-none ${inputClassName}`
           )}
+          onBlur={onBlur}
           placeholder={placeholder}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && onEnter) {

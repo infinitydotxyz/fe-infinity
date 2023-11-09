@@ -532,7 +532,7 @@ export const AstraCart = ({
   return (
     <div
       className={twMerge(
-        'w-fit  min-h-screen h-full border-l border-t overflow-auto bg-gray-100 dark:bg-dark-bg',
+        'w-fit  min-h-screen h-full border-l overflow-auto bg-gray-100 dark:bg-dark-bg',
         borderColor,
         isFixed ? 'top-0 fixed' : 'fixed pb-20 md:top-18.75'
       )}
@@ -598,7 +598,7 @@ export const AstraCart = ({
         </div>
       )}
 
-      <div className="overflow-auto no-scrollbar min-h-50">{cartContent}</div>
+      <div className="overflow-auto no-scrollbar min-h-50 md:min-h-87">{cartContent}</div>
 
       {cartType !== CartType.Send && cartType !== CartType.Cancel && (
         <div className={twMerge('m-4 flex flex-col text-sm space-y-2 rounded-lg p-3', secondaryBgColor)}>
@@ -960,6 +960,16 @@ const PriceAndExpiry = ({
 
   const priceEditable = !currentPrice || editing;
 
+  const [showError, setError] = useState(false);
+  const checkValidation = (value: string) => {
+    if (pattern.test(value.toString())) {
+      setError(false);
+    } else {
+      setError(true);
+    }
+  };
+
+  const pattern = /^-?\d+(\.\d+)?$/;
   return (
     <div className={twMerge('flex flex-row space-x-4 w-full', className)}>
       {!priceEditable ? (
@@ -1057,39 +1067,50 @@ const PriceAndExpiry = ({
           </div>
         </div>
       ) : (
-        <TextInputBox
-          inputClassName="text-sm text-right mr-2 font-body"
-          className="p-1.625"
-          autoFocus={true}
-          addEthSymbol={true}
-          type="number"
-          value={price}
-          placeholder="Price"
-          onChange={(value) => {
-            let parsedValue = parseFloat(value);
-            if (parsedValue < 0) {
-              parsedValue = 0;
-              setPrice(String(parsedValue));
-            } else {
-              setPrice(String(value));
-            }
-            // onEditComplete?.(value);
-            if (token) {
-              token.orderPriceEth = parsedValue;
-            } else if (collection) {
-              collection.offerPriceEth = parsedValue;
-            }
-          }}
-          onEnter={() => {
-            onEditComplete?.(price);
-          }}
-          onBlur={() => {
-            onEditComplete?.(price);
-          }}
-          // onMouseLeave={() => {
-          //   onEditComplete?.(price);
-          // }}
-        />
+        <div className="flex flex-col">
+          <TextInputBox
+            inputClassName="text-sm text-right mr-2 font-body relative"
+            className="p-1.625"
+            autoFocus={true}
+            addEthSymbol={true}
+            type="number"
+            value={price}
+            placeholder="Price"
+            onChange={(value) => {
+              checkValidation(value);
+
+              let parsedValue = parseFloat(value);
+
+              if (parsedValue < 0) {
+                parsedValue = 0;
+                setPrice(String(parsedValue));
+              } else {
+                setPrice(String(value));
+              }
+              // onEditComplete?.(value);
+              if (token) {
+                token.orderPriceEth = parsedValue;
+              } else if (collection) {
+                collection.offerPriceEth = parsedValue;
+              }
+            }}
+            onEnter={() => {
+              if (!showError) {
+                onEditComplete?.(price);
+              }
+            }}
+            onBlur={() => {
+              if (!showError) {
+                onEditComplete?.(price);
+              }
+            }}
+
+            // onMouseLeave={() => {
+            //   onEditComplete?.(price);
+            // }}
+          />
+          {showError && <span className="text-red-600  w-full whitespace-nowrap">Please Enter Number</span>}
+        </div>
       )}
     </div>
   );

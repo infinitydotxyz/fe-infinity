@@ -88,7 +88,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected, avatarUrl }: Pr
   const { isNFTSelectable, toggleNFTSelection } = useAppContext();
   const router = useRouter();
   const [addedToCart, setAddedToCart] = useState(isNFTSelected);
-  const { isDesktop } = useScreenSize();
+  const { isMobile, isDesktop } = useScreenSize();
 
   const fetchSalesAndOrdersForTimeBucket = async () => {
     const { result, error } = await apiGet(
@@ -216,18 +216,31 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected, avatarUrl }: Pr
       titleClassName="!mb-0 md:mb-5"
       showButton={true}
       onClose={() => {
-        if (event instanceof PointerEvent) {
-          event.stopPropagation();
-          event.preventDefault();
+        if (!isMobile) {
+          if (event instanceof PointerEvent) {
+            event.stopPropagation();
+            event.preventDefault();
+          }
+          removeViewParams();
         }
-        removeViewParams();
       }}
       modalButton={
         <div className="h-fit md:hidden items-center justify-center fixed z-80 bottom-4 w-full left-0 px-3.5 mt-19 md:mt-0">
           <div className="shadow-buttonDropdown w-full flex flex-col space-y-0.75 rounded-4">
             <div className="relative md:flex justify-end w-full">{addToCartBtn()}</div>
             <div className="w-full">
-              <AButton className="w-full border-0 bg-neutral-200 dark:bg-white py-2.5 !font-semibold text-base dark:text-neutral-200 text-white rounded-4 overflow-hidden leading-5">
+              <AButton
+                className="w-full border-0 bg-neutral-200 dark:bg-white py-2.5 !font-semibold text-base dark:text-neutral-200 text-white rounded-4 overflow-hidden leading-5"
+                onClick={() => {
+                  if (isMobile) {
+                    if (event instanceof PointerEvent) {
+                      event.stopPropagation();
+                      event.preventDefault();
+                    }
+                    removeViewParams();
+                  }
+                }}
+              >
                 Close
               </AButton>
             </div>

@@ -296,7 +296,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                       >
                         <div
                           className={twMerge(
-                            'md:flex flex-1 md:flex-grow-0 w-full md:w-auto md:flex-auto text-sm items-center gap-2.5'
+                            'md:flex flex-1 md:flex-grow-0 w-full md:w-auto md:flex-auto text-sm items-center gap-2.5',
+                            showCart && 'flex-wrap'
                           )}
                         >
                           <div

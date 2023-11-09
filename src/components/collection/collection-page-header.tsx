@@ -14,6 +14,7 @@ import {
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { SocialXIcon } from 'src/icons';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 export interface CollectionPageHeaderProps {
   expanded: boolean;
@@ -52,6 +53,8 @@ export const CollectionPageHeader = ({
 
   const chainId = (collection?.chainId ?? '1') as ChainId;
 
+  const { showCart } = useAppContext();
+
   // const { result: matchingEngineStatus, isInitialLoadComplete } = useMatchingEngineCollection(
   //   collection?.address ?? '',
   //   chainId
@@ -62,7 +65,12 @@ export const CollectionPageHeader = ({
       {expanded && (
         <div className="flex flex-col space-y-3">
           <div className="flex w-full items-center text-center md:flex-row flex-col md:pl-5">
-            <div className="flex flex-col-reverse md:flex-row w-full items-center space-x-2">
+            <div
+              className={twMerge(
+                'flex flex-col-reverse md:flex-row w-full items-center space-x-2',
+                showCart && 'md:!flex-col-reverse lg:!flex-row'
+              )}
+            >
               <div className="py-7.5 flex-1 flex flex-col md:flex-row items-center">
                 <EZImage
                   src={avatarUrl}
@@ -94,7 +102,12 @@ export const CollectionPageHeader = ({
                   ) : null}
                 </div>
               </div>
-              <div className="p-2.5 flex flex-row gap-2.5 md:gap-0 justify-center flex-wrap md:flex-col items-end">
+              <div
+                className={twMerge(
+                  'p-2.5 flex flex-row gap-2.5 md:gap-0 justify-center flex-wrap md:flex-col items-end',
+                  showCart && 'md:!flex-row lg:!flex-col'
+                )}
+              >
                 <div
                   className={twMerge(
                     hoverColor,
@@ -243,7 +256,7 @@ export const CollectionPageHeader = ({
           })}
         </div>
         <Spacer />
-        <div className="lg:flex hidden text-sm divide-x divide-light-border dark:divide-dark-border items-center">
+        <div className="xl:flex hidden text-sm divide-x divide-light-border dark:divide-dark-border items-center">
           {Number(floorPrice) > 0 && (
             <div className="flex items-end pr-4 gap-2 whitespace-nowrap font-medium">
               <span className={secondaryTextColor}>Floor </span>
