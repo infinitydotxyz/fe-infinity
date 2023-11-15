@@ -50,7 +50,7 @@ export const ProfileCollections = ({ userAddress }: Props) => {
             <div
               key={item.address}
               className={twMerge(
-                'flex space-x-5 items-center cursor-pointer w-full first:rounded-t-10 first:pt-3.75 last:rounded-b-10 px-3.75 py-2.5 bg-zinc-300 dark:bg-neutral-800',
+                'flex space-x-3 items-center cursor-pointer w-full first:rounded-t-10 first:pt-2.5 last:rounded-b-10 px-3.75 sm:px-2.5 py-2.5 bg-zinc-300 dark:bg-neutral-800',
                 hoverColorBrandText,
                 hoverColor
               )}
@@ -62,19 +62,19 @@ export const ProfileCollections = ({ userAddress }: Props) => {
                 setSelectedCollection({ address: item.address, name: item.name, imageUrl: item.imageUrl });
               }}
             >
-              <EZImage src={item.imageUrl} className="w-20 h-20 rounded" />
+              <EZImage src={item.imageUrl} className="w-12 h-12 rounded" />
               <div className="">
-                <div className={twMerge('!text-xl leading-7 font-bold', secondaryTextColor)}>{item.name}</div>
-                <div className={twMerge('text-base leading-6 font-semibold', secondaryTextColor)}>
+                <div className={twMerge('!text-base font-bold', secondaryTextColor)}>{item.name}</div>
+                <div className={twMerge('text-sm font-semibold', secondaryTextColor)}>
                   Floor{' '}
-                  <span className="text-17 text-amber-700 ml-1.25 font-normal">
+                  <span className="text-sm text-amber-700 ml-1.25 font-normal">
                     <span className="font-supply">{item.floorPrice}</span>
                     {EthSymbol}
                   </span>
                 </div>
               </div>
               <Spacer />
-              <span className={twMerge('!text-22 font-bold px-2.5', secondaryTextColor)}>{item.numNFTs}</span>
+              <span className={twMerge('!text-base font-bold px-2.5', secondaryTextColor)}>{item.numNFTs}</span>
             </div>
           );
         })}

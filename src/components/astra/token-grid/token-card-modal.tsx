@@ -322,12 +322,6 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected, avatarUrl }: Pr
                             </div>
                           ) : null}
                         </div>
-                        <div className="hidden md:block group">
-                          <EZImage
-                            src={avatarUrl}
-                            className="h-18 w-18 rounded-lg cursor-pointer group-hover:scale-90 duration-100"
-                          />
-                        </div>
                       </div>
                     </div>
                     <div className="flex md:hidden space-x-2 justify-center md:justify-start w-full">

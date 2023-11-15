@@ -16,7 +16,7 @@ import { CollectionNftSearchInput } from 'src/components/common/search/collectio
 import { useCollectionListingsFetcher } from 'src/hooks/api/useTokenFetcher';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
-import { ChevronDown, ETHCoinOutline, FilterListIcon } from 'src/icons';
+import { ETHCoinOutline, FilterListIcon } from 'src/icons';
 import { CollectionPageTabs, apiGet, getNetwork, getNetworkName, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
@@ -359,7 +359,12 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                             )}
                             {selectedCollectionTab === CollectionPageTabs.Bid.toString() && isDesktop && (
                               <AButton
-                                className={twMerge('p-2.5 rounded-6 text-sm', tabItemBGColor)}
+                                className={twMerge(
+                                  'p-2.5 rounded-6 text-sm',
+                                  tabItemBGColor,
+                                  isCollSelected(collection as ERC721CollectionCartItem) &&
+                                    'border border-gray-400 dark:border-neutral-700'
+                                )}
                                 onClick={() => {
                                   setCartType(CartType.CollectionBid);
                                   if (isCollSelectable(collection as ERC721CollectionCartItem)) {
@@ -368,7 +373,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                                 }}
                               >
                                 <div className="flex items-center space-x-2.5">
-                                  {!isCollSelected(collection as ERC721CollectionCartItem) && (
+                                  {isCollSelected(collection as ERC721CollectionCartItem) && (
                                     <AiOutlineCheckCircle className={'h-3.75 w-3.75'} />
                                   )}
                                   <ETHCoinOutline className={'h-3.75 w-3.75'} />
@@ -376,9 +381,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                                 </div>
                               </AButton>
                             )}
-                          </div>
-                          <div className="hidden md:flex rounded-4 cursor-pointer border dark:border-neutral-200 border-gray-300 w-28 h-7.5 justify-center items-center">
-                            <ChevronDown className="-rotate-90" />
                           </div>
                         </div>
                       </div>

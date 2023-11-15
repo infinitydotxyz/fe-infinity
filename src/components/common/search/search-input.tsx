@@ -43,12 +43,10 @@ export function SearchInput({
   setSelectedCollection,
   setSelectedToken,
   customIcon,
-  iconStyle = '',
-  shortCuts = false
+  iconStyle = ''
 }: Props): JSX.Element {
   const router = useRouter();
   const [isActive, setIsActive] = useState(false);
-  const [showShortCut, setShowShortCut] = useState(true);
   const [selected, setSelected] = useState<SearchResult | null>(null);
   const isMounted = useIsMounted();
 
@@ -65,14 +63,9 @@ export function SearchInput({
   };
 
   const deactivate = () => {
-    setShowShortCut(true);
     if (isMounted()) {
       query.length === 0 && !expanded ? setIsActive(false) : null;
     }
-  };
-
-  const handleFocus = () => {
-    setShowShortCut(false);
   };
 
   useEffect(() => {
@@ -110,8 +103,7 @@ export function SearchInput({
     <div
       className={twMerge(
         textColor,
-        'w-full md:max-w-300 px-2.5 rounded-lg text-center h-9 flex place-items-center bg-black bg-opacity-3 dark:bg-gray-600 peer-focus-within:ring-1',
-        showShortCut ? 'ring-0' : 'ring-1 ring-gray-400 dark:ring-neutral-300',
+        'w-full md:max-w-300 px-2.5 rounded-lg text-center h-9 flex place-items-center bg-black bg-opacity-3 dark:bg-gray-600 peer-focus-within:ring-1 ring-1 ring-gray-400 dark:ring-neutral-300',
         containerClassName
       )}
     >
@@ -140,7 +132,6 @@ export function SearchInput({
           placeholder={placeholder}
           ref={inputRef}
           onBlur={deactivate}
-          onFocus={handleFocus}
           autoComplete="off"
           onChange={(e: React.FormEvent<HTMLInputElement>) => {
             const value = e.currentTarget.value;
@@ -181,16 +172,6 @@ export function SearchInput({
           </Combobox.Options>
         </div>
       </Combobox>
-      {showShortCut && shortCuts && (
-        <div className="flex gap-0.5">
-          <div className="w-4.5 h-4.5 flex justify-center items-center rounded-3 bg-white dark:bg-amber-400 border border-gray-300 dark:border-amber-800 dark:text-white text-black text-xs leading-3 font-normal">
-            <code className="pt-0.5">⌘</code>
-          </div>
-          <div className="w-4.5 h-4.5 flex justify-center items-center rounded-3 bg-white dark:bg-amber-400 border border-gray-300 dark:border-amber-800 dark:text-white text-black text-sm leading-3 font-normal">
-            <code className="">K</code>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

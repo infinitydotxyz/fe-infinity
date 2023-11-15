@@ -532,9 +532,9 @@ export const AstraCart = ({
   return (
     <div
       className={twMerge(
-        'w-fit  min-h-screen h-full border-l overflow-auto bg-gray-100 dark:bg-dark-bg',
+        'w-fit flex flex-col  min-h-screen h-full border-l overflow-auto bg-gray-100 dark:bg-dark-bg',
         borderColor,
-        isFixed ? 'top-0 fixed' : 'fixed pb-20 md:top-18.75'
+        isFixed ? 'top-0 fixed' : 'fixed md:pb-20 md:top-18.75'
       )}
       style={{
         width: 'inherit'
@@ -598,7 +598,7 @@ export const AstraCart = ({
         </div>
       )}
 
-      <div className="overflow-auto no-scrollbar min-h-50 md:min-h-87">{cartContent}</div>
+      <div className="overflow-auto no-scrollbar flex-1">{cartContent}</div>
 
       {cartType !== CartType.Send && cartType !== CartType.Cancel && (
         <div className={twMerge('m-4 flex flex-col text-sm space-y-2 rounded-lg p-3', secondaryBgColor)}>
