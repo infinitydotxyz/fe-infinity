@@ -41,11 +41,11 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
       ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
       : isNFTSelected(editableCartItem as ERC721TokenCartItem)
   );
-  // const [addedToCancelCart, setAddedToCancelCart] = useState(
-  //   isCollBid
-  //     ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
-  //     : isNFTSelected(editableCartItem as ERC721TokenCartItem)
-  // );
+  const [addedToCancelCart, setAddedToCancelCart] = useState(
+    isCollBid
+      ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
+      : isNFTSelected(editableCartItem as ERC721TokenCartItem)
+  );
 
   const isActionable = isOwner;
 
@@ -55,11 +55,11 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
         ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
         : isNFTSelected(editableCartItem as ERC721TokenCartItem)
     );
-    // setAddedToCancelCart(
-    //   isCollBid
-    //     ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
-    //     : isNFTSelected(editableCartItem as ERC721TokenCartItem)
-    // );
+    setAddedToCancelCart(
+      isCollBid
+        ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
+        : isNFTSelected(editableCartItem as ERC721TokenCartItem)
+    );
   }, [cartType, cartItems]);
 
   return (
@@ -116,7 +116,15 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
           <div className="sm:w-auto flex w-full justify-center mt-3.75 sm:mt-0 sm:justify-end">
             <AButton
               disabled={!isActionable}
-              className="text-white dark:text-neutral-200 dark:bg-white bg-neutral-200 px-5 py-2.5 rounded-l-6 mr-0.25"
+              className={twMerge(
+                'text-white dark:text-neutral-200 dark:bg-white bg-neutral-200 px-5 py-2.5 rounded-l-6 mr-0.25',
+                addedToEditCart &&
+                  (cartType === CartType.TokenList ||
+                    cartType === CartType.TokenBid ||
+                    cartType === CartType.CollectionBid)
+                  ? 'text-yellow-700 dark:text-yellow-700'
+                  : ''
+              )}
               onClick={() => {
                 if (!isConnected) {
                   return;
@@ -142,21 +150,24 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
             </AButton>
 
             <AButton
-              className="text-white dark:text-neutral-200 dark:bg-white bg-neutral-200 px-5 py-2.5 rounded-r-6 group"
+              className={twMerge(
+                'text-white dark:text-neutral-200 dark:bg-white bg-neutral-200 px-5 py-2.5 rounded-r-6 group',
+                addedToCancelCart && cartType === CartType.Cancel ? 'text-yellow-700 dark:text-yellow-700' : ''
+              )}
               disabled={!isActionable}
-              // onClick={() => {
-              //   if (!isConnected) {
-              //     return;
-              //   }
-              //   const newCartType = CartType.Cancel;
-              //   editableCartItem.cartType = newCartType;
-              //   setCartType(newCartType);
-              //   if (isCollBid) {
-              //     toggleCollSelection(editableCartItem as ERC721CollectionCartItem);
-              //   } else {
-              //     toggleNFTSelection(editableCartItem as ERC721TokenCartItem);
-              //   }
-              // }}
+              onClick={() => {
+                if (!isConnected) {
+                  return;
+                }
+                const newCartType = CartType.Cancel;
+                editableCartItem.cartType = newCartType;
+                setCartType(newCartType);
+                if (isCollBid) {
+                  toggleCollSelection(editableCartItem as ERC721CollectionCartItem);
+                } else {
+                  toggleNFTSelection(editableCartItem as ERC721TokenCartItem);
+                }
+              }}
             >
               <DeleteIcon />
             </AButton>

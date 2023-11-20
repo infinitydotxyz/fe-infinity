@@ -43,24 +43,24 @@ export function BidStats({ stats, userStats, showUserStats }: Props) {
           title="Bid totals"
           sideInfoClassName="md:min-h-25"
           sideInfo={
-            <div className="h-full md:px-5">
-              <div className="md:flex md:flex-col lg:flex-row md:items-start lg:items-center flex-wrap h-full justify-center xl:justify-between gap-3 xl:gap-1">
-                <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+            <div className="h-full md:p-5">
+              <div className="md:flex md:flex-col lg:flex-row items-center flex-wrap h-full justify-center xl:justify-between gap-3 xl:gap-1">
+                <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/4')}>
                   <div className={analyticsSectionItemValue}>{nFormatter(stats.numBids, 2)}</div>
                   <div className={analyticsSectionItemLabel}>Bids</div>
                 </div>
                 <Spacer />
-                <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/4')}>
                   <div className={analyticsSectionItemValue}>{nFormatter(stats.numActiveBids, 2)}</div>
                   <div className={analyticsSectionItemLabel}>Active bids</div>
                 </div>
                 <Spacer />
-                <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/2')}>
                   <div className={analyticsSectionItemValue}>{nFormatter(stats.numActiveBidsNearFloor, 2)}</div>
                   <div className={analyticsSectionItemLabel}>Active bids near floor</div>
                 </div>
                 <Spacer />
-                <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/4')}>
                   <div className={analyticsSectionItemValue}>{nFormatter(stats.numCancelledBids, 2)}</div>
                   <div className={analyticsSectionItemLabel}>Cancelled bids</div>
                 </div>
@@ -76,24 +76,24 @@ export function BidStats({ stats, userStats, showUserStats }: Props) {
             title="Your bid totals"
             sideInfoClassName="md:min-h-25"
             sideInfo={
-              <div className="h-full md:px-5">
-                <div className="md:flex md:flex-col lg:flex-row md:items-start lg:items-center flex-wrap h-full justify-center xl:justify-between gap-3 xl:gap-1">
-                  <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+              <div className="h-full md:p-5">
+                <div className="md:flex md:flex-col lg:flex-row items-center flex-wrap h-full justify-center xl:justify-between gap-3 xl:gap-1">
+                  <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/4')}>
                     <div className={analyticsSectionItemValue}>{nFormatter(userStats.numBids, 2)}</div>
                     <div className={analyticsSectionItemLabel}>Bids</div>
                   </div>
                   <Spacer />
-                  <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                  <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/4')}>
                     <div className={analyticsSectionItemValue}>{nFormatter(userStats.numActiveBids, 2)}</div>
                     <div className={analyticsSectionItemLabel}>Active bids</div>
                   </div>
                   <Spacer />
-                  <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                  <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/2')}>
                     <div className={analyticsSectionItemValue}>{nFormatter(userStats.numActiveBidsNearFloor, 2)}</div>
                     <div className={analyticsSectionItemLabel}>Active bids near floor</div>
                   </div>
                   <Spacer />
-                  <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/6')}>
+                  <div className={twMerge(tokenItemClassname, 'md:!w-5/12 xl:!w-1/4')}>
                     <div className={analyticsSectionItemValue}>{nFormatter(userStats.numCancelledBids, 2)}</div>
                     <div className={analyticsSectionItemLabel}>Cancelled bids</div>
                   </div>

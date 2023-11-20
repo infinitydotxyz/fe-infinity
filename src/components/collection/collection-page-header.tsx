@@ -258,26 +258,30 @@ export const CollectionPageHeader = ({
         <Spacer />
         <div className="xl:flex hidden text-sm divide-x divide-light-border dark:divide-dark-border items-center">
           {Number(floorPrice) > 0 && (
-            <div className="flex items-end pr-4 gap-2 whitespace-nowrap font-medium">
-              <span className={secondaryTextColor}>Floor </span>
+            <div className="flex items-center leading-3.5 pr-4 gap-2 whitespace-nowrap font-medium">
+              <span className={secondaryTextColor}>Floor</span>
               <span className="text-amber-700 leading-4 font-normal font-supply">
                 {floorPrice ?? '-'} <span className="font-body">{EthSymbol}</span>
               </span>
             </div>
           )}
-          <div className="flex items-end px-4 gap-2 whitespace-nowrap font-medium">
+          <div className="flex items-center leading-3.5 px-4 gap-2 whitespace-nowrap font-medium">
             <span className={secondaryTextColor}>Total Vol </span>
             <span className="text-amber-700 leading-4 font-normal font-supply">
               {totalVol ?? '-'} <span className="font-body">{EthSymbol}</span>
             </span>
           </div>
-          <div className="flex items-end px-4 gap-2 whitespace-nowrap font-medium">
-            <span className={secondaryTextColor}>Owners </span>
-            <span className="text-amber-700 leading-4 font-normal font-supply">{numOwners ?? '-'}</span>
+          <div className="flex items-center leading-3.5 px-4 gap-2 whitespace-nowrap font-medium">
+            <span className={secondaryTextColor}>Owners</span>
+            <span className="text-amber-700 leading-4 font-normal font-supply">
+              {numOwners ?? '-'} <span className="font-body"></span>
+            </span>
           </div>
-          <div className="flex items-end pl-4 gap-2 whitespace-nowrap font-medium">
+          <div className="flex items-center leading-3.5 pl-4 gap-2 whitespace-nowrap font-medium">
             <span className={secondaryTextColor}>Items </span>
-            <span className="text-amber-700 leading-4 font-normal font-supply">{numNfts ?? '-'}</span>
+            <span className="text-amber-700 leading-4 font-normal font-supply">
+              {numNfts ?? '-'} <span className="font-body h-4.5"></span>
+            </span>
           </div>
         </div>
       </div>

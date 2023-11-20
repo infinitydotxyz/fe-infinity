@@ -19,6 +19,7 @@ import { twMerge } from 'tailwind-merge';
 import ChainSwitch from 'src/components/common/ChainSwitch';
 import { AButton } from 'src/components/astra/astra-button';
 import { ADropdown } from 'src/components/astra/astra-dropdown';
+import { useRouter } from 'next/router';
 
 const homeFeaturesList: { id: number; feature: string }[] = [
   { id: 1, feature: 'Listings from over 100 NFT marketplaces for instant buys.' },
@@ -80,7 +81,7 @@ const HomePage = () => {
     fetchData(true);
     // }, [period, selectedChain]);
   }, [selectedChain]);
-
+  const router = useRouter();
   return (
     <NonSsrWrapper>
       <div>
@@ -224,6 +225,9 @@ const HomePage = () => {
                 className={twMerge(
                   'text-base py-3.5 border-0 border-r-2 border-black/40 dark:border-black/40 px-5 rounded-4 !bg-neutral-200 !text-white'
                 )}
+                onClick={() => {
+                  router.push('/trending');
+                }}
               >
                 <div className="flex items-center  gap-2.5">
                   <ChevronDown className={twMerge('w-4.5 leading h-4.5 text-yellow-700 -rotate-90')} />

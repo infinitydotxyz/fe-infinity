@@ -264,7 +264,7 @@ export const StatusIcon = ({
 
   return (
     <div className="flex items-baseline h-max px-2.5 py-1.75 border rounded-4 dark:border-neutral-200 border-gray-300 space-x-1.5">
-      <span className="text-base leading-5 font-semibold">
+      <span className="text-base h-5 font-semibold">
         {label}
         {duration != null && (
           <span className={twMerge(secondaryTextColor, 'text-xs font-medium')}>({formatDuration(duration)})</span>

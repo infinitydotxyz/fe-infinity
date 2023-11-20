@@ -91,37 +91,39 @@ export const CollectionManualBidListItem = ({ order, orderType, collectionSlug }
               </p>
             </div>
           ) : null}
-          <AButton
-            primary
-            className="dark:!text-neutral-200 !text-white px-5 py-2.5 rounded-6 md:w-auto w-full md:mt-0 mt-2 flex justify-center leading-3.5 dark:border-transparent !font-semibold text-base"
-            disabled={!isActionable}
-            customDisabledClassName="!font-normal"
-            onClick={() => {
-              if (!isConnected) {
-                return;
-              }
-              editableCartItem.cartType = isCollBid ? CartType.CollectionBid : CartType.TokenBid;
-              if (isCollBid && isCollSelectable(editableCartItem as ERC721CollectionCartItem)) {
-                setCartType(CartType.CollectionBid);
-                toggleCollSelection(editableCartItem as ERC721CollectionCartItem);
-              } else if (!isCollBid && isNFTSelectable(editableCartItem as ERC721TokenCartItem)) {
-                setCartType(CartType.TokenBid);
-                toggleNFTSelection(editableCartItem as ERC721TokenCartItem);
-              }
-            }}
-          >
-            {addedToCart ? '✓' : ''} {'Bid higher'}
-            {order.validUntil ? (
-              <div
-                className={twMerge(
-                  secondaryTextColor,
-                  'md:hidden text-sm font-medium text-right text-gray-300 dark:text-neutral-700'
-                )}
-              >
-                Expires {format(order.validUntil)}
-              </div>
-            ) : null}
-          </AButton>
+          {isActionable && (
+            <AButton
+              primary
+              className="dark:!text-neutral-200 !text-white px-5 py-2.5 rounded-6 md:w-auto w-full md:mt-0 mt-2 flex justify-center leading-3.5 dark:border-transparent !font-semibold text-base"
+              disabled={!isActionable}
+              customDisabledClassName="!font-normal"
+              onClick={() => {
+                if (!isConnected) {
+                  return;
+                }
+                editableCartItem.cartType = isCollBid ? CartType.CollectionBid : CartType.TokenBid;
+                if (isCollBid && isCollSelectable(editableCartItem as ERC721CollectionCartItem)) {
+                  setCartType(CartType.CollectionBid);
+                  toggleCollSelection(editableCartItem as ERC721CollectionCartItem);
+                } else if (!isCollBid && isNFTSelectable(editableCartItem as ERC721TokenCartItem)) {
+                  setCartType(CartType.TokenBid);
+                  toggleNFTSelection(editableCartItem as ERC721TokenCartItem);
+                }
+              }}
+            >
+              {addedToCart ? '✓' : ''} {'Bid higher'}
+              {order.validUntil ? (
+                <div
+                  className={twMerge(
+                    secondaryTextColor,
+                    'md:hidden text-sm font-medium text-right text-gray-300 dark:text-neutral-700'
+                  )}
+                >
+                  Expires {format(order.validUntil)}
+                </div>
+              ) : null}
+            </AButton>
+          )}
         </div>
       </div>
     </div>
