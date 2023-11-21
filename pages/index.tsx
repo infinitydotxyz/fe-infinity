@@ -1,9 +1,6 @@
 import NonSsrWrapper from 'src/components/astra/non-ssr-wrapper';
 import { ConnectButton, EZImage, EthPrice, NextLink } from 'src/components/common';
 import { BlueCheckIcon, ChevronDown } from 'src/icons';
-import NFTCards from 'src/images/nftcardstack.png';
-import NFTCardsLight from 'src/images/nftcardstackwhite.png';
-// import NFTCardsLightMobile from 'src/images/nftcardswhitemobile.png';
 import NFTCardsLightMobile from 'src/images/nftcardstackwhitemobile.png';
 import Image from 'next/image';
 import { apiGet, formatNumber, getNetworkName, nFormatter } from 'src/utils';
@@ -121,8 +118,8 @@ const HomePage = () => {
             </div>
             {/* cards stack */}
             <div className="hidden blur-none lg:flex flex-1 justify-center">
-              <Image src={NFTCards} className="dark:block hidden bg-contain" alt="nft cards" height={565} width={380} />
-              <Image src={NFTCardsLight} className="block dark:hidden" alt="nft cards" height={565} width={380} />
+              <div className="bg-center bg-[url(/images/nftcardstackwhite.png)] dark:hidden bg-contain bg-no-repeat h-full w-full"></div>
+              <div className="bg-center bg-[url(/images/nftcardstackdark.png)] hidden dark:block bg-contain bg-no-repeat h-full w-full"></div>
             </div>
           </div>
           {/* home top section mobile view*/}

@@ -164,7 +164,7 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress, collectio
                 </div>
                 <div className="flex space-x-1 items-center">
                   <p className="text-base font-semibold font-body text-neutral-300">
-                    Collection bid {timeAgo(new Date(item.timestamp))} ago
+                    {timeAgo(new Date(item.timestamp))} ago
                   </p>
                 </div>
               </div>
