@@ -37,7 +37,7 @@ export function BidStats({ stats, userStats, showUserStats }: Props) {
   };
 
   return (
-    <>
+    <div className="overflow-clip h-full">
       <div className="mb-5">
         <RewardsSection
           title="Bid totals"
@@ -149,6 +149,6 @@ export function BidStats({ stats, userStats, showUserStats }: Props) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

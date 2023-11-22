@@ -270,7 +270,7 @@ export const StatusIcon = ({
           <span className={twMerge(secondaryTextColor, 'text-xs font-medium')}>({formatDuration(duration)})</span>
         )}
       </span>
-      <span className={twMerge('flex w-2 h-2 relative', iconClassName)}>
+      <span className={twMerge('flex w-2 h-2 mt-0.5 relative', iconClassName)}>
         <span
           className={`${isValid ? 'animate-ping' : ''} absolute w-full h-full rounded-full ${iconClass} opacity-75`}
         ></span>

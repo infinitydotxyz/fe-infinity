@@ -18,6 +18,8 @@ interface Props {
   collectionFloorPrice?: string | number | null | undefined;
   collectionCreator?: string;
   avatarUrl?: string;
+  disableSearchIconClick?: boolean;
+  hideActionButton?: boolean;
 }
 
 export const GridCard = ({
@@ -27,7 +29,9 @@ export const GridCard = ({
   isSelectable,
   collectionFloorPrice,
   collectionCreator,
-  avatarUrl
+  avatarUrl,
+  disableSearchIconClick = false,
+  hideActionButton = false
 }: Props): JSX.Element => {
   const [notSelectable, setNotSelectable] = useState(false);
   const title = data?.title;
@@ -84,6 +88,9 @@ export const GridCard = ({
           {!selected && (
             <div
               onClick={(e) => {
+                if (disableSearchIconClick) {
+                  return;
+                }
                 e.stopPropagation();
                 const { pathname, query } = router;
                 query['tokenId'] = basicTokenInfo.tokenId;
@@ -139,18 +146,20 @@ export const GridCard = ({
                   </div>
                 )}
               </div>
-              <div>
-                <ARoundOutlineButton
-                  className={twMerge(
-                    'rounded-md transition-all  !leading-2.5 w-full text-xs sm:text-sm',
-                    selected
-                      ? 'block mt-2.5 p-2.5 border-neutral-700 text-neutral-700 font-medium'
-                      : 'hidden h-0 group-hover/nft:h-full opacity-0 group-hover/nft:mt-2.5 group-hover/nft:p-2.5 group-hover/nft:block group-hover/nft:opacity-100 group-hover/nft:animate-in group-hover/nft:duration-300 group-hover/nft:slide-in-from-bottom bg-neutral-700 text-white font-semibold dark:bg-white dark:text-neutral-700'
-                  )}
-                >
-                  {selected ? 'Remove from Cart' : 'Add to Cart'}
-                </ARoundOutlineButton>
-              </div>
+              {!hideActionButton && (
+                <div>
+                  <ARoundOutlineButton
+                    className={twMerge(
+                      'rounded-md transition-all  !leading-2.5 w-full text-xs sm:text-sm',
+                      selected
+                        ? 'block mt-2.5 p-2.5 border-neutral-700 text-neutral-700 font-medium'
+                        : 'hidden h-0 group-hover/nft:h-full opacity-0 group-hover/nft:mt-2.5 group-hover/nft:p-2.5 group-hover/nft:block group-hover/nft:opacity-100 group-hover/nft:animate-in group-hover/nft:duration-300 group-hover/nft:slide-in-from-bottom bg-neutral-700 text-white font-semibold dark:bg-white dark:text-neutral-700'
+                    )}
+                  >
+                    {selected ? 'Remove from Cart' : 'Add to Cart'}
+                  </ARoundOutlineButton>
+                </div>
+              )}
             </div>
           </div>
         </div>

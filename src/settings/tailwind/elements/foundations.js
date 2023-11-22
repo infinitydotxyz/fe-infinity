@@ -270,6 +270,7 @@ module.exports = {
     9: '9px',
     10: '10px',
     11: '11px',
+    20: '20px',
     39: '39px'
   },
   borderWidth: {

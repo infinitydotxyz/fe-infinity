@@ -218,6 +218,8 @@ export const SalesChartDetails = ({ data }: Props3) => {
               query['collectionAddress'] = data.collectionAddress;
               router.replace({ pathname, query }, undefined, { shallow: true });
             }}
+            disableSearchIconClick={true}
+            hideActionButton={true}
           />
         </div>
         {modalOpen && <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} />}

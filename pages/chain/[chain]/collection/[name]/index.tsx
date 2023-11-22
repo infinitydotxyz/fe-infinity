@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { AButton } from 'src/components/astra/astra-button';
+import { AvFooter } from 'src/components/astra/astra-footer';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { CollectionCharts } from 'src/components/collection/collection-charts';
 import { CollectionItemsPageSidebar } from 'src/components/collection/collection-items-page-sidebar';
@@ -255,7 +256,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
       <div className="h-full w-full flex flex-col">
         <CollectionPageHeader {...headerProps} />
 
-        <div ref={setRef} className="overflow-y-auto scrollbar-hide">
+        <div ref={setRef} className="md:overflow-y-auto h-full scrollbar-hide">
           {(selectedCollectionTab === CollectionPageTabs.Bid.toString() ||
             selectedCollectionTab === CollectionPageTabs.Buy.toString()) && (
             <>
@@ -425,6 +426,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   />
                 </div>
               </div>
+              <AvFooter />
             </>
           )}
 

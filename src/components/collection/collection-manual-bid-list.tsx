@@ -8,6 +8,7 @@ import { StatusIcon } from '../common/status-icon';
 import { CollectionManualBidListItem } from './collection-manual-bid-list-item';
 import { ASwitchButton } from '../astra/astra-button';
 import { secondaryTextColor } from 'src/utils/ui-constants';
+import { AvFooter } from '../astra/astra-footer';
 
 interface Props {
   collectionAddress: string;
@@ -36,7 +37,7 @@ export const CollectionManualBidList = ({ collectionAddress, collectionSlug, col
   }, [onlyCollectionBids]);
 
   return (
-    <div className={twMerge('min-h-50vh pb-20', className)}>
+    <div className={twMerge('min-h-50vh', className)}>
       <div className={twMerge('w-full flex p-5 space-x-2')}>
         <div className="flex text-sm items-center">
           <StatusIcon status="pending-indefinite" label="Live" />
@@ -55,7 +56,7 @@ export const CollectionManualBidList = ({ collectionAddress, collectionSlug, col
         </div>
       </div>
 
-      <div className="flex px-5">
+      <div className="flex  pb-20 px-5">
         <div className="w-full pointer-events-auto">
           {isLoading && (
             <div className="">
@@ -104,6 +105,9 @@ export const CollectionManualBidList = ({ collectionAddress, collectionSlug, col
             />
           ) : null}
         </div>
+      </div>
+      <div>
+        <AvFooter />
       </div>
     </div>
   );

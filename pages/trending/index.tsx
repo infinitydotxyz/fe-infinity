@@ -2,6 +2,7 @@ import { Collection, CollectionPeriodStatsContent, StatsPeriod } from '@infinity
 import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { AButton } from 'src/components/astra/astra-button';
+import { AvFooter } from 'src/components/astra/astra-footer';
 import { APageBox } from 'src/components/astra/astra-page-box';
 import { BouncingLogo, CenterFixed, EZImage, EthPrice, NextLink, ToggleTab } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
@@ -65,8 +66,8 @@ const TrendingPage = () => {
   }, [period, selectedChain]);
 
   return (
-    <APageBox title="Trending Collections" showTitle={true}>
-      <div className="overflow-y-auto overflow-x-clip text-sm scrollbar-hide">
+    <APageBox title="Trending Collections" footer={<AvFooter />} showTitle={true}>
+      <div>
         <ToggleTab
           className="font-heading"
           options={options.map((option) => option.label)}
@@ -74,7 +75,9 @@ const TrendingPage = () => {
           onChange={(label) => setPeriod(options.find((option) => option.label === label) || options[0])}
           border={true}
         />
-        <div className="space-y-3.5 md:space-y-0.25 p-5 pb-20">
+      </div>
+      <div className="overflow-x-clip text-sm scrollbar-hide">
+        <div className=" space-y-3.5 md:space-y-0.25 p-5 pb-20">
           {data.map((coll, index) => {
             return (
               <TrendingPageCard
@@ -138,7 +141,12 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
   const salesVolumeChange = Number(nFormatter(periodStat?.salesVolumeChange ?? 0));
 
   return (
-    <div className={twMerge(borderColor, 'py-3.75 px-5 md:flex items-center bg-zinc-300 dark:bg-neutral-800')}>
+    <div
+      className={twMerge(
+        borderColor,
+        'py-3.75 px-5 md:flex items-center first:rounded-t-20 last:rounded-b-20 bg-zinc-300 dark:bg-neutral-800'
+      )}
+    >
       <div
         className="md:grid gap-2 justify-between items-center w-full"
         style={{ gridTemplateColumns: 'minmax(0, 3fr) repeat(auto-fit, minmax(0, 1fr))' }}

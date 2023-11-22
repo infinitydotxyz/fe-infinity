@@ -1,8 +1,9 @@
+import { AvFooter } from 'src/components/astra/astra-footer';
 import { APageBox } from 'src/components/astra/astra-page-box';
 
 const PrivacyPolicyPage = () => {
   return (
-    <APageBox title="Privacy Policy" className="overflow-x-clip overflow-y-auto">
+    <APageBox title="Privacy Policy" footer={<AvFooter />} className="overflow-x-clip overflow-y-auto">
       <div className="flex flex-col items-center justify-center space-y-2">
         <div className="font-bold font-supply text-3xl">Pixl</div>
         <div className="underline">Privacy Policy</div>

@@ -9,6 +9,7 @@ import { OrdersChartDetails, SalesChartDetails } from '../charts/chart-details';
 import { ResponsiveSalesChart, SalesChartData } from '../charts/sales-chart';
 import { BarChartType, ScatterChartType } from '../charts/types';
 import { CollectionHistoricalSale } from 'src/utils/types';
+import { AvFooter } from '../astra/astra-footer';
 
 const infoBoxStyle = 'flex items-center justify-center opacity-60 font-bold text-lg h-full';
 
@@ -220,6 +221,9 @@ export const CollectionCharts = ({
       <div className={twMerge('w-full p-2 flex space-x-5 text-xs mt-6 z-50', secondaryTextColor)}>
         <ExternalLink href="https://pixl.so/terms">Terms</ExternalLink>
         <ExternalLink href="https://pixl.so/privacy-policy">Privacy Policy</ExternalLink>
+      </div>
+      <div className="-mx-5">
+        <AvFooter />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
+import { AvFooter } from 'src/components/astra/astra-footer';
 import { CenteredContent, ConnectButton } from 'src/components/common';
 import { ProfileCollections } from 'src/components/profile/profile-collections';
 import { ProfileNFTs } from 'src/components/profile/profile-nfts';
@@ -45,26 +46,28 @@ export default function ProfileItemsPage() {
       }
 
       setContent(
-        <div className="flex flex-col h-full w-full">
+        <div className="flex overflow-auto sm:overflow-clip flex-col h-full w-full">
           <ProfilePageHeader expanded={expanded} tabs={tabs} />
-
-          <div ref={setRef} className="lg:flex lg:flex-row-reverse gap-5 lg:px-5">
-            {!showCart && (
-              <div className="flex w-full lg:w-1/3 lg:mb-22.5">
-                <ProfileCollections userAddress={addressFromPath} key={addressFromPath} />
+          <div className="sm:overflow-auto">
+            <div ref={setRef} className="lg:flex lg:flex-row-reverse gap-5 lg:px-5">
+              {!showCart && (
+                <div className="flex w-full lg:w-1/3 lg:mb-22.5">
+                  <ProfileCollections userAddress={addressFromPath} key={addressFromPath} />
+                </div>
+              )}
+              <div className={twMerge('px-5 lg:px-0', showCart ? 'w-full' : 'lg:w-2/3')}>
+                {selectedProfileTab === ProfileTabs.Items && (
+                  <ProfileNFTs userAddress={addressFromPath} key={addressFromPath} isOwner={isOwner} />
+                )}
+                {selectedProfileTab === ProfileTabs.Orders && (
+                  <ProfileOrderList userAddress={addressFromPath} key={addressFromPath} isOwner={isOwner} />
+                )}
+                {selectedProfileTab === ProfileTabs.Send && (
+                  <ProfileNFTs userAddress={addressFromPath} key={addressFromPath} isOwner={isOwner} />
+                )}
               </div>
-            )}
-            <div className={twMerge('px-5 lg:px-0', showCart ? 'w-full' : 'lg:w-2/3')}>
-              {selectedProfileTab === ProfileTabs.Items && (
-                <ProfileNFTs userAddress={addressFromPath} key={addressFromPath} isOwner={isOwner} />
-              )}
-              {selectedProfileTab === ProfileTabs.Orders && (
-                <ProfileOrderList userAddress={addressFromPath} key={addressFromPath} isOwner={isOwner} />
-              )}
-              {selectedProfileTab === ProfileTabs.Send && (
-                <ProfileNFTs userAddress={addressFromPath} key={addressFromPath} isOwner={isOwner} />
-              )}
             </div>
+            <AvFooter />
           </div>
         </div>
       );

@@ -46,9 +46,10 @@ export const APageBox = ({
           pageHeaderClassName={pageHeaderClassName}
         />
       ) : null}
-
-      {children}
-      {footer}
+      <div className="overflow-auto">
+        {children}
+        {footer}
+      </div>
     </div>
   );
 };

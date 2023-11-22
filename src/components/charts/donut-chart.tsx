@@ -156,7 +156,7 @@ export function DonutChart({ title, subTitle, children, dataSet, selectedDataPoi
   return (
     <ChartBox className="h-full">
       <div className="md:flex justify-between mb-7.5">
-        <div className="w-max mx-auto">
+        <div className="mx-auto">
           <div className="font-bold mt-3 font-body text-22 text-center">{title}</div>
           <div className={twMerge(secondaryTextColor, 'font-medium text-sm')}>{subTitle}</div>
         </div>

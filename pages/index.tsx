@@ -81,7 +81,7 @@ const HomePage = () => {
   const router = useRouter();
   return (
     <NonSsrWrapper>
-      <div>
+      <div className="overflow-auto h-full">
         {/* home top section */}
         <div className="relative overflow-hidden bg-gray-100 sm:bg-zinc-300 dark:bg-dark-bg sm:dark:bg-neutral-200">
           <div className={twMerge('hidden sm:block absolute h-full ', heroSectionBGImage)}>

@@ -63,7 +63,7 @@ export function BuyStats() {
   };
 
   return (
-    <>
+    <div className="overflow-clip h-full">
       <div className="mb-4">
         <RewardsSection
           title="Buy totals"
@@ -235,6 +235,6 @@ export function BuyStats() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

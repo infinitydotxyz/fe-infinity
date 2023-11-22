@@ -532,7 +532,7 @@ export const AstraCart = ({
   return (
     <div
       className={twMerge(
-        'w-fit flex flex-col  min-h-screen h-full border-l overflow-auto bg-gray-100 dark:bg-dark-bg',
+        'w-fit flex flex-col  min-h-screen h-full border-l border-t  overflow-auto bg-gray-100 dark:bg-dark-bg',
         borderColor,
         isFixed ? 'top-0 fixed' : 'fixed md:pb-20 md:top-18.75'
       )}
