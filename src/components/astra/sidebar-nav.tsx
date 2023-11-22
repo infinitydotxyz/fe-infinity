@@ -319,35 +319,35 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
           <Spacer />
 
           <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Twitter</div>}>
-            <AButton className="rounded-lg">
-              <a
-                aria-label="Twitter"
-                href="https://twitter.com/pixlso"
-                rel="external nofollow noopener noreferrer"
-                target="_blank"
-              >
+            <a
+              aria-label="Twitter"
+              href="https://twitter.com/pixlso"
+              rel="external nofollow noopener noreferrer"
+              target="_blank"
+            >
+              <AButton className="rounded-lg">
                 <SocialXIcon
                   className={twMerge(iconButtonStyle, hoverColorNewBrandText, 'h-5 w-5.5')}
                   aria-hidden="true"
                 />
-              </a>
-            </AButton>
+              </AButton>
+            </a>
           </HelpToolTip>
 
           <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Discord</div>}>
-            <AButton className="rounded-lg">
-              <a
-                aria-label="Discord"
-                href="https://discord.gg/pixlso"
-                rel="external nofollow noopener noreferrer"
-                target="_blank"
-              >
+            <a
+              aria-label="Discord"
+              href="https://discord.gg/pixlso"
+              rel="external nofollow noopener noreferrer"
+              target="_blank"
+            >
+              <AButton className="rounded-lg">
                 <FaDiscord
                   className={twMerge(iconButtonStyle, hoverColorNewBrandText, 'text-neutral-300 h-5 w-6.5')}
                   aria-hidden="true"
                 />
-              </a>
-            </AButton>
+              </AButton>
+            </a>
           </HelpToolTip>
         </div>
       </div>
