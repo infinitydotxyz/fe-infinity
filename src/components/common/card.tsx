@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { CollectionPageTabs, ellipsisString } from 'src/utils';
@@ -9,9 +10,12 @@ import { TokenCardModal } from '../astra/token-grid/token-card-modal';
 import { EZImage, EthSymbol } from '../common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CheckedIcon, SearchIcon } from 'src/icons';
+import { OrderbookRowButton } from '../charts/chart-detail-button';
+import { CollectionOrder } from '@infinityxyz/lib-frontend/types/core';
 
 interface Props {
   data: ERC721TokenCartItem;
+  order?: CollectionOrder;
   selected: boolean;
   isSelectable: (data: ERC721TokenCartItem) => boolean;
   onClick: (data: ERC721TokenCartItem) => void;
@@ -20,10 +24,12 @@ interface Props {
   avatarUrl?: string;
   disableSearchIconClick?: boolean;
   hideActionButton?: boolean;
+  showChartButton?: boolean;
 }
 
 export const GridCard = ({
   data,
+  order,
   onClick,
   selected,
   isSelectable,
@@ -31,7 +37,8 @@ export const GridCard = ({
   collectionCreator,
   avatarUrl,
   disableSearchIconClick = false,
-  hideActionButton = false
+  hideActionButton = false,
+  showChartButton = false
 }: Props): JSX.Element => {
   const [notSelectable, setNotSelectable] = useState(false);
   const title = data?.title;
@@ -62,7 +69,6 @@ export const GridCard = ({
       router.query?.collectionAddress === basicTokenInfo.collectionAddress;
     setModalOpen(isModalOpen);
   }, [router.query]);
-
   return (
     <div
       className={twMerge(
@@ -90,12 +96,13 @@ export const GridCard = ({
               onClick={(e) => {
                 if (disableSearchIconClick) {
                   return;
+                } else {
+                  e.stopPropagation();
+                  const { pathname, query } = router;
+                  query['tokenId'] = basicTokenInfo.tokenId;
+                  query['collectionAddress'] = basicTokenInfo.collectionAddress;
+                  router.replace({ pathname, query }, undefined, { shallow: true });
                 }
-                e.stopPropagation();
-                const { pathname, query } = router;
-                query['tokenId'] = basicTokenInfo.tokenId;
-                query['collectionAddress'] = basicTokenInfo.collectionAddress;
-                router.replace({ pathname, query }, undefined, { shallow: true });
               }}
               className="hidden rounded-5  group-hover/nft-card-image:flex cursor-pointer bg-black/30  absolute h-full text-white w-full  items-center justify-center z-10"
             >
@@ -148,16 +155,29 @@ export const GridCard = ({
               </div>
               {!hideActionButton && (
                 <div>
-                  <ARoundOutlineButton
-                    className={twMerge(
-                      'rounded-md transition-all  !leading-2.5 w-full text-xs sm:text-sm',
-                      selected
-                        ? 'block mt-2.5 p-2.5 border-neutral-700 text-neutral-700 font-medium'
-                        : 'hidden h-0 group-hover/nft:h-full opacity-0 group-hover/nft:mt-2.5 group-hover/nft:p-2.5 group-hover/nft:block group-hover/nft:opacity-100 group-hover/nft:animate-in group-hover/nft:duration-300 group-hover/nft:slide-in-from-bottom bg-neutral-700 text-white font-semibold dark:bg-white dark:text-neutral-700'
-                    )}
-                  >
-                    {selected ? 'Remove from Cart' : 'Add to Cart'}
-                  </ARoundOutlineButton>
+                  {showChartButton && order ? (
+                    <OrderbookRowButton
+                      order={order}
+                      collectionAddress={data?.address}
+                      collectionName={data?.collectionName}
+                      className={twMerge(
+                        'rounded-md transition-all  !leading-2.5 w-full text-xs sm:text-sm',
+                        'block mt-2.5 p-2.5 border-neutral-700 text-neutral-700 font-medium',
+                        'h-full bg-neutral-700 text-white font-semibold dark:bg-white dark:text-neutral-700'
+                      )}
+                    />
+                  ) : (
+                    <ARoundOutlineButton
+                      className={twMerge(
+                        'rounded-md transition-all  !leading-2.5 w-full text-xs sm:text-sm',
+                        selected
+                          ? 'block mt-2.5 p-2.5 border-neutral-700 text-neutral-700 font-medium'
+                          : 'hidden h-0 group-hover/nft:h-full opacity-0 group-hover/nft:mt-2.5 group-hover/nft:p-2.5 group-hover/nft:block group-hover/nft:opacity-100 group-hover/nft:animate-in group-hover/nft:duration-300 group-hover/nft:slide-in-from-bottom bg-neutral-700 text-white font-semibold dark:bg-white dark:text-neutral-700'
+                      )}
+                    >
+                      {selected ? 'Remove from Cart' : 'Add to Cart'}
+                    </ARoundOutlineButton>
+                  )}
                 </div>
               )}
             </div>
@@ -165,7 +185,7 @@ export const GridCard = ({
         </div>
       </div>
 
-      {modalOpen && (
+      {modalOpen && !showChartButton && (
         <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} isNFTSelected={selected} avatarUrl={avatarUrl} />
       )}
     </div>

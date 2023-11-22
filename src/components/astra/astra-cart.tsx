@@ -551,7 +551,7 @@ export const AstraCart = ({
                 {currentCartItems.length}
               </div>
               <div
-                className={twMerge('ml-2 text-sm cursor-pointer', brandTextColor)}
+                className={twMerge('ml-2 text-sm cursor-pointer text-amber-700')}
                 onClick={() => {
                   if (
                     cartType === CartType.Send ||

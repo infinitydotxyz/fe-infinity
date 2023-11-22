@@ -63,7 +63,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     hasNextPage: listingsHasNextPage,
     isLoading: listingsIsLoading,
     fetch: fetchListings
-  } = useCollectionListingsFetcher(collection.address, chainId);
+  } = useCollectionListingsFetcher(collection?.address, chainId);
 
   // deep copy original listings to a new array
   const originalData = listings.map((x) => Object.assign({}, x));
@@ -141,7 +141,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     }
     toggleMultipleNFTSelection(tokens);
   }, [numSweep]);
-
   useEffect(() => {
     let bidBelowPctNum = parseFloat(bidBelowPct);
     if (isNaN(bidBelowPctNum)) {
@@ -222,7 +221,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     tabs,
     onTabChange
   };
-
   const head = (
     <Head>
       <meta property="og:title" content={collection.metadata?.name} />
@@ -249,7 +247,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
       <meta property="twitter:creator" content={collection.metadata?.links?.twitter} />
     </Head>
   );
-
   return (
     <div className="h-full w-full overflow-y-auto overflow-x-hidden">
       {head}

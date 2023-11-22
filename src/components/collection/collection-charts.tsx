@@ -150,7 +150,6 @@ export const CollectionCharts = ({
     fetchOrdersData('sell');
     fetchOrdersData('buy');
   }, [collectionAddress, collectionChainId]);
-
   return (
     <div className={twMerge('w-full gap-2.5 h-full relative flex flex-col p-5', className)}>
       <div className="md:grid md:grid-cols-12 gap-5">

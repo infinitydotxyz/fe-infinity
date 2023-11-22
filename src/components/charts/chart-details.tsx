@@ -135,7 +135,6 @@ const OrderDetailViewer = ({ order, collectionAddress, collectionName, collectio
       router.query?.collectionAddress === basicTokenInfo.collectionAddress;
     setModalOpen(isModalOpen);
   }, [router.query]);
-
   return (
     <div className={twMerge('flex flex-col text-sm mt-4 items-center')}>
       <div className="w-56.25">
@@ -145,12 +144,18 @@ const OrderDetailViewer = ({ order, collectionAddress, collectionName, collectio
             image: order.tokenImage,
             price: order.priceEth,
             cartType: CartType.TokenList,
-            title: collectionName ?? order.maker
+            title: collectionName ?? order.maker,
+            address: collectionAddress,
+            collectionName,
+            collectionSlug
           }}
+          order={order}
+          disableSearchIconClick={true}
           selected={false}
           collectionFloorPrice={order.priceEth}
           collectionCreator={collectionName}
           isSelectable={(data: ERC721TokenCartItem) => !!data}
+          showChartButton={true}
           onClick={() => {
             const { pathname, query } = router;
             query['tokenId'] = order.tokenId;
@@ -174,7 +179,6 @@ export const SalesChartDetails = ({ data }: Props3) => {
   const { chain } = useNetwork();
   const { selectedChain } = useAppContext();
   const chainId = String(chain?.id ?? selectedChain);
-
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: data?.tokenId ?? '',
     collectionAddress: data?.collectionAddress ?? '',

@@ -65,29 +65,29 @@ export const AvFooter = () => {
           ></FooterNavItem>
         </div>
         <div className="flex items-center justify-center gap-2.5 mt-5">
-          <AButton className="group rounded-lg p-5 bg-light-borderLight dark:bg-neutral-800 dark:hover:bg-yellow-700 hover:bg-yellow-700 hover:text-white">
-            <a
-              aria-label="Twitter"
-              href="https://twitter.com/pixlso"
-              rel="external nofollow noopener noreferrer"
-              target="_blank"
-            >
+          <a
+            aria-label="Twitter"
+            href="https://twitter.com/pixlso"
+            rel="external nofollow noopener noreferrer"
+            target="_blank"
+          >
+            <AButton className="group rounded-lg p-5 bg-light-borderLight dark:bg-neutral-800 dark:hover:bg-yellow-700 hover:bg-yellow-700 hover:text-white">
               <SocialXIcon
                 className={twMerge('text-neutral-300 group-hover:text-white h-5 w-5.5')}
                 aria-hidden="true"
               />
-            </a>
-          </AButton>
-          <AButton className="group rounded-lg p-5 bg-light-borderLight dark:bg-neutral-800 dark:hover:bg-yellow-700 hover:bg-yellow-700 hover:text-white">
-            <a
-              aria-label="Discord"
-              href="https://discord.gg/pixlso"
-              rel="external nofollow noopener noreferrer"
-              target="_blank"
-            >
+            </AButton>
+          </a>
+          <a
+            aria-label="Discord"
+            href="https://discord.gg/pixlso"
+            rel="external nofollow noopener noreferrer"
+            target="_blank"
+          >
+            <AButton className="group rounded-lg p-5 bg-light-borderLight dark:bg-neutral-800 dark:hover:bg-yellow-700 hover:bg-yellow-700 hover:text-white">
               <FaDiscord className={twMerge('text-neutral-300 group-hover:text-white h-5 w-6.5')} aria-hidden="true" />
-            </a>
-          </AButton>
+            </AButton>
+          </a>
           <AButton className="group rounded-lg p-5 bg-light-borderLight dark:bg-neutral-800 dark:hover:bg-yellow-700 hover:bg-yellow-700 hover:text-white">
             <BookIcon className={twMerge('text-neutral-300 group-hover:text-white h-5 w-6.5')} />
           </AButton>
