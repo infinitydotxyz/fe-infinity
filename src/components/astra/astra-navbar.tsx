@@ -21,7 +21,7 @@ export const ANavbar = ({ setSidebarOpen }: ANavbarPropType) => {
       <div className={isWalletNetworkSupported ? 'hidden' : 'block'}>
         <NetworkWarning />
       </div>
-      <div className="sm:max-h-19 sm:h-full sm:flex px-5 py-5 md:space-x-4 bg-zinc-500 dark:bg-neutral-800 items-center border-b border-gray-300 dark:border-neutral-200">
+      <div className="sm:max-h-19 sm:h-full sm:flex px-5 py-5 md:space-x-4 bg-zinc-500 dark:bg-neutral-800 items-center border-b dark:border-b border-gray-300 dark:border-dark-border">
         <div className="hidden sm:block md:w-1/3 sm:w-1/2">
           <CollectionSearchInput expanded />
         </div>

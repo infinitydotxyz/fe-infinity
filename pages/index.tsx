@@ -17,6 +17,7 @@ import ChainSwitch from 'src/components/common/ChainSwitch';
 import { AButton } from 'src/components/astra/astra-button';
 import { ADropdown } from 'src/components/astra/astra-dropdown';
 import { useRouter } from 'next/router';
+import { AvFooter } from 'src/components/astra/astra-footer';
 
 const homeFeaturesList: { id: number; feature: string }[] = [
   { id: 1, feature: 'Listings from over 100 NFT marketplaces for instant buys.' },
@@ -234,6 +235,7 @@ const HomePage = () => {
             </div>
           </div>
         </div>
+        <AvFooter />
       </div>
     </NonSsrWrapper>
   );

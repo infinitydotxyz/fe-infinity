@@ -200,7 +200,8 @@ module.exports = {
       borderDark: '#2A2A26',
       borderUnderline: '#222222',
       disabledTier: '#1B1B11',
-      tier: '#14140C'
+      tier: '#14140C',
+      modalBg: '#0E0E0B'
     },
     light: {
       bg: '#F7F7F3',
@@ -398,6 +399,7 @@ module.exports = {
     3.5: '14px',
     4.25: '17px',
     4.5: '18px',
+    5.5: '22px',
     6.5: '26px'
   },
   margin: {

@@ -112,7 +112,13 @@ export const Modal = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className={twMerge('fixed inset-0', theme === 'dark' ? 'bg-light-bg' : 'bg-dark-bg', 'bg-opacity-30')} />
+          <div
+            className={twMerge(
+              'fixed inset-0',
+              theme === 'dark' ? 'bg-dark-modalBg' : 'bg-neutral-400',
+              'bg-opacity-80'
+            )}
+          />
         </Transition.Child>
 
         <div className={twMerge('fixed inset-0 overflow-y-auto overflow-x-clip')}>

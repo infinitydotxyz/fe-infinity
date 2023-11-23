@@ -120,6 +120,7 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
                   };
                   handleCollectionSearchResult(selectedColl);
                 }}
+                placeHolder="Search by collection"
               />
               <StatusIcon status="pending-indefinite" label="Live" iconClassName="mt-0.75" />
             </div>

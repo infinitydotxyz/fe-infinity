@@ -66,10 +66,12 @@ export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
     setFilter(newFilter);
     setSelectedCollection(undefined);
   };
-
+  const [customSweep, setCustomSweep] = useState('');
   const multiSelect = () => {
     return (
       <TabSelector
+        customValue={customSweep}
+        setCustomValue={setCustomSweep}
         className="mb-0 mt-2.5"
         value={numSweep}
         setValue={setNumSweep}
@@ -95,6 +97,7 @@ export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
                 };
                 handleCollectionSearchResult(selectedColl);
               }}
+              placeHolder="Search by collection"
             />
             <div className="hidden md:block">{isOwner && multiSelect()}</div>
             <div className="block md:hidden">

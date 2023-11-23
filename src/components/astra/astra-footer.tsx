@@ -88,9 +88,11 @@ export const AvFooter = () => {
               <FaDiscord className={twMerge('text-neutral-300 group-hover:text-white h-5 w-6.5')} aria-hidden="true" />
             </AButton>
           </a>
-          <AButton className="group rounded-lg p-5 bg-light-borderLight dark:bg-neutral-800 dark:hover:bg-yellow-700 hover:bg-yellow-700 hover:text-white">
-            <BookIcon className={twMerge('text-neutral-300 group-hover:text-white h-5 w-6.5')} />
-          </AButton>
+          <a aria-label="Docs" href="https://docs.pixl.so/" rel="external nofollow noopener noreferrer" target="_blank">
+            <AButton className="group rounded-lg p-5 bg-light-borderLight dark:bg-neutral-800 dark:hover:bg-yellow-700 hover:bg-yellow-700 hover:text-white">
+              <BookIcon className={twMerge('text-neutral-300 group-hover:text-white h-5 w-6.5')} />
+            </AButton>
+          </a>
         </div>
         <div className="mt-3.75 flex items-center gap-5">
           <Link

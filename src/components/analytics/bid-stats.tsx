@@ -35,7 +35,6 @@ export function BidStats({ stats, userStats, showUserStats }: Props) {
       return prev && prev.id === item.id ? null : item;
     });
   };
-
   return (
     <div className="overflow-clip h-full">
       <div className="mb-5">

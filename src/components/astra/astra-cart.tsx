@@ -532,7 +532,7 @@ export const AstraCart = ({
   return (
     <div
       className={twMerge(
-        'w-fit flex flex-col  min-h-screen h-full border-l border-t  overflow-auto bg-gray-100 dark:bg-dark-bg',
+        'w-fit flex flex-col  min-h-screen h-full border-l overflow-auto bg-gray-100 dark:bg-dark-bg',
         borderColor,
         isFixed ? 'top-0 fixed' : 'fixed md:pb-20 md:top-18.75'
       )}
@@ -707,7 +707,7 @@ export const AstraCart = ({
                             </span>
                           )}
                           <AButton
-                            className={twMerge('rounded-md text-xs ml-2', secondaryBtnBgColorText)}
+                            className={twMerge('rounded-md text-xs ml-2 !text-yellow-900', secondaryBtnBgColorText)}
                             onClick={() => {
                               setTokenInfo('WETH');
                               setShowBuyTokensModal(true);
@@ -748,6 +748,7 @@ export const AstraCart = ({
       <div className="m-6 flex flex-col">
         <AButton
           className="p-3 mb-5 z-30"
+          customDisabledClassName="opacity-50 pointer-events-none"
           primary={true}
           disabled={
             isCheckingOut ||
