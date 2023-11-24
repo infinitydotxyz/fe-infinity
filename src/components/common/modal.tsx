@@ -114,7 +114,7 @@ export const Modal = ({
         >
           <div
             className={twMerge(
-              'fixed inset-0',
+              'fixed inset-0 backdrop-blur-5',
               theme === 'dark' ? 'bg-dark-modalBg' : 'bg-neutral-400',
               'bg-opacity-80'
             )}

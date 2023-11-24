@@ -18,6 +18,7 @@ import { AButton } from 'src/components/astra/astra-button';
 import { ADropdown } from 'src/components/astra/astra-dropdown';
 import { useRouter } from 'next/router';
 import { AvFooter } from 'src/components/astra/astra-footer';
+import { useNetwork, useSwitchNetwork } from 'wagmi';
 
 const homeFeaturesList: { id: number; feature: string }[] = [
   { id: 1, feature: 'Listings from over 100 NFT marketplaces for instant buys.' },
@@ -27,8 +28,6 @@ const homeFeaturesList: { id: number; feature: string }[] = [
   { id: 5, feature: 'Built on battle tested infra & audited contracts.' },
   { id: 6, feature: 'Mega gas optimized.' }
 ];
-type Tabs = 'Polygon' | 'Ethereum';
-const tabs = ['Polygon', 'Ethereum'] as Tabs[];
 const HomePage = () => {
   const queryBy = 'by_sales_volume';
   const options = [
@@ -40,7 +39,6 @@ const HomePage = () => {
   const [data, setData] = useState<Collection[]>([]);
   const [period] = useState(options[0]);
   const [isLoading, setIsLoading] = useState(false);
-  const [selected, setSelected] = useState<Tabs>(tabs[0]);
   const isMounted = useIsMounted();
   const { isCollSelected, isCollSelectable, toggleCollSelection } = useAppContext();
   const { setCartType } = useCartContext();
@@ -80,6 +78,8 @@ const HomePage = () => {
     // }, [period, selectedChain]);
   }, [selectedChain]);
   const router = useRouter();
+  const { chain, chains } = useNetwork();
+  const { switchNetwork } = useSwitchNetwork();
   return (
     <NonSsrWrapper>
       <div className="overflow-auto h-full">
@@ -159,16 +159,20 @@ const HomePage = () => {
             {isDesktop ? (
               <ChainSwitch />
             ) : (
-              <ADropdown
-                label={selected}
-                menuParentButtonClassName="py-1 px-2.5 bg-gray-100 border-gray-300 dark:bg-neutral-800 dark:border-neutral-200 rounded-4"
-                menuButtonClassName="font-semibold text-neutral-700"
-                innerClassName="w-30"
-                items={tabs.map((option) => ({
-                  label: option,
-                  onClick: () => setSelected(option as Tabs)
-                }))}
-              />
+              !!chains?.length && (
+                <ADropdown
+                  label={chains.find((chainItem) => chainItem?.id === chain?.id)?.name}
+                  menuParentButtonClassName="py-1 px-2.5 bg-gray-100 border-gray-300 dark:bg-neutral-800 dark:border-neutral-200 rounded-4"
+                  menuButtonClassName="font-semibold text-neutral-700"
+                  innerClassName="w-30"
+                  items={chains?.map((chainItem) => ({
+                    label: chainItem?.name,
+                    onClick: () => {
+                      switchNetwork?.(chainItem.id);
+                    }
+                  }))}
+                />
+              )
             )}
           </div>
           <div className="rounded-5 overflow-hidden mt-5">

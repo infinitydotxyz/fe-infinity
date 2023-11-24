@@ -67,11 +67,11 @@ export const CollectionPageHeader = ({
           <div className="flex w-full items-center text-center md:flex-row flex-col md:pl-5">
             <div
               className={twMerge(
-                'flex flex-col-reverse md:flex-row w-full items-center space-x-2',
+                'flex flex-col-reverse md:flex-row w-full items-center md:items-start space-x-2',
                 showCart && 'md:!flex-col-reverse lg:!flex-row'
               )}
             >
-              <div className="py-7.5 flex-1 flex flex-col md:flex-row items-center">
+              <div className="py-7.5 flex-1 flex flex-col md:flex-row items-center md:items-start">
                 <EZImage
                   src={avatarUrl}
                   className="md:mr-5 h-25 w-25 rounded-lg cursor-pointer hover:scale-90 duration-100"

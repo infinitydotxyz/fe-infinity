@@ -90,25 +90,25 @@ export const useTopUsersByBidsDataSets = () => {
   };
 
   useEffect(() => {
-    setTopUsersByNumBidsDataSet(toDataSet('Top users by bids', 'Bids', 'numBids', topUsersByNumBids));
+    setTopUsersByNumBidsDataSet(toDataSet('Top Users by Bids', 'Bids', 'numBids', topUsersByNumBids));
   }, [topUsersByNumBids, address]);
 
   useEffect(() => {
     setTopUsersByNumActiveBidsDataSet(
-      toDataSet('Top users by active bids', 'Bids', 'numActiveBids', topUsersByNumActiveBids)
+      toDataSet('Top Users by Active Bids', 'Bids', 'numActiveBids', topUsersByNumActiveBids)
     );
   }, [topUsersByNumActiveBids, address]);
 
   useEffect(() => {
     setTopUsersByNumBidsNearFloorDataSet(
-      toDataSet('Top users by bids near floor', 'Bids', 'numBidsNearFloor', topUsersByNumBidsNearFloor)
+      toDataSet('Top Users by Bids Near Floor', 'Bids', 'numBidsNearFloor', topUsersByNumBidsNearFloor)
     );
   }, [topUsersByNumBidsNearFloor, address]);
 
   useEffect(() => {
     setTopUsersByNumActiveBidsNearFloorDataSet(
       toDataSet(
-        'Top users by active bids near floor',
+        'Top Users by Active Bids Near Floor',
         'Bids',
         'numActiveBidsNearFloor',
         topUsersByNumActiveBidsNearFloor

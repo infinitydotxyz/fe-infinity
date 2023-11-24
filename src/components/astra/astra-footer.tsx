@@ -73,7 +73,9 @@ export const AvFooter = () => {
           >
             <AButton className="group rounded-lg p-5 bg-light-borderLight dark:bg-neutral-800 dark:hover:bg-yellow-700 hover:bg-yellow-700 hover:text-white">
               <SocialXIcon
-                className={twMerge('text-neutral-300 group-hover:text-white h-5 w-5.5')}
+                className={twMerge(
+                  'text-neutral-300 group-hover:text-white group-hover:dark:text-neutral-200 h-5 w-5.5'
+                )}
                 aria-hidden="true"
               />
             </AButton>
@@ -85,12 +87,21 @@ export const AvFooter = () => {
             target="_blank"
           >
             <AButton className="group rounded-lg p-5 bg-light-borderLight dark:bg-neutral-800 dark:hover:bg-yellow-700 hover:bg-yellow-700 hover:text-white">
-              <FaDiscord className={twMerge('text-neutral-300 group-hover:text-white h-5 w-6.5')} aria-hidden="true" />
+              <FaDiscord
+                className={twMerge(
+                  'text-neutral-300 group-hover:text-white group-hover:dark:text-neutral-200 h-5 w-6.5'
+                )}
+                aria-hidden="true"
+              />
             </AButton>
           </a>
           <a aria-label="Docs" href="https://docs.pixl.so/" rel="external nofollow noopener noreferrer" target="_blank">
             <AButton className="group rounded-lg p-5 bg-light-borderLight dark:bg-neutral-800 dark:hover:bg-yellow-700 hover:bg-yellow-700 hover:text-white">
-              <BookIcon className={twMerge('text-neutral-300 group-hover:text-white h-5 w-6.5')} />
+              <BookIcon
+                className={twMerge(
+                  'text-neutral-300 group-hover:text-white group-hover:dark:text-neutral-200 h-5 w-6.5'
+                )}
+              />
             </AButton>
           </a>
         </div>

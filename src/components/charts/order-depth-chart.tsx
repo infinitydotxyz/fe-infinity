@@ -172,6 +172,7 @@ const OrderDepthChartSub = ({ data, hideOutliers }: Props2) => {
         stroke: am5.color(chartLinesColor),
         fill: am5.color(chartLinesColor),
         tooltip: am5.Tooltip.new(root, {
+          autoTextColor: false,
           getFillFromSprite: false,
           getLabelFillFromSprite: false,
           pointerOrientation: 'down',
@@ -205,6 +206,7 @@ const OrderDepthChartSub = ({ data, hideOutliers }: Props2) => {
         stroke: am5.color(chartLinesColor),
         fill: am5.color(chartLinesColor),
         tooltip: am5.Tooltip.new(root, {
+          autoTextColor: false,
           getFillFromSprite: false,
           getLabelFillFromSprite: false,
           pointerOrientation: 'down',

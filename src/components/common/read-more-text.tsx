@@ -93,13 +93,13 @@ export const ReadMoreText: React.FC<ReadMoreTextPropType> = (props) => {
   let displayText;
   if (!secondaryText) {
     displayText = (
-      <div className="leading-6">
+      <div className="leading-6 text-neutral-300 md:text-neutral-700">
         <span className="">{`${primaryText} ${secondaryText}`}</span>
       </div>
     );
   } else if (displaySecondary) {
     displayText = (
-      <div className="leading-6">
+      <div className="leading-6 text-neutral-300 md:text-neutral-700">
         <span>{`${primaryText} ${secondaryText}`}</span>
         <span className="ml-2 cursor-pointer" onClick={setStatus}>
           [Less]
@@ -108,7 +108,7 @@ export const ReadMoreText: React.FC<ReadMoreTextPropType> = (props) => {
     );
   } else {
     displayText = (
-      <div className="leading-6">
+      <div className="leading-6 text-neutral-300 md:text-neutral-700">
         <span className="">
           {primaryText}
           <span style={{ display: 'none' }}>{secondaryText}</span>

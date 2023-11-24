@@ -102,7 +102,6 @@ export function BidStats({ stats, userStats, showUserStats }: Props) {
           ></RewardsSection>
         </div>
       )}
-
       <div className={twMerge('space-y-4 pb-5')}>
         <div className="flex flex-col lg:flex-row">
           <div className="mb-4 lg:mb-0 lg:flex-1 lg:mr-2 lg:max-w-1/2">

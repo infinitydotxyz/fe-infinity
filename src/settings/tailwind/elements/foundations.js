@@ -85,6 +85,9 @@ module.exports = {
   zIndex: {
     80: 80
   },
+  backdropBlur: {
+    5: '5px'
+  },
   backdropFilter: {
     none: 'none',
     blur: 'blur(4px)',

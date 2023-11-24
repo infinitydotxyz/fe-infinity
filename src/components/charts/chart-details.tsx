@@ -185,7 +185,6 @@ export const SalesChartDetails = ({ data }: Props3) => {
     collectionSlug: data?.collectionSlug ?? '',
     chainId
   };
-
   useEffect(() => {
     const isModalOpen =
       router.query?.tokenId === basicTokenInfo.tokenId &&
