@@ -4,6 +4,8 @@ import { ChainNFTs } from '@infinityxyz/lib-frontend/types/core';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { adaptEthersSigner } from '@reservoir0x/ethers-wallet-adapter';
 import { Execute } from '@reservoir0x/reservoir-sdk';
+import { switchNetwork } from '@wagmi/core';
+import axios, { AxiosResponse } from 'axios';
 import { Contract, ethers } from 'ethers';
 import { useTheme } from 'next-themes';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
@@ -11,6 +13,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { toastError, toastSuccess } from 'src/components/common';
 import { WaitingForTxModal } from 'src/components/common/waiting-for-tx-modal';
+import { Signature, useUserSignature } from 'src/hooks/api/useUserSignature';
 import { useChain } from 'src/hooks/useChain';
 import { useCollectionSelection } from 'src/hooks/useCollectionSelection';
 import { useNFTSelection } from 'src/hooks/useNFTSelection';
@@ -18,15 +21,11 @@ import { useOrderSelection } from 'src/hooks/useOrderSelection';
 import { CollectionPageTabs, ProfileTabs } from 'src/utils';
 import { cancelMultipleOrders } from 'src/utils/orders';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem } from 'src/utils/types';
-import { useAccount, useBalance, useProvider, useSigner } from 'wagmi';
+import { useAccount, useProvider, useSigner } from 'wagmi';
 import { getClientUrl, getReservoirClient } from '../astra-utils';
 import { extractErrorMsg, getDefaultOrderExpiryTime, getOrderExpiryTimeInMsFromEnum } from '../common-utils';
-import { FEE_BPS, FEE_WALLET_ADDRESS, FLOW_TOKEN, Native, ROYALTY_BPS, WNative } from '../constants';
-import { fetchMinXflBalanceForZeroFee } from '../orderbook-utils';
+import { Native, ROYALTY_BPS, WNative } from '../constants';
 import { CartType, useCartContext } from './CartContext';
-import { Signature, useUserSignature } from 'src/hooks/api/useUserSignature';
-import { switchNetwork } from '@wagmi/core';
-import axios, { AxiosResponse } from 'axios';
 
 type ReservoirOrderbookType =
   | 'reservoir'
@@ -147,50 +146,50 @@ export const AppContextProvider = ({ children }: Props) => {
   const { theme } = useTheme();
   const darkMode = theme === 'dark';
 
-  const xflBalanceObj = useBalance({
-    address: user,
-    token: FLOW_TOKEN.address as `0x${string}`,
-    watch: false,
-    cacheTime: 5_000,
-    chainId: 1
-  });
-  const xflBalance = parseFloat(xflBalanceObj?.data?.formatted ?? '0');
+  // const xflBalanceObj = useBalance({
+  //   address: user,
+  //   token: FLOW_TOKEN.address as `0x${string}`,
+  //   watch: false,
+  //   cacheTime: 5_000,
+  //   chainId: 1
+  // });
+  // const xflBalance = parseFloat(xflBalanceObj?.data?.formatted ?? '0');
 
-  const blurBalanceObj = useBalance({
-    address: user,
-    token: '0x5283d291dbcf85356a21ba090e6db59121208b44' as `0x${string}`,
-    watch: false,
-    cacheTime: 5_000,
-    chainId: 1
-  });
-  const blurBalance = parseFloat(blurBalanceObj?.data?.formatted ?? '0');
+  // const blurBalanceObj = useBalance({
+  //   address: user,
+  //   token: '0x5283d291dbcf85356a21ba090e6db59121208b44' as `0x${string}`,
+  //   watch: false,
+  //   cacheTime: 5_000,
+  //   chainId: 1
+  // });
+  // const blurBalance = parseFloat(blurBalanceObj?.data?.formatted ?? '0');
 
-  const looksBalanceObj = useBalance({
-    address: user,
-    token: '0xf4d2888d29d722226fafa5d9b24f9164c092421e' as `0x${string}`,
-    watch: false,
-    cacheTime: 5_000,
-    chainId: 1
-  });
-  const looksBalance = parseFloat(looksBalanceObj?.data?.formatted ?? '0');
+  // const looksBalanceObj = useBalance({
+  //   address: user,
+  //   token: '0xf4d2888d29d722226fafa5d9b24f9164c092421e' as `0x${string}`,
+  //   watch: false,
+  //   cacheTime: 5_000,
+  //   chainId: 1
+  // });
+  // const looksBalance = parseFloat(looksBalanceObj?.data?.formatted ?? '0');
 
-  const x2y2BalanceObj = useBalance({
-    address: user,
-    token: '0x1e4ede388cbc9f4b5c79681b7f94d36a11abebc9' as `0x${string}`,
-    watch: false,
-    cacheTime: 5_000,
-    chainId: 1
-  });
-  const x2y2Balance = parseFloat(x2y2BalanceObj?.data?.formatted ?? '0');
+  // const x2y2BalanceObj = useBalance({
+  //   address: user,
+  //   token: '0x1e4ede388cbc9f4b5c79681b7f94d36a11abebc9' as `0x${string}`,
+  //   watch: false,
+  //   cacheTime: 5_000,
+  //   chainId: 1
+  // });
+  // const x2y2Balance = parseFloat(x2y2BalanceObj?.data?.formatted ?? '0');
 
-  const sudoBalanceObj = useBalance({
-    address: user,
-    token: '0x3446dd70b2d52a6bf4a5a192d9b0a161295ab7f9' as `0x${string}`,
-    watch: false,
-    cacheTime: 5_000,
-    chainId: 1
-  });
-  const sudoBalance = parseFloat(sudoBalanceObj?.data?.formatted ?? '0');
+  // const sudoBalanceObj = useBalance({
+  //   address: user,
+  //   token: '0x3446dd70b2d52a6bf4a5a192d9b0a161295ab7f9' as `0x${string}`,
+  //   watch: false,
+  //   cacheTime: 5_000,
+  //   chainId: 1
+  // });
+  // const sudoBalance = parseFloat(sudoBalanceObj?.data?.formatted ?? '0');
 
   const {
     isNFTSelected,
@@ -483,23 +482,26 @@ export const AppContextProvider = ({ children }: Props) => {
           const currentBlock = await provider.getBlock('latest');
           const listingTimeSeconds = currentBlock.timestamp;
 
-          // calculate fees
-          let automatedRoyalties = true;
-          let fees = [`${FEE_WALLET_ADDRESS}:${FEE_BPS}`];
-          const minBal = await fetchMinXflBalanceForZeroFee();
-          if (minBal) {
-            const feesWaived =
-              xflBalance >= minBal ||
-              blurBalance >= minBal ||
-              looksBalance >= minBal ||
-              x2y2Balance >= minBal ||
-              sudoBalance >= minBal;
+          const automatedRoyalties = false;
+          const fees: [] = [];
 
-            if (feesWaived) {
-              automatedRoyalties = false;
-              fees = [];
-            }
-          }
+          // calculate fees
+          // let automatedRoyalties = true;
+          // let fees = [`${FEE_WALLET_ADDRESS}:${FEE_BPS}`];
+          // const minBal = await fetchMinXflBalanceForZeroFee();
+          // if (minBal) {
+          //   const feesWaived =
+          //     xflBalance >= minBal ||
+          //     blurBalance >= minBal ||
+          //     looksBalance >= minBal ||
+          //     x2y2Balance >= minBal ||
+          //     sudoBalance >= minBal;
+
+          //   if (feesWaived) {
+          //     automatedRoyalties = false;
+          //     fees = [];
+          //   }
+          // }
 
           for (const token of tokens) {
             const collection = trimLowerCase(token.address || token.tokenAddress || '');

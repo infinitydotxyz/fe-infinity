@@ -21,7 +21,6 @@ import {
 } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartItem, CartType, useCartContext } from 'src/utils/context/CartContext';
-import { fetchMinXflBalanceForZeroFee } from 'src/utils/orderbook-utils';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
 import {
   borderColor,
@@ -144,55 +143,55 @@ export const AstraCart = ({
     }
   };
 
-  const xflBalanceObj = useBalance({
-    address: user,
-    token: FLOW_TOKEN.address as `0x${string}`,
-    watch: false,
-    cacheTime: 5_000,
-    chainId: 1
-  });
-  const xflBalance = parseFloat(xflBalanceObj?.data?.formatted ?? '0');
+  // const xflBalanceObj = useBalance({
+  //   address: user,
+  //   token: FLOW_TOKEN.address as `0x${string}`,
+  //   watch: false,
+  //   cacheTime: 5_000,
+  //   chainId: 1
+  // });
+  // const xflBalance = parseFloat(xflBalanceObj?.data?.formatted ?? '0');
 
-  const blurBalanceObj = useBalance({
-    address: user,
-    token: '0x5283d291dbcf85356a21ba090e6db59121208b44' as `0x${string}`,
-    watch: false,
-    cacheTime: 5_000,
-    chainId: 1
-  });
-  const blurBalance = parseFloat(blurBalanceObj?.data?.formatted ?? '0');
+  // const blurBalanceObj = useBalance({
+  //   address: user,
+  //   token: '0x5283d291dbcf85356a21ba090e6db59121208b44' as `0x${string}`,
+  //   watch: false,
+  //   cacheTime: 5_000,
+  //   chainId: 1
+  // });
+  // const blurBalance = parseFloat(blurBalanceObj?.data?.formatted ?? '0');
 
-  const looksBalanceObj = useBalance({
-    address: user,
-    token: '0xf4d2888d29d722226fafa5d9b24f9164c092421e' as `0x${string}`,
-    watch: false,
-    cacheTime: 5_000,
-    chainId: 1
-  });
-  const looksBalance = parseFloat(looksBalanceObj?.data?.formatted ?? '0');
+  // const looksBalanceObj = useBalance({
+  //   address: user,
+  //   token: '0xf4d2888d29d722226fafa5d9b24f9164c092421e' as `0x${string}`,
+  //   watch: false,
+  //   cacheTime: 5_000,
+  //   chainId: 1
+  // });
+  // const looksBalance = parseFloat(looksBalanceObj?.data?.formatted ?? '0');
 
-  const x2y2BalanceObj = useBalance({
-    address: user,
-    token: '0x1e4ede388cbc9f4b5c79681b7f94d36a11abebc9' as `0x${string}`,
-    watch: false,
-    cacheTime: 5_000,
-    chainId: 1
-  });
-  const x2y2Balance = parseFloat(x2y2BalanceObj?.data?.formatted ?? '0');
+  // const x2y2BalanceObj = useBalance({
+  //   address: user,
+  //   token: '0x1e4ede388cbc9f4b5c79681b7f94d36a11abebc9' as `0x${string}`,
+  //   watch: false,
+  //   cacheTime: 5_000,
+  //   chainId: 1
+  // });
+  // const x2y2Balance = parseFloat(x2y2BalanceObj?.data?.formatted ?? '0');
 
-  const sudoBalanceObj = useBalance({
-    address: user,
-    token: '0x3446dd70b2d52a6bf4a5a192d9b0a161295ab7f9' as `0x${string}`,
-    watch: false,
-    cacheTime: 5_000,
-    chainId: 1
-  });
-  const sudoBalance = parseFloat(sudoBalanceObj?.data?.formatted ?? '0');
+  // const sudoBalanceObj = useBalance({
+  //   address: user,
+  //   token: '0x3446dd70b2d52a6bf4a5a192d9b0a161295ab7f9' as `0x${string}`,
+  //   watch: false,
+  //   cacheTime: 5_000,
+  //   chainId: 1
+  // });
+  // const sudoBalance = parseFloat(sudoBalanceObj?.data?.formatted ?? '0');
 
-  const [minBalForFeeWaiverAndBoost, setMinBalForFeeWaiverAndBoost] = useState(0);
-  const [holderOfToken, setHolderOfToken] = useState('');
+  const [minBalForFeeWaiverAndBoost] = useState(0);
+  const [holderOfToken] = useState('');
   // const [xflStakeBoost, setXflStakeBoost] = useState('0x');
-  const [areFeesWaived, setAreFeesWaived] = useState(false);
+  const [areFeesWaived] = useState(true);
 
   const [tokenMap, setTokenMap] = useState<Map<string, ERC721TokenCartItem[]>>(new Map());
   const [collMap, setCollMap] = useState<Map<string, ERC721CollectionCartItem[]>>(new Map());
@@ -213,39 +212,39 @@ export const AstraCart = ({
     setNetProceeds(newNetProceeds);
   }, [cartTotal]);
 
-  useEffect(() => {
-    getMinBalanceInfo();
-  });
+  // useEffect(() => {
+  //   getMinBalanceInfo();
+  // });
 
-  const getMinBalanceInfo = async () => {
-    const minBal = minBalForFeeWaiverAndBoost === 0 ? await fetchMinXflBalanceForZeroFee() : minBalForFeeWaiverAndBoost;
-    setMinBalForFeeWaiverAndBoost(minBal);
+  // const getMinBalanceInfo = async () => {
+  //   const minBal = minBalForFeeWaiverAndBoost === 0 ? await fetchMinXflBalanceForZeroFee() : minBalForFeeWaiverAndBoost;
+  //   setMinBalForFeeWaiverAndBoost(minBal);
 
-    // const boost = xflStaked >= minStakeAmount ? 2 : 0;
-    // setXflStakeBoost(boost + 'x');
+  //   // const boost = xflStaked >= minStakeAmount ? 2 : 0;
+  //   // setXflStakeBoost(boost + 'x');
 
-    const feesWaived =
-      xflBalance >= minBal ||
-      blurBalance >= minBal ||
-      looksBalance >= minBal ||
-      x2y2Balance >= minBal ||
-      sudoBalance >= minBal;
-    setAreFeesWaived(feesWaived);
+  //   const feesWaived =
+  //     xflBalance >= minBal ||
+  //     blurBalance >= minBal ||
+  //     looksBalance >= minBal ||
+  //     x2y2Balance >= minBal ||
+  //     sudoBalance >= minBal;
+  //   setAreFeesWaived(feesWaived);
 
-    const holder =
-      xflBalance >= minBal
-        ? FLOW_TOKEN.symbol
-        : blurBalance >= minBal
-        ? 'BLUR'
-        : looksBalance >= minBal
-        ? 'LOOKS'
-        : x2y2Balance >= minBal
-        ? 'X2Y2'
-        : sudoBalance >= minBal
-        ? 'SUDO'
-        : '';
-    setHolderOfToken(holder);
-  };
+  //   const holder =
+  //     xflBalance >= minBal
+  //       ? FLOW_TOKEN.symbol
+  //       : blurBalance >= minBal
+  //       ? 'BLUR'
+  //       : looksBalance >= minBal
+  //       ? 'LOOKS'
+  //       : x2y2Balance >= minBal
+  //       ? 'X2Y2'
+  //       : sudoBalance >= minBal
+  //       ? 'SUDO'
+  //       : '';
+  //   setHolderOfToken(holder);
+  // };
 
   const currency = WNative[parseInt(selectedChain, 10)];
   if (!currency) {
