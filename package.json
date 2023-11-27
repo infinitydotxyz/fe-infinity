@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@amcharts/amcharts5": "^5.4.0",
+    "@fontsource/barlow": "^5.0.8",
     "@headlessui/react": "^1.7.8",
     "@infinityxyz/lib-frontend": "^1.349.15",
     "@next/bundle-analyzer": "^13.1.6",
@@ -48,7 +49,7 @@
     "lottie-react": "^2.3.1",
     "lru-cache": "^7.14.1",
     "merkletreejs": "^0.3.9",
-    "next": "^13.1.6",
+    "next": "13.1.6",
     "next-themes": "^0.2.1",
     "nprogress": "^0.2.0",
     "postcss-import": "^15.1.0",
@@ -90,7 +91,8 @@
     "prettier": "^2.8.3",
     "sass": "^1.57.1",
     "tailwindcss": "^3.2.4",
-    "typescript": "^5.0.4"
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "5.0.4"
   },
   "prettier": {
     "tabWidth": 2,

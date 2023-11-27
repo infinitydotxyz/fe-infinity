@@ -13,9 +13,22 @@ interface Props {
   collectionAddress: string;
   collectionFloorPrice?: string | number | null | undefined;
   chainId: ChainId;
+  customIcon?: React.ReactNode;
+  customPlaceholder?: string;
+  inputClassName?: string;
+  containerClassName?: string;
 }
 
-export const CollectionNftSearchInput = ({ expanded, collectionAddress, collectionFloorPrice, chainId }: Props) => {
+export const CollectionNftSearchInput = ({
+  customIcon,
+  expanded,
+  collectionAddress,
+  collectionFloorPrice,
+  chainId,
+  customPlaceholder,
+  inputClassName,
+  containerClassName
+}: Props) => {
   const parsedCollectionAddress = collectionAddress.split(':')[0]; // to handle cases like artblocks where address is in the form of 0xabcd...1234:0:1000
   const { search, setSubTypeQuery, setQuery } = useSearchState<SearchType.Collection, 'address', 'nft'>({
     type: SearchType.Collection,
@@ -59,6 +72,7 @@ export const CollectionNftSearchInput = ({ expanded, collectionAddress, collecti
     <>
       <SearchInput
         tokenSearch
+        customIcon={customIcon}
         setSelectedToken={(info) => {
           const { pathname, query } = router;
           query['tokenId'] = info.tokenId;
@@ -67,10 +81,12 @@ export const CollectionNftSearchInput = ({ expanded, collectionAddress, collecti
           info.collectionFloorPrice = collectionFloorPrice;
           setBasicTokenInfo(info);
         }}
+        inputClassName={inputClassName}
+        containerClassName={containerClassName}
         expanded={expanded}
         query={'subTypeQuery' in search ? search.subTypeQuery : ''}
         setQuery={setSubTypeQuery}
-        placeholder={placeholder}
+        placeholder={customPlaceholder ?? placeholder}
         data={result.data}
       />
       {modalOpen && basicTokenInfo ? <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} /> : null}

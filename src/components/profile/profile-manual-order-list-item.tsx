@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FiEdit3, FiTrash2 } from 'react-icons/fi';
-import { Button, EthPrice } from 'src/components/common';
+import { EthSymbol } from 'src/components/common';
 import { erc721TokenCartItemToCollectionCartItem, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
@@ -10,7 +9,9 @@ import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { useAccount } from 'wagmi';
 import { ManualOrderbookItem } from '../orderbook/manual-orderbook-item';
-import useScreenSize from 'src/hooks/useScreenSize';
+import { AButton } from '../astra/astra-button';
+import { EditIcon } from 'src/icons';
+import { DeleteIcon } from 'src/icons/DeleteIcon';
 
 interface Props {
   isOwner: boolean;
@@ -24,7 +25,6 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
   const { cartType, cartItems, setCartType } = useCartContext();
   const { isNFTSelectable, isNFTSelected, toggleNFTSelection, isCollSelectable, isCollSelected, toggleCollSelection } =
     useAppContext();
-  const { isDesktop } = useScreenSize();
 
   const isTokenBid = orderType === 'bids-placed' && order.criteria?.kind === 'token';
 
@@ -63,9 +63,14 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
   }, [cartType, cartItems]);
 
   return (
-    <div className={twMerge(standardBorderCard, 'flex md:mx-4 text-sm')}>
-      <div className="md:flex justify-between items-center w-full">
-        <div className="md:w-1/3">
+    <div
+      className={twMerge(
+        standardBorderCard,
+        'flex md:mx-4 text-sm bg-zinc-300 dark:bg-neutral-800 p-3.75 my-0.25 !mx-0 border-0 rounded-none first:rounded-t-xl last:rounded-b-xl'
+      )}
+    >
+      <div className="flex flex-wrap justify-between items-center w-full">
+        <div className="w-full sm:w-1/3">
           <ManualOrderbookItem
             isCollBid={isCollBid}
             canShowAssetModal={isTokenBid}
@@ -75,9 +80,13 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
           />
         </div>
 
-        <div className="md:w-1/6 md:flex-col flex justify-between md:mt-0 mt-2">
-          <div className={twMerge(secondaryTextColor, 'font-medium')}>Order type</div>
-          <div className="">
+        <div className="w-1/2 sm:w-1/6 flex-col flex justify-between sm:mt-0 mt-3.75">
+          <div
+            className={twMerge(secondaryTextColor, 'font-medium text-sm text-gray-800 dark:text-gray-800 capitalize')}
+          >
+            Order type
+          </div>
+          <div className="text-base font-semibold text-neutral-700 dark:text-white">
             {orderType === 'listings'
               ? 'Listing'
               : orderType === 'bids-placed'
@@ -86,36 +95,36 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
                 : 'Bid'
               : 'Offer'}
           </div>
-          {order.validUntil && isDesktop ? (
+          {/* {order.validUntil && isDesktop ? (
             <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>Expires {format(order.validUntil)}</div>
-          ) : null}
+          ) : null} */}
         </div>
 
-        <div className="md:w-1/6 md:flex-col flex justify-between md:mt-0 mt-2">
-          <div className={twMerge(secondaryTextColor, 'font-medium')}>Price</div>
-          <div className="">
-            <EthPrice label={`${nFormatter(startPriceEth, 2)}`} />
+        <div className="w-1/2 sm:w-1/6 flex-col flex justify-between sm:mt-0 mt-3.75">
+          <div
+            className={twMerge(secondaryTextColor, 'font-medium text-sm text-gray-800 dark:text-gray-800 capitalize')}
+          >
+            Price
+          </div>
+          <div className="text-amber-700 text-17 font-supply font-normal">
+            <span className="font-body font-normal mr-0.5">{EthSymbol}</span>
+            {nFormatter(startPriceEth, 2)}
           </div>
         </div>
-        {order.validUntil && !isDesktop ? (
-          <div className={twMerge(secondaryTextColor, 'text-xs font-medium my-2 text-right')}>
-            Expires {format(order.validUntil)}
-          </div>
-        ) : null}
 
         {orderType === 'listings' || orderType === 'bids-placed' ? (
-          <div className="w-1/8 flex justify-end">
-            <Button
-              variant={
-                addedToEditCart &&
-                (cartType === CartType.TokenList ||
-                  cartType === CartType.TokenBid ||
-                  cartType === CartType.CollectionBid)
-                  ? 'primary'
-                  : 'outline'
-              }
+          <div className="sm:w-auto flex w-full justify-center mt-3.75 sm:mt-0 sm:justify-end">
+            <AButton
               disabled={!isActionable}
-              className="mr-2"
+              className={twMerge(
+                'text-white dark:text-neutral-200 dark:bg-white bg-neutral-200 px-5 py-2.5 rounded-l-6 mr-0.25',
+                addedToEditCart &&
+                  (cartType === CartType.TokenList ||
+                    cartType === CartType.TokenBid ||
+                    cartType === CartType.CollectionBid)
+                  ? 'text-yellow-700 dark:text-yellow-700'
+                  : ''
+              )}
               onClick={() => {
                 if (!isConnected) {
                   return;
@@ -137,11 +146,14 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
                 }
               }}
             >
-              <FiEdit3 className="w-4 h-4" />
-            </Button>
+              <EditIcon />
+            </AButton>
 
-            <Button
-              variant={addedToCancelCart && cartType === CartType.Cancel ? 'primary' : 'outline'}
+            <AButton
+              className={twMerge(
+                'text-white dark:text-neutral-200 dark:bg-white bg-neutral-200 px-5 py-2.5 rounded-r-6 group',
+                addedToCancelCart && cartType === CartType.Cancel ? 'text-yellow-700 dark:text-yellow-700' : ''
+              )}
               disabled={!isActionable}
               onClick={() => {
                 if (!isConnected) {
@@ -157,14 +169,26 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
                 }
               }}
             >
-              <FiTrash2 className="w-4 h-4" />
-            </Button>
+              <DeleteIcon />
+            </AButton>
           </div>
         ) : null}
 
         {orderType === 'offers-received' ? (
-          <div className="md:w-1/6 flex justify-end">
-            <Button
+          <div className="flex w-full sm:w-auto mt-3.75 sm:mt-0 items-center gap-2.5 justify-end">
+            {order.validUntil ? (
+              <div
+                className={twMerge(
+                  secondaryTextColor,
+                  'text-xs hidden font-medium rounded-5  px-1.75 bg-light-borderLight dark:bg-zinc-700 dark:text-gray-800 py-0.5 my-2 text-right'
+                )}
+              >
+                Expires {format(order.validUntil)}
+              </div>
+            ) : null}
+            <AButton
+              primary
+              className="w-full md:w-auto rounded-6 border-0 py-2.5 px-5 font-semibold text-white dark:text-neutral-200"
               disabled={!isActionable}
               onClick={() => {
                 if (!isConnected) {
@@ -179,7 +203,19 @@ export const ProfileManualOrderListItem = ({ order, orderType, isOwner }: Props)
               }}
             >
               {addedToEditCart && cartType === CartType.AcceptOffer ? '✓' : ''} Accept Offer
-            </Button>
+              <span className="md:hidden">
+                {order.validUntil ? (
+                  <div
+                    className={twMerge(
+                      secondaryTextColor,
+                      'text-xs hidden font-medium rounded-5  px-1.75 bg-light-borderLight dark:bg-zinc-700 dark:text-gray-800 py-0.5 my-2 text-right'
+                    )}
+                  >
+                    Expires {format(order.validUntil)}
+                  </div>
+                ) : null}
+              </span>
+            </AButton>
           </div>
         ) : null}
       </div>

@@ -5,12 +5,10 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import {
   activeColor,
   buttonBorderColor,
-  brandBorderColor,
-  hoverColor,
-  primaryBtnWithBgColorTextTransition,
   textColor,
   brandTextColor,
-  brandBgColor
+  brandBgCustomColor,
+  btnBgColorText
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
@@ -24,6 +22,7 @@ interface Props {
   primary?: boolean;
   submit?: boolean;
   tooltip?: string;
+  customDisabledClassName?: string;
 }
 
 export const AButton = ({
@@ -34,6 +33,7 @@ export const AButton = ({
   children,
   className = '',
   tooltip = '',
+  customDisabledClassName = '',
   highlighted = false,
   onClick
 }: Props): JSX.Element => {
@@ -44,11 +44,8 @@ export const AButton = ({
       primary={primary}
       highlighted={highlighted}
       tooltip={tooltip}
-      className={twMerge(
-        small ? 'text-sm px-2 py-0.5' : 'px-2.5 py-[5px]',
-        primary ? primaryBtnWithBgColorTextTransition : '',
-        className
-      )}
+      customDisabledClassName={customDisabledClassName}
+      className={twMerge(small ? 'text-sm px-2 py-0.5' : 'px-2.5 py-1.25', primary ? btnBgColorText : '', className)}
       onClick={onClick}
     >
       {children}
@@ -67,6 +64,7 @@ interface BaseProps {
   highlighted?: boolean;
   submit?: boolean;
   tooltip?: string;
+  customDisabledClassName?: string;
 }
 
 const ButtonBase = ({
@@ -77,6 +75,7 @@ const ButtonBase = ({
   className = '',
   highlighted = false,
   tooltip = '',
+  customDisabledClassName = '',
   onClick
 }: BaseProps): JSX.Element => {
   const disabledClass = 'opacity-30 cursor-not-allowed';
@@ -90,10 +89,9 @@ const ButtonBase = ({
       className={twMerge(
         highlighted ? brandTextColor : primary ? 'text-light-body' : textColor,
         activeColor,
-        hoverColor,
         'select-none transition ease-in-out duration-300',
         'focus:outline-none focus-visible:ring focus:ring-dark-bg focus:ring-opacity-50',
-        disabled ? disabledClass : '',
+        disabled ? customDisabledClassName ?? disabledClass : '',
         className
       )}
       title={tooltip}
@@ -244,18 +242,17 @@ export const ASwitchButton = ({ checked, onChange }: Props5) => {
       checked={checked}
       onChange={onChange}
       className={twMerge(
-        'border-[1px] relative inline-flex h-[24px] w-[50px] shrink-0 cursor-pointer rounded-full \
-             transition-colors duration-100 ease-in-out',
-        brandBorderColor,
-        checked ? brandBgColor : ''
+        'border border-gray-300 dark:border-neutral-200 relative inline-flex p-1 w-13 shrink-0 cursor-pointer rounded transition-colors duration-100 ease-in-out',
+        checked ? brandBgCustomColor : ''
       )}
     >
       <span className="sr-only">Use setting</span>
+      {/* bg-gray-300 */}
       <span
         className={twMerge(
-          'dark:bg-gray-200 bg-gray-300',
-          checked ? 'translate-x-[25px] bg-white dark:bg-black' : 'translate-x-1',
-          'mt-[1px] h-[20px] w-[20px] rounded-full'
+          'border border-zinc-100 bg-zinc-200',
+          checked ? 'translate-x-full bg-white dark:bg-black' : 'translate-x-0',
+          'h-5.5 w-5.5 rounded-3'
         )}
       />
     </Switch>

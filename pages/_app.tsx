@@ -35,6 +35,13 @@ import {
 import '../styles/nprogress.css'; //styles of nprogress
 NProgress.configure({ showSpinner: false });
 
+import '@fontsource/barlow/400.css';
+import '@fontsource/barlow/500.css';
+import '@fontsource/barlow/600.css';
+import '@fontsource/barlow/700.css';
+import '@fontsource/barlow/800.css';
+import '@fontsource/barlow/900.css';
+
 //Binding events.
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());

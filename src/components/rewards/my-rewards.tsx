@@ -65,8 +65,8 @@ const MyRewards = () => {
   }
 
   return (
-    <div className="space-y-10 mt-6 pb-6 mb-16 mr-4">
-      <PixlRewards isDesktop={isDesktop} />
+    <div className="space-y-5 mt-5 pb-6 mb-16 px-5">
+      <PixlRewards />
 
       {address && <TokenBalances isDesktop={isDesktop} address={address} chainId="1" />}
 
@@ -108,6 +108,9 @@ const MyRewards = () => {
           }
         ></RewardsSection>
       )}
+      <div className="py-10 text-neutral-700 text-base font-semibold text-center dark:text-white">
+        More rewards dropping soon.
+      </div>
     </div>
   );
 };

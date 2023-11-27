@@ -1,22 +1,20 @@
 import { ChainId, Collection, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
-import { FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
-import { HiOutlineExternalLink } from 'react-icons/hi';
+import { FaDiscord, FaInstagram } from 'react-icons/fa';
 import { BlueCheck, ClipboardButton, EZImage, EthSymbol, ReadMoreText, Spacer } from 'src/components/common';
 import etherscanLogo from 'src/images/etherscan-logo.png';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
 import {
   borderColor,
-  brandBorderColor,
+  golderBorderColor,
   hoverColor,
-  hoverColorBrandText,
-  secondaryBgColor,
-  secondaryTextColor,
-  smallIconButtonStyle
+  hoverColorNewBrandText,
+  mediumIconButtonStyle,
+  secondaryTextColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { AOutlineButton } from '../astra/astra-button';
-import useScreenSize from 'src/hooks/useScreenSize';
+import { SocialXIcon } from 'src/icons';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 export interface CollectionPageHeaderProps {
   expanded: boolean;
@@ -52,9 +50,10 @@ export const CollectionPageHeader = ({
   onTabChange
 }: CollectionPageHeaderProps) => {
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
-  const { isDesktop } = useScreenSize();
 
   const chainId = (collection?.chainId ?? '1') as ChainId;
+
+  const { showCart } = useAppContext();
 
   // const { result: matchingEngineStatus, isInitialLoadComplete } = useMatchingEngineCollection(
   //   collection?.address ?? '',
@@ -62,101 +61,140 @@ export const CollectionPageHeader = ({
   // );
 
   return (
-    <div className={twMerge(borderColor, secondaryBgColor, 'border-b px-6')}>
+    <div className={twMerge(borderColor, 'border-b')}>
       {expanded && (
         <div className="flex flex-col space-y-3">
-          <div className="flex w-full items-center text-center md:flex-row flex-col mt-2">
-            <EZImage
-              src={avatarUrl}
-              className="md:mr-4 h-14 w-14 rounded-lg cursor-pointer hover:scale-90 duration-100"
-              onClick={() => window.open(collection?.metadata?.links?.external)}
-            />
-            <div className="md:flex w-full items-center space-x-2">
-              <div className="font-bold font-heading text-xl">{title}</div>
-
-              {isDesktop && (
-                <>
-                  <div className="flex p-2 text-sm space-x-2 items-center justify-center">
-                    {hasBlueCheck ? <BlueCheck /> : null}
-                    <div>{ellipsisAddress(collection?.address).toLowerCase()}</div>
-                    <div className={twMerge('cursor-pointer p-2 rounded-lg', hoverColor)}>
-                      <ClipboardButton
-                        textToCopy={collection?.address ?? ''}
-                        className={twMerge(smallIconButtonStyle)}
-                      />
+          <div className="flex w-full items-center text-center md:flex-row flex-col md:pl-5">
+            <div
+              className={twMerge(
+                'flex flex-col-reverse md:flex-row w-full items-center md:items-start space-x-2',
+                showCart && 'md:!flex-col-reverse lg:!flex-row'
+              )}
+            >
+              <div className="py-7.5 flex-1 flex flex-col md:flex-row items-center md:items-start">
+                <EZImage
+                  src={avatarUrl}
+                  className="md:mr-5 h-25 w-25 rounded-lg cursor-pointer hover:scale-90 duration-100"
+                  onClick={() => window.open(collection?.metadata?.links?.external)}
+                />
+                <div>
+                  <div className="flex flex-col md:flex-row items-center gap-1">
+                    <h4 className="font-extrabold text-center md:text-left text-35 text-neutral-700 dark:text-white font-body line-clamp-1">
+                      {title}
+                    </h4>
+                    <div className="flex text-17 space-x-5 items-center justify-center mt-2">
+                      {hasBlueCheck ? <BlueCheck /> : null}
+                      <div className="flex items-center gap-1.25">
+                        <p className="text-17 font-supply text-neutral-700 dark:text-white leading-5 whitespace-nowrap">
+                          {ellipsisAddress(collection?.address).toLowerCase()}
+                        </p>
+                        <ClipboardButton
+                          textToCopy={collection?.address ?? ''}
+                          className={twMerge(mediumIconButtonStyle)}
+                        />
+                      </div>
                     </div>
                   </div>
-                  <Spacer />
-                  {collection?.metadata?.links?.external ? (
-                    <>
-                      <AOutlineButton
-                        className={hoverColor}
-                        onClick={() => window.open(collection.metadata?.links?.external)}
-                      >
-                        <span className="flex items-center">
-                          <EZImage src={avatarUrl} className="mr-2 h-5 w-5 rounded-full" />
-                          <HiOutlineExternalLink className="text-md" />
-                        </span>
-                      </AOutlineButton>
-                    </>
+                  {description ? (
+                    <div className="px-5 mt-3.75 md:mt-0 md:px-0 max-w-5xl font-body font-semibold text-neutral-700 dark:text-white md:text-left text-center">
+                      <ReadMoreText text={description} min={30} ideal={60} max={100} />
+                    </div>
                   ) : null}
+                </div>
+              </div>
+              <div
+                className={twMerge(
+                  'p-2.5 flex flex-row gap-2.5 md:gap-0 justify-center flex-wrap md:flex-col items-end',
+                  showCart && 'md:!flex-row lg:!flex-col'
+                )}
+              >
+                <div
+                  className={twMerge(
+                    hoverColor,
+                    'py-2.5 px-4 cursor-pointer bg-zinc-300 dark:bg-zinc-900 md:dark:bg-transparent md:bg-transparent rounded-full'
+                  )}
+                  onClick={() => window.open(getChainScannerBase(chainId) + '/address/' + collection?.address)}
+                >
+                  <span className="flex items-center">
+                    <EZImage src={etherscanLogo.src} className="mr-2.5 h-5 w-5 rounded-lg" />
+                    <p className="text-sm dark:text-white font-medium text-neutral-700 font-body">Etherscan</p>
+                  </span>
+                </div>
 
-                  <AOutlineButton
-                    className={hoverColor}
-                    onClick={() => window.open(getChainScannerBase(chainId) + '/address/' + collection?.address)}
+                {collection?.metadata?.links?.external ? (
+                  <div
+                    className={twMerge(
+                      hoverColor,
+                      'py-2.5 px-4 cursor-pointer bg-zinc-300 dark:bg-zinc-900 md:dark:bg-transparent md:bg-transparent rounded-full'
+                    )}
+                    onClick={() => window.open(collection.metadata?.links?.external)}
                   >
                     <span className="flex items-center">
-                      <EZImage src={etherscanLogo.src} className="mr-2 h-5 w-5 rounded-lg" />
-                      <HiOutlineExternalLink className="text-md" />
+                      <EZImage src={avatarUrl} className="mr-2.5 h-5 w-5" />
+                      <p className="text-sm dark:text-white font-medium text-neutral-700 font-body">Website</p>
                     </span>
-                  </AOutlineButton>
-
-                  {collection?.metadata?.links?.twitter ? (
-                    <AOutlineButton
-                      className={hoverColor}
-                      onClick={() => window.open(collection?.metadata?.links?.twitter)}
-                    >
-                      <span className="flex items-center text-sm">
-                        <div className="">
-                          <FaTwitter className="text-brand-twitter h-5 w-5" />
-                        </div>
-                        {/* {twitterFollowers ?? ''} */}
-                      </span>
-                    </AOutlineButton>
-                  ) : null}
-
-                  {collection?.metadata?.links?.discord ? (
-                    <AOutlineButton
-                      className={hoverColor}
-                      onClick={() => window.open(collection?.metadata?.links?.discord)}
-                    >
-                      <span className="flex items-center text-sm">
-                        <div className="">
-                          <FaDiscord className="text-brand-discord h-5 w-5" />
-                        </div>
-                        {/* {discordFollowers ?? ''} */}
-                      </span>
-                    </AOutlineButton>
-                  ) : null}
-
-                  {collection?.metadata?.links?.instagram ? (
-                    <AOutlineButton
-                      className={hoverColor}
-                      onClick={() => window.open(collection?.metadata?.links?.instagram)}
-                    >
-                      <FaInstagram className="text-xl" />
-                    </AOutlineButton>
-                  ) : null}
-                </>
-              )}
+                  </div>
+                ) : null}
+                {collection?.metadata?.links?.discord ? (
+                  <div
+                    className={twMerge(
+                      hoverColor,
+                      'py-2.5 px-4 cursor-pointer bg-zinc-300 dark:bg-zinc-900 md:dark:bg-transparent md:bg-transparent rounded-full'
+                    )}
+                    onClick={() => window.open(collection?.metadata?.links?.discord)}
+                  >
+                    <span className="flex items-center text-sm">
+                      <div className="">
+                        <FaDiscord
+                          className={twMerge(
+                            hoverColorNewBrandText,
+                            'mr-2.5 dark:text-neutral-300 text-neutral-700 h-5 w-5'
+                          )}
+                        />
+                      </div>
+                      <p className="text-sm dark:text-white font-medium text-neutral-700 font-body">Discord</p>
+                    </span>
+                  </div>
+                ) : null}
+                {collection?.metadata?.links?.twitter ? (
+                  <div
+                    className={twMerge(
+                      hoverColor,
+                      'py-2.5 px-4 cursor-pointer bg-zinc-300 dark:bg-zinc-900 md:dark:bg-transparent md:bg-transparent rounded-full'
+                    )}
+                    onClick={() => window.open(collection?.metadata?.links?.twitter)}
+                  >
+                    <span className="flex items-center text-sm">
+                      <div className="">
+                        <SocialXIcon
+                          className={twMerge(
+                            hoverColorNewBrandText,
+                            'mr-2.5 h-5 w-5.5 dark:text-neutral-300 text-neutral-700'
+                          )}
+                          aria-hidden="true"
+                        />
+                      </div>
+                      <p className="text-sm dark:text-white font-medium text-neutral-700 font-body">x.com</p>
+                    </span>
+                  </div>
+                ) : null}
+                {collection?.metadata?.links?.instagram ? (
+                  <div
+                    className={twMerge(hoverColor, 'py-2 px-2.5 cursor-pointer flex items-center')}
+                    onClick={() => window.open(collection?.metadata?.links?.instagram)}
+                  >
+                    <FaInstagram
+                      className={twMerge(
+                        hoverColorNewBrandText,
+                        'mr-2.5 h-5 w-5.5 dark:text-neutral-300 text-neutral-700'
+                      )}
+                    />
+                    <p className="text-sm dark:text-white font-medium text-neutral-700 font-body">Instagram</p>
+                  </div>
+                ) : null}
+              </div>
             </div>
           </div>
-
-          {description && isDesktop ? (
-            <div className="max-w-5xl text-sm md:text-left text-center">
-              <ReadMoreText text={description} min={30} ideal={60} max={100} />
-            </div>
-          ) : null}
         </div>
       )}
 
@@ -195,16 +233,16 @@ export const CollectionPageHeader = ({
         </div>
       </div> */}
 
-      <div className="flex mt-4 text-sm gap-3">
-        <div className="flex space-x-3 overflow-auto scrollbar-hide">
+      <div className="flex text-sm gap-3 px-5">
+        <div className="flex space-x-6 sm:space-x-7.5 overflow-auto scrollbar-hide">
           {tabs.map((e) => {
             return (
-              <div key={e} className={twMerge('pb-2 px-3', selectedTab === e ? `border-b-2 ${brandBorderColor}` : '')}>
+              <div key={e} className={twMerge('py-2.5', selectedTab === e ? `border-b-3 ${golderBorderColor}` : '')}>
                 <div
                   className={twMerge(
-                    selectedTab === e ? '' : secondaryTextColor,
-                    hoverColorBrandText,
-                    'font-medium cursor-pointer'
+                    selectedTab === e ? 'text-amber-900' : secondaryTextColor,
+                    'hover:text-amber-900',
+                    'font-semibold text-base cursor-pointer'
                   )}
                   onClick={() => {
                     setSelectedTab(e);
@@ -217,31 +255,33 @@ export const CollectionPageHeader = ({
             );
           })}
         </div>
-
         <Spacer />
-
-        <div className="md:flex hidden text-sm divide-x divide-light-border dark:divide-dark-border items-center">
+        <div className="xl:flex hidden text-sm divide-x divide-light-border dark:divide-dark-border items-center">
           {Number(floorPrice) > 0 && (
-            <div className="flex pr-4 gap-2 whitespace-nowrap font-medium">
-              <span className={secondaryTextColor}>Floor </span>
-              <span className="">
-                {floorPrice ?? '-'} {EthSymbol}
+            <div className="flex items-center leading-3.5 pr-4 gap-2 whitespace-nowrap font-medium">
+              <span className={secondaryTextColor}>Floor</span>
+              <span className="text-amber-700 leading-4 font-normal font-supply">
+                {floorPrice ?? '-'} <span className="font-body">{EthSymbol}</span>
               </span>
             </div>
           )}
-          <div className="flex px-4 gap-2 whitespace-nowrap font-medium">
+          <div className="flex items-center leading-3.5 px-4 gap-2 whitespace-nowrap font-medium">
             <span className={secondaryTextColor}>Total Vol </span>
-            <span className="">
-              {totalVol ?? '-'} {EthSymbol}
+            <span className="text-amber-700 leading-4 font-normal font-supply">
+              {totalVol ?? '-'} <span className="font-body">{EthSymbol}</span>
             </span>
           </div>
-          <div className="flex px-4 gap-2 whitespace-nowrap font-medium">
-            <span className={secondaryTextColor}>Owners </span>
-            <span className="">{numOwners ?? '-'}</span>
+          <div className="flex items-center leading-3.5 px-4 gap-2 whitespace-nowrap font-medium">
+            <span className={secondaryTextColor}>Owners</span>
+            <span className="text-amber-700 leading-4 font-normal font-supply">
+              {numOwners ?? '-'} <span className="font-body"></span>
+            </span>
           </div>
-          <div className="flex pl-4 gap-2 whitespace-nowrap font-medium">
+          <div className="flex items-center leading-3.5 pl-4 gap-2 whitespace-nowrap font-medium">
             <span className={secondaryTextColor}>Items </span>
-            <span className="">{numNfts ?? '-'}</span>
+            <span className="text-amber-700 leading-4 font-normal font-supply">
+              {numNfts ?? '-'} <span className="font-body h-4.5"></span>
+            </span>
           </div>
         </div>
       </div>

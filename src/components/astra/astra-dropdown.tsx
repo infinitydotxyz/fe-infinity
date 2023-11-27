@@ -1,18 +1,10 @@
 import { Menu, Transition } from '@headlessui/react';
 import { ReactElement, ReactNode } from 'react';
-import { RxCaretDown } from 'react-icons/rx';
-import {
-  borderColor,
-  dropShadow,
-  hoverColor,
-  hoverColorBrandText,
-  secondaryBgColor,
-  secondaryTextColor,
-  smallIconButtonStyle
-} from 'src/utils/ui-constants';
+import { borderColor, dropShadow, hoverColor, hoverColorBrandText, secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { Divider } from '../common';
 import { AOutlineButton, ATextButton } from './astra-button';
+import { ChevronDown } from 'src/icons';
 
 export type ADropdownItem = {
   label: string | ReactElement;
@@ -23,19 +15,27 @@ export type ADropdownItem = {
 interface DropdownBtnProps {
   children?: ReactNode;
   isMenuOpen?: boolean;
+  className?: string;
 }
 
-export const ADropdownButton = ({ children, isMenuOpen }: DropdownBtnProps) => {
+export const ADropdownButton = ({ children, isMenuOpen, className }: DropdownBtnProps) => {
   return (
-    <div className={twMerge('flex items-center gap-1 py-1 text-sm', secondaryTextColor, hoverColorBrandText)}>
+    <div
+      className={twMerge(
+        'flex items-center gap-1.5 py-1 text-sm text-neutral-200 dark:text-white font-medium',
+        hoverColorBrandText,
+        className
+      )}
+    >
       <div className={twMerge('whitespace-nowrap font-medium')}>{children}</div>
-      <RxCaretDown
-        className={twMerge(smallIconButtonStyle)}
+      <div
         style={{
           transition: 'all 0.1s ease',
           transform: `rotate(${!isMenuOpen ? 0 : '0.5turn'})`
         }}
-      />
+      >
+        <ChevronDown className="w-3 h-2" />
+      </div>
     </div>
   );
 };
@@ -49,6 +49,8 @@ interface DropdownProps {
   hasBorder?: boolean;
   innerClassName?: string;
   menuItemClassName?: string;
+  menuButtonClassName?: string;
+  menuParentButtonClassName?: string;
 }
 
 export const ADropdown = ({
@@ -59,7 +61,9 @@ export const ADropdown = ({
   hasBorder = true,
   alignMenuRight = false,
   innerClassName = '',
-  menuItemClassName = ''
+  menuItemClassName = '',
+  menuButtonClassName = '',
+  menuParentButtonClassName = ''
 }: DropdownProps) => {
   return (
     <div className={twMerge(className, 'text-sm')}>
@@ -69,13 +73,17 @@ export const ADropdown = ({
             <span>
               <ACustomMenuButton>
                 {hasBorder && (
-                  <AOutlineButton tooltip={tooltip}>
-                    <ADropdownButton isMenuOpen={open}>{label}</ADropdownButton>
+                  <AOutlineButton className={menuParentButtonClassName} tooltip={tooltip}>
+                    <ADropdownButton className={menuButtonClassName} isMenuOpen={open}>
+                      {label}
+                    </ADropdownButton>
                   </AOutlineButton>
                 )}{' '}
                 {!hasBorder && (
-                  <ATextButton tooltip={tooltip}>
-                    <ADropdownButton isMenuOpen={open}>{label}</ADropdownButton>
+                  <ATextButton className={menuParentButtonClassName} tooltip={tooltip}>
+                    <ADropdownButton className={menuButtonClassName} isMenuOpen={open}>
+                      {label}
+                    </ADropdownButton>
                   </ATextButton>
                 )}
               </ACustomMenuButton>
@@ -170,7 +178,7 @@ export const ACustomMenuItems = ({ children, open, alignMenuRight, innerClassNam
         >
           <div
             className={twMerge(
-              'h-4 w-4 rotate-45 absolute top-[-6px]',
+              'h-4 w-4 rotate-45 absolute -top-1.5',
               secondaryBgColor,
               alignMenuRight ? 'right-8' : 'left-8'
             )}

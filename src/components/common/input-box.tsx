@@ -51,7 +51,7 @@ export const InputBox = ({
             )}
 
             {/* NOTE: this centered positioning of the input field using % is kind of a hack, we should look into a better approach when more than one component needs to render a left icon */}
-            <div className={twMerge('flex items-center w-full', renderLeftIcon ? 'ml-[40%]' : '')}>{children}</div>
+            <div className={twMerge('flex items-center w-full', renderLeftIcon ? 'ml-40%' : '')}>{children}</div>
 
             {tooltip ? (
               <Tooltip
@@ -91,6 +91,7 @@ interface Props4 {
   onEnter?: () => void;
   stopEnterSpacePropagation?: boolean;
   onMouseLeave?: () => void;
+  onBlur?: () => void;
 }
 
 export const TextInputBox = ({
@@ -111,7 +112,8 @@ export const TextInputBox = ({
   inputClassName = '',
   onEnter,
   stopEnterSpacePropagation = false,
-  onMouseLeave
+  onMouseLeave,
+  onBlur
 }: Props4) => {
   return (
     <InputBox
@@ -138,6 +140,7 @@ export const TextInputBox = ({
           className={twMerge(
             `p-0 bg-transparent border-none focus:ring-0 block w-full outline-none ring-transparent shadow-none ${inputClassName}`
           )}
+          onBlur={onBlur}
           placeholder={placeholder}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && onEnter) {

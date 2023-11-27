@@ -40,15 +40,17 @@ export const ProfileCollections = ({ userAddress }: Props) => {
   }, [userAddress, chainId]);
 
   return (
-    <div className={twMerge('border rounded-lg p-2 overflow-y-scroll scrollbar-hide text-sm w-full', borderColor)}>
-      <div className={twMerge('p-3 text-lg font-medium')}>Owned Collections</div>
-      <div className={twMerge('mx-3 border-b-[1px] mb-1', borderColor)}></div>
-      {ownedColls.map((item) => {
-        return (
-          <div key={item.address} className="flex">
+    <div className={twMerge('rounded-lg overflow-y-scroll scrollbar-hide text-sm w-full', borderColor)}>
+      <div className="py-5 !text-22 text-lg font-semibold lg:leading-9 px-5 lg:px-0 text-neutral-700 dark:text-white">
+        Owned Collections
+      </div>
+      <div className="flex flex-col sm:px-5 lg:px-0">
+        {ownedColls.map((item) => {
+          return (
             <div
+              key={item.address}
               className={twMerge(
-                'flex space-x-3 items-center cursor-pointer w-full p-3 rounded-lg',
+                'flex space-x-3 items-center cursor-pointer w-full first:rounded-t-10 first:pt-2.5 last:rounded-b-10 px-3.75 sm:px-2.5 py-2.5 bg-zinc-300 dark:bg-neutral-800',
                 hoverColorBrandText,
                 hoverColor
               )}
@@ -60,19 +62,23 @@ export const ProfileCollections = ({ userAddress }: Props) => {
                 setSelectedCollection({ address: item.address, name: item.name, imageUrl: item.imageUrl });
               }}
             >
-              <EZImage src={item.imageUrl} className="w-9 h-9 rounded" />
-              <div className="space-y-1">
-                <div>{item.name}</div>
-                <div className={twMerge('text-xs', secondaryTextColor)}>
-                  Floor: {item.floorPrice} {EthSymbol}
+              <EZImage src={item.imageUrl} className="w-12 h-12 rounded" />
+              <div className="">
+                <div className={twMerge('!text-base font-bold', secondaryTextColor)}>{item.name}</div>
+                <div className={twMerge('text-sm font-semibold', secondaryTextColor)}>
+                  Floor{' '}
+                  <span className="text-sm text-amber-700 ml-1.25 font-normal">
+                    <span className="font-supply">{item.floorPrice}</span>
+                    {EthSymbol}
+                  </span>
                 </div>
               </div>
               <Spacer />
-              <span className={twMerge('text-xs', secondaryTextColor)}>{item.numNFTs}</span>
+              <span className={twMerge('!text-base font-bold px-2.5', secondaryTextColor)}>{item.numNFTs}</span>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 };

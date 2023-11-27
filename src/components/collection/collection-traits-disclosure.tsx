@@ -33,10 +33,7 @@ export function CollectionTraitsDisclosure({ traits, filter, setFilter, typeValu
           const traitValueData = val[1];
           const isChecked = typeValueMap[traitType]?.[traitValue];
           return (
-            <div
-              className={twMerge('flex border-b-[1px] py-2', borderColor)}
-              key={`${traitType}.${traitValue}.${isChecked}`}
-            >
+            <div className={twMerge('flex border-b py-2', borderColor)} key={`${traitType}.${traitValue}.${isChecked}`}>
               <Checkbox
                 checked={isChecked}
                 onChange={(checked) => {

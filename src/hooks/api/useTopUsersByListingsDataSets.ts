@@ -92,20 +92,20 @@ export const useTopUsersByListingsDataSets = () => {
 
   useEffect(() => {
     setTopUsersByNumListingsDataSet(
-      toDataSet('Top users by listings', 'Listings', 'numListings', topUsersByNumListings)
+      toDataSet('Top Users by Listings', 'Listings', 'numListings', topUsersByNumListings)
     );
   }, [topUsersByNumListings, address]);
 
   useEffect(() => {
     setTopUsersByNumActiveListingsDataSet(
-      toDataSet('Top users by active listings', 'Listings', 'numActiveListings', topUsersByNumActiveListings)
+      toDataSet('Top Users by Active Listings', 'Listings', 'numActiveListings', topUsersByNumActiveListings)
     );
   }, [topUsersByNumActiveListings, address]);
 
   useEffect(() => {
     setTopUsersByNumListingsBelowFloorDataSet(
       toDataSet(
-        'Top users by listings below floor',
+        'Top Users by Listings Below Floor',
         'Listings',
         'numListingsBelowFloor',
         topUsersByNumListingsBelowFloor
@@ -116,7 +116,7 @@ export const useTopUsersByListingsDataSets = () => {
   useEffect(() => {
     setTopUsersByNumActiveListingsBelowFloorDataSet(
       toDataSet(
-        'Top users by active listings below floor',
+        'Top Users by Active Listings Below Floor',
         'Listings',
         'numActiveListingsBelowFloor',
         topUsersByNumActiveListingsBelowFloor

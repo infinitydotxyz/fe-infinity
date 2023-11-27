@@ -26,10 +26,10 @@ export const ATraitFilter = ({ collectionAddress, filter, setFilter, collectionA
             </ACustomMenuButton>
           </span>
 
-          <ACustomMenuItems open={open} innerClassName="w-[580px] border-0 px-0 py-0" alignMenuRight={true}>
+          <ACustomMenuItems open={open} innerClassName="w-145 border-0 px-0 py-0" alignMenuRight={true}>
             {!collectionAttributes ? <BouncingLogo /> : null}
             {collectionAttributes ? (
-              <div className="h-[400px]">
+              <div className="h-100">
                 <CollectionTraits
                   traits={collectionAttributes}
                   collectionAddress={collectionAddress}

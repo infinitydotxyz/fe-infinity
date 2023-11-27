@@ -215,11 +215,13 @@ export const MatchAndExecutionOrderStatus = ({
 export const StatusIcon = ({
   status,
   label,
-  duration
+  duration,
+  iconClassName
 }: {
   status: 'complete' | 'pending' | 'pending-indefinite' | 'error' | 'invalid';
   label: string;
   duration?: number | null;
+  iconClassName?: string;
 }) => {
   let iconClass = '';
   switch (status) {
@@ -261,18 +263,18 @@ export const StatusIcon = ({
   const isValid = status != 'invalid';
 
   return (
-    <div className="flex items-center space-x-1.5">
-      <span className="flex w-2 h-2 relative">
+    <div className="flex items-center h-max px-2.5 py-1.75 border rounded-4 dark:border-neutral-200 border-gray-300 space-x-1.5">
+      <span className="text-base leading-5 font-semibold">
+        {label}
+        {duration != null && (
+          <span className={twMerge(secondaryTextColor, 'text-xs font-medium')}>({formatDuration(duration)})</span>
+        )}
+      </span>
+      <span className={twMerge('flex w-2 h-2 mt-0.5 relative', iconClassName)}>
         <span
           className={`${isValid ? 'animate-ping' : ''} absolute w-full h-full rounded-full ${iconClass} opacity-75`}
         ></span>
         <span className={`rounded-full w-full ${iconClass}`}></span>
-      </span>
-      <span className="ml-2">
-        {label}{' '}
-        {duration != null && (
-          <span className={twMerge(secondaryTextColor, 'text-xs font-medium')}>({formatDuration(duration)})</span>
-        )}
       </span>
     </div>
   );

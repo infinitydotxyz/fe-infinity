@@ -56,6 +56,16 @@ function Chart({
   xAxisType: AxisType;
 }) {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const lineDarkColors = [tailwindConfig.colors['white'], tailwindConfig.colors['yellow'][800]];
+  const lineLightColors = [tailwindConfig.colors['neutral'][700], tailwindConfig.colors['yellow'][800]];
+  const { theme } = useTheme();
+  const darkMode = theme === 'dark';
+  const lineColors = useMemo(() => {
+    return theme === 'dark' ? lineDarkColors : lineLightColors;
+  }, [theme]);
+
+  const blackGridColor = darkMode ? tailwindConfig.colors['neutral'][700] : tailwindConfig.colors['black'];
+  const axisLabelColor = darkMode ? tailwindConfig.colors.white : tailwindConfig.colors.black;
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -198,20 +208,20 @@ function Chart({
   const dots = useMemo(() => {
     return (
       <>
-        {dataSets.map((dataSet) => {
+        {dataSets.map((dataSet, index) => {
           return (
             <Fragment key={dataSet.id}>
               <LinePath
                 data={dataSet.dataPoints}
                 x={(d) => xScale(d.x)}
                 y={(d) => yScale(d.y)}
-                stroke={dataSet.color}
+                stroke={lineColors[index] ?? lineColors[0]}
                 strokeWidth={1}
               />
               {dataSet.dataPoints.map((d: DataPoint) => (
                 <Circle
                   key={d.id}
-                  fill={dataSet.color}
+                  fill={lineColors[index] ?? lineColors[0]}
                   cx={xScale(xAccessor(d))}
                   cy={yScale(yAccessor(d))}
                   r={4}
@@ -223,11 +233,7 @@ function Chart({
         })}
       </>
     );
-  }, [xScale, yScale, dataSets]);
-
-  const { theme } = useTheme();
-  const darkMode = theme === 'dark';
-  const themeToUse = tailwindConfig.colors[darkMode ? 'dark' : 'light'];
+  }, [xScale, yScale, dataSets, lineColors]);
 
   return (
     <div>
@@ -241,13 +247,7 @@ function Chart({
         style={{ transition: 'all 0.7s ease-in-out' }}
       >
         <Group top={margin.top} left={margin.left}>
-          <AnimatedGridRows
-            scale={yScale}
-            width={boundedWidth}
-            stroke={themeToUse.disabledFade}
-            strokeDasharray="6,6"
-            numTicks={6}
-          />
+          <AnimatedGridRows scale={yScale} width={boundedWidth} stroke={blackGridColor} numTicks={6} />
           <AnimatedAxis
             orientation="left"
             numTicks={5}
@@ -255,25 +255,12 @@ function Chart({
             hideTicks={true}
             scale={yScale}
             tickLabelProps={() => ({
-              fill: themeToUse.disabled,
-              fontWeight: 700,
+              fill: axisLabelColor,
+              fontWeight: 400,
               fontSize: 12,
+              fontFamily: 'Supply-Mono',
               textAnchor: 'end',
               verticalAnchor: 'middle'
-            })}
-          />
-          <AnimatedAxis
-            orientation="bottom"
-            numTicks={5}
-            top={boundedHeight}
-            hideAxisLine={true}
-            hideTicks={true}
-            scale={xScale}
-            tickLabelProps={() => ({
-              fill: themeToUse.disabled,
-              fontWeight: 700,
-              fontSize: 12,
-              textAnchor: 'middle'
             })}
           />
           {dots}
@@ -316,11 +303,11 @@ export function LineChart({ dataSets, title, subTitle, children, xAxisType }: Li
   const { isDesktop } = useScreenSize();
 
   return (
-    <ChartBox className="h-full">
-      <div className="md:flex justify-between mb-4">
-        <div>
-          <div className="font-medium mt-3 font-heading text-lg">{title}</div>
-          <div className={twMerge(secondaryTextColor, 'font-medium text-sm')}>{subTitle}</div>
+    <ChartBox className="h-full pb-0" noCSSStyles>
+      <div className="md:flex justify-between mb-4 flex-col items-center">
+        <div className="flex flex-col items-center">
+          <div className="mt-5 text-neutral-700 dark:text-white font-body font-bold text-22">{title}</div>
+          <div className={twMerge('text-amber-700 font-semibold text-base w-max')}>{subTitle}</div>
         </div>
         {children}
       </div>

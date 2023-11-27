@@ -12,7 +12,6 @@
   src: url(/fonts/PPNeueMachina-InktrapRegular.woff2) format('woff2');
 }
 
-
 @font-face {
   font-family: Monument-Bold;
   font-weight: bold;
@@ -20,3 +19,16 @@
   src: url(/fonts/Monument-Bold.woff2) format('woff2');
 }
 
+@font-face {
+  font-family: Supply-Mono;
+  font-weight: normal;
+  font-display: auto;
+  src: url(/fonts/PPSupplyMono-Regular.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: Supply-Mono-Light;
+  font-weight: normal;
+  font-display: auto;
+  src: url(/fonts/PPSupplyMono-Ultralight.woff2) format('woff2');
+}

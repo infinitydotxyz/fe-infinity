@@ -27,11 +27,17 @@ interface ATraitProps {
 
 export const ATrait: FC<ATraitProps> = ({ trait, description }) => {
   return (
-    <div className={twMerge(borderColor, 'border rounded-lg flex flex-col py-1')}>
-      <div className="text-center text-xs break-words">{trait.key}</div>
-      <div className="text-center text-sm font-medium break-words mt-0.5">{trait.value}</div>
-      <div className={twMerge('text-center text-xs rounded-br-lg rounded-bl-lg tracking-tighter mt-0.5')}>
-        {description}
+    <div className={twMerge(borderColor, '  flex py-1 justify-between gap-3')}>
+      <div>
+        <div className="text-base break-words text-neutral-700 dark:text-white font-semibold">{trait.value}</div>
+        <div className="text-sm text-amber-700 font-medium break-words">{description}</div>
+      </div>
+      <div
+        className={twMerge(
+          'flex items-center text-sm rounded-br-4 text-neutral-700 dark:text-neutral-300 rounded-bl-4 mt-0.5'
+        )}
+      >
+        {trait.key}
       </div>
     </div>
   );
@@ -41,8 +47,8 @@ export const ATraitList: FC<ATraitListProps> = ({ traits, className = 'mt-6', to
   traits.sort((a, b) => a.tokenCount - b.tokenCount);
   return (
     <div className={className}>
-      <p className="text-lg font-bold font-heading mb-1">Traits</p>
-      <div className="space-y-2 max-h-[365px] overflow-auto scrollbar-hide">
+      <p className="text-22 font-bold mb-7.5 text-neutral-700 dark:text-white leading-7 mt-3">Traits</p>
+      <div className="space-y-5 max-h-91.25 overflow-auto scrollbar-hide">
         {traits?.map((trait: ReservoirTokenAttributeV6, idx) => (
           <ATrait key={idx + '_' + trait.key} trait={trait} description={getDescription(trait, totalTokenCount)} />
         ))}

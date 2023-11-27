@@ -1,12 +1,11 @@
-import { BsPatchCheckFill } from 'react-icons/bs';
-import { twMerge } from 'tailwind-merge';
+import { BlueCheckIcon } from '../../icons';
 
 interface Props {
   className?: string;
 }
 
 export const BlueCheck = ({ className = '' }: Props) => {
-  return <BsPatchCheckFill className={twMerge(className, 'text-blue-500')} />;
+  return <BlueCheckIcon className={className} />;
 };
 
 export const BlueCheckInline = () => {

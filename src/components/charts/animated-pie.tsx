@@ -19,9 +19,18 @@ type AnimatedPieProps<Datum> = ProvidedProps<Datum> & {
   getColor: (d: PieArcDatum<Datum>) => string;
   onClickDatum: (d: PieArcDatum<Datum>) => void;
   delay?: number;
+  labelColor?: string;
 };
 
-export function AnimatedPie<Datum>({ animate, arcs, path, getKey, getColor, onClickDatum }: AnimatedPieProps<Datum>) {
+export function AnimatedPie<Datum>({
+  animate,
+  arcs,
+  path,
+  getKey,
+  getColor,
+  labelColor,
+  onClickDatum
+}: AnimatedPieProps<Datum>) {
   const transitions = useTransition<PieArcDatum<Datum>, AnimatedStyles>(arcs, {
     from: animate ? fromLeaveTransition : enterUpdateTransition,
     enter: enterUpdateTransition,
@@ -51,11 +60,13 @@ export function AnimatedPie<Datum>({ animate, arcs, path, getKey, getColor, onCl
         {hasSpaceForLabel && (
           <animated.g style={{ opacity: props.opacity }}>
             <text
-              fill="white"
+              fill={labelColor ?? 'white'}
               x={centroidX}
               y={centroidY}
               dy=".33em"
-              fontSize={9}
+              fontSize={11}
+              fontWeight={400}
+              fontFamily="Supply-Mono"
               textAnchor="middle"
               pointerEvents="none"
             >

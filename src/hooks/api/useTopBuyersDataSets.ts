@@ -89,22 +89,22 @@ export const useTopBuyersDataSets = () => {
   };
 
   useEffect(() => {
-    setTopUsersByVolumeDataSet(toDataSet('Top users by buy volume', 'USD', 'volume', topBuyersByVolume));
+    setTopUsersByVolumeDataSet(toDataSet('Top Users by Buy Volume', 'USD', 'volume', topBuyersByVolume));
   }, [topBuyersByVolume, address]);
 
   useEffect(() => {
     setTopUsersByNativeVolumeDataSet(
-      toDataSet('Top users by native buy volume', 'USD', 'nativeVolume', topBuyersByNativeVolume)
+      toDataSet('Top Users by Native Buy Volume', 'USD', 'nativeVolume', topBuyersByNativeVolume)
     );
   }, [topBuyersByNativeVolume, address]);
 
   useEffect(() => {
-    setTopUsersByNumBuysDataSet(toDataSet('Top users by num buys', 'Buys', 'numBuys', topBuyersByNumBuys));
+    setTopUsersByNumBuysDataSet(toDataSet('Top Users by Num Buys', 'Buys', 'numBuys', topBuyersByNumBuys));
   }, [topBuyersByNumBuys, address]);
 
   useEffect(() => {
     setTopUsersByNumNativeBuysDataSet(
-      toDataSet('Top users by num native buys', 'Buys', 'numNativeBuys', topBuyersByNumNativeBuys)
+      toDataSet('Top Users by Num Native Buys', 'Buys', 'numNativeBuys', topBuyersByNumNativeBuys)
     );
   }, [topBuyersByNumNativeBuys, address]);
 

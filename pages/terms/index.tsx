@@ -1,15 +1,16 @@
+import { AvFooter } from 'src/components/astra/astra-footer';
 import { APageBox } from 'src/components/astra/astra-page-box';
 import { FLOW_TOKEN } from 'src/utils/constants';
 
 const TermsPage = () => {
   return (
-    <APageBox title="Terms and Conditions" className="overflow-x-clip overflow-y-auto">
+    <APageBox title="Terms and Conditions" footer={<AvFooter />} className="overflow-x-clip overflow-y-auto">
       <div className="flex flex-col items-center justify-center space-y-2">
-        <div className="font-bold font-heading text-3xl">Pixl</div>
+        <div className="font-bold font-supply text-3xl">Pixl</div>
         <div className="underline">Terms and Conditions of Use</div>
       </div>
 
-      <div className="space-y-2 text-sm">
+      <div className="space-y-2 px-5 text-sm">
         <div>Last Updated: Jan 20, 2023</div>
         <div className="space-y-4">
           <p dir="ltr" className="font-bold">

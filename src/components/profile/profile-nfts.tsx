@@ -5,10 +5,11 @@ import { useProfileTokenFetcher } from 'src/hooks/api/useTokenFetcher';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { SelectedCollectionType, useProfileContext } from 'src/utils/context/ProfileContext';
 import { TokensFilter } from 'src/utils/types';
-import { borderColor, hoverColor, hoverColorBrandText, selectedColor } from 'src/utils/ui-constants';
+import { borderColor, hoverColorBrandText } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { EZImage, Spacer, TextInputBox } from '../common';
+import { Checkbox, EZImage } from '../common';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
+import TabSelector from '../common/TabSelecter';
 
 interface Props {
   userAddress: string;
@@ -30,7 +31,6 @@ export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
 
   const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(userAddress, selectedChain, filter);
   const [numSweep, setNumSweep] = useState('');
-  const [customSweep, setCustomSweep] = useState('');
 
   useEffect(() => {
     const numToSelect = Math.min(data.length, parseInt(numSweep));
@@ -66,102 +66,62 @@ export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
     setFilter(newFilter);
     setSelectedCollection(undefined);
   };
-
+  const [customSweep, setCustomSweep] = useState('');
   const multiSelect = () => {
     return (
-      <div className={twMerge('flex md:ml-2 md:my-0 my-2 h-10 rounded-lg border cursor-pointer text-sm', borderColor)}>
-        <div className={twMerge('md:flex hidden items-center border-r-[1px] px-6 cursor-default', borderColor)}>
-          Select
-        </div>
-        <div
-          className={twMerge(
-            'px-4 h-full flex items-center border-r-[1px]',
-            borderColor,
-            hoverColor,
-            numSweep === '5' && selectedColor
-          )}
-          onClick={() => {
-            numSweep === '5' ? setNumSweep('') : setNumSweep('5');
-          }}
-        >
-          5
-        </div>
-        <div
-          className={twMerge(
-            'px-4 h-full flex items-center border-r-[1px]',
-            borderColor,
-            hoverColor,
-            numSweep === '10' && selectedColor
-          )}
-          onClick={() => {
-            numSweep === '10' ? setNumSweep('') : setNumSweep('10');
-          }}
-        >
-          10
-        </div>
-        <div
-          className={twMerge(
-            'px-4 h-full flex items-center border-r-[1px]',
-            borderColor,
-            hoverColor,
-            numSweep === '20' && selectedColor
-          )}
-          onClick={() => {
-            numSweep === '20' ? setNumSweep('') : setNumSweep('20');
-          }}
-        >
-          20
-        </div>
-        <div
-          className={twMerge(
-            'px-4 h-full flex items-center border-r-[1px]',
-            borderColor,
-            hoverColor,
-            numSweep === '50' && selectedColor
-          )}
-          onClick={() => {
-            numSweep === '50' ? setNumSweep('') : setNumSweep('50');
-          }}
-        >
-          50
-        </div>
-        <div className="px-4 h-full flex items-center">
-          <TextInputBox
-            autoFocus={true}
-            inputClassName="text-sm font-body"
-            className="border-0 w-14 p-0 text-sm"
-            type="number"
-            placeholder="Custom"
-            value={customSweep}
-            onChange={(value) => {
-              setNumSweep(value);
-              setCustomSweep(value);
-            }}
-          />
-        </div>
-      </div>
+      <TabSelector
+        customValue={customSweep}
+        setCustomValue={setCustomSweep}
+        className="mb-0 mt-2.5"
+        value={numSweep}
+        setValue={setNumSweep}
+        tabItems={['5', '10', '20', '50']}
+        showCustom
+      />
     );
   };
-
+  const [hideSpam, setHideSpam] = useState(false);
   return (
     <>
-      <div className="flex flex-col md:px-4 mt-2 space-y-2 text-sm">
-        <div className="md:flex gap-4">
-          <CollectionSearchInput
-            expanded
-            profileSearch
-            setSelectedCollection={(value) => {
-              const selectedColl: SelectedCollectionType = {
-                address: value.address,
-                name: value.name,
-                imageUrl: value.profileImage
-              };
-              handleCollectionSearchResult(selectedColl);
-            }}
-          />
-          {isOwner && multiSelect()}
-
-          <Spacer />
+      <div className="flex flex-col my-3.75 md:my-5 space-y-2 text-sm">
+        <div className="md:flex items-center justify-between">
+          <div className="flex items-center flex-1 justify-between md:justify-start gap-2.5">
+            <CollectionSearchInput
+              expanded
+              profileSearch
+              setSelectedCollection={(value) => {
+                const selectedColl: SelectedCollectionType = {
+                  address: value.address,
+                  name: value.name,
+                  imageUrl: value.profileImage
+                };
+                handleCollectionSearchResult(selectedColl);
+              }}
+              placeHolder="Search by collection"
+            />
+            <div className="hidden md:block">{isOwner && multiSelect()}</div>
+            <div className="block md:hidden">
+              <Checkbox
+                inputClassName="border border-gray-300 dark:border-neutral-200"
+                tickMarkClassName="border border-gray-300 dark:peer-checked:text-yellow-700 dark:peer-checked:border-neutral-200 dark:peer-checked:bg-dark-bg"
+                boxOnLeft={false}
+                label="Hide spam"
+                checked={hideSpam}
+                onChange={setHideSpam}
+              />
+            </div>
+          </div>
+          <div className="hidden md:block">
+            <Checkbox
+              boxOnLeft={false}
+              inputClassName="border border-gray-300 dark:border-neutral-200"
+              tickMarkClassName="border border-gray-300 dark:peer-checked:text-yellow-700 dark:peer-checked:border-neutral-200 dark:peer-checked:bg-dark-bg"
+              label="Hide spam"
+              checked={hideSpam}
+              onChange={setHideSpam}
+            />
+          </div>
+          <div className="md:hidden block">{isOwner && multiSelect()}</div>
         </div>
 
         {selectedCollection ? (
@@ -184,7 +144,6 @@ export const ProfileNFTs = ({ userAddress, isOwner }: Props) => {
 
       <TokenGrid
         listMode={listMode}
-        className="md:px-4 py-4"
         onClick={toggleNFTSelection}
         isSelectable={isNFTSelectable}
         isSelected={isNFTSelected}
