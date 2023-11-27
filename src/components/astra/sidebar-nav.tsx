@@ -1,28 +1,26 @@
+import { Dialog, Transition } from '@headlessui/react';
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
 import { Fragment, ReactNode, useEffect, useState } from 'react';
+import { FaDiscord } from 'react-icons/fa';
 import { AButton, ARoundButton } from 'src/components/astra/astra-button';
 import { EZImage, HelpToolTip, NextLink, Spacer } from 'src/components/common';
+import {
+  ChevronDown,
+  ExploreBoxIcon,
+  ItemsBoxIcon,
+  OrdersBoxIcon,
+  SendBoxIcon,
+  SocialXIcon,
+  ThemeSwitcherIcon
+} from 'src/icons';
+import darkLogo from 'src/images/dark-logo.png';
+import lightLogo from 'src/images/light-logo.png';
 import { ProfileTabs } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { hoverColorNewBrandText, iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useAccount } from 'wagmi';
-import lightLogo from 'src/images/light-logo.png';
-import darkLogo from 'src/images/dark-logo.png';
-import {
-  AnalyticsBoxIcon,
-  ChevronDown,
-  ExploreBoxIcon,
-  ItemsBoxIcon,
-  OrdersBoxIcon,
-  RewardsBoxIcon,
-  SendBoxIcon,
-  SocialXIcon,
-  ThemeSwitcherIcon
-} from 'src/icons';
-import { FaDiscord } from 'react-icons/fa';
-import { Dialog, Transition } from '@headlessui/react';
 type SidebarNavPropType = {
   sidebarOpen: boolean;
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -155,7 +153,7 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
                           )}
                         />
                       </SidebarNavItem>
-                      <SidebarNavItem
+                      {/* <SidebarNavItem
                         title="Rewards"
                         highlighted={router.asPath.startsWith(`/rewards`)}
                         onClick={() => {
@@ -184,7 +182,7 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
                             router.asPath.startsWith(`/analytics`) && 'text-white dark:text-neutral-200'
                           )}
                         />
-                      </SidebarNavItem>
+                      </SidebarNavItem> */}
 
                       <AButton
                         className="w-full flex items-center justify-center h-44.25"
@@ -283,7 +281,7 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
               )}
             />
           </SidebarNavItem>
-          <SidebarNavItem
+          {/* <SidebarNavItem
             title="Rewards"
             highlighted={router.asPath.startsWith(`/rewards`)}
             onClick={() => {
@@ -310,7 +308,7 @@ export const SidebarNav = ({ sidebarOpen, setSidebarOpen }: SidebarNavPropType) 
                 router.asPath.startsWith(`/analytics`) && 'text-white dark:text-neutral-200'
               )}
             />
-          </SidebarNavItem>
+          </SidebarNavItem> */}
 
           <ARoundButton onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
             <ThemeSwitcherIcon className={hoverColorNewBrandText} />
