@@ -2,11 +2,10 @@ import { useEffect, useState } from 'react';
 import { AvFooter } from 'src/components/astra/astra-footer';
 import { APageBox } from 'src/components/astra/astra-page-box';
 import { ToggleTab } from 'src/components/common';
-import GlobalRewards from 'src/components/rewards/global-rewards';
 import MyRewards from 'src/components/rewards/my-rewards';
 
 const RewardsPage = () => {
-  const tabs = ['My Rewards', 'Global Rewards'];
+  const tabs = ['My Rewards'];
   const [selected, setSelected] = useState(tabs[0]);
 
   // prevent hydration errors
@@ -28,7 +27,7 @@ const RewardsPage = () => {
       </div>
       <div className="overflow-auto">
         {isClient && selected === 'My Rewards' && <MyRewards />}
-        {isClient && selected === 'Global Rewards' && <GlobalRewards />}
+        {/* {isClient && selected === 'Global Rewards' && <GlobalRewards />} */}
       </div>
     </APageBox>
   );
