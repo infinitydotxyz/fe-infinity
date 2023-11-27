@@ -24,8 +24,6 @@ import {
   chartAxisLabelLightColor,
   gridDarkColor,
   gridLightColor,
-  saleDataPointDarkColor,
-  saleDataPointLightColor,
   secondaryBgColor,
   secondaryTextColor,
   textColor
@@ -319,7 +317,7 @@ function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
       dataToRender.map((d: SalesChartData) => (
         <Circle
           key={d.id}
-          fill={darkMode ? saleDataPointDarkColor : saleDataPointLightColor}
+          fill="#11FF00"
           cx={xScale(xAccessor(d))}
           cy={yScale(yAccessor(d))}
           r={7.5}
