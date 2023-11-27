@@ -20,14 +20,14 @@ import {
   mainnet,
   // goerli,
   // sepolia,
-  polygon
+  polygon,
   // polygonMumbai,
-  // arbitrum,
-  // optimism,
+  arbitrum,
+  optimism,
   // arbitrumNova,
-  // base,
+  base,
   // baseGoerli,
-  // zora,
+  polygonZkEvm
   // zoraTestnet,
   // scrollTestnet,
   // linea
@@ -57,14 +57,15 @@ const supportedChains = [
   mainnet,
   // goerli,
   // sepolia,
-  polygon
+  polygon,
   // polygonMumbai,
-  // arbitrum,
-  // optimism,
+  arbitrum,
+  optimism,
   // arbitrumNova,
-  // base,
+  base,
+  polygonZkEvm
   // baseGoerli,
-  // zora,
+  // zora
   // zoraTestnet,
   // scrollTestnet,
   // linea

@@ -8,6 +8,8 @@ import lightLogo from 'src/images/light-logo.png';
 import { AiOutlineMenu } from 'react-icons/ai';
 import { MagnifyingGlassIcon } from 'src/icons';
 import { useState } from 'react';
+import { useNetwork } from 'wagmi';
+import { AOutlineButton } from './astra-button';
 
 type ANavbarPropType = {
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -15,6 +17,8 @@ type ANavbarPropType = {
 export const ANavbar = ({ setSidebarOpen }: ANavbarPropType) => {
   const { isWalletNetworkSupported, showCart } = useAppContext();
   const [showSearchBar, setShowSearchBar] = useState(false);
+  const { chain } = useNetwork();
+  const selectedChain = chain?.name;
 
   return (
     <div>
@@ -50,15 +54,21 @@ export const ANavbar = ({ setSidebarOpen }: ANavbarPropType) => {
         </div>
         <Spacer />
         <div className="hidden sm:flex items-center sm:mt-0 mt-2">
+          <AOutlineButton disabled className="mr-2 cursor-default">
+            <div>{selectedChain}</div>
+          </AOutlineButton>
           <ConnectButton half />
           <ShoppingBagButton />
         </div>
         <div
           className={twMerge(
-            'p-5  sm:hidden items-center justify-center bg-linear-back-dark fixed z-50 bottom-0 w-full left-0',
+            'p-5 sm:hidden items-center justify-center bg-linear-back-dark fixed z-50 bottom-0 w-full left-0',
             showCart ? 'hidden' : 'flex'
           )}
         >
+          <AOutlineButton disabled className="mr-2 cursor-default">
+            <div>{selectedChain}</div>
+          </AOutlineButton>
           <ConnectButton half fullWidth />
           <ShoppingBagButton />
         </div>

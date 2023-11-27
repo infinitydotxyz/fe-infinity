@@ -23,7 +23,7 @@ import { useNetwork, useSwitchNetwork } from 'wagmi';
 const homeFeaturesList: { id: number; feature: string }[] = [
   { id: 1, feature: 'Listings from over 100 NFT marketplaces for instant buys.' },
   { id: 2, feature: 'Bids from over 100 marketplaces for instant sells.' },
-  { id: 3, feature: 'Zero fees & royalties for token holders of $XFL, $BLUR, $LOOKS, $X2Y2, $SUDO.' },
+  { id: 3, feature: 'Zero fees & royalties' },
   { id: 4, feature: 'Gas free batch listings, bids & cancellations.' },
   { id: 5, feature: 'Built on battle tested infra & audited contracts.' },
   { id: 6, feature: 'Mega gas optimized.' }
