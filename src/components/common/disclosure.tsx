@@ -25,7 +25,7 @@ export function ADisclosure({ data }: Props) {
                   className={twMerge(
                     secondaryBgColor,
                     hoverColor,
-                    'flex w-full justify-between p-2 text-xs border-b-[1px]',
+                    'flex w-full justify-between p-2 text-xs border-b',
                     borderColor
                   )}
                 >

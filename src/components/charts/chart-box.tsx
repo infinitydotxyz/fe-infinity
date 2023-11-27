@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { borderColor } from 'src/utils/ui-constants';
+import { containerBGColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { chartHeight } from './chart-utils';
 
@@ -18,7 +18,7 @@ interface ChartBoxProps {
 export const ChartBox = ({ children, className = '', noCSSStyles: noStyle = false }: ChartBoxProps) => {
   return (
     <div
-      className={twMerge('rounded-lg px-6 pt-5 pb-12 border', borderColor, className)}
+      className={twMerge('rounded-10 px-6 pt-5 pb-12', containerBGColor, className)}
       style={noStyle ? undefined : { height: chartHeight }}
     >
       {children}

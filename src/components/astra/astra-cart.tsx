@@ -21,12 +21,12 @@ import {
 } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartItem, CartType, useCartContext } from 'src/utils/context/CartContext';
-import { fetchMinXflBalanceForZeroFee } from 'src/utils/orderbook-utils';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
 import {
   borderColor,
   brandTextColor,
   extraSmallIconButtonStyle,
+  iconButtonStyle,
   inverseBgColor,
   inverseTextColor,
   secondaryBgColor,
@@ -143,55 +143,55 @@ export const AstraCart = ({
     }
   };
 
-  const xflBalanceObj = useBalance({
-    address: user,
-    token: FLOW_TOKEN.address as `0x${string}`,
-    watch: false,
-    cacheTime: 5_000,
-    chainId: 1
-  });
-  const xflBalance = parseFloat(xflBalanceObj?.data?.formatted ?? '0');
+  // const xflBalanceObj = useBalance({
+  //   address: user,
+  //   token: FLOW_TOKEN.address as `0x${string}`,
+  //   watch: false,
+  //   cacheTime: 5_000,
+  //   chainId: 1
+  // });
+  // const xflBalance = parseFloat(xflBalanceObj?.data?.formatted ?? '0');
 
-  const blurBalanceObj = useBalance({
-    address: user,
-    token: '0x5283d291dbcf85356a21ba090e6db59121208b44' as `0x${string}`,
-    watch: false,
-    cacheTime: 5_000,
-    chainId: 1
-  });
-  const blurBalance = parseFloat(blurBalanceObj?.data?.formatted ?? '0');
+  // const blurBalanceObj = useBalance({
+  //   address: user,
+  //   token: '0x5283d291dbcf85356a21ba090e6db59121208b44' as `0x${string}`,
+  //   watch: false,
+  //   cacheTime: 5_000,
+  //   chainId: 1
+  // });
+  // const blurBalance = parseFloat(blurBalanceObj?.data?.formatted ?? '0');
 
-  const looksBalanceObj = useBalance({
-    address: user,
-    token: '0xf4d2888d29d722226fafa5d9b24f9164c092421e' as `0x${string}`,
-    watch: false,
-    cacheTime: 5_000,
-    chainId: 1
-  });
-  const looksBalance = parseFloat(looksBalanceObj?.data?.formatted ?? '0');
+  // const looksBalanceObj = useBalance({
+  //   address: user,
+  //   token: '0xf4d2888d29d722226fafa5d9b24f9164c092421e' as `0x${string}`,
+  //   watch: false,
+  //   cacheTime: 5_000,
+  //   chainId: 1
+  // });
+  // const looksBalance = parseFloat(looksBalanceObj?.data?.formatted ?? '0');
 
-  const x2y2BalanceObj = useBalance({
-    address: user,
-    token: '0x1e4ede388cbc9f4b5c79681b7f94d36a11abebc9' as `0x${string}`,
-    watch: false,
-    cacheTime: 5_000,
-    chainId: 1
-  });
-  const x2y2Balance = parseFloat(x2y2BalanceObj?.data?.formatted ?? '0');
+  // const x2y2BalanceObj = useBalance({
+  //   address: user,
+  //   token: '0x1e4ede388cbc9f4b5c79681b7f94d36a11abebc9' as `0x${string}`,
+  //   watch: false,
+  //   cacheTime: 5_000,
+  //   chainId: 1
+  // });
+  // const x2y2Balance = parseFloat(x2y2BalanceObj?.data?.formatted ?? '0');
 
-  const sudoBalanceObj = useBalance({
-    address: user,
-    token: '0x3446dd70b2d52a6bf4a5a192d9b0a161295ab7f9' as `0x${string}`,
-    watch: false,
-    cacheTime: 5_000,
-    chainId: 1
-  });
-  const sudoBalance = parseFloat(sudoBalanceObj?.data?.formatted ?? '0');
+  // const sudoBalanceObj = useBalance({
+  //   address: user,
+  //   token: '0x3446dd70b2d52a6bf4a5a192d9b0a161295ab7f9' as `0x${string}`,
+  //   watch: false,
+  //   cacheTime: 5_000,
+  //   chainId: 1
+  // });
+  // const sudoBalance = parseFloat(sudoBalanceObj?.data?.formatted ?? '0');
 
-  const [minBalForFeeWaiverAndBoost, setMinBalForFeeWaiverAndBoost] = useState(0);
-  const [holderOfToken, setHolderOfToken] = useState('');
+  const [minBalForFeeWaiverAndBoost] = useState(0);
+  const [holderOfToken] = useState('');
   // const [xflStakeBoost, setXflStakeBoost] = useState('0x');
-  const [areFeesWaived, setAreFeesWaived] = useState(false);
+  const [areFeesWaived] = useState(true);
 
   const [tokenMap, setTokenMap] = useState<Map<string, ERC721TokenCartItem[]>>(new Map());
   const [collMap, setCollMap] = useState<Map<string, ERC721CollectionCartItem[]>>(new Map());
@@ -212,39 +212,39 @@ export const AstraCart = ({
     setNetProceeds(newNetProceeds);
   }, [cartTotal]);
 
-  useEffect(() => {
-    getMinBalanceInfo();
-  });
+  // useEffect(() => {
+  //   getMinBalanceInfo();
+  // });
 
-  const getMinBalanceInfo = async () => {
-    const minBal = minBalForFeeWaiverAndBoost === 0 ? await fetchMinXflBalanceForZeroFee() : minBalForFeeWaiverAndBoost;
-    setMinBalForFeeWaiverAndBoost(minBal);
+  // const getMinBalanceInfo = async () => {
+  //   const minBal = minBalForFeeWaiverAndBoost === 0 ? await fetchMinXflBalanceForZeroFee() : minBalForFeeWaiverAndBoost;
+  //   setMinBalForFeeWaiverAndBoost(minBal);
 
-    // const boost = xflStaked >= minStakeAmount ? 2 : 0;
-    // setXflStakeBoost(boost + 'x');
+  //   // const boost = xflStaked >= minStakeAmount ? 2 : 0;
+  //   // setXflStakeBoost(boost + 'x');
 
-    const feesWaived =
-      xflBalance >= minBal ||
-      blurBalance >= minBal ||
-      looksBalance >= minBal ||
-      x2y2Balance >= minBal ||
-      sudoBalance >= minBal;
-    setAreFeesWaived(feesWaived);
+  //   const feesWaived =
+  //     xflBalance >= minBal ||
+  //     blurBalance >= minBal ||
+  //     looksBalance >= minBal ||
+  //     x2y2Balance >= minBal ||
+  //     sudoBalance >= minBal;
+  //   setAreFeesWaived(feesWaived);
 
-    const holder =
-      xflBalance >= minBal
-        ? FLOW_TOKEN.symbol
-        : blurBalance >= minBal
-        ? 'BLUR'
-        : looksBalance >= minBal
-        ? 'LOOKS'
-        : x2y2Balance >= minBal
-        ? 'X2Y2'
-        : sudoBalance >= minBal
-        ? 'SUDO'
-        : '';
-    setHolderOfToken(holder);
-  };
+  //   const holder =
+  //     xflBalance >= minBal
+  //       ? FLOW_TOKEN.symbol
+  //       : blurBalance >= minBal
+  //       ? 'BLUR'
+  //       : looksBalance >= minBal
+  //       ? 'LOOKS'
+  //       : x2y2Balance >= minBal
+  //       ? 'X2Y2'
+  //       : sudoBalance >= minBal
+  //       ? 'SUDO'
+  //       : '';
+  //   setHolderOfToken(holder);
+  // };
 
   const currency = WNative[parseInt(selectedChain, 10)];
   if (!currency) {
@@ -304,8 +304,8 @@ export const AstraCart = ({
         divList.push(
           <div
             className={twMerge(
-              'w-full font-bold font-heading truncate',
-              cartType === CartType.TokenList ? 'min-h-[25px]' : 'min-h-[25px]'
+              'w-full font-bold truncate',
+              cartType === CartType.TokenList ? 'min-h-6.25' : 'min-h-6.25'
             )}
             key={`header-${first.id}`}
           >
@@ -330,14 +330,12 @@ export const AstraCart = ({
             />
           );
         }
-        divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
+        divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b', borderColor)} />);
       });
 
       // min-w-0 is important otherwise text doesn't truncate
       cartItemList = (
-        <div className={twMerge(textColor, 'min-w-0 flex px-4 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
-          {divList}
-        </div>
+        <div className={twMerge(textColor, 'min-w-0 flex px-4 flex-col space-y-2 items-start flex-1')}>{divList}</div>
       );
     } else if (cartType === CartType.CollectionBid && collMap.size > 0) {
       const divList: ReactNode[] = [];
@@ -357,12 +355,12 @@ export const AstraCart = ({
           );
         }
 
-        divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
+        divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b', borderColor)} />);
       });
 
       // min-w-0 is important otherwise text doesn't truncate
       cartItemList = (
-        <div className={twMerge(textColor, 'min-w-0 flex px-4 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
+        <div className={twMerge(textColor, 'min-w-0 flex px-4 flex-col space-y-2 items-start flex-1 h-full')}>
           {divList}
         </div>
       );
@@ -375,7 +373,7 @@ export const AstraCart = ({
         const firstCollName = isCollBid ? first.criteria?.data?.collection?.name : first.collectionName;
 
         divList.push(
-          <div className="w-full rounded-md truncate font-bold font-heading min-h-[25px]" key={`header-${orderId}`}>
+          <div className="w-full rounded-md truncate font-bold min-h-6.25" key={`header-${orderId}`}>
             {firstCollName}
           </div>
         );
@@ -390,19 +388,19 @@ export const AstraCart = ({
           );
         }
 
-        divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
+        divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b', borderColor)} />);
       });
 
       // min-w-0 is important otherwise text doesn't truncate
       cartItemList = (
-        <div className={twMerge(textColor, 'min-w-0 flex px-4 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
+        <div className={twMerge(textColor, 'min-w-0 flex px-4 flex-col space-y-2 items-start flex-1 h-full')}>
           {divList}
         </div>
       );
     } else {
       cartItemList = (
         <div key={Math.random()} className={twMerge(textColor, 'flex items-center justify-center uppercase flex-1')}>
-          <div className={twMerge('font-medium font-heading', secondaryTextColor)}>Cart empty</div>
+          <div className={twMerge('font-medium font-body', secondaryTextColor)}>Cart empty</div>
         </div>
       );
     }
@@ -512,11 +510,39 @@ export const AstraCart = ({
     setCartContent(cartItemList);
   }, [cartType, cartItems, tokenMap.size, collMap.size, orderMap.size]);
 
-  return (
-    <div className={twMerge('h-full flex flex-col border-l-[1px]', borderColor)}>
-      <div className="m-4 flex items-center">
-        <div className={twMerge(textColor, 'md:text-3xl lg:text-2xl font-bold font-heading mr-3')}>{cartTitle}</div>
+  const [isFixed, setIsFixed] = useState(false);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY >= 50) {
+        setIsFixed(true);
+      } else {
+        setIsFixed(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const { setShowCart } = useAppContext();
+
+  return (
+    <div
+      className={twMerge(
+        'w-fit flex flex-col  min-h-screen h-full border-l overflow-auto bg-gray-100 dark:bg-dark-bg',
+        borderColor,
+        isFixed ? 'top-0 fixed' : 'fixed md:pb-20 md:top-18.75'
+      )}
+      style={{
+        width: 'inherit'
+      }}
+    >
+      <div className="m-4 flex items-center justify-between">
+        <div className={twMerge(textColor, 'md:text-3xl lg:text-2xl text-xl font-bold font-body mr-3')}>
+          {cartTitle}
+        </div>
         <div className="flex items-center">
           {currentCartItems.length > 0 && (
             <>
@@ -524,7 +550,7 @@ export const AstraCart = ({
                 {currentCartItems.length}
               </div>
               <div
-                className={twMerge('ml-2 text-sm cursor-pointer', brandTextColor)}
+                className={twMerge('ml-2 text-sm cursor-pointer text-amber-700')}
                 onClick={() => {
                   if (
                     cartType === CartType.Send ||
@@ -548,6 +574,16 @@ export const AstraCart = ({
             </>
           )}
         </div>
+        <MdClose
+          className={twMerge(
+            iconButtonStyle,
+            'dark:text-dark-body text-light-body cursor-pointer ',
+            isFixed ? 'block ' : 'md:hidden'
+          )}
+          onClick={() => {
+            setShowCart(false);
+          }}
+        />
       </div>
 
       {cartType === CartType.Send && tokenMap.size > 0 && (
@@ -561,12 +597,12 @@ export const AstraCart = ({
         </div>
       )}
 
-      {cartContent}
+      <div className="overflow-auto no-scrollbar flex-1">{cartContent}</div>
 
       {cartType !== CartType.Send && cartType !== CartType.Cancel && (
         <div className={twMerge('m-4 flex flex-col text-sm space-y-2 rounded-lg p-3', secondaryBgColor)}>
           <ToggleTab
-            className="font-heading mb-2"
+            className="mb-2"
             options={cartTabOptions}
             defaultOption={cartTabOptions[0]}
             onChange={onCartTabOptionsChange}
@@ -574,11 +610,11 @@ export const AstraCart = ({
 
           {selectedTab === 'Totals' && (
             <div className="space-y-3 px-1">
-              <div className={twMerge('border-b-[1px] pb-2 space-y-2', borderColor)}>
+              <div className={twMerge('border-b pb-2 space-y-2', borderColor)}>
                 <div className={twMerge('flex justify-between')}>
                   <div className={twMerge(secondaryTextColor, 'font-medium')}>Cart total: </div>
-                  <div className="font-heading">
-                    {nFormatter(Number(cartTotal))} {EthSymbol}
+                  <div className="font-supply text-amber-700">
+                    {nFormatter(Number(cartTotal))} <span className="font-body">{EthSymbol}</span>
                   </div>
                 </div>
 
@@ -586,42 +622,28 @@ export const AstraCart = ({
                   <div className="text-xs">
                     <div className={twMerge('flex justify-between')}>
                       <div className={twMerge(secondaryTextColor)}>Platform fees: </div>
-                      <div className="font-heading">
-                        {nFormatter(Number(fees))} {EthSymbol}
+                      <div className="text-amber-700">
+                        <span className="font-supply">{nFormatter(Number(fees))}</span> {EthSymbol}
                       </div>
                     </div>
 
                     <div className={twMerge('flex justify-between')}>
                       <div className={twMerge(secondaryTextColor)}>Royalties: </div>
-                      <div className="font-heading">
-                        {nFormatter(Number(royalties))} {EthSymbol}
+                      <div className="text-amber-700">
+                        <span className="font-supply">{nFormatter(Number(royalties))}</span> {EthSymbol}
                       </div>
                     </div>
 
                     <div className={twMerge('flex justify-between text-sm mt-2')}>
                       <div className={twMerge(secondaryTextColor, 'font-medium')}>Net proceeds: </div>
-                      <div className="font-heading">
-                        {nFormatter(Number(netProceeds))} {EthSymbol}
+                      <div className="text-amber-700">
+                        <span className="font-supply">{nFormatter(Number(netProceeds))}</span> {EthSymbol}
                       </div>
                     </div>
 
                     <div className={twMerge('mt-4 rounded-md space-y-1 text-xs')}>
-                      {/* <div className={twMerge('flex justify-between')}>
-                        <div className={twMerge(secondaryTextColor, 'font-medium')}>Staked ${FLOW_TOKEN.symbol}: </div>
-                        <div className="font-heading">{nFormatter(Number(xflStaked))}</div>
-                      </div> */}
-
-                      {/* <div className={twMerge('flex justify-between')}>
-                        <div className={twMerge(secondaryTextColor, 'font-medium')}>Reward boost: </div>
-                        <div className="font-heading">{xflStakeBoost}</div>
-                      </div> */}
-
                       <div className={twMerge('flex')}>
                         {areFeesWaived ? (
-                          // <div className={twMerge(secondaryTextColor, 'mt-2')}>
-                          //   You are maximizing your net proceeds and will earn {xflStakeBoost} rewards. Buyer of your
-                          //   listing will save upto 40% on gas fees.
-                          // </div>
                           <div className={twMerge(secondaryTextColor, 'mt-2')}>
                             You are maximizing your net proceeds for holding {nFormatter(minBalForFeeWaiverAndBoost)} $
                             {holderOfToken} tokens. Buyers of your{' '}
@@ -637,7 +659,7 @@ export const AstraCart = ({
                               {currentCartItems.length > 1 ? ' listings ' : ' listing '} will also be shown first,
                               before other similarly priced listings.
                               <span
-                                className={twMerge('underline cursor-pointer ml-[2px]', brandTextColor)}
+                                className={twMerge('underline cursor-pointer ml-0.5', brandTextColor)}
                                 onClick={() => {
                                   setTokenInfo(FLOW_TOKEN.symbol);
                                   setShowBuyTokensModal(true);
@@ -664,8 +686,8 @@ export const AstraCart = ({
                       {isEthBalanceLoading ? (
                         <span>Loading...</span>
                       ) : (
-                        <span className="font-heading">
-                          {nFormatter(Number(ethBalance?.formatted))} {EthSymbol}
+                        <span className="text-amber-700">
+                          <span className="font-supply">{nFormatter(Number(ethBalance?.formatted))}</span> {EthSymbol}
                         </span>
                       )}
                     </div>
@@ -678,12 +700,13 @@ export const AstraCart = ({
                           {isLoading ? (
                             <span>Loading...</span>
                           ) : (
-                            <span className="font-heading">
-                              {nFormatter(Number(wethBalance?.formatted))} {EthSymbol}
+                            <span className="text-amber-700">
+                              <span className="font-supply">{nFormatter(Number(wethBalance?.formatted))}</span>{' '}
+                              {EthSymbol}
                             </span>
                           )}
                           <AButton
-                            className={twMerge('rounded-md text-xs ml-2', secondaryBtnBgColorText)}
+                            className={twMerge('rounded-md text-xs ml-2 !text-yellow-900', secondaryBtnBgColorText)}
                             onClick={() => {
                               setTokenInfo('WETH');
                               setShowBuyTokensModal(true);
@@ -723,7 +746,8 @@ export const AstraCart = ({
 
       <div className="m-6 flex flex-col">
         <AButton
-          className="p-3 z-30"
+          className="p-3 mb-5 z-30"
+          customDisabledClassName="opacity-50 pointer-events-none"
           primary={true}
           disabled={
             isCheckingOut ||
@@ -778,7 +802,7 @@ const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
     <div key={getTokenCartItemKey(token)} className="flex items-center w-full">
       <div className="relative">
         <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={token.image} />
-        <div className={twMerge('absolute top-[-5px] right-[-5px] rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
+        <div className={twMerge('absolute -top-1.25 -right-1.25 rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
           <MdClose
             className={twMerge(extraSmallIconButtonStyle, inverseTextColor)}
             onClick={() => {
@@ -830,7 +854,7 @@ const AstraCollectionCartItem = ({ collection, onRemove, updateCartTotal }: Prop
     <div key={getCollectionKeyId(collection)} className="flex items-center w-full mt-3">
       <div className="relative">
         <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={collection.metadata.profileImage} />
-        <div className={twMerge('absolute top-[-5px] right-[-5px] rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
+        <div className={twMerge('absolute -top-1.25 -right-1.25 rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
           <MdClose
             className={twMerge(extraSmallIconButtonStyle, inverseTextColor)}
             onClick={() => {
@@ -841,7 +865,7 @@ const AstraCollectionCartItem = ({ collection, onRemove, updateCartTotal }: Prop
       </div>
 
       <div className="ml-4 flex w-full flex-col space-y-2">
-        <div className={twMerge('font-bold font-heading text-sm truncate')}>{collection.metadata.name}</div>
+        <div className={twMerge('font-bold  text-sm truncate')}>{collection.metadata.name}</div>
         <div className="flex flex-row items-center">
           <PriceAndExpiry
             collection={collection}
@@ -879,7 +903,7 @@ const AstraCancelCartItem = ({ order, onTokenRemove, onCollectionRemove }: Props
     <div key={order.id} className="flex items-center w-full">
       <div className="relative">
         <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={image} />
-        <div className={twMerge('absolute top-[-5px] right-[-5px] rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
+        <div className={twMerge('absolute -top-1.25 -right-1.25 rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
           <MdClose
             className={twMerge(extraSmallIconButtonStyle, inverseTextColor)}
             onClick={() => {
@@ -891,7 +915,7 @@ const AstraCancelCartItem = ({ order, onTokenRemove, onCollectionRemove }: Props
         </div>
       </div>
 
-      <div className="ml-3 flex flex-col w-full text-sm font-bold font-heading">
+      <div className="ml-3 flex flex-col w-full text-sm font-bold">
         <div>{ellipsisString(tokenId)}</div>
         <PriceAndExpiry
           token={isCollBid ? undefined : (order as ERC721TokenCartItem)}
@@ -936,6 +960,16 @@ const PriceAndExpiry = ({
 
   const priceEditable = !currentPrice || editing;
 
+  const [showError, setError] = useState(false);
+  const checkValidation = (value: string) => {
+    if (pattern.test(value.toString())) {
+      setError(false);
+    } else {
+      setError(true);
+    }
+  };
+
+  const pattern = /^-?\d+(\.\d+)?$/;
   return (
     <div className={twMerge('flex flex-row space-x-4 w-full', className)}>
       {!priceEditable ? (
@@ -1025,44 +1059,58 @@ const PriceAndExpiry = ({
           )}
 
           <div className={twMerge('flex flex-col items-end')}>
-            <div className="flex flex-row">
-              <div className={twMerge('')}>{nFormatter(Number(price), 2)}</div>
+            <div className="flex flex-row text-amber-700">
+              <div className={twMerge('font-supply')}>{nFormatter(Number(price), 2)}</div>
               <div className={twMerge('ml-1')}>{EthSymbol}</div>
             </div>
             {!hideExpiry && <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>{expiry}</div>}
           </div>
         </div>
       ) : (
-        <TextInputBox
-          inputClassName="text-sm text-right mr-2 font-body"
-          className="p-[6.5px]"
-          autoFocus={true}
-          addEthSymbol={true}
-          type="number"
-          value={price}
-          placeholder="Price"
-          onChange={(value) => {
-            let parsedValue = parseFloat(value);
-            if (parsedValue < 0) {
-              parsedValue = 0;
-              setPrice(String(parsedValue));
-            } else {
-              setPrice(String(value));
-            }
-            // onEditComplete?.(value);
-            if (token) {
-              token.orderPriceEth = parsedValue;
-            } else if (collection) {
-              collection.offerPriceEth = parsedValue;
-            }
-          }}
-          onEnter={() => {
-            onEditComplete?.(price);
-          }}
-          onMouseLeave={() => {
-            onEditComplete?.(price);
-          }}
-        />
+        <div className="flex flex-col">
+          <TextInputBox
+            inputClassName="text-sm text-right mr-2 font-body relative"
+            className="p-1.625"
+            autoFocus={true}
+            addEthSymbol={true}
+            type="number"
+            value={price}
+            placeholder="Price"
+            onChange={(value) => {
+              checkValidation(value);
+
+              let parsedValue = parseFloat(value);
+
+              if (parsedValue < 0) {
+                parsedValue = 0;
+                setPrice(String(parsedValue));
+              } else {
+                setPrice(String(value));
+              }
+              // onEditComplete?.(value);
+              if (token) {
+                token.orderPriceEth = parsedValue;
+              } else if (collection) {
+                collection.offerPriceEth = parsedValue;
+              }
+            }}
+            onEnter={() => {
+              if (!showError) {
+                onEditComplete?.(price);
+              }
+            }}
+            onBlur={() => {
+              if (!showError) {
+                onEditComplete?.(price);
+              }
+            }}
+
+            // onMouseLeave={() => {
+            //   onEditComplete?.(price);
+            // }}
+          />
+          {showError && <span className="text-red-600  w-full whitespace-nowrap">Please Enter Number</span>}
+        </div>
       )}
     </div>
   );

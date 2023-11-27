@@ -1,7 +1,7 @@
 import { CollectionOrder, CreationFlow, TokenStandard } from '@infinityxyz/lib-frontend/types/core';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useTheme } from 'next-themes';
-import { AButton } from 'src/components/astra/astra-button';
+import { ARoundOutlineButton } from 'src/components/astra/astra-button';
 import { ButtonProps, toastError } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
@@ -15,9 +15,16 @@ type Props = {
   outlineButtons?: boolean;
   collectionAddress?: string;
   collectionName?: string;
+  className?: string;
 };
 
-export const OrderbookRowButton = ({ order, outlineButtons = false, collectionAddress, collectionName }: Props) => {
+export const OrderbookRowButton = ({
+  order,
+  outlineButtons = false,
+  collectionAddress,
+  collectionName,
+  className
+}: Props) => {
   const { address: user, isConnected } = useAccount();
   const { chain } = useNetwork();
   const { selectedChain } = useAppContext();
@@ -126,22 +133,22 @@ export const OrderbookRowButton = ({ order, outlineButtons = false, collectionAd
   const actionButton = () => {
     if (isOwner) {
       return (
-        <AButton {...buttonProps} primary onClick={() => onClickEdit(order)}>
+        <ARoundOutlineButton {...buttonProps} className={className} onClick={() => onClickEdit(order)}>
           Edit
-        </AButton>
+        </ARoundOutlineButton>
       );
     }
     if (order.isSellOrder && !isOwner) {
       return (
-        <AButton {...buttonProps} primary onClick={() => onClickBuySell()}>
+        <ARoundOutlineButton {...buttonProps} className={className} onClick={() => onClickBuySell()}>
           {isNFTSelected(token) ? 'Remove' : 'Add to Cart'}
-        </AButton>
+        </ARoundOutlineButton>
       );
     } else if (!order.isSellOrder && !isOwner) {
       return (
-        <AButton {...buttonProps} primary onClick={() => onClickBidHigher(order)}>
+        <ARoundOutlineButton {...buttonProps} className={className} onClick={() => onClickBidHigher(order)}>
           {isCollSelected(collection) ? 'Remove' : 'Bid Higher'}
-        </AButton>
+        </ARoundOutlineButton>
       );
     } else {
       return null;

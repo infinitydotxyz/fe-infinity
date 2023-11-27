@@ -6,14 +6,13 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { SelectedCollectionType, useProfileContext } from 'src/utils/context/ProfileContext';
 import { TokensFilter } from 'src/utils/types';
-import { borderColor, hoverColorBrandText, primaryBtnBgColorText, secondaryTextColor } from 'src/utils/ui-constants';
+import { borderColor, hoverColorBrandText } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { AOutlineButton } from '../astra/astra-button';
 import { BouncingLogo, CenteredContent, EZImage, EthSymbol, ScrollLoader } from '../common';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
 import { StatusIcon } from '../common/status-icon';
 import { ProfileManualOrderListItem } from './profile-manual-order-list-item';
-import useScreenSize from 'src/hooks/useScreenSize';
+import TabSelector from '../common/TabSelecter';
 
 interface Props {
   userAddress: string;
@@ -28,8 +27,7 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
   const { selectedCollection, setSelectedCollection } = useProfileContext();
   const { selectedProfileTab } = useAppContext();
   const { setCartType } = useCartContext();
-  const { isDesktop } = useScreenSize();
-
+  const [orderType, setOrderType] = useState('Bids');
   const [selectedOrderType, setSelectedOrderType] = useState<'listings' | 'bids-placed' | 'offers-received' | ''>(
     DEFAULT_ORDER_TYPE_FILTER
   );
@@ -53,7 +51,7 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
     setSelectedCollection(undefined);
   };
 
-  const onClickOrderType = (newType: 'listings' | 'bids-placed' | 'offers-received' | '') => {
+  const onClickOrderType = (newType: 'listings' | 'bids-placed' | 'offers-received') => {
     setSelectedOrderType(newType);
     if (newType === 'listings') {
       setCartType(CartType.TokenList);
@@ -87,13 +85,30 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
       handleCollectionSearchClear();
     }
   }, [selectedCollection, selectedProfileTab]);
-
+  const orderTypes: {
+    [key: string]: 'offers-received' | 'listings' | 'bids-placed';
+  } = {
+    Offers: 'offers-received',
+    Listings: 'listings',
+    Bids: 'bids-placed'
+  };
   return (
-    <div className={twMerge('min-h-[50vh] pb-20', className)}>
-      <div className={twMerge('flex py-2 md:px-4')}>
-        <div className="flex flex-col space-y-2 w-full">
+    <div className={twMerge('min-h-50vh pb-20', className)}>
+      <div className={twMerge('flex py-3.75 md:py-5')}>
+        <div className="flex flex-col space-y-2.5 w-full">
           <div className="md:flex justify-between">
-            <div className="flex">
+            <div className="md:hidden block">
+              <TabSelector
+                value={orderType}
+                className="mb-2.5 mt-0"
+                setValue={(e) => {
+                  setOrderType(e);
+                  onClickOrderType(orderTypes[e]);
+                }}
+                tabItems={Object.keys(orderTypes)}
+              />
+            </div>
+            <div className="flex items-center flex-1 justify-between md:justify-start gap-5 md:gap-2.5 mr-0 md:mr-2.5">
               <CollectionSearchInput
                 expanded
                 orderSearch
@@ -105,55 +120,35 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
                   };
                   handleCollectionSearchResult(selectedColl);
                 }}
+                placeHolder="Search by collection"
               />
+              <StatusIcon status="pending-indefinite" label="Live" iconClassName="mt-0.75" />
             </div>
 
-            <div className="flex space-x-2 md:mt-0 mt-2">
-              <div className="flex text-sm items-cente md:px-4">
-                <StatusIcon status="pending-indefinite" label={isDesktop ? 'Live' : ''} />
+            <div className="flex justify-center space-x-2">
+              {selectedOrderType === 'offers-received' && (
+                <div className={twMerge('flex items-center w-fit md:mt-0 mt-2.5')}>
+                  <div className="flex items-center space-x-2">
+                    <div className="text-sm font-medium">
+                      <span className="text-amber-700">{numTokensWithOffers}</span> offers totaling to
+                      <span className="text-amber-700 font-normal">
+                        <span className="mx-0.5">{EthSymbol}</span>
+                        {totalOffersValue}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div className="hidden md:block">
+                <TabSelector
+                  value={orderType}
+                  setValue={(e) => {
+                    setOrderType(e);
+                    onClickOrderType(orderTypes[e]);
+                  }}
+                  tabItems={Object.keys(orderTypes)}
+                />
               </div>
-
-              <AOutlineButton
-                className={twMerge(
-                  'font-medium text-sm px-4',
-                  selectedOrderType === 'bids-placed'
-                    ? primaryBtnBgColorText
-                    : twMerge(secondaryTextColor, hoverColorBrandText)
-                )}
-                onClick={() => {
-                  onClickOrderType('bids-placed');
-                }}
-              >
-                Bids
-              </AOutlineButton>
-
-              <AOutlineButton
-                className={twMerge(
-                  'font-medium text-sm px-4',
-                  selectedOrderType === 'listings'
-                    ? primaryBtnBgColorText
-                    : twMerge(secondaryTextColor, hoverColorBrandText)
-                )}
-                onClick={() => {
-                  onClickOrderType('listings');
-                }}
-              >
-                Listings
-              </AOutlineButton>
-
-              <AOutlineButton
-                className={twMerge(
-                  'font-medium text-sm px-4',
-                  selectedOrderType === 'offers-received'
-                    ? primaryBtnBgColorText
-                    : twMerge(secondaryTextColor, hoverColorBrandText)
-                )}
-                onClick={() => {
-                  onClickOrderType('offers-received');
-                }}
-              >
-                Offers
-              </AOutlineButton>
 
               {/* <AOutlineButton
                 className={twMerge(
@@ -201,19 +196,6 @@ export const ProfileOrderList = ({ userAddress, isOwner, className = '' }: Props
               </div>
             </div>
           ) : null}
-
-          {selectedOrderType === 'offers-received' && (
-            <div className={twMerge('flex items-center w-fit')}>
-              <div className="flex items-center space-x-2">
-                <div className={twMerge('text-sm rounded-lg border p-2', borderColor)}>
-                  # Tokens with offers: {numTokensWithOffers}
-                </div>
-                <div className={twMerge('text-sm rounded-lg border p-2', borderColor)}>
-                  Total value of offers: {totalOffersValue} {EthSymbol}
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 

@@ -3,12 +3,11 @@ import { useEffect, useState } from 'react';
 import { BlueCheck, Checkbox, EZImage, ScrollLoader, Spacer } from 'src/components/common';
 import { GridCard } from 'src/components/common/card';
 import { BasicTokenInfo, ERC721TokenCartItem } from 'src/utils/types';
-import { hoverColor, textColor } from 'src/utils/ui-constants';
+import { hoverColor, textColor, tokenCardGridCols } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AOutlineButton } from '../astra-button';
 import { ErrorOrLoading } from '../error-or-loading';
 import { TokenCardModal } from './token-card-modal';
-
 interface Props {
   listMode: boolean;
   className?: string;
@@ -22,6 +21,7 @@ interface Props {
   isLoading?: boolean;
   collectionFloorPrice?: string | number | null | undefined;
   collectionCreator?: string;
+  avatarUrl?: string;
 }
 
 export const TokenGrid = ({
@@ -36,7 +36,8 @@ export const TokenGrid = ({
   isError,
   isLoading,
   collectionFloorPrice,
-  collectionCreator
+  collectionCreator,
+  avatarUrl
 }: Props) => {
   let contents;
 
@@ -62,17 +63,13 @@ export const TokenGrid = ({
               );
             })}
           </div>
-
           {hasNextPage && onFetchMore && <ScrollLoader onFetchMore={onFetchMore} />}
         </>
       );
     } else {
       contents = (
         <>
-          <div
-            className="md:pb-20 pb-5 grid grid-flow-row-dense gap-2 3xl:grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))]
-                          sm:grid-cols-[repeat(auto-fill,_minmax(167px,_1fr))] grid-cols-[repeat(auto-fit,_minmax(100px,_1fr))]"
-          >
+          <div className={twMerge('md:pb-20 pb-5', tokenCardGridCols)}>
             {cardData.map((data) => {
               return (
                 <GridCard
@@ -85,6 +82,7 @@ export const TokenGrid = ({
                   onClick={(data) => {
                     onClick?.(data);
                   }}
+                  avatarUrl={avatarUrl}
                 />
               );
             })}
@@ -134,7 +132,7 @@ const GridItem = ({ data, onClick, selected, isSelectable, collectionFloorPrice 
     <div
       className={twMerge(
         hoverColor,
-        'w-full relative flex flex-col  px-3 py-2 transition-all duration-200',
+        'w-full relative flex flex-col px-3 py-2 transition-all duration-200',
         notSelectable ? 'animate-wiggle' : ''
       )}
       onClick={() => {
@@ -146,7 +144,7 @@ const GridItem = ({ data, onClick, selected, isSelectable, collectionFloorPrice 
       }}
       onAnimationEnd={() => setNotSelectable(false)}
     >
-      <div className="h-full flex items-center  text-2xl lg:text-sm">
+      <div className="h-full flex items-center text-2xl lg:text-sm">
         <Checkbox
           label=""
           checked={selected}

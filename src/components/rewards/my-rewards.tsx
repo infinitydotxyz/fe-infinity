@@ -14,8 +14,6 @@ import { twMerge } from 'tailwind-merge';
 import { useAccount } from 'wagmi';
 import { AButton } from '../astra/astra-button';
 import { useChain } from 'src/hooks/useChain';
-import { PixlRewards } from './pixl-rewards';
-import { TokenBalances } from './token-balances';
 import { RewardsSection } from './rewards-section';
 
 const MyRewards = () => {
@@ -65,10 +63,10 @@ const MyRewards = () => {
   }
 
   return (
-    <div className="space-y-10 mt-6 pb-6 mb-16 mr-4">
-      <PixlRewards isDesktop={isDesktop} />
+    <div className="space-y-5 mt-5 pb-6 mb-16 px-5">
+      {/* <PixlRewards /> */}
 
-      {address && <TokenBalances isDesktop={isDesktop} address={address} chainId="1" />}
+      {/* {address && <TokenBalances isDesktop={isDesktop} address={address} chainId="1" />} */}
 
       {cumulativeAmount > 0 && (
         <RewardsSection

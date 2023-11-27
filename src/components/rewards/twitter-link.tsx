@@ -1,4 +1,4 @@
-import { Button } from '../common';
+import { AButton } from '../astra/astra-button';
 
 export const TwitterLink = ({
   tweetText,
@@ -17,5 +17,9 @@ export const TwitterLink = ({
     window.open(twitterUrl, '_blank', 'noopener,noreferrer');
   };
 
-  return <Button onClick={handleButtonClick}>{linkText}</Button>;
+  return (
+    <AButton primary className={'text-base border-0 rounded-4 mt-2 font-semibold'} onClick={handleButtonClick}>
+      {linkText}
+    </AButton>
+  );
 };

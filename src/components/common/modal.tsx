@@ -15,6 +15,7 @@ interface Props {
   showCloseIcon?: boolean;
 
   children?: ReactNode;
+  modalButton?: ReactNode;
   // you can repurpose the ok/cancel buttons
   // pass in '' to hide button
   okButton?: string;
@@ -22,6 +23,8 @@ interface Props {
 
   disableOK?: boolean;
   disableCancel?: boolean;
+  modalStyle?: string;
+  showButton?: boolean;
 
   // if not set, it will call onClose
   onCancelButton?: () => void;
@@ -39,10 +42,13 @@ export const Modal = ({
   onCancelButton,
   okButton = 'OK',
   cancelButton = 'Cancel',
+  showButton = false,
   disableOK = false,
   showCloseIcon = false,
+  modalButton,
   disableCancel = false,
   title,
+  modalStyle = '',
   onClose, // X icon, or click outside dialog
   showActionButtons = true,
   wide = true,
@@ -96,6 +102,7 @@ export const Modal = ({
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className={twMerge('relative z-50')} onClose={onClose}>
+        {showButton && modalButton}
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -105,11 +112,17 @@ export const Modal = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className={twMerge('fixed inset-0', theme === 'dark' ? 'bg-light-bg' : 'bg-dark-bg', 'bg-opacity-30')} />
+          <div
+            className={twMerge(
+              'fixed inset-0 backdrop-blur-5',
+              theme === 'dark' ? 'bg-dark-modalBg' : 'bg-neutral-400',
+              'bg-opacity-80'
+            )}
+          />
         </Transition.Child>
 
         <div className={twMerge('fixed inset-0 overflow-y-auto overflow-x-clip')}>
-          <div className="flex min-h-full items-center justify-center p-4 text-center">
+          <div className={twMerge('flex min-h-full items-center justify-center p-4 text-center', modalStyle)}>
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"

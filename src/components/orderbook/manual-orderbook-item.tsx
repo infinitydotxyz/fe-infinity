@@ -1,5 +1,4 @@
 import { ChainId } from '@infinityxyz/lib-frontend/types/core';
-
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
@@ -16,9 +15,20 @@ type Props1 = {
   onClick?: () => void;
   canShowAssetModal?: boolean;
   collectionSlug: string;
+  titleClassName?: string;
+  className?: string;
+  tokenIdClassName?: string;
 };
 
-export const ManualOrderbookItem = ({ isCollBid, order, canShowAssetModal, collectionSlug }: Props1): JSX.Element => {
+export const ManualOrderbookItem = ({
+  isCollBid,
+  order,
+  canShowAssetModal,
+  collectionSlug,
+  titleClassName = '',
+  className = '',
+  tokenIdClassName = ''
+}: Props1): JSX.Element => {
   const image = isCollBid
     ? (order as ERC721CollectionCartItem).metadata.profileImage
     : (order as ERC721TokenCartItem).image;
@@ -31,10 +41,13 @@ export const ManualOrderbookItem = ({ isCollBid, order, canShowAssetModal, colle
     <SingleCollectionCell
       collectionSlug={collectionSlug}
       isCollBid={isCollBid}
+      titleClassName={titleClassName}
+      className={className}
       canShowAssetModal={canShowAssetModal}
       image={image ?? ''}
       title={title ?? ''}
       order={order}
+      tokenIdClassName={tokenIdClassName}
     />
   );
 };
@@ -48,9 +61,22 @@ type Props3 = {
   order?: ERC721TokenCartItem | ERC721CollectionCartItem;
   canShowAssetModal?: boolean;
   collectionSlug: string;
+  titleClassName?: string;
+  className?: string;
+  tokenIdClassName?: string;
 };
 
-const SingleCollectionCell = ({ order, image, title, canShowAssetModal, isCollBid, collectionSlug }: Props3) => {
+const SingleCollectionCell = ({
+  order,
+  image,
+  title,
+  canShowAssetModal,
+  isCollBid,
+  collectionSlug,
+  titleClassName,
+  className,
+  tokenIdClassName = ''
+}: Props3) => {
   const [modalOpen, setModalOpen] = useState(false);
   const tokenIdOrAttribute = isCollBid
     ? ''
@@ -88,14 +114,14 @@ const SingleCollectionCell = ({ order, image, title, canShowAssetModal, isCollBi
   }, [router.query]);
 
   return (
-    <div className="flex gap-2 items-center">
+    <div className={twMerge('flex gap-5 items-center', className)}>
       {canShowAssetModal && modalOpen && basicTokenInfo && (
         <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} />
       )}
 
-      <div className="flex justify-center shrink-0 h-14 w-14 mr-2">
+      <div className="flex items-center justify-center shrink-0 ">
         <EZImage
-          className={twMerge('h-14 w-14 rounded-lg overflow-clip', canShowAssetModal ? 'cursor-pointer' : '')}
+          className={twMerge('h-10.5 w-10.5 rounded-lg overflow-clip', canShowAssetModal ? 'cursor-pointer' : '')}
           src={image}
           onClick={() => {
             if (basicTokenInfo && canShowAssetModal) {
@@ -110,13 +136,23 @@ const SingleCollectionCell = ({ order, image, title, canShowAssetModal, isCollBi
 
       <div className={`flex flex-col truncate`}>
         {collectionAddress && chainId ? (
-          <div className={twMerge(secondaryTextColor, 'font-medium')}>
+          <div
+            className={twMerge(
+              tokenIdOrAttribute ? 'text-gray-800 dark:text-gray-800' : secondaryTextColor,
+              'font-semibold text-base capitalize',
+              titleClassName
+            )}
+          >
             {title}
             {hasBlueCheck === true && <BlueCheckInline />}
           </div>
         ) : null}
 
-        {tokenIdOrAttribute && <div className={twMerge('whitespace-pre-wrap')}>{tokenIdOrAttribute}</div>}
+        {tokenIdOrAttribute && (
+          <div className={twMerge('whitespace-pre-wrap text-base font-semibold', secondaryTextColor, tokenIdClassName)}>
+            {tokenIdOrAttribute}
+          </div>
+        )}
       </div>
     </div>
   );

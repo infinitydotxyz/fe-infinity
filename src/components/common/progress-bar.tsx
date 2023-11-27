@@ -41,7 +41,7 @@ const ProgressBarFiller = ({ percentage, className }: { percentage: number; clas
   return (
     <div
       className={twMerge(
-        'bg-[#92DEFF] rounded-sm font-normal py-4',
+        'bg-blue-300 rounded-sm font-normal py-4',
         percentage <= 98 ? 'rounded-r-none' : '',
         className
       )}
@@ -63,14 +63,14 @@ const ProgressBarOverlay: React.FC<
       )}
     >
       {showAmount && (
-        <div className="min-w-[120px] flex flex-row">
+        <div className="min-w-30 flex flex-row">
           <div className="mr-1">{nFormatter(round(props.amount, 2))}</div>
           <div className="mr-1">/</div>
           <div className="mr-2">{nFormatter(round(props.max, 2))}</div>
           <div className="font-normal">{props.units}</div>
         </div>
       )}
-      <div className={twMerge('w-[80px] font-bold', showAmount ? 'text-right' : '')}>{props.percentage}%</div>
+      <div className={twMerge('w-20 font-bold', showAmount ? 'text-right' : '')}>{props.percentage}%</div>
       {'total' in props && <div className={twMerge('font-bold', showAmount ? 'text-right' : '')}>{props.total}</div>}
     </div>
   );
@@ -80,7 +80,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = (props) => {
   const { fillerClassName, overlayClassName, className, ...rest } = props;
   const percentage = getPercentage(props);
   return (
-    <div className={twMerge(secondaryBgColor, 'rounded-sm w-full relative min-w-[250px]', `text-xl`, className)}>
+    <div className={twMerge(secondaryBgColor, 'rounded-sm w-full relative min-w-62.5', `text-xl`, className)}>
       <ProgressBarFiller percentage={percentage} className={fillerClassName} />
       <ProgressBarOverlay className={overlayClassName} {...rest} percentage={percentage} />
     </div>

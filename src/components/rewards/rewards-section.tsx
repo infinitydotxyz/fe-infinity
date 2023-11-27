@@ -6,6 +6,7 @@ interface RewardsSectionProps {
   subTitle?: React.ReactNode | string;
   sideInfo?: React.ReactNode;
   children?: React.ReactNode;
+  sideInfoClassName?: string;
 }
 
 export const RewardsSection = (props: RewardsSectionProps) => {
@@ -13,17 +14,28 @@ export const RewardsSection = (props: RewardsSectionProps) => {
     <div
       className={twMerge(
         buttonBorderColor,
-        'border flex-col p-4 md:px-10 w-full shadow-brand-primaryFade dark:shadow-brand-darkPrimaryFade shadow-sm'
+        'rounded-10 flex-col px-5 md:px-0 py-5 md:pr-3.75 bg-zinc-300 dark:bg-neutral-800 w-full  shadow-sm'
       )}
     >
       <div className="md:flex w-full">
-        <div className="md:w-1/2">
-          <div className="text-2xl font-medium">{props.title}</div>
-          {props.subTitle && <div className="md:w-1/2 mt-5">{props.subTitle}</div>}
+        <div className="md:w-1/2 md:px-7.5 flex flex-col justify-center">
+          <div className="text-22 text-neutral-700 dark:text-white font-bold leading-7">{props.title}</div>
+          {props?.subTitle && (
+            <div className=" my-2.5 text-base text-neutral-700 dark:text-white font-medium">{props.subTitle}</div>
+          )}
         </div>
-        {props?.sideInfo && <div className="md:w-1/2 md:mt-0 mt-4">{props.sideInfo}</div>}
+        {props?.sideInfo && (
+          <div
+            className={twMerge(
+              'md:w-1/2 md:mt-0 mt-4 px-8 py-6 md:py-0 sm:px-10 bg-light-borderLight dark:bg-zinc-700 md:min-h-2.5 rounded-lg',
+              props.sideInfoClassName
+            )}
+          >
+            {props.sideInfo}
+          </div>
+        )}
       </div>
-      {props.children && <div className="flex w-full mt-5">{props.children}</div>}
+      {props?.children && <div className="flex w-full mt-5 px-7.5">{props.children}</div>}
     </div>
   );
 };

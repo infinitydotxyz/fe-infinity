@@ -9,6 +9,7 @@ import { OrdersChartDetails, SalesChartDetails } from '../charts/chart-details';
 import { ResponsiveSalesChart, SalesChartData } from '../charts/sales-chart';
 import { BarChartType, ScatterChartType } from '../charts/types';
 import { CollectionHistoricalSale } from 'src/utils/types';
+import { AvFooter } from '../astra/astra-footer';
 
 const infoBoxStyle = 'flex items-center justify-center opacity-60 font-bold text-lg h-full';
 
@@ -149,24 +150,23 @@ export const CollectionCharts = ({
     fetchOrdersData('sell');
     fetchOrdersData('buy');
   }, [collectionAddress, collectionChainId]);
-
   return (
-    <div className={twMerge('w-full h-full relative flex flex-col p-2', className)}>
-      <div className="md:flex">
-        <div className="md:w-3/4 p-2">
+    <div className={twMerge('w-full gap-2.5 h-full relative flex flex-col p-5', className)}>
+      <div className="md:grid md:grid-cols-12 gap-5">
+        <div className="md:col-span-6 lg:col-span-7 xl:col-span-8">
           {salesChartData.length > 0 && (
             <ResponsiveSalesChart graphType={ScatterChartType.Sales} data={salesChartData} />
           )}
 
           {isSalesLoading && <Loading graphType={ScatterChartType.Sales} />}
         </div>
-        <div className="md:w-1/4 p-2">
+        <div className={`md:col-span-6 lg:col-span-5 xl:col-span-4 ${salesChartData.length <= 0 ? 'mt-18' : ''}`}>
           {salesChartData.length > 0 && <SalesChartDetails data={salesChartData[0]} />}
         </div>
       </div>
 
-      <div className="md:flex">
-        <div className="md:w-3/4 p-2">
+      <div className="md:grid md:grid-cols-12 gap-5">
+        <div className="md:col-span-6 lg:col-span-7 xl:col-span-8">
           {listingsData.length > 5 && (
             <ResponsiveBarChart
               graphType={BarChartType.Listings}
@@ -177,7 +177,7 @@ export const CollectionCharts = ({
 
           {isListingsLoading && <Loading graphType={BarChartType.Listings} />}
         </div>
-        <div className="md:w-1/4 p-2">
+        <div className="md:col-span-6 lg:col-span-5 xl:col-span-4 mt-18">
           {listingsData.length > 5 && (
             <OrdersChartDetails
               orders={selectedListings}
@@ -193,15 +193,15 @@ export const CollectionCharts = ({
         </div>
       </div>
 
-      <div className="md:flex">
-        <div className="md:w-3/4 p-2">
+      <div className="md:grid md:grid-cols-12 gap-5">
+        <div className="md:col-span-6 lg:col-span-7 xl:col-span-8">
           {bidsData.length > 5 && (
             <ResponsiveBarChart graphType={BarChartType.Bids} data={bidsData} displayDetails={displayBidDetails} />
           )}
 
           {isBidsLoading && <Loading graphType={BarChartType.Bids} />}
         </div>
-        <div className="md:w-1/4 p-2">
+        <div className="md:col-span-6 lg:col-span-5 xl:col-span-4 mt-18">
           {bidsData.length > 5 && (
             <OrdersChartDetails
               orders={selectedBids}
@@ -220,6 +220,9 @@ export const CollectionCharts = ({
       <div className={twMerge('w-full p-2 flex space-x-5 text-xs mt-6 z-50', secondaryTextColor)}>
         <ExternalLink href="https://pixl.so/terms">Terms</ExternalLink>
         <ExternalLink href="https://pixl.so/privacy-policy">Privacy Policy</ExternalLink>
+      </div>
+      <div className="-mx-5">
+        <AvFooter />
       </div>
     </div>
   );

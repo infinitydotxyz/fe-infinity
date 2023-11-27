@@ -2,7 +2,6 @@ import { Combobox } from '@headlessui/react';
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import { AiOutlineSearch } from 'react-icons/ai';
 import { BasicTokenInfo, NftSearchResultData } from 'src/utils/types';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { borderColor, secondaryBgColor, hoverColor, textColor } from 'src/utils/ui-constants';
@@ -10,18 +9,24 @@ import { twMerge } from 'tailwind-merge';
 import { getSearchResultKey, SearchResultItem } from './search-results';
 import { SearchResult } from './types';
 import { getNetworkName } from 'src/utils';
+import { MagnifyingGlassIcon } from 'src/icons';
 
 interface Props {
   expanded?: boolean;
   query: string;
   placeholder: string;
+  inputClassName?: string;
+  containerClassName?: string;
   setQuery: (query: string) => void;
   data: SearchResult[];
   tokenSearch?: boolean;
   profileSearch?: boolean;
+  shortCuts?: boolean;
   orderSearch?: boolean;
   setSelectedCollection?: (collection: CollectionSearchDto) => void;
   setSelectedToken?: (basicTokenInfo: BasicTokenInfo) => void;
+  customIcon?: React.ReactNode;
+  iconStyle?: string;
 }
 
 export function SearchInput({
@@ -29,17 +34,22 @@ export function SearchInput({
   query,
   setQuery,
   placeholder,
+  inputClassName,
+  containerClassName,
   data,
   tokenSearch,
   profileSearch,
   orderSearch,
   setSelectedCollection,
-  setSelectedToken
+  setSelectedToken,
+  customIcon,
+  iconStyle = ''
 }: Props): JSX.Element {
   const router = useRouter();
   const [isActive, setIsActive] = useState(false);
   const [selected, setSelected] = useState<SearchResult | null>(null);
   const isMounted = useIsMounted();
+
   const inputRef: React.RefObject<HTMLInputElement> = useRef(null);
 
   useEffect(() => {
@@ -93,16 +103,18 @@ export function SearchInput({
     <div
       className={twMerge(
         textColor,
-        borderColor,
-        'border w-full px-4 rounded-lg text-center h-10 flex place-items-center'
+        'w-full md:max-w-300 px-2.5 rounded-lg text-center h-9 flex place-items-center bg-black bg-opacity-3 dark:bg-gray-600 peer-focus-within:ring-1 ring-1 ring-gray-400 dark:ring-neutral-300',
+        containerClassName
       )}
     >
       <div className="w-content h-content  hover:cursor-pointer" onClick={activate}>
-        <AiOutlineSearch className={twMerge(textColor, 'flex-[1] w-[18px] h-[18px] max-h-full')}></AiOutlineSearch>
+        {customIcon ?? (
+          <MagnifyingGlassIcon className={twMerge('flex-1 w-3.75 h-3.75 max-h-full', iconStyle)}></MagnifyingGlassIcon>
+        )}
       </div>
       <Combobox
         as="div"
-        className={`w-full h-full max-h-full flex-[10] outline-none  ${isActive ? 'visible' : 'hidden'}`}
+        className={`w-full h-full max-h-full flex-10 outline-none  ${isActive ? 'visible' : 'hidden'}`}
         value={selected}
         onChange={setSelected}
       >
@@ -114,7 +126,8 @@ export function SearchInput({
             'focus-visible:outline-none focus:ring-transparent focus:border-transparent focus:shadow-none',
             'active:outline-none active:ring-transparent active:border-transparent active:shadow-none',
             'outline-none ring-transparent border-transparent shadow-none',
-            'text-sm align-middle p-3'
+            'text-sm align-middle p-2.5 text-neutral-700 dark:text-white font-medium dark:placeholder:text-neutral-500 placeholder:text-amber-600 ',
+            inputClassName
           )}
           placeholder={placeholder}
           ref={inputRef}
@@ -131,7 +144,7 @@ export function SearchInput({
               secondaryBgColor,
               data.length === 0 ? 'opacity-0' : '', // without this, a thin line appears
               borderColor,
-              'absolute md:left-auto left-[-2rem] md:right-auto right-[-1rem] z-20 md:-mx-8 md:w-full md:top-2 top-2  w-content h-content max-h-content',
+              'absolute md:left-auto -left-8 md:right-auto -right-4 z-20 md:-mx-8 md:top-2 top-2  w-content h-content max-h-content',
               'py-2 border rounded-lg flex flex-col shadow-lg'
             )}
           >

@@ -61,7 +61,7 @@ export const RaffleDescription = ({ raffle, ethPrice }: { raffle: UserRaffleDto;
   }) => {
     return (
       <TooltipWrapper
-        className="w-fit min-w-[200px]"
+        className="w-fit min-w-50"
         show={props.isHovered}
         tooltip={{
           title: props.title ?? '',

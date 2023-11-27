@@ -1,18 +1,17 @@
 import { MaxUint256 } from '@ethersproject/constants';
-import { useEffect, useState } from 'react';
+import { useTheme } from 'next-themes';
+import { useState } from 'react';
 import { useStakerContract } from 'src/hooks/contract/staker/useStakerContract';
 import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
 import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
 import { FLOW_TOKEN, SEASON_2_UNLOCK_BLOCK, nFormatter } from 'src/utils';
-import { fetchMinXflBalanceForZeroFee } from 'src/utils/orderbook-utils';
+import { secondaryTextColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 import { useAccount, useBalance } from 'wagmi';
 import { BouncingLogo, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
-import { twMerge } from 'tailwind-merge';
-import { secondaryTextColor } from 'src/utils/ui-constants';
-import { useTheme } from 'next-themes';
 
 interface Props {
   onClose: () => void;
@@ -26,18 +25,18 @@ export const StakeTokensModal = ({ onClose, chainId }: Props) => {
   const { approve } = useTokenApprove(chainId);
   const { allowance } = useTokenAllowance(chainId);
   const { address } = useAccount();
-  const [minStakeAmountForBoost, setMinStakeAmountForBoost] = useState(0);
+  const [minStakeAmountForBoost] = useState(0);
   const { theme } = useTheme();
   const darkMode = theme === 'dark';
 
-  useEffect(() => {
-    const fetchMinStakeAmountForBoost = async () => {
-      const minStakeAmount =
-        minStakeAmountForBoost === 0 ? await fetchMinXflBalanceForZeroFee() : minStakeAmountForBoost;
-      setMinStakeAmountForBoost(minStakeAmount);
-    };
-    fetchMinStakeAmountForBoost();
-  });
+  // useEffect(() => {
+  //   const fetchMinStakeAmountForBoost = async () => {
+  //     const minStakeAmount =
+  //       minStakeAmountForBoost === 0 ? await fetchMinXflBalanceForZeroFee() : minStakeAmountForBoost;
+  //     setMinStakeAmountForBoost(minStakeAmount);
+  //   };
+  //   fetchMinStakeAmountForBoost();
+  // });
 
   const xflBalanceObj = useBalance({
     address,

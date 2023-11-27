@@ -1,5 +1,5 @@
 import { useTheme } from 'next-themes';
-import { ReactNode, useRef } from 'react';
+import { ReactNode, useRef, useState } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
 import { AstraCart } from 'src/components/astra/astra-cart';
 import { Grid } from 'src/components/astra/grid';
@@ -8,6 +8,7 @@ import { toastError } from '../common';
 import { ANavbar } from './astra-navbar';
 import NonSsrWrapper from './non-ssr-wrapper';
 import { SidebarNav } from './sidebar-nav';
+import { AvFooter } from './astra-footer';
 
 interface Props {
   children: ReactNode;
@@ -37,7 +38,6 @@ export const Layout = ({ children }: Props) => {
 
   const { theme } = useTheme();
   const darkMode = theme === 'dark';
-
   const cart = (
     <NonSsrWrapper>
       <AstraCart
@@ -86,8 +86,15 @@ export const Layout = ({ children }: Props) => {
       />
     </NonSsrWrapper>
   );
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
 
-  const footer = <></>;
-
-  return Grid(<ANavbar />, <SidebarNav />, <>{children}</>, cart, footer, gridRef, containerRef);
+  return Grid(
+    <ANavbar setSidebarOpen={setSidebarOpen} />,
+    <SidebarNav sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />,
+    <>{children}</>,
+    cart,
+    <AvFooter />,
+    gridRef,
+    containerRef
+  );
 };

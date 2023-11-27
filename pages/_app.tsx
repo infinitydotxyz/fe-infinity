@@ -20,20 +20,27 @@ import {
   mainnet,
   // goerli,
   // sepolia,
-  polygon
+  polygon,
   // polygonMumbai,
-  // arbitrum,
-  // optimism,
+  arbitrum,
+  optimism,
   // arbitrumNova,
-  // base,
+  base,
   // baseGoerli,
-  // zora,
+  polygonZkEvm
   // zoraTestnet,
   // scrollTestnet,
   // linea
 } from '@wagmi/chains';
 import '../styles/nprogress.css'; //styles of nprogress
 NProgress.configure({ showSpinner: false });
+
+import '@fontsource/barlow/400.css';
+import '@fontsource/barlow/500.css';
+import '@fontsource/barlow/600.css';
+import '@fontsource/barlow/700.css';
+import '@fontsource/barlow/800.css';
+import '@fontsource/barlow/900.css';
 
 //Binding events.
 Router.events.on('routeChangeStart', () => NProgress.start());
@@ -50,14 +57,15 @@ const supportedChains = [
   mainnet,
   // goerli,
   // sepolia,
-  polygon
+  polygon,
   // polygonMumbai,
-  // arbitrum,
-  // optimism,
+  arbitrum,
+  optimism,
   // arbitrumNova,
-  // base,
+  base,
+  polygonZkEvm
   // baseGoerli,
-  // zora,
+  // zora
   // zoraTestnet,
   // scrollTestnet,
   // linea

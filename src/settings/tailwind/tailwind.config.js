@@ -15,5 +15,11 @@ module.exports = {
       ...extensions
     }
   },
-  plugins: [require('tailwindcss'), require('autoprefixer'), require('postcss-import'), require('@tailwindcss/forms')]
+  plugins: [
+    require('tailwindcss'),
+    require('autoprefixer'),
+    require('postcss-import'),
+    require('@tailwindcss/forms'),
+    require('tailwindcss-animate')
+  ]
 };
