@@ -71,15 +71,15 @@ export const CollectionPageHeader = ({
                 showCart && 'md:!flex-col-reverse lg:!flex-row'
               )}
             >
-              <div className="py-7.5 flex-1 flex flex-col md:flex-row items-center md:items-start">
+              <div className="flex-1 flex flex-col md:flex-row items-center md:items-start">
                 <EZImage
                   src={avatarUrl}
-                  className="md:mr-5 h-25 w-25 rounded-lg cursor-pointer hover:scale-90 duration-100"
+                  className="md:mr-5 h-20 w-20 rounded-lg cursor-pointer hover:scale-90 duration-100"
                   onClick={() => window.open(collection?.metadata?.links?.external)}
                 />
                 <div>
                   <div className="flex flex-col md:flex-row items-center gap-1">
-                    <h4 className="font-extrabold text-center md:text-left text-35 text-neutral-700 dark:text-white font-body line-clamp-1">
+                    <h4 className="font-extrabold text-center md:text-left text-22 text-neutral-700 dark:text-white font-body line-clamp-1">
                       {title}
                     </h4>
                     <div className="flex text-17 space-x-5 items-center justify-center mt-2">
@@ -96,15 +96,16 @@ export const CollectionPageHeader = ({
                     </div>
                   </div>
                   {description ? (
-                    <div className="px-5 mt-3.75 md:mt-0 md:px-0 max-w-5xl font-body font-semibold text-neutral-700 dark:text-white md:text-left text-center">
+                    <div className="text-sm px-5 mt-3.75 md:mt-0 md:px-0 max-w-5xl font-body font-semibold text-neutral-700 dark:text-white md:text-left text-center">
                       <ReadMoreText text={description} min={30} ideal={60} max={100} />
                     </div>
                   ) : null}
                 </div>
               </div>
+
               <div
                 className={twMerge(
-                  'p-2.5 flex flex-row gap-2.5 md:gap-0 justify-center flex-wrap md:flex-col items-end',
+                  'p-2.5 flex flex-row gap-2.5 md:gap-0 justify-center flex-wrap items-end',
                   showCart && 'md:!flex-row lg:!flex-col'
                 )}
               >

@@ -22,7 +22,7 @@ const OrderDepthChart = ({ data }: Props) => {
         </div>
       </div>
 
-      <div className="rounded-lg h-154.5 bg-zinc-300 dark:bg-neutral-800 py-5 px-2.5">
+      <div className="rounded-lg h-[500px] bg-zinc-300 dark:bg-neutral-800 py-5 px-2.5">
         <OrderDepthChartSub data={data} hideOutliers={!showOutliers} key={String(showOutliers)} />
       </div>
     </div>
