@@ -139,7 +139,7 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
               key={`${selectedTimeBucket}-${showOutliers}-${chartData.length}`}
               data={chartData}
               width={width}
-              height={isDesktop ? 576 : 270}
+              height={isDesktop ? 376 : 270}
               hideOutliers={!showOutliers}
             />
           )}
