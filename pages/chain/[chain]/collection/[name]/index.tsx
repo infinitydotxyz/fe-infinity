@@ -156,7 +156,11 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     }
     setMutatedData(mutatedTokens);
   }, [bidBelowPct]);
-
+  useEffect(() => {
+    return () => {
+      setSelectedCollectionTab(tabs[0]);
+    };
+  }, []);
   const onTabChange = (tab: string) => {
     setSelectedCollectionTab(tab);
   };
